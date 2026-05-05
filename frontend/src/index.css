@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --grove-paper: #F5F0E8;
+    --grove-parchment: #EDE5D8;
+    --grove-leaf: #EAF3DE;
+    --grove-stone: #D3C9B8;
+    --grove-ink: #1A1A17;
+    --grove-deep: #1C2E10;
+    --grove-bark: #2D5016;
+    --grove-canopy: #3B6D11;
+    --grove-fern: #639922;
+    --grove-moss: #5DCAA5;
+    --grove-dew: #9FE1CB;
+    --grove-bloom: #D4537E;
+    --grove-bloom-light: #FBEAF0;
+
+    --background: 40 33% 94%;
+    --foreground: 60 3% 10%;
+    --card: 38 28% 90%;
+    --card-foreground: 60 3% 10%;
+    --popover: 38 28% 90%;
+    --popover-foreground: 60 3% 10%;
+    --primary: 92 48% 12%;
+    --primary-foreground: 40 33% 94%;
+    --secondary: 78 38% 91%;
+    --secondary-foreground: 92 48% 12%;
+    --muted: 38 28% 90%;
+    --muted-foreground: 60 3% 18%;
+    --accent: 78 38% 91%;
+    --accent-foreground: 92 48% 12%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 35 18% 80%;
+    --input: 35 18% 80%;
+    --ring: 162 44% 58%;
+    --radius: 14px;
+    --chart-1: 102 65% 25%;
+    --chart-2: 162 44% 58%;
+    --chart-3: 78 38% 91%;
+    --chart-4: 340 56% 58%;
+    --chart-5: 35 18% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[#D3C9B8];
+  }
+  body {
+    @apply bg-[#F5F0E8] text-[#1A1A17];
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+}
+
+.font-plant {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.font-latin {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+.font-ui {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}

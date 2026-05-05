@@ -1,0 +1,55 @@
+export const EMPTY_STATES = {
+  collection_zero_plants: {
+    illustration: 'leaf',
+    heading: 'Your grove starts here',
+    body: 'Add your first plant. It takes under a minute — photos can come later.',
+    cta: 'Add a plant',
+    ctaPath: '/add-plant',
+  },
+  feed_no_grove: {
+    illustration: 'cluster',
+    heading: 'No one in your grove yet',
+    body: 'A grove is never a single tree. Invite a friend or join an existing grove to see their plants here.',
+    cta: 'Find a grove',
+    ctaPath: '/groves',
+  },
+  swaps_locked: {
+    illustration: 'leaf',
+    heading: 'Swap matching unlocks at day 30',
+    body: "Keep your streak going. When you reach 30 days, you'll be matched with grove members whose plants you want — and who want yours.",
+    cta: null,
+    streakProgress: true,
+  },
+  bouquet_none: {
+    illustration: 'bloom',
+    heading: 'No bouquets tracked yet',
+    body: 'Next time you receive flowers, photograph them. Grove identifies every stem and tells you exactly how to keep them alive.',
+    cta: 'Track a bouquet',
+    ctaPath: '/bouquets/new',
+  },
+  library_no_photos: {
+    illustration: 'leaf',
+    heading: 'No community photos yet for this species',
+    body: 'Be the first. Add this plant to your collection and your photos will appear here for the community.',
+    cta: null,
+  },
+  goals_none: {
+    illustration: 'leaf',
+    heading: 'Set your first plant goal',
+    body: 'Keep a Fiddle Leaf Fig alive for 90 days. Propagate 5 plants this season. Track a bouquet and beat its expected vase life.',
+    cta: 'Add a goal',
+  },
+  care_all_done: {
+    illustration: 'leaf',
+    heading: 'All caught up!',
+    body: 'No plants need care right now. Nice work — your grove is thriving.',
+    cta: null,
+  },
+  rooms_none: {
+    illustration: 'leaf',
+    heading: 'No rooms yet',
+    body: 'Add rooms to your plants to organize them by location. Rooms make bulk watering faster.',
+    cta: 'Add a plant',
+    ctaPath: '/add-plant',
+  },
+};

@@ -1141,18 +1141,27 @@ def _local_today(tz_offset_minutes: int) -> str:
     return local.strftime("%Y-%m-%d")
 
 
-def _trivia_index_for_day(day_str: str, deck_size: int) -> int:
-    """Deterministic deck-rotation. Same day → same card across the community.
+def _trivia_index_for_day(day_str: str, deck_size: int, user_id: Optional[str] = None) -> int:
+    """Deterministic per-user-per-day deck rotation.
 
-    Uses the integer date stamp modulo the deck size, so the rotation is a
-    simple round-robin and adding new cards never reshuffles past days.
+    Pre-testing audit fix: the testing script requires *different* trivia
+    for Maya / James / Clare on the same day so the rotation feels
+    personal and so dismissing on one account doesn't telegraph the card
+    on another. We hash (day_str + user_id) into the deck index. Without
+    a user_id we fall back to the legacy day-only rotation so non-auth'd
+    contexts (admin debug etc.) still produce a stable card.
     """
     if deck_size <= 0:
         return 0
     try:
-        # Days since epoch — stable, monotonic, no dependency on locale.
         d = datetime.strptime(day_str, "%Y-%m-%d").replace(tzinfo=timezone.utc)
         days_since_epoch = int(d.timestamp() // 86400)
+        if user_id:
+            import hashlib
+            h = hashlib.sha256(f"{days_since_epoch}:{user_id}".encode("utf-8")).digest()
+            # First 8 bytes → unsigned int → modulo deck size
+            n = int.from_bytes(h[:8], "big")
+            return n % deck_size
         return days_since_epoch % deck_size
     except Exception:
         return 0
@@ -1173,7 +1182,7 @@ async def get_today_trivia(
     cards = await db.trivia.find({"active": True}).sort("order", 1).to_list(500)
     if not cards:
         return {"date": day_str, "card": None, "dismissed": False}
-    idx = _trivia_index_for_day(day_str, len(cards))
+    idx = _trivia_index_for_day(day_str, len(cards), current_user["user_id"])
     card = cards[idx]
 
     user = await db.users.find_one({"id": current_user["user_id"]}) or {}
@@ -1317,6 +1326,11 @@ async def get_swap_deck(current_user: dict = Depends(get_current_user), limit: i
             "owner_username": (owner or {}).get('username', ''),
             "owner_display_name": (owner or {}).get('display_name', ''),
             "owner_location": (owner or {}).get('location', ''),
+            # Pre-testing diagnostic: surface verified flags so the swap
+            # deck card can render the Verified Pro checkmark next to the
+            # plant owner's username.
+            "owner_verified_user": bool((owner or {}).get('verified_user')),
+            "owner_verified_by_admin": bool((owner or {}).get('verified_by_admin')),
         })
     return {
         "unlocked": True,
@@ -2860,6 +2874,11 @@ async def get_feed(current_user: dict = Depends(get_current_user), page: int = 1
         post_data['username'] = user.get('username', 'Unknown') if user else 'Unknown'
         post_data['display_name'] = user.get('display_name', '') if user else ''
         post_data['avatar_url'] = user.get('avatar_url', '') if user else ''
+        # Pre-testing diagnostic: surface verified flags so the FeedPage
+        # can render the Verified Pro checkmark next to the author's name
+        # when the user has both flags set.
+        post_data['verified_user'] = bool(user.get('verified_user')) if user else False
+        post_data['verified_by_admin'] = bool(user.get('verified_by_admin')) if user else False
         # Back-compat kudos
         kudos = await db.kudos.find_one({"post_id": post['id'], "user_id": current_user['user_id']})
         post_data['user_gave_kudos'] = kudos is not None
@@ -3214,7 +3233,11 @@ async def get_grove_members(grove_id: str, current_user: dict = Depends(get_curr
                 "display_name": user.get('display_name', ''),
                 "avatar_url": user.get('avatar_url', ''),
                 "role": m.get('role', 'member'),
-                "joined_at": m.get('joined_at')
+                "joined_at": m.get('joined_at'),
+                # Pre-testing diagnostic: surface verified flags so the
+                # member list can render the Verified Pro checkmark.
+                "verified_user": bool(user.get('verified_user')),
+                "verified_by_admin": bool(user.get('verified_by_admin')),
             })
     return result
 
@@ -3232,6 +3255,9 @@ async def get_grove_feed(grove_id: str, current_user: dict = Depends(get_current
         post_data = serialize_doc(post)
         post_data['username'] = user.get('username', '') if user else ''
         post_data['display_name'] = user.get('display_name', '') if user else ''
+        # Pre-testing diagnostic: surface verified flags for Grove feed.
+        post_data['verified_user'] = bool(user.get('verified_user')) if user else False
+        post_data['verified_by_admin'] = bool(user.get('verified_by_admin')) if user else False
         kudos = await db.kudos.find_one({"post_id": post['id'], "user_id": current_user['user_id']})
         post_data['user_gave_kudos'] = kudos is not None
         if post.get('plant_id'):
@@ -4717,7 +4743,7 @@ async def get_demo_status(current_user: dict = Depends(get_current_user)):
 @api_router.post("/admin/demo/reset/{username}")
 async def reset_test_account(username: str, current_user: dict = Depends(get_current_user)):
     user = await db.users.find_one({"id": current_user['user_id']})
-    if not user.get('is_admin'):
+    if not user or not user.get('is_admin'):
         raise HTTPException(status_code=403, detail="Admin access required")
 
     if username not in ["mayagreens", "rootsandstems", "clarenolan_studio", "groveling"]:

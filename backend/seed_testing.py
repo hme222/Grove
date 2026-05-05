@@ -356,10 +356,9 @@ async def seed_maya(db):
     await db.goals.insert_many([goal1, goal2])
     print(f"  ✓ Created 2 goals")
     
-    # Phase 14C.2 — want list (3 species: Monstera, Philodendron Pink Princess,
-    # Anthurium warocqueanum). Testing script asks Maya to "remove one and add
-    # a different species" so the starting list of 3 is meaningful.
-    want_slugs = ["monstera-deliciosa", "philodendron-pink-princess", "anthurium-warocqueanum"]
+    # Phase 14C.2 — want list (3 species per user-testing spec: Monstera
+    # deliciosa, Philodendron pink princess, Bird of Paradise).
+    want_slugs = ["monstera-deliciosa", "philodendron-pink-princess", "strelitzia-reginae"]
     species_docs = await db.species.find({"slug": {"$in": want_slugs}}).to_list(10)
     for s in species_docs:
         await db.want_list.insert_one({
@@ -372,21 +371,34 @@ async def seed_maya(db):
         })
     print(f"  ✓ Want list: {len(species_docs)} species")
     
-    # Phase 14C.3.b — 8 starter badges per testing script v2.
-    # These reflect Maya's beginner state: 1st of various counts + a 12-day
-    # streak + 1 month on Grove + her first bouquet. NOT verified (so the
-    # verification flow is part of the testing demo).
+    # Pre-testing audit: 8 starter badges aligned verbatim to the
+    # user-testing script. These are seeded (granted_by_seed=True) so they
+    # show up in Maya's gallery even though some (e.g., streak_14) are
+    # ahead of her live stats — the live stats stay consistent with her
+    # 12-day streak. NOT verified (so the verification flow is part of the
+    # testing demo).
     maya_badges = [
-        "plant_first", "plant_5",          # 6 plants
-        "watering_first", "watering_10",   # ~30 care logs (mostly water)
-        "streak_7",                        # 12-day streak
-        "post_first",                      # 3 posts
-        "bouquet_first",                   # 1 bouquet
-        "grove_1_month",                   # 42-day account
+        "plant_first", "plant_5",            # 6 plants
+        "watering_first",                    # ~25 care logs
+        "streak_7", "streak_14",             # 12-day streak with seeded history up to 14
+        "kudos_received_first",              # community engagement
+        "prop_first",                        # started propagating
+        "grove_joined_first",                # Phase 14 badge unification
     ]
     for slug in maya_badges:
         await _grant_seed_badge(db, user_id, slug)
     print(f"  ✓ Granted {len(maya_badges)} starter badges")
+
+    # Pre-testing audit: 3 display badges — narratively selected to tell
+    # Maya's "growing beginner" story (collection growth, streak building,
+    # first propagation).
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"displayed_badges": [
+            "plant_5", "streak_14", "prop_first"
+        ]}}
+    )
+    print(f"  ✓ Featured 3 badges on profile")
     
     print(f"✅ Maya Chen complete: @mayagreens / {TEST_PASSWORD}")
     return user_id
@@ -419,12 +431,10 @@ async def seed_james(db):
         "first_session_banner_dismissed": True,
         "created_at": days_ago(420),
         "updated_at": hours_ago(2),
-        # Phase 14C fixtures — testing script v2:
-        # James is the "power user" persona. He has signed the pact + has
-        # an active subscription, so swaps are unlocked. He's read most
-        # tutorials but NOT lighting (testing script flags lighting tutorial
-        # discovery as a Phase 14B test point).
-        "tutorials_seen": ["care", "greenhouse", "collection", "grove"],
+        # Pre-testing audit: lighting tutorial marked SEEN so the
+        # light_reader badge (below) is consistent with the UI flag and
+        # James won't get the lighting intro modal during testing.
+        "tutorials_seen": ["care", "greenhouse", "collection", "grove", "lighting"],
         "is_verified": True,
         "verified_user": True,
         "verified_by_admin": False,
@@ -649,12 +659,101 @@ async def seed_james(db):
         # Verification + time
         "verified_user",
         "grove_1_month", "grove_6_months", "grove_1_year",
+        # Pre-testing audit additions (per user-testing script):
+        # - light_reader: earned by reading the lighting tutorial
+        # - aroid_enthusiast: admin-granted niche badge (not in 63 wired)
+        "light_reader",
+        "aroid_enthusiast",
     ]
     granted = 0
     for slug in james_badges:
         if await _grant_seed_badge(db, user_id, slug):
             granted += 1
-    print(f"  ✓ Granted {granted} badges (target 30)")
+    print(f"  ✓ Granted {granted} badges (target 32)")
+
+    # Pre-testing audit: 3 display badges — tells James's "power user +
+    # aroid specialist" story as required by the user-testing script.
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"displayed_badges": [
+            "plant_collector_gold", "streak_100", "aroid_enthusiast"
+        ]}}
+    )
+    print(f"  ✓ Featured 3 badges on profile")
+
+    # Pre-testing audit: want list (4 species) including Anthurium
+    # warocqueanum per spec.
+    want_slugs_james = [
+        "anthurium-warocqueanum",
+        "monstera-deliciosa",
+        "philodendron-pink-princess",
+        "strelitzia-reginae",
+    ]
+    species_docs = await db.species.find({"slug": {"$in": want_slugs_james}}).to_list(10)
+    for s in species_docs:
+        existing = await db.want_list.find_one({"user_id": user_id, "species_id": s["id"]})
+        if existing:
+            continue
+        await db.want_list.insert_one({
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "species_id": s["id"],
+            "note": "",
+            "priority": "medium",
+            "created_at": days_ago(30),
+        })
+    print(f"  ✓ Want list: {len(species_docs)} species")
+
+    # Pre-testing audit: seed grove chat history in at least 2 groves so
+    # testers see an active community when opening chat tabs.
+    from random import choice
+    chat_seeds = [
+        # grove_ids[0] = Aroid Society
+        (0, "James just moved my gloriosum into brighter light. Already opening new leaves.", 14),
+        (0, "Anyone have experience with Anthurium warocqueanum? Mine's velvety but slow.", 10),
+        (0, "My Thai Constellation finally threw a pure white leaf today 🤍", 3),
+        # grove_ids[3] = Propagation Project
+        (3, "Three cuttings in water, one in LECA — LECA wins every time for me.", 9),
+        (3, "Sharing a Philodendron micans cutting with a friend — propagation is community.", 5),
+        (3, "Rooting hormone = overrated for pothos. Fresh water + warmth does it.", 2),
+    ]
+    for grove_idx, body, d_ago in chat_seeds:
+        if grove_idx >= len(grove_ids):
+            continue
+        now_iso = days_ago(d_ago)
+        await db.grove_messages.insert_one({
+            "id": str(uuid.uuid4()),
+            "grove_id": grove_ids[grove_idx],
+            "user_id": user_id,
+            "body": body,
+            "photo_path": None,
+            "edited": False,
+            "is_deleted": False,
+            "deleted_at": None,
+            "deleted_by": None,
+            "created_at": now_iso,
+            "updated_at": now_iso,
+        })
+    print(f"  ✓ Seeded {len(chat_seeds)} chat messages across 2 groves")
+
+    # Pre-testing diagnostic: seed one James-authored post so testers can
+    # confirm — side-by-side with Clare's seeded post on the same shared
+    # groves — that the Verified Pro checkmark renders on Clare's name
+    # but NOT on James's (he has verified_user=true but verified_by_admin
+    # is false, so he's verified-but-not-pro).
+    james_post = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "caption": "My Anthurium warocqueanum threw its biggest leaf yet this morning — 38cm across. Velvet finish, deep emerald veining. Worth the wait.",
+        "photo_url": "",
+        "plant_id": None,
+        "kudos_count": 9,
+        "comment_count": 0,
+        "created_at": days_ago(1),
+        "updated_at": days_ago(1),
+    }
+    await db.posts.insert_one(james_post)
+    print(f"  ✓ Seeded 1 feed post")
     
     print(f"✅ James Okafor complete: @rootsandstems / {TEST_PASSWORD}")
     return user_id
@@ -706,9 +805,12 @@ async def seed_clare(db):
         "pro_active": True,
         "subscription_status": "active",
         "florist_pro_active": True,
-        "hardiness_zone": "9a",
-        "hardiness_zone_source": "postcode-area",
-        "hardiness_zone_system": "RHS",
+        # Pre-testing audit: hardiness zone set to 8b (USDA) per spec
+        # ("West Coast florist" is only a narrative framing; her London
+        # location is unchanged to avoid ripple effects on other fixtures).
+        "hardiness_zone": "8b",
+        "hardiness_zone_source": "manual",
+        "hardiness_zone_system": "USDA",
         "location_country": "UK",
         "location_postcode": "E2",
         "personality_title": "The Studio Grower",
@@ -717,11 +819,11 @@ async def seed_clare(db):
     await db.users.insert_one(user)
     print(f"  ✓ Created user: @clarenolan_studio")
     
-    # Streak — active today
+    # Pre-testing audit: 60-day current streak per user-testing spec.
     streak = {
         "user_id": user_id,
-        "current_streak": 23,
-        "longest_streak": 56,
+        "current_streak": 60,
+        "longest_streak": 60,
         "last_log_date": today_iso_date(),
         "updated_at": hours_ago(3)
     }
@@ -756,7 +858,11 @@ async def seed_clare(db):
             "status": "green" if pdata["health"] > 85 else "amber",
             "is_archived": False,
             "acquired_date": days_ago(240),
-            "created_at": days_ago(240),
+            # Pre-testing diagnostic: Clare's plants need recent created_at
+            # so a couple bubble up into the swap deck (top 20 by created_at)
+            # and testers can see her Verified Pro checkmark next to the
+            # owner badge on at least one swap card.
+            "created_at": days_ago(2 + i),
             "updated_at": days_ago(2)
         }
         await db.plants.insert_one(plant)
@@ -817,8 +923,8 @@ async def seed_clare(db):
     # bouquets tracked (we seed 6 here but the gallery shows the full
     # production set), 8 plants, all 5 tutorials read, multi-month streak.
     clare_badges = [
-        # Streak family (4 of 9) — 56-day longest covers up to streak_30
-        "streak_7", "streak_14", "streak_30",
+        # Streak family (4 of 9) — 60-day current covers streak_60
+        "streak_7", "streak_14", "streak_30", "streak_60",
         # Watering (3 of 6)
         "watering_first", "watering_10", "watering_50",
         # Fertilizing (1 of 4)
@@ -831,9 +937,11 @@ async def seed_clare(db):
         "prop_first",
         # Plant counts (3 of 7)
         "plant_first", "plant_5",
-        # Bouquet counts (5 of 6) — 18 bouquets in production
+        # Bouquet counts (6 of 6) — 18 bouquets tracked in production;
+        # pre-testing audit adds bouquet_collector_gold (previously missing)
         "bouquet_first", "bouquet_5",
         "bouquet_collector_bronze", "bouquet_collector_silver",
+        "bouquet_collector_gold",
         # Species variety (1 of 4)
         "species_5",
         # Community
@@ -874,16 +982,58 @@ async def seed_clare(db):
             })
     print(f"  ✓ Joined 3 themed groves")
     
-    # Set Clare's displayed badges (up to 3) — the most visible Florist Pro
-    # signals: verified_pro, bouquet_collector_silver, all_tutorials
+    # Pre-testing audit: Clare's display badges — 3 strongest Florist Pro
+    # signals per user-testing spec (verified_pro, bouquet_collector_gold,
+    # wedding_florist).
     await db.users.update_one(
         {"id": user_id},
         {"$set": {"displayed_badges": [
-            "verified_pro", "bouquet_collector_silver", "all_tutorials"
+            "verified_pro", "bouquet_collector_gold", "wedding_florist"
         ]}}
     )
     print(f"  ✓ Featured 3 badges on profile")
-    
+
+    # Pre-testing audit: want list (4 species) per spec incl. David Austin
+    # Juliet rose and Lisianthus.
+    want_slugs_clare = [
+        "rosa-juliet-ausjameson",
+        "eustoma-grandiflorum",
+        "strelitzia-reginae",
+        "monstera-deliciosa",
+    ]
+    species_docs = await db.species.find({"slug": {"$in": want_slugs_clare}}).to_list(10)
+    for s in species_docs:
+        existing = await db.want_list.find_one({"user_id": user_id, "species_id": s["id"]})
+        if existing:
+            continue
+        await db.want_list.insert_one({
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "species_id": s["id"],
+            "note": "",
+            "priority": "medium",
+            "created_at": days_ago(60),
+        })
+    print(f"  ✓ Want list: {len(species_docs)} species")
+
+    # Pre-testing diagnostic: seed one Clare-authored post so testers can
+    # see the Verified Pro checkmark next to her username in the main
+    # feed (and on grove feed posts). Without an authored post there's
+    # nowhere on /feed for the checkmark to render.
+    clare_post = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "caption": "First lisianthus stems of the season — these are headed into a wedding bouquet on Saturday. Soft butter yellow, just opening.",
+        "photo_url": "",
+        "plant_id": None,
+        "kudos_count": 4,
+        "comment_count": 0,
+        "created_at": days_ago(2),
+        "updated_at": days_ago(2),
+    }
+    await db.posts.insert_one(clare_post)
+    print(f"  ✓ Seeded 1 feed post")
+
     print(f"✅ Clare Nolan complete: @clarenolan_studio / {TEST_PASSWORD}")
     return user_id
 
