@@ -46,6 +46,14 @@ import PostOnboarding from "./pages/PostOnboarding";
 import QuickWinVariations from "./pages/QuickWinVariations";
 import ResetCourseVariation from "./pages/ResetCourseVariation";
 import WindowBlueprintVariations from "./pages/WindowBlueprintVariations";
+import SoilFingerTestVariation from "./pages/SoilFingerTestVariation";
+import PlantERVariations from "./pages/PlantERVariations";
+import HabitStackingVariations from "./pages/HabitStackingVariations";
+import PlantClusterVariations from "./pages/PlantClusterVariation";
+import ChunkyAroidMixVariations from "./pages/ChunkyAroidMixVariations";
+import DualPathLandingVariations from "./pages/DualPathLandingVariations";
+import CozyRoomPlannerVariations from "./pages/CozyRoomPlannerVariations";
+import BehavioralChangeWidgets from "./pages/BehavioralChangeWidgets";
 import BottomNav from "./components/BottomNav";
 import CareLayout from "./components/CareLayout";
 
@@ -119,6 +127,14 @@ function AppRoutes() {
         <Route path="/quick-wins" element={<QuickWinVariations />} />
         <Route path="/reset-course" element={<ResetCourseVariation />} />
         <Route path="/window-blueprint" element={<WindowBlueprintVariations />} />
+        <Route path="/soil-finger-test" element={<SoilFingerTestVariation />} />
+        <Route path="/plant-er" element={<PlantERVariations />} />
+        <Route path="/habit-stacking" element={<HabitStackingVariations />} />
+        <Route path="/plant-cluster" element={<PlantClusterVariations />} />
+        <Route path="/chunky-aroid-mix" element={<ChunkyAroidMixVariations />} />
+        <Route path="/dual-path-landing" element={<DualPathLandingVariations />} />
+        <Route path="/cozy-room-planner" element={<CozyRoomPlannerVariations />} />
+        <Route path="/behavioral-change-widgets" element={<BehavioralChangeWidgets />} />
         <Route path="/help" element={
           <ProtectedRoute>
             <HelpPage />
