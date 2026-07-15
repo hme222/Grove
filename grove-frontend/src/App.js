@@ -42,6 +42,10 @@ import SwapChatPage from "./pages/SwapChatPage";
 import WishlistPage from "./pages/WishlistPage";
 import NotificationPreferencesPage from "./pages/NotificationPreferencesPage";
 import LandingVariations from "./pages/LandingVariations";
+import PostOnboarding from "./pages/PostOnboarding";
+import QuickWinVariations from "./pages/QuickWinVariations";
+import ResetCourseVariation from "./pages/ResetCourseVariation";
+import WindowBlueprintVariations from "./pages/WindowBlueprintVariations";
 import BottomNav from "./components/BottomNav";
 import CareLayout from "./components/CareLayout";
 
@@ -111,6 +115,10 @@ function AppRoutes() {
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
         <Route path="/landing" element={<LandingVariations />} />
+        <Route path="/post-onboarding" element={<PostOnboarding />} />
+        <Route path="/quick-wins" element={<QuickWinVariations />} />
+        <Route path="/reset-course" element={<ResetCourseVariation />} />
+        <Route path="/window-blueprint" element={<WindowBlueprintVariations />} />
         <Route path="/help" element={
           <ProtectedRoute>
             <HelpPage />
