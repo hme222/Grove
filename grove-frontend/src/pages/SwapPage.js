@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
-import { getFileUrl } from '../lib/api';
+import { getFileUrl, swapsAPI } from '../lib/api';
 import axios from 'axios';
-import { Leaf, Heart, X, Sparkles, ChevronLeft } from 'lucide-react';
+import { Leaf, Heart, X, Sparkles, ChevronLeft, MessageCircle, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import VerifiedProBadge from '../components/VerifiedProBadge';
 
@@ -89,13 +89,29 @@ export default function SwapPage() {
     fetchDeck();
   }, []);
 
-  const handleChoice = (direction) => {
+  const handleChoice = async (direction) => {
+    const card = cards[index];
+    if (!card) return;
     setLeaving(direction);
     setTimeout(() => {
       setLeaving(null);
       setIndex((i) => i + 1);
-      if (direction === 'right') toast.success('Interest saved');
     }, 260);
+    try {
+      if (direction === 'right') {
+        const res = await swapsAPI.interest(card.plant_id);
+        if (res.data.matched) {
+          toast.success("It's a match! You can now message each other.", { duration: 4000 });
+        } else {
+          toast.success('Interest saved');
+        }
+      } else {
+        await swapsAPI.pass(card.plant_id);
+      }
+    } catch (e) {
+      // Don't block the UI on swipe failures
+      console.error('Swap action failed', e);
+    }
   };
 
   if (loading) {
@@ -133,7 +149,7 @@ export default function SwapPage() {
           </div>
           <h2 className="font-plant text-[#1C2E10] text-2xl mb-2">Swap opens at a 30-day streak</h2>
           <p className="font-ui text-sm text-[#2B2B26] leading-relaxed">
-            You’re on day {currentStreak}. Keep tending daily and swapping opens up with {30 - currentStreak} more days of care.
+            You're on day {currentStreak}. Keep tending daily and swapping opens up with {30 - currentStreak} more days of care.
           </p>
         </div>
       </div>
@@ -151,6 +167,15 @@ export default function SwapPage() {
       <PageHeader
         title="Swap"
         count={Math.max(0, remaining)}
+        rightContent={
+          <button
+            onClick={() => navigate('/swaps/matches')}
+            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#3B6D11] flex items-center gap-1.5"
+          >
+            <Users className="h-3.5 w-3.5" />
+            Matches
+          </button>
+        }
       />
 
       <div className="max-w-[500px] mx-auto px-4 py-4">
@@ -198,8 +223,15 @@ export default function SwapPage() {
             <div className="w-16 h-16 mx-auto rounded-full bg-[#EAF3DE] border-[0.5px] border-[#D3C9B8] flex items-center justify-center mb-4">
               <Sparkles className="h-7 w-7 text-[#3B6D11]" />
             </div>
-            <p className="font-plant text-[#1C2E10] text-lg mb-1">You’ve seen the current deck</p>
-            <p className="font-ui text-sm text-[#2B2B26]">Check back soon — new cuttings are always being added.</p>
+            <p className="font-plant text-[#1C2E10] text-lg mb-1">You've seen the current deck</p>
+            <p className="font-ui text-sm text-[#2B2B26] mb-4">Check back soon — new cuttings are always being added.</p>
+            <button
+              onClick={() => navigate('/swaps/matches')}
+              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016] inline-flex items-center gap-1.5"
+            >
+              <Users className="h-3.5 w-3.5" />
+              View matches
+            </button>
           </div>
         )}
 

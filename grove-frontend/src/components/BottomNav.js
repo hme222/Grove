@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Leaf, Droplets, Users, BookOpen } from 'lucide-react';
 
 const tabs = [
-  { path: '/', match: (p) => p === '/' || p.startsWith('/plants') || p.startsWith('/bouquets') || p === '/add-plant' || p.startsWith('/wishlist'), icon: Leaf, label: 'Collection', testid: 'bottom-tab-collection' },
+  { path: '/', match: (p) => p === '/' || p.startsWith('/plants') || p.startsWith('/bouquets') || p === '/add-plant' || p.startsWith('/wishlist') || p === '/rooms', icon: Leaf, label: 'Collection', testid: 'bottom-tab-collection' },
   { path: '/care/today', match: (p) => p.startsWith('/care'), icon: Droplets, label: 'Care', testid: 'bottom-tab-care' },
   { path: '/feed', match: (p) => p === '/feed' || p.startsWith('/groves') || p.startsWith('/swap'), icon: Users, label: 'Grove', testid: 'bottom-tab-grove' },
   { path: '/greenhouse', match: (p) => p.startsWith('/greenhouse') || p.startsWith('/encyclopedia') || p.startsWith('/species'), icon: BookOpen, label: 'Greenhouse', testid: 'bottom-tab-greenhouse' },

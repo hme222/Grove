@@ -589,7 +589,7 @@ function FinalStep({ allAcksTrue, submitting, onAgree, onDecline, onBack }) {
 
       <blockquote className="rounded-[10px] border-[0.5px] border-[#3B6D11] bg-[#EAF3DE] p-5 my-4">
         <p className="font-plant italic text-[15px] text-[#1C2E10] leading-relaxed">
-          “{FINAL_COPY.oath}”
+          "{FINAL_COPY.oath}"
         </p>
       </blockquote>
 

@@ -146,8 +146,12 @@ export default function EncyclopediaPage() {
                 data-testid="species-card"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0">
-                    <Leaf className="h-6 w-6 text-[#3B6D11]" />
+                  <div className="w-12 h-12 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {(s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image) ? (
+                      <img src={s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <Leaf className="h-6 w-6 text-[#3B6D11]" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-plant text-[#1C2E10] text-base truncate">{s.common_name}</h3>

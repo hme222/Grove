@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { plantAPI, careAPI, bouquetAPI } from '../lib/api';
 import PlantCard from '../components/PlantCard';
 import PlantImage from '../components/PlantImage';
@@ -26,6 +26,8 @@ const BULK_WARN_THRESHOLD = 20;
 
 export default function CollectionPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const roomFilter = searchParams.get('room') || '';
   const [plants, setPlants] = useState([]);
   const [bouquets, setBouquets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ export default function CollectionPage() {
   };
 
   const selectAllPlants = () => {
-    setSelected(new Set(plants.map(p => p.id)));
+    setSelected(new Set(filteredPlants.map(p => p.id)));
   };
 
   const clearBulkSelection = () => {
@@ -115,13 +117,18 @@ export default function CollectionPage() {
   const showSoftWarning = selectedCount > BULK_WARN_THRESHOLD;
   const actionSummary = useMemo(() => Array.from(bulkActions).join(' · '), [bulkActions]);
 
-  const totalCount = plants.length + bouquets.length;
-  const isEmpty = totalCount === 0;
+  const totalCount = roomFilter ? filteredPlants.length : plants.length + bouquets.length;
+  const isEmpty = totalCount === 0 && !loading;
+
+  // Filter plants by room if query param is set
+  const filteredPlants = roomFilter
+    ? plants.filter(p => p.room === roomFilter)
+    : plants;
 
   // Combined list, plants then bouquets, each tagged with type for rendering
   const combined = [
-    ...plants.map(p => ({ ...p, _type: 'plant' })),
-    ...bouquets.map(b => ({ ...b, _type: 'bouquet' })),
+    ...filteredPlants.map(p => ({ ...p, _type: 'plant' })),
+    ...(roomFilter ? [] : bouquets.map(b => ({ ...b, _type: 'bouquet' }))),
   ];
 
   return (
@@ -157,9 +164,32 @@ export default function CollectionPage() {
       />
 
       <div className="max-w-[1100px] mx-auto px-4 py-4">
+        {roomFilter && (
+          <div className="flex items-center justify-between mb-3 px-1">
+            <span className="font-plant text-sm text-[#1C2E10]">
+              Room: {roomFilter}
+            </span>
+            <button
+              onClick={() => setSearchParams({})}
+              className="font-plant uppercase tracking-[0.08em] text-[10px] text-[#3B6D11] hover:text-[#1C2E10]"
+            >
+              Show all
+            </button>
+          </div>
+        )}
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : isEmpty && roomFilter ? (
+          <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] p-6 text-center">
+            <p className="text-sm text-[#2B2B26]">No plants in "{roomFilter}"</p>
+            <button
+              onClick={() => setSearchParams({})}
+              className="mt-2 font-plant uppercase tracking-[0.08em] text-[10px] text-[#3B6D11] hover:text-[#1C2E10]"
+            >
+              Show all plants
+            </button>
           </div>
         ) : isEmpty ? (
           <EmptyState config={EMPTY_STATES.collection_zero_plants} />
@@ -181,12 +211,12 @@ export default function CollectionPage() {
       </div>
 
       {/* Select-all helper row — appears in selection mode before any selection */}
-      {selectionMode && plants.length > 0 && (
+      {selectionMode && filteredPlants.length > 0 && (
         <div className="max-w-[1100px] mx-auto px-4 -mt-2 mb-1 flex items-center justify-between" data-testid="bulk-helper-row">
           <span className="text-[11px] font-ui text-[#2B2B26] opacity-70">
             {selectedCount === 0
               ? 'Tap plants to select them.'
-              : `${selectedCount} of ${plants.length} selected`}
+              : `${selectedCount} of ${filteredPlants.length} selected`}
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -195,7 +225,7 @@ export default function CollectionPage() {
               data-testid="bulk-select-all"
               className="text-[11px] font-ui text-[#2D5016] underline underline-offset-2 hover:text-[#1C2E10]"
             >
-              Select all ({plants.length})
+              Select all ({filteredPlants.length})
             </button>
             {selectedCount > 0 && (
               <button

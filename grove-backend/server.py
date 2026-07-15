@@ -1308,11 +1308,14 @@ async def get_swap_deck(current_user: dict = Depends(get_current_user), limit: i
             "current_streak": current_streak,
             "cards": []
         }
-    # Pull plants from OTHER users, with basic info. Limit + latest-first.
-    cursor = db.plants.find(
-        {"user_id": {"$ne": current_user['user_id']}, "is_archived": {"$ne": True}},
-        {"_id": 0}
-    ).sort("created_at", -1).limit(limit)
+    # Exclude plants the user already swiped on
+    passed_ids = [p['plant_id'] async for p in db.swap_passes.find({"user_id": current_user['user_id']}, {"plant_id": 1})]
+    interested_ids = [i['plant_id'] async for i in db.swap_interests.find({"user_id": current_user['user_id']}, {"plant_id": 1})]
+    exclude_ids = set(passed_ids + interested_ids)
+    query = {"user_id": {"$ne": current_user['user_id']}, "is_archived": {"$ne": True}}
+    if exclude_ids:
+        query["id"] = {"$nin": list(exclude_ids)}
+    cursor = db.plants.find(query, {"_id": 0}).sort("created_at", -1).limit(limit)
     raw = await cursor.to_list(limit)
     cards = []
     for p in raw:
@@ -2191,9 +2194,44 @@ def _safe_box(box: dict) -> Optional[dict]:
 
 
 @api_router.post("/plants/scan-room")
-async def scan_room_removed(current_user: dict = Depends(get_current_user)):
-    # Phase 14 Part 8.2 — room-photo identification removed entirely.
-    raise HTTPException(status_code=410, detail="Room scan has been removed. Add plants one at a time.")
+async def scan_room(input: IdentifyPlantInput, current_user: dict = Depends(get_current_user)):
+    """Scan a room photo and identify every visible plant using Claude vision."""
+    img_b64 = await _resolve_image_b64(input)
+    fallback = {"plantsFound": 0, "roomDescription": "", "plants": []}
+    try:
+        response = await call_claude_vision(ROOM_SCAN_SYSTEM, ROOM_SCAN_PROMPT, img_b64)
+        parsed = parse_json_response(response)
+    except Exception:
+        logger.exception("scan_room Claude error")
+        return {**fallback, "error": "scan_failed", "message": "Room scan unavailable — try adding plants individually."}
+
+    plants_raw = parsed.get('plants') or []
+    plants_out = []
+    for p in plants_raw:
+        if not isinstance(p, dict):
+            continue
+        confidence = max(0.0, min(1.0, float(p.get('confidence') or 0.0)))
+        health_score = max(0, min(100, int(p.get('healthScore') or 80)))
+        box = _safe_box(p.get('boundingBox'))
+        plants_out.append({
+            "id": p.get('id', f"plant_{len(plants_out) + 1}"),
+            "commonName": (p.get('commonName') or 'Unknown plant').strip(),
+            "latinName": (p.get('latinName') or '').strip(),
+            "confidence": confidence,
+            "nicknameSuggestion": (p.get('nicknameSuggestion') or '').strip()[:32],
+            "wateringFrequencyDays": int(p.get('wateringFrequencyDays') or 7),
+            "healthScore": health_score,
+            "healthSummary": (p.get('healthSummary') or '').strip(),
+            "growMedium": p.get('growMedium') if p.get('growMedium') in ['soil', 'leca', 'water', 'unknown'] else 'unknown',
+            "boundingBox": box,
+            "notes": (p.get('notes') or '').strip()[:200],
+        })
+
+    return {
+        "plantsFound": len(plants_out),
+        "roomDescription": (parsed.get('roomDescription') or '').strip(),
+        "plants": plants_out,
+    }
 
 
 class BatchPlantItem(BaseModel):
@@ -4693,6 +4731,299 @@ def _swap_eligibility(user: dict) -> dict:
 async def get_swap_eligibility(current_user: dict = Depends(get_current_user)):
     user = await db.users.find_one({"id": current_user['user_id']})
     return _swap_eligibility(user)
+
+
+# ============ SWAP MATCHING ============
+
+class SwapInterestInput(BaseModel):
+    plant_id: str
+    owner_id: Optional[str] = None
+
+
+@api_router.post("/swaps/interest")
+async def express_swap_interest(input: SwapInterestInput, current_user: dict = Depends(get_current_user)):
+    """Swipe right — express interest in another user's plant."""
+    user_id = current_user['user_id']
+    # Verify the plant exists and belongs to someone else
+    plant = await db.plants.find_one({"id": input.plant_id, "is_archived": {"$ne": True}})
+    if not plant:
+        raise HTTPException(status_code=404, detail="Plant not found")
+    if plant['user_id'] == user_id:
+        raise HTTPException(status_code=400, detail="Cannot express interest in your own plant")
+    owner_id = plant['user_id']
+    # Prevent duplicate interest
+    existing = await db.swap_interests.find_one({
+        "user_id": user_id, "plant_id": input.plant_id
+    })
+    if existing:
+        return {"already_interested": True, "interest_id": existing['id']}
+    interest_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    await db.swap_interests.insert_one({
+        "id": interest_id,
+        "user_id": user_id,
+        "plant_id": input.plant_id,
+        "owner_id": owner_id,
+        "status": "pending",  # pending | matched | declined | expired
+        "created_at": now,
+    })
+    # Check for mutual interest — does the owner want any of our plants?
+    mutual = await db.swap_interests.find_one({
+        "user_id": owner_id,
+        "owner_id": user_id,
+        "status": "pending",
+    })
+    if mutual:
+        # Create a match
+        match_id = str(uuid.uuid4())
+        await db.swaps.insert_one({
+            "id": match_id,
+            "user_a": user_id,
+            "user_b": owner_id,
+            "interest_a": interest_id,
+            "interest_b": mutual['id'],
+            "plant_a": mutual.get('plant_id'),  # plant from user_a that owner wants
+            "plant_b": input.plant_id,           # plant from owner that user_a wants
+            "status": "matched",  # matched | messaging | confirmed | completed | cancelled
+            "created_at": now,
+            "updated_at": now,
+        })
+        # Update both interests to matched
+        await db.swap_interests.update_many(
+            {"id": {"$in": [interest_id, mutual['id']]}},
+            {"$set": {"status": "matched"}}
+        )
+        # Notify both users
+        user_doc = await db.users.find_one({"id": user_id})
+        owner_doc = await db.users.find_one({"id": owner_id})
+        await create_notification(
+            user_id=owner_id, ntype="swap_match",
+            title="You have a swap match!",
+            body=f"@{(user_doc or {}).get('username', 'someone')} is interested in swapping. Check your matches.",
+            entity_type="swap", entity_id=match_id,
+        )
+        await create_notification(
+            user_id=user_id, ntype="swap_match",
+            title="You have a swap match!",
+            body=f"@{(owner_doc or {}).get('username', 'someone')} is also interested. You can now message each other.",
+            entity_type="swap", entity_id=match_id,
+        )
+        return {"interested": True, "matched": True, "match_id": match_id, "interest_id": interest_id}
+
+    return {"interested": True, "matched": False, "interest_id": interest_id}
+
+
+@api_router.post("/swaps/pass")
+async def pass_swap(input: SwapInterestInput, current_user: dict = Depends(get_current_user)):
+    """Swipe left — record a pass so we don't show this card again."""
+    existing = await db.swap_passes.find_one({
+        "user_id": current_user['user_id'], "plant_id": input.plant_id
+    })
+    if existing:
+        return {"already_passed": True}
+    await db.swap_passes.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": current_user['user_id'],
+        "plant_id": input.plant_id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    })
+    return {"passed": True}
+
+
+@api_router.get("/swaps/matches")
+async def get_swap_matches(current_user: dict = Depends(get_current_user)):
+    """Get all active swap matches for the current user."""
+    user_id = current_user['user_id']
+    matches = await db.swaps.find({
+        "$or": [{"user_a": user_id}, {"user_b": user_id}],
+        "status": {"$in": ["matched", "messaging", "confirmed"]},
+    }).sort("created_at", -1).to_list(50)
+
+    result = []
+    for m in matches:
+        other_id = m['user_b'] if m['user_a'] == user_id else m['user_a']
+        other_user = await db.users.find_one({"id": other_id}, {"_id": 0, "password_hash": 0})
+        # Get the plants involved
+        my_plant_id = m.get('plant_a') if m['user_a'] == user_id else m.get('plant_b')
+        their_plant_id = m.get('plant_b') if m['user_a'] == user_id else m.get('plant_a')
+        my_plant = await db.plants.find_one({"id": my_plant_id}, {"_id": 0}) if my_plant_id else None
+        their_plant = await db.plants.find_one({"id": their_plant_id}, {"_id": 0}) if their_plant_id else None
+        # Unread message count
+        unread = await db.swap_messages.count_documents({
+            "swap_id": m['id'], "sender_id": other_id, "is_read": False,
+        })
+        result.append({
+            "match": serialize_doc(m),
+            "other_user": serialize_doc(other_user) if other_user else None,
+            "my_plant": serialize_doc(my_plant) if my_plant else None,
+            "their_plant": serialize_doc(their_plant) if their_plant else None,
+            "unread_messages": unread,
+        })
+    return {"matches": result}
+
+
+@api_router.get("/swaps/{swap_id}")
+async def get_swap_detail(swap_id: str, current_user: dict = Depends(get_current_user)):
+    """Get a single swap with messages."""
+    user_id = current_user['user_id']
+    swap = await db.swaps.find_one({
+        "id": swap_id,
+        "$or": [{"user_a": user_id}, {"user_b": user_id}],
+    })
+    if not swap:
+        raise HTTPException(status_code=404, detail="Swap not found")
+    other_id = swap['user_b'] if swap['user_a'] == user_id else swap['user_a']
+    other_user = await db.users.find_one({"id": other_id}, {"_id": 0, "password_hash": 0})
+    messages = await db.swap_messages.find({"swap_id": swap_id}).sort("created_at", 1).to_list(200)
+    # Mark their messages as read
+    await db.swap_messages.update_many(
+        {"swap_id": swap_id, "sender_id": other_id, "is_read": False},
+        {"$set": {"is_read": True}}
+    )
+    return {
+        "swap": serialize_doc(swap),
+        "other_user": serialize_doc(other_user) if other_user else None,
+        "messages": [serialize_doc(msg) for msg in messages],
+    }
+
+
+class SwapMessageInput(BaseModel):
+    body: str
+
+
+@api_router.post("/swaps/{swap_id}/messages")
+async def send_swap_message(swap_id: str, input: SwapMessageInput, current_user: dict = Depends(get_current_user)):
+    """Send a message within a swap conversation."""
+    user_id = current_user['user_id']
+    swap = await db.swaps.find_one({
+        "id": swap_id,
+        "$or": [{"user_a": user_id}, {"user_b": user_id}],
+        "status": {"$in": ["matched", "messaging", "confirmed"]},
+    })
+    if not swap:
+        raise HTTPException(status_code=404, detail="Swap not found or not active")
+    if not input.body.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    # Upgrade status to messaging on first message
+    if swap['status'] == 'matched':
+        await db.swaps.update_one({"id": swap_id}, {"$set": {"status": "messaging", "updated_at": datetime.now(timezone.utc).isoformat()}})
+    other_id = swap['user_b'] if swap['user_a'] == user_id else swap['user_a']
+    msg_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    msg = {
+        "id": msg_id,
+        "swap_id": swap_id,
+        "sender_id": user_id,
+        "body": input.body.strip()[:1000],
+        "is_read": False,
+        "created_at": now,
+    }
+    await db.swap_messages.insert_one(msg)
+    # Notify recipient
+    user_doc = await db.users.find_one({"id": user_id})
+    await create_notification(
+        user_id=other_id, ntype="swap_message",
+        title="New swap message",
+        body=f"@{(user_doc or {}).get('username', 'someone')}: {input.body.strip()[:80]}",
+        entity_type="swap", entity_id=swap_id,
+        actor_id=user_id,
+    )
+    return serialize_doc(msg)
+
+
+@api_router.post("/swaps/{swap_id}/confirm")
+async def confirm_swap(swap_id: str, current_user: dict = Depends(get_current_user)):
+    """Both users must confirm to complete a swap."""
+    user_id = current_user['user_id']
+    swap = await db.swaps.find_one({
+        "id": swap_id,
+        "$or": [{"user_a": user_id}, {"user_b": user_id}],
+        "status": {"$in": ["matched", "messaging", "confirmed"]},
+    })
+    if not swap:
+        raise HTTPException(status_code=404, detail="Swap not found or not active")
+    confirm_field = "confirmed_a" if swap['user_a'] == user_id else "confirmed_b"
+    other_confirm = "confirmed_b" if swap['user_a'] == user_id else "confirmed_a"
+    now = datetime.now(timezone.utc).isoformat()
+    update = {"$set": {confirm_field: True, "updated_at": now}}
+    # If the other side already confirmed, complete the swap
+    if swap.get(other_confirm):
+        update["$set"]["status"] = "completed"
+        update["$set"]["completed_at"] = now
+    else:
+        update["$set"]["status"] = "confirmed"
+    await db.swaps.update_one({"id": swap_id}, update)
+    # If completed, award badges
+    if swap.get(other_confirm):
+        await check_and_award_badges(swap['user_a'])
+        await check_and_award_badges(swap['user_b'])
+        # Notify both
+        for uid in [swap['user_a'], swap['user_b']]:
+            await create_notification(
+                user_id=uid, ntype="swap_completed",
+                title="Swap completed!",
+                body="Both growers confirmed — your swap is officially done. Happy growing!",
+                entity_type="swap", entity_id=swap_id,
+            )
+        # Update user stats
+        await db.users.update_one({"id": swap['user_a']}, {"$inc": {"swap_count": 1}})
+        await db.users.update_one({"id": swap['user_b']}, {"$inc": {"swap_count": 1}})
+
+    return {"confirmed": True, "completed": bool(swap.get(other_confirm))}
+
+
+@api_router.post("/swaps/{swap_id}/cancel")
+async def cancel_swap(swap_id: str, current_user: dict = Depends(get_current_user)):
+    """Cancel an active swap."""
+    user_id = current_user['user_id']
+    swap = await db.swaps.find_one({
+        "id": swap_id,
+        "$or": [{"user_a": user_id}, {"user_b": user_id}],
+        "status": {"$in": ["matched", "messaging", "confirmed"]},
+    })
+    if not swap:
+        raise HTTPException(status_code=404, detail="Swap not found or already completed")
+    await db.swaps.update_one({"id": swap_id}, {"$set": {
+        "status": "cancelled", "cancelled_by": user_id,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }})
+    other_id = swap['user_b'] if swap['user_a'] == user_id else swap['user_a']
+    user_doc = await db.users.find_one({"id": user_id})
+    await create_notification(
+        user_id=other_id, ntype="swap_cancelled",
+        title="Swap cancelled",
+        body=f"@{(user_doc or {}).get('username', 'someone')} cancelled the swap. No worries — more matches will come.",
+        entity_type="swap", entity_id=swap_id,
+        actor_id=user_id,
+    )
+    return {"cancelled": True}
+
+
+@api_router.get("/swaps/interests/sent")
+async def get_sent_interests(current_user: dict = Depends(get_current_user)):
+    """Get plants the user has expressed interest in (pending only)."""
+    interests = await db.swap_interests.find({
+        "user_id": current_user['user_id'], "status": "pending"
+    }).sort("created_at", -1).to_list(100)
+    return {"interests": [serialize_doc(i) for i in interests]}
+
+
+@api_router.get("/swaps/interests/received")
+async def get_received_interests(current_user: dict = Depends(get_current_user)):
+    """Get pending interests from other users in the current user's plants."""
+    interests = await db.swap_interests.find({
+        "owner_id": current_user['user_id'], "status": "pending"
+    }).sort("created_at", -1).to_list(100)
+    result = []
+    for i in interests:
+        user_doc = await db.users.find_one({"id": i['user_id']}, {"_id": 0, "password_hash": 0})
+        plant_doc = await db.plants.find_one({"id": i['plant_id']}, {"_id": 0})
+        result.append({
+            "interest": serialize_doc(i),
+            "user": serialize_doc(user_doc) if user_doc else None,
+            "plant": serialize_doc(plant_doc) if plant_doc else None,
+        })
+    return {"interests": result}
 
 @api_router.get("/admin/demo/status")
 async def get_demo_status(current_user: dict = Depends(get_current_user)):

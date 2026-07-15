@@ -13,6 +13,9 @@ function iconForType(type) {
     case 'care_due':
     case 'care_overdue': return Sprout;
     case 'swap_match': return Users;
+    case 'swap_message': return MessageCircle;
+    case 'swap_completed': return Heart;
+    case 'swap_cancelled': return Users;
     case 'kudos_received':
     case 'reaction_received': return Heart;
     case 'comment_received': return MessageCircle;
@@ -38,7 +41,11 @@ function relativeTime(iso) {
 
 function routeForNotification(n) {
   const t = n.type;
-  if (t === 'swap_match' || t === 'unlock') return '/swap';
+  if (t === 'swap_match') return n.entity_id ? `/swaps/${n.entity_id}` : '/swaps/matches';
+  if (t === 'swap_message') return n.entity_id ? `/swaps/${n.entity_id}` : '/swaps/matches';
+  if (t === 'swap_completed') return n.entity_id ? `/swaps/${n.entity_id}` : '/swaps/matches';
+  if (t === 'swap_cancelled') return '/swaps/matches';
+  if (t === 'unlock') return '/swap';
   if (t === 'care_due' || t === 'care_overdue') return '/care/today';
   if (t === 'streak_at_risk' || t === 'streak_milestone') return '/care/today';
   if (t === 'goal_completed') return '/badges';

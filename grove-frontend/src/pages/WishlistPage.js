@@ -51,6 +51,12 @@ export default function WishlistPage() {
             <p className="font-ui text-sm text-[#2B2B26]">
               React with <span className="font-plant">Cutting</span> on any post in the Grove to add a plant here.
             </p>
+            <button
+              onClick={() => navigate('/feed')}
+              className="mt-3 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-[#D4537E] text-[#F5F0E8] hover:bg-[#B8406A] transition-colors duration-150"
+            >
+              Browse the feed
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" data-testid="wishlist-grid">

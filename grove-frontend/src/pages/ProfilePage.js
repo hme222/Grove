@@ -294,6 +294,24 @@ export default function ProfilePage() {
             <p className="font-plant text-sm text-[#1C2E10]">Swaps</p>
             <p className="font-ui text-[10px] text-[#5F5E5A] mt-0.5">Trade with verified growers</p>
           </button>
+          <button
+            type="button"
+            onClick={() => navigate('/rooms')}
+            data-testid="profile-link-rooms"
+            className="rounded-[12px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-3 hover:border-[#3B6D11] transition-colors duration-150 text-left"
+          >
+            <p className="font-plant text-sm text-[#1C2E10]">Rooms</p>
+            <p className="font-ui text-[10px] text-[#5F5E5A] mt-0.5">Plants by location</p>
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/swaps/matches')}
+            data-testid="profile-link-swap-matches"
+            className="rounded-[12px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-3 hover:border-[#3B6D11] transition-colors duration-150 text-left"
+          >
+            <p className="font-plant text-sm text-[#1C2E10]">Swap matches</p>
+            <p className="font-ui text-[10px] text-[#5F5E5A] mt-0.5">Messages and active swaps</p>
+          </button>
         </div>
 
         {/* Hardiness zone — Phase 14C */}
@@ -884,7 +902,7 @@ function PactReaderModal({ onClose }) {
 
           <blockquote className="rounded-[10px] border-[0.5px] border-[#3B6D11] bg-[#EAF3DE] p-4">
             <p className="font-plant italic text-[13px] text-[#1C2E10] leading-relaxed">
-              “{FINAL_COPY.oath}”
+              "{FINAL_COPY.oath}"
             </p>
           </blockquote>
         </div>

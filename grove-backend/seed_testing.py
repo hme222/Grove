@@ -13,8 +13,11 @@ import asyncio
 import uuid
 import os
 from datetime import datetime, timezone, timedelta
+from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 from passlib.context import CryptContext
+
+load_dotenv()
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -841,7 +844,7 @@ async def seed_clare(db):
         {"common_name": "Succulent", "room": "studio windowsill", "days": 30, "health": 92},
     ]
     
-    for pdata in plants_data:
+    for pi, pdata in enumerate(plants_data):
         plant_id = str(uuid.uuid4())
         plant = {
             "id": plant_id,
@@ -862,7 +865,7 @@ async def seed_clare(db):
             # so a couple bubble up into the swap deck (top 20 by created_at)
             # and testers can see her Verified Pro checkmark next to the
             # owner badge on at least one swap card.
-            "created_at": days_ago(2 + i),
+            "created_at": days_ago(2 + pi),
             "updated_at": days_ago(2)
         }
         await db.plants.insert_one(plant)
@@ -879,7 +882,7 @@ async def seed_clare(db):
         ("Past Corporate", "corporate", 90, 12, 14, False),
     ]
     
-    for i, (name, occasion, days_ago_val, expected, achieved, active) in enumerate(bouquet_names[:6]):
+    for name, occasion, days_ago_val, expected, achieved, active in bouquet_names[:6]:
         bouquet_id = str(uuid.uuid4())
         bouquet = {
             "id": bouquet_id,

@@ -4,7 +4,7 @@ import { encyclopediaAPI, wantsAPI } from '../lib/api';
 import {
   ChevronLeft, Leaf, Droplets, Sun, AlertTriangle, Sprout, Bug, BookOpen,
   ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Users, Loader2,
-  Bookmark, BookmarkCheck,
+  Bookmark, BookmarkCheck, Camera,
 } from 'lucide-react';
 import SectionTutorial from '../components/SectionTutorial';
 import { toast } from 'sonner';
@@ -176,9 +176,28 @@ export default function SpeciesDetailPage() {
       <div className="max-w-[1100px] mx-auto px-4 pt-6 space-y-4" data-testid="species-detail">
         {/* Header card */}
         <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-5">
+          {/* Botanical illustration hero */}
+          {(species.botanical_illustration || species.bhl_primary_illustration) && (
+            <div className="rounded-[12px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] mb-4">
+              <img
+                src={species.botanical_illustration || species.bhl_primary_illustration}
+                alt={`Botanical illustration of ${species.common_name}`}
+                className="w-full max-h-72 object-contain bg-white"
+                loading="lazy"
+              />
+              <p className="px-3 py-1.5 font-latin italic text-[9px] text-[#888780] bg-[#FDFAF6]">
+                {species.botanical_illustration_title || 'Botanical illustration'} — {species.botanical_illustration_license || 'Public Domain'}
+              </p>
+            </div>
+          )}
+
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0">
-              <Leaf className="h-8 w-8 text-[#3B6D11]" />
+            <div className="w-16 h-16 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {(species.botanical_illustration_thumb || species.bhl_primary_thumbnail || species.wiki_thumbnail || species.wiki_image) ? (
+                <img src={species.botanical_illustration_thumb || species.bhl_primary_thumbnail || species.wiki_thumbnail || species.wiki_image} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <Leaf className="h-8 w-8 text-[#3B6D11]" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="font-plant text-2xl text-[#1C2E10]">{species.common_name}</h2>
@@ -283,6 +302,39 @@ export default function SpeciesDetailPage() {
           )}
         </div>
 
+        {/* Photo gallery — real photographs from Wikipedia / Wikimedia Commons */}
+        {species.wiki_image && (
+          <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-4" data-testid="species-photo-gallery">
+            <div className="flex items-center gap-2 mb-3">
+              <Camera className="h-4 w-4 text-[#5F5E5A]" />
+              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-[#1C2E10]">Photos</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-[8px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-white">
+                <img
+                  src={species.wiki_image}
+                  alt={`Photo of ${species.common_name}`}
+                  className="w-full aspect-[4/3] object-cover"
+                  loading="lazy"
+                />
+              </div>
+              {species.wiki_thumbnail && species.wiki_thumbnail !== species.wiki_image && (
+                <div className="rounded-[8px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-white">
+                  <img
+                    src={species.wiki_thumbnail}
+                    alt={`${species.common_name} thumbnail`}
+                    className="w-full aspect-[4/3] object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+            </div>
+            <p className="font-latin italic text-[9px] text-[#888780] mt-2">
+              Photos from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="underline">Wikimedia Commons</a> — CC / Public Domain
+            </p>
+          </div>
+        )}
+
         {/* Companions — Phase 14B.2 */}
         {Array.isArray(species.companions) && species.companions.length > 0 && (
           <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4" data-testid="species-companions">
@@ -318,6 +370,43 @@ export default function SpeciesDetailPage() {
         />
 
         {/* Citations */}
+        {/* BHL illustration gallery */}
+        {Array.isArray(species.bhl_illustrations) && species.bhl_illustrations.length > 1 && (
+          <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-4" data-testid="species-bhl-gallery">
+            <div className="flex items-center gap-2 mb-3">
+              <BookOpen className="h-4 w-4 text-[#5F5E5A]" />
+              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-[#1C2E10]">Historical illustrations</h3>
+              <span className="font-latin italic text-[10px] text-[#888780]">{species.bhl_illustrations.length} from BHL</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {species.bhl_illustrations.map((ill) => (
+                <a
+                  key={ill.page_id}
+                  href={ill.page_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-[8px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-white hover:border-[#3B6D11] transition-colors duration-150 block"
+                >
+                  <img
+                    src={ill.thumbnail_url}
+                    alt={`${species.common_name} illustration from ${ill.source_title}`}
+                    className="w-full aspect-square object-cover"
+                    loading="lazy"
+                  />
+                  {ill.source_title && (
+                    <p className="px-1.5 py-1 font-latin italic text-[8px] text-[#888780] truncate">
+                      {ill.source_title}{ill.publication_date ? `, ${ill.publication_date}` : ''}
+                    </p>
+                  )}
+                </a>
+              ))}
+            </div>
+            <p className="font-latin italic text-[9px] text-[#888780] mt-2">
+              From the <a href="https://www.biodiversitylibrary.org" target="_blank" rel="noopener noreferrer" className="underline">Biodiversity Heritage Library</a> — public domain botanical archives.
+            </p>
+          </div>
+        )}
+
         {Array.isArray(species.citations) && species.citations.length > 0 && (
           <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-4" data-testid="species-citations">
             <div className="flex items-center gap-2 mb-2">

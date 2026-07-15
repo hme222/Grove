@@ -229,7 +229,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         {identified?.latinName && <p className="font-latin text-[11px] text-[#639922]">{identified.latinName}</p>}
         <p className={`font-latin text-[10px] mt-0.5 ${lowConf ? 'text-[#BA7517]' : 'text-[#888780]'}`}>Confidence: {confidencePct}%</p>
         {lowConf && identified?.message && (
-          <p className="italic font-plant text-xs text-[#5F5E5A] mt-2">“{identified.message}”</p>
+          <p className="italic font-plant text-xs text-[#5F5E5A] mt-2">"{identified.message}"</p>
         )}
       </div>
       <div className="h-px bg-[#D3C9B8] my-3" />
@@ -289,7 +289,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           <span className="font-plant text-[#1C2E10] text-sm">{identified?.healthScore || 80}</span>
         </div>
         {identified?.healthSummary && (
-          <p className="italic font-plant text-xs text-[#5F5E5A] mt-1.5 leading-snug">“{identified.healthSummary}”</p>
+          <p className="italic font-plant text-xs text-[#5F5E5A] mt-1.5 leading-snug">"{identified.healthSummary}"</p>
         )}
         <p className="font-plant italic text-[11px] text-[#888780] mt-1">
           Based on your photo today. This score improves as Grove learns your plant's real patterns over time.

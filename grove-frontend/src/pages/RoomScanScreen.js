@@ -344,7 +344,7 @@ export default function RoomScanScreen() {
                     <span className={lowConf ? 'text-[#BA7517]' : ''}>{Math.round((p.confidence || 0) * 100)}% confident</span>
                   </p>
                   {lowConf && p.notes && (
-                    <p className="italic font-plant text-[11px] text-[#5F5E5A] mt-1 line-clamp-2">“{p.notes}”</p>
+                    <p className="italic font-plant text-[11px] text-[#5F5E5A] mt-1 line-clamp-2">"{p.notes}"</p>
                   )}
                   <div className="flex items-center gap-2 mt-1.5">
                     <div className="flex-1 h-1.5 bg-[#EDE5D8] rounded-full overflow-hidden">

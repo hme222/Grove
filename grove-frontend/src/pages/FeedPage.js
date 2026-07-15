@@ -369,7 +369,7 @@ export default function FeedPage() {
                           Conversation · {post.comment_count || 0}
                         </p>
                         <p className="font-latin text-[9px] text-[#2B2B26] truncate max-w-[60%]">
-                          on {post.display_name || post.username}’s post
+                          on {post.display_name || post.username}'s post
                         </p>
                       </div>
 

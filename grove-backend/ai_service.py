@@ -1,14 +1,15 @@
 import os
-import uuid
 import json
 import re
 import logging
 from typing import Optional
+import anthropic
 
 logger = logging.getLogger(__name__)
 
+client = anthropic.AsyncAnthropic(api_key=os.environ.get('ANTHROPIC_API_KEY'))
+
 async def call_claude(system_message: str, prompt: str, model: str = "claude-sonnet-4-6") -> str:
-    # Enforce American English across all Grove AI outputs.
     american_suffix = (
         " Write in American English. Use American spellings (color not colour, "
         "favorite not favourite, organize not organise, center not centre, "
@@ -18,19 +19,13 @@ async def call_claude(system_message: str, prompt: str, model: str = "claude-son
     if "American English" not in system_message:
         system_message = system_message.rstrip() + american_suffix
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        api_key = os.environ.get('EMERGENT_LLM_KEY')
-        if not api_key:
-            raise Exception("EMERGENT_LLM_KEY not set")
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"grove-{uuid.uuid4()}",
-            system_message=system_message
+        response = await client.messages.create(
+            model=model,
+            max_tokens=1024,
+            system=system_message,
+            messages=[{"role": "user", "content": prompt}]
         )
-        chat.with_model("anthropic", model)
-        user_message = UserMessage(text=prompt)
-        response = await chat.send_message(user_message)
-        return response
+        return response.content[0].text
     except Exception as e:
         logger.error(f"Claude API error: {e}")
         raise
@@ -45,20 +40,29 @@ async def call_claude_vision(system_message: str, prompt: str, image_base64: str
     if "American English" not in system_message:
         system_message = system_message.rstrip() + american_suffix
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
-        api_key = os.environ.get('EMERGENT_LLM_KEY')
-        if not api_key:
-            raise Exception("EMERGENT_LLM_KEY not set")
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"grove-vision-{uuid.uuid4()}",
-            system_message=system_message
+        response = await client.messages.create(
+            model=model,
+            max_tokens=1024,
+            system=system_message,
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": "image/jpeg",
+                            "data": image_base64
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "text": prompt
+                    }
+                ]
+            }]
         )
-        chat.with_model("anthropic", model)
-        image_content = ImageContent(image_base64=image_base64)
-        user_message = UserMessage(text=prompt, file_contents=[image_content])
-        response = await chat.send_message(user_message)
-        return response
+        return response.content[0].text
     except Exception as e:
         logger.error(f"Claude Vision API error: {e}")
         raise

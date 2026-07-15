@@ -270,6 +270,15 @@ export const zoneAPI = {
 
 export const swapsAPI = {
   eligibility: () => api.get('/swaps/eligibility'),
+  interest: (plant_id) => api.post('/swaps/interest', { plant_id }),
+  pass: (plant_id) => api.post('/swaps/pass', { plant_id }),
+  getMatches: () => api.get('/swaps/matches'),
+  getSwap: (swapId) => api.get(`/swaps/${swapId}`),
+  sendMessage: (swapId, body) => api.post(`/swaps/${swapId}/messages`, { body }),
+  confirm: (swapId) => api.post(`/swaps/${swapId}/confirm`),
+  cancel: (swapId) => api.post(`/swaps/${swapId}/cancel`),
+  sentInterests: () => api.get('/swaps/interests/sent'),
+  receivedInterests: () => api.get('/swaps/interests/received'),
 };
 
 // Phase 14C.3.a — Verification pact flow

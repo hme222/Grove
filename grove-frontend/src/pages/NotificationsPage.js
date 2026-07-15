@@ -59,7 +59,9 @@ export default function NotificationsPage() {
     }
     // Navigate based on entity type
     if (notification.entity_type === 'goal' && notification.entity_id) {
-      navigate('/goals');
+      navigate('/care/today');
+    } else if (notification.entity_type === 'swap' && notification.entity_id) {
+      navigate(`/swaps/${notification.entity_id}`);
     } else if (notification.entity_type === 'plant' && notification.entity_id) {
       navigate(`/plants/${notification.entity_id}`);
     }

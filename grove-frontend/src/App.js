@@ -37,8 +37,11 @@ import VerifyPage from "./pages/VerifyPage";
 import BadgesPage from "./pages/BadgesPage";
 import AdminDemoPage from "./pages/AdminDemoPage";
 import SwapPage from "./pages/SwapPage";
+import SwapMatchesPage from "./pages/SwapMatchesPage";
+import SwapChatPage from "./pages/SwapChatPage";
 import WishlistPage from "./pages/WishlistPage";
 import NotificationPreferencesPage from "./pages/NotificationPreferencesPage";
+import LandingVariations from "./pages/LandingVariations";
 import BottomNav from "./components/BottomNav";
 import CareLayout from "./components/CareLayout";
 
@@ -107,6 +110,7 @@ function AppRoutes() {
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
+        <Route path="/landing" element={<LandingVariations />} />
         <Route path="/help" element={
           <ProtectedRoute>
             <HelpPage />
@@ -243,6 +247,16 @@ function AppRoutes() {
         <Route path="/swap" element={
           <ProtectedRoute>
             <AppLayout><SwapPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/swaps/matches" element={
+          <ProtectedRoute>
+            <AppLayout><SwapMatchesPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/swaps/:swapId" element={
+          <ProtectedRoute>
+            <AppLayout><SwapChatPage /></AppLayout>
           </ProtectedRoute>
         } />
         <Route path="/wishlist" element={
