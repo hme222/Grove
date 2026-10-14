@@ -2,9 +2,13 @@
 
 Date: 2026-10-13
 Revised: 2026-10-14 (v5)
-Status: Draft for review. Not approved for planning.
+Status: Approved by the founder for planning on 2026-10-14. Open questions in
+section 12 remain and are carried into the plan.
 
 ## Revision notes
+
+**v5.2 (2026-10-14)**: Pip's note slot shows a thumbnail of the nook and opens
+it. The founder approved this spec for planning.
 
 **v5.1 (2026-10-14)** clarifies and extends v5:
 
@@ -351,7 +355,10 @@ Draft mapping, for content review:
 - A **home-screen widget** is a later phase. It needs a native build, and v1 is
   web.
 
-There is no separate nook tile. The Pip's note slot is the entry point.
+There is no separate nook tile. The Pip's note slot is the entry point. It
+shows a small thumbnail of the nook next to the daily note, and tapping it
+opens the nook. The thumbnail is a still image of the current nook state, and
+it shows Pip's current form.
 
 ## 5. Pip's nook and slots
 
@@ -515,7 +522,5 @@ Verified by reading `grove-backend` and `grove-frontend`.
 - Whether "when they come back for lessons" means the next session, or
   whenever the user next opens the lessons list. This spec assumes the lesson
   is queued and never forced in the same session.
-- Whether Pip's note slot should also show a small picture of the nook, so one
-  card is both the daily note and the way into the nook.
 - Whether to cut the catalog or the species templates for v1.
 - Timing and tooling for the home-screen widget.
