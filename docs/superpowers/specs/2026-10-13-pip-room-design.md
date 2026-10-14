@@ -299,7 +299,11 @@ Draft mapping, for content review:
 
 - The quiz routes straight into the primary track's lesson, which serves as the
   first-week onboarding.
-- Each track lesson ends on a **"your turn" action that logs something real**:
+- The lesson mockups already end on a "your turn" card. The features behind
+  some of them (habit reminders, a triage guide, lighting zones) were not
+  verified to exist, so in v1 the closing card records that the user did the
+  step. Rebirth and every Soil Finger-Test also log a soil test. The intended
+  actions are:
   - Rebirth: the first soil test.
   - Rescue: assessing the plant.
   - Steady Sprout: choosing an anchor habit.
@@ -315,9 +319,13 @@ Draft mapping, for content review:
   next lesson and offered when the user comes back for lessons, through the
   lessons list and Pip's note slot. It is never forced in the same session.
   Its last card, "Log my first soil test," creates the first soil test event.
-- **Lesson 3 onward** is Quick Wins and then the track's remaining content.
+- **Lesson 3 onward** is the track's remaining content. Quick Wins is a
+  five-step dashboard concept in the mockups, and its steps 3 ("Meet 3
+  forgiving plants") and 5 ("Celebrate the first new leaf") have no lesson
+  content yet, so Quick Wins waits for content.
 - **Rebirth exception.** The Soil Finger-Test is already the Rebirth track's
-  lesson 1, so Rebirth users get it first, and their lesson 2 is Quick Wins.
+  lesson 1, so Rebirth users get it first. Their lesson 2 is the Plant Parent
+  Reset's Watering 101, proposed here and open for review.
 - **No-plant users.** The Soil Finger-Test's last card asks the user to go to
   their nearest plant. For a user with no real plant, that card changes to
   "Save this for your first plant," no soil test is logged, and the lesson is
@@ -332,7 +340,7 @@ Draft mapping, for content review:
 5. When the user comes back for lessons, lesson 2 (the Soil Finger-Test) is
    next. It ends in the first soil test. Pip hosts it if the nook was
    accepted, and it appears without Pip if not.
-6. Pip hosts Quick Wins and the remaining lessons if the nook was accepted.
+6. Pip hosts the remaining lessons if the nook was accepted.
 7. The tutorial ends when the lessons are finished or at day 7. Pip stops
    prompting. Pip then moves to the shelf once it unlocks at level 2.
 
@@ -477,8 +485,8 @@ Verified by reading `grove-backend` and `grove-frontend`.
 | Master lessons and Quick Wins (static pages, not wired) | `pages/SoilFingerTestVariation.js`, `QuickWinVariations.js`, `ResetCourseVariation.js`, `PlantERVariations.js`, `HabitStackingVariations.js`, `WindowBlueprintVariations.js` | **Reuse content as written.** They must become real lesson screens that save progress and end on a real action. |
 | One-time tutorials in `tutorials_seen[]`; badges already read it (`light_reader`) | `components/SectionTutorial.js`, `grove-backend/server.py` | **Reuse** for opt-in, quiz, and lesson completion. |
 | First-session banner and first-care celebration | `FirstSessionBanner.js`, `FirstCareCelebration.js`, server flags | **Reuse.** The nook offer follows the celebration. |
-| Daily trivia and daily missions, including `water_streak` | `components/DailyTriviaCard.js`, `DailyMissionCard.js`, `grove-backend/missions.py` | **Reuse** trivia in Pip's note. **Conflict:** "Water at least 1 plant today" works against the Soil Finger-Test lesson. Replace it with a soil-check mission. |
-| Bulk "water round" | `pages/CarePage.js` | **Conflict.** It waters every plant without a check. Gate it behind a check or a due state. |
+| Daily trivia and daily missions, including `water_streak` | `components/DailyTriviaCard.js`, `DailyMissionCard.js`, `grove-backend/missions.py` | **Reuse** trivia in Pip's note. **Copy conflict:** the `water_streak` mission is titled "Water one plant," but any care log completes it, so a soil test already counts. Reword it to "Check one plant" and keep its type id so existing data still works. |
+| Bulk "water round" | `pages/CarePage.js` | **Tension.** It waters every plant that is due by schedule, with no soil check. Consider asking for a soil check first. |
 | Daily streak and streak badges | `update_streak`, `server.py`, `BadgesPage.js` | **Tension.** The nook uses a weekly rhythm. The app's daily streak is unchanged here. |
 | Badges and "working toward" | `badge_catalog.py`, `badge_progress.py`, `WorkingTowardSection.js` | **Reuse** as the surface for nook levels. |
 | Notification preferences | `pages/NotificationPreferencesPage.js` | **Reuse** for the weekly nudge. |
@@ -510,13 +518,15 @@ Verified by reading `grove-backend` and `grove-frontend`.
 - Where the soil test outcome, decision, and note are stored. The care log has
   no such type today.
 - How "overwatering report" is defined and captured.
-- Whether XP from missions rolls up into any level or total. This was not
-  confirmed.
+- Mission XP is stored per mission (`xp_awarded` in `user_missions`) and is not
+  summed anywhere, so the nook sums it itself.
 - Whether the reference-user pacing holds against real activity logs.
 - Whether the app's daily streak and streak badges stay, change, or move to a
   weekly rhythm. Who owns that decision?
-- Who owns the decision to replace the `water_streak` mission and gate the
-  bulk water round.
+- Who owns the decision to reword the `water_streak` mission and to ask for a
+  soil check before the bulk water round. Grove also has an existing
+  `push_streak_at_risk` notification preference, which sits uneasily with the
+  no-streak-loss-warning guardrail.
 - The content of the Chunky Aroid Mix lesson, and the tracks of the Chunky
   Aroid Mix and Plant Cluster lessons.
 - Whether "when they come back for lessons" means the next session, or
