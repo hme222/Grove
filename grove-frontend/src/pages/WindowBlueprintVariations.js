@@ -35,7 +35,7 @@ import { Progress } from "@/components/ui/progress";
 /* ================================================================
    Shared lesson data
    ================================================================ */
-const CARDS = [
+export const CARDS = [
   {
     n: 1,
     header: "Card 1 of 5 · The Hook",
