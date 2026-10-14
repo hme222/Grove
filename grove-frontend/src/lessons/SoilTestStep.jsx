@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { plantAPI, careAPI } from '../lib/api';
 import { NOTE_CHIPS } from './lessonMeta';
@@ -32,6 +32,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(null);
+  const submitting = useRef(false);
 
   useEffect(() => {
     if (!hasPlant) return undefined;
@@ -101,6 +102,8 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
     setChips((prev) => (prev.includes(chip) ? prev.filter((c) => c !== chip) : [...prev, chip]));
 
   const submit = async () => {
+    // A double tap must not log two soil tests.
+    if (submitting.current) return;
     if (!plantId) {
       setError('Pick the plant you tested.');
       return;
@@ -110,6 +113,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       return;
     }
     setError('');
+    submitting.current = true;
     setSaving(true);
     try {
       const res = await careAPI.createLog(plantId, {
@@ -122,6 +126,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
     } catch (_e) {
       setError('Could not save your soil test. Try again.');
     } finally {
+      submitting.current = false;
       setSaving(false);
     }
   };

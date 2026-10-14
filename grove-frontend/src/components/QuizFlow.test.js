@@ -113,3 +113,38 @@ test('the error clears on the next successful try', async () => {
   expect(q('quiz-error')).toBeNull();
   expect(onDone).toHaveBeenCalled();
 });
+
+const doubleClick = (el) =>
+  act(async () => {
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+
+test('a double tap on start sends the quiz once and finishes once', async () => {
+  const onDone = await mount();
+  await click(q('quiz-option-forget'));
+  await doubleClick(q('quiz-start'));
+  await flush();
+  expect(lessonAPI.submitQuiz).toHaveBeenCalledTimes(1);
+  expect(onDone).toHaveBeenCalledTimes(1);
+});
+
+test('a double tap on skip sends once', async () => {
+  const onDone = await mount();
+  await doubleClick(q('quiz-skip'));
+  await flush();
+  expect(lessonAPI.submitQuiz).toHaveBeenCalledTimes(1);
+  expect(onDone).toHaveBeenCalledTimes(1);
+});
+
+test('is a labelled modal dialog that takes focus and sits above the bottom nav', async () => {
+  await mount();
+  const dialog = q('quiz-flow');
+  const heading = container.querySelector('h1');
+  expect(dialog.getAttribute('role')).toBe('dialog');
+  expect(dialog.getAttribute('aria-modal')).toBe('true');
+  expect(heading.id).not.toBe('');
+  expect(dialog.getAttribute('aria-labelledby')).toBe(heading.id);
+  expect(document.activeElement).toBe(heading);
+  expect(dialog.className).toContain('z-[80]');
+});

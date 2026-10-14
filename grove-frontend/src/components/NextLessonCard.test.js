@@ -48,33 +48,43 @@ test('shows the next lesson and opens it', async () => {
   expect(mockNavigate).toHaveBeenCalledWith('/lessons/plant-er');
 });
 
-test('long-time users with no saved track see nothing and cause no request', async () => {
+test('the next lesson card also links to all lessons', async () => {
+  await mount();
+  await click(q('next-lesson-all'));
+  expect(mockNavigate).toHaveBeenCalledWith('/lessons');
+  expect(q('lessons-link')).toBeNull();
+});
+
+test('long-time users with no saved track get a quiet link to the lessons and no request', async () => {
   mockUser = { primary_track: undefined };
   await mount();
   expect(q('next-lesson-card')).toBeNull();
   expect(lessonAPI.queue).not.toHaveBeenCalled();
+  await click(q('lessons-link'));
+  expect(mockNavigate).toHaveBeenCalledWith('/lessons');
 });
 
 test('no user shows nothing', async () => {
   mockUser = null;
   await mount();
   expect(q('next-lesson-card')).toBeNull();
+  expect(q('lessons-link')).toBeNull();
 });
 
-test('an empty queue shows nothing', async () => {
-  lessonAPI.queue.mockResolvedValue({ data: { queue: [] } });
+test('nothing flashes while the queue is loading', async () => {
+  lessonAPI.queue.mockReturnValue(new Promise(() => {}));
   await mount();
   expect(q('next-lesson-card')).toBeNull();
+  expect(q('lessons-link')).toBeNull();
 });
 
-test('a lesson id the app does not know shows nothing', async () => {
-  lessonAPI.queue.mockResolvedValue({ data: { queue: ['made-up'] } });
+test.each([
+  ['an empty queue', () => lessonAPI.queue.mockResolvedValue({ data: { queue: [] } })],
+  ['a lesson id the app does not know', () => lessonAPI.queue.mockResolvedValue({ data: { queue: ['made-up'] } })],
+  ['a failed request', () => lessonAPI.queue.mockRejectedValue(new Error('network'))],
+])('%s falls back to the quiet lessons link', async (_name, arrange) => {
+  arrange();
   await mount();
   expect(q('next-lesson-card')).toBeNull();
-});
-
-test('a failed request shows nothing and does not throw', async () => {
-  lessonAPI.queue.mockRejectedValue(new Error('network'));
-  await mount();
-  expect(q('next-lesson-card')).toBeNull();
+  expect(q('lessons-link')).not.toBeNull();
 });

@@ -162,6 +162,32 @@ describe('SoilTestStep with plants', () => {
     expect(q('soil-step-saved')).toBeNull();
   });
 
+  test('a double tap on log sends one soil test', async () => {
+    careAPI.createLog.mockResolvedValue({ data: { _meta: {} } });
+    await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
+    await click(q('soil-outcome-dry'));
+    await act(async () => {
+      const button = q('soil-step-submit');
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+    await flush();
+    expect(careAPI.createLog).toHaveBeenCalledTimes(1);
+  });
+
+  test('after a failed save the user can try again', async () => {
+    careAPI.createLog.mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce({ data: { _meta: {} } });
+    await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
+    await click(q('soil-outcome-dry'));
+    await click(q('soil-step-submit'));
+    await flush();
+    expect(q('soil-step-error')).not.toBeNull();
+    await click(q('soil-step-submit'));
+    await flush();
+    expect(careAPI.createLog).toHaveBeenCalledTimes(2);
+    expect(q('soil-step-saved')).not.toBeNull();
+  });
+
   test('a failed plant load shows an error', async () => {
     plantAPI.getAll.mockRejectedValue(new Error('network'));
     await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
