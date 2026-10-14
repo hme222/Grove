@@ -770,6 +770,74 @@ async def reset_tutorial(body: TutorialSeenBody, current_user: dict = Depends(ge
     )
     return {"replayed": body.tutorial_id}
 
+# ============ LESSONS AND QUIZ ============
+
+class QuizBody(BaseModel):
+    answers: List[str] = []
+
+
+async def _user_has_plant(user_id: str) -> bool:
+    count = await db.plants.count_documents({"user_id": user_id, "is_archived": {"$ne": True}})
+    return count > 0
+
+
+async def _lesson_queue_for(user_id: str) -> dict:
+    user = await db.users.find_one({"id": user_id}) or {}
+    track = user.get("primary_track") or tracks_mod.DEFAULT_TRACK
+    done = tracks_mod.completed_lessons(user.get("tutorials_seen"))
+    return {
+        "primary_track": track,
+        "queue": tracks_mod.build_lesson_queue(track, done),
+        "completed": done,
+        "library": list(tracks_mod.LESSON_IDS),
+        "has_plant": await _user_has_plant(user_id),
+    }
+
+
+@api_router.post("/users/me/quiz")
+async def submit_quiz(body: QuizBody, current_user: dict = Depends(get_current_user)):
+    """Save quiz answers and pick the primary lesson track.
+
+    An empty list (the quiz was skipped) falls back to the default track.
+    """
+    track = tracks_mod.resolve_primary_track(body.answers)
+    known = [a for a in body.answers if a in tracks_mod.QUIZ_OPTION_TRACK]
+    now = datetime.now(timezone.utc).isoformat()
+    await db.users.update_one(
+        {"id": current_user['user_id']},
+        {"$set": {
+            "quiz_answers": known,
+            "primary_track": track,
+            "quiz_completed_at": now,
+            "updated_at": now,
+        }},
+    )
+    return await _lesson_queue_for(current_user['user_id'])
+
+
+@api_router.get("/lessons/queue")
+async def get_lesson_queue(current_user: dict = Depends(get_current_user)):
+    return await _lesson_queue_for(current_user['user_id'])
+
+
+@api_router.post("/lessons/{lesson_id}/complete")
+async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_current_user)):
+    """Mark a lesson complete. Safe to call twice."""
+    if lesson_id not in tracks_mod.LESSON_IDS:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    user_id = current_user['user_id']
+    # The soil lesson ends in a real soil test, so it cannot finish without a plant.
+    if lesson_id == tracks_mod.SOIL_LESSON and not await _user_has_plant(user_id):
+        raise HTTPException(status_code=409, detail="Add a plant before finishing this lesson.")
+    await db.users.update_one(
+        {"id": user_id},
+        {"$addToSet": {"tutorials_seen": tracks_mod.lesson_tutorial_id(lesson_id)},
+         "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}},
+    )
+    await check_and_award_badges(user_id)
+    return await _lesson_queue_for(user_id)
+
+
 @api_router.get("/users/me/stats")
 async def get_my_stats(current_user: dict = Depends(get_current_user)):
     return await get_user_stats(current_user['user_id'])
