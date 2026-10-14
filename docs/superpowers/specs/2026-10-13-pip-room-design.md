@@ -3,7 +3,9 @@
 Date: 2026-10-13
 Revised: 2026-10-14 (v5)
 Status: Approved by the founder for planning on 2026-10-14. Open questions in
-section 12 remain and are carried into the plan.
+section 12 remain and are carried into the plans. Plan 1 (lessons, quiz, soil
+test) is `docs/superpowers/plans/2026-10-14-lessons-quiz-soil-test.md`. The
+nook is Plan 2.
 
 ## Revision notes
 
