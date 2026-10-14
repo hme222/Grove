@@ -31,6 +31,8 @@ from hardiness_zones import (
 )
 from seed import seed_database
 import missions as missions_mod
+import soil_check as soil_check_mod
+import tracks as tracks_mod
 import secrets
 import base64
 
@@ -1705,6 +1707,9 @@ class CareLogCreate(BaseModel):
     notes: Optional[str] = None
     root_length_cm: Optional[float] = None
     water_level_pct: Optional[int] = None
+    # Soil test (action "soil_check"): what the user felt and what they chose.
+    soil_outcome: Optional[str] = None
+    soil_decision: Optional[str] = None
 
 class BulkCareLogCreate(BaseModel):
     plant_ids: List[str]
@@ -1717,7 +1722,7 @@ class BulkCareLogCreate(BaseModel):
 VALID_CARE_ACTIONS = {
     'water', 'mist', 'fertilize', 'rotate', 'prune', 'check',
     'change_water', 'flush', 'repot', 'propagate', 'photo',
-    'clean', 'stake', 'inspect', 'health_check'
+    'clean', 'stake', 'inspect', 'health_check', 'soil_check'
 }
 
 def _normalize_actions(single: Optional[str], many: Optional[List[str]]) -> List[str]:
@@ -1753,6 +1758,12 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
     actions = _normalize_actions(input.action, input.actions)
     if not actions:
         raise HTTPException(status_code=400, detail="At least one action is required")
+    # Validate a soil test up front so a bad request writes no logs at all.
+    if soil_check_mod.SOIL_ACTION in actions:
+        try:
+            soil_check_mod.soil_fields(soil_check_mod.SOIL_ACTION, input.soil_outcome, input.soil_decision)
+        except soil_check_mod.SoilCheckError as e:
+            raise HTTPException(status_code=400, detail=str(e))
     # Phase 14A.2: share a group_id across multi-action logs created together so
     # the timeline and care log views can collapse them into a single "care sweep".
     group_id = str(uuid.uuid4()) if len(actions) > 1 else None
@@ -1768,6 +1779,7 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
             "logged_at": now.isoformat(), "created_at": now.isoformat(),
             "group_id": group_id,
         }
+        log.update(soil_check_mod.soil_fields(act, input.soil_outcome, input.soil_decision))
         await db.care_logs.insert_one(log)
         logs_out.append(log)
         if act in ['water', 'mist', 'change_water', 'flush'] and not watering_applied:
@@ -1800,6 +1812,8 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
         'group_id': group_id,
         'logs': [serialize_doc({k: v for k, v in l.items() if k != '_id'}) for l in logs_out],
     }
+    if soil_check_mod.SOIL_ACTION in actions:
+        primary['_meta']['soil_coaching'] = soil_check_mod.soil_coaching(input.soil_outcome, input.soil_decision)
     return primary
 
 @api_router.post("/care-logs/bulk")
@@ -1808,6 +1822,8 @@ async def bulk_care_log(input: BulkCareLogCreate, current_user: dict = Depends(g
     actions = _normalize_actions(input.action, input.actions)
     if not actions:
         raise HTTPException(status_code=400, detail="At least one action is required")
+    if soil_check_mod.SOIL_ACTION in actions:
+        raise HTTPException(status_code=400, detail="A soil test is logged one plant at a time.")
     if not input.plant_ids:
         raise HTTPException(status_code=400, detail="Select at least one plant")
     group_id = str(uuid.uuid4())
