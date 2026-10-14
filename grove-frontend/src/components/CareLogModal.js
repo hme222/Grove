@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { careAPI } from '../lib/api';
 import { toast } from 'sonner';
-import { Droplets, Wind, Utensils, Scissors, FlowerIcon, SproutIcon, Camera, FileText, RotateCw, ClipboardCheck } from 'lucide-react';
+import { Droplets, Wind, Utensils, Scissors, FlowerIcon, SproutIcon, Camera, FileText, RotateCw, ClipboardCheck, Hand } from 'lucide-react';
 import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
 
 // Phase 14A.2 — multi-action care log. Users can select several actions in a
@@ -15,6 +15,7 @@ const CARE_ACTIONS = [
   { value: 'rotate', label: 'Rotate', icon: RotateCw, color: '#BA7517' },
   { value: 'prune', label: 'Prune', icon: Scissors, color: '#2D5016' },
   { value: 'check', label: 'Check', icon: ClipboardCheck, color: '#185FA5' },
+  { value: 'soil_check', label: 'Soil test', icon: Hand, color: '#BA7517' },
   { value: 'repot', label: 'Repot', icon: FlowerIcon, color: '#BA7517' },
   { value: 'propagate', label: 'Propagate', icon: SproutIcon, color: '#185FA5' },
   { value: 'photo', label: 'Photo', icon: Camera, color: '#D4537E' },
@@ -28,6 +29,9 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
   const [selected, setSelected] = useState(() => new Set());
   const [notes, setNotes] = useState('');
   const [logging, setLogging] = useState(false);
+  const [soilOutcome, setSoilOutcome] = useState('');
+  const [soilDecision, setSoilDecision] = useState('');
+  const [soilError, setSoilError] = useState('');
   const submitBtnRef = useRef(null);
 
   const selectedArr = useMemo(() => Array.from(selected), [selected]);
@@ -65,14 +69,28 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
   const handleReset = () => {
     setSelected(new Set());
     setNotes('');
+    setSoilOutcome('');
+    setSoilDecision('');
+    setSoilError('');
   };
 
   const handleLog = async (e) => {
     if (count === 0) return;
+    const hasSoilTest = selected.has('soil_check');
+    if (hasSoilTest && !soilOutcome) {
+      setSoilError('Choose what you felt: dry or damp.');
+      return;
+    }
+    setSoilError('');
     setLogging(true);
     try {
-      const res = await careAPI.createLog(plantId, { actions: selectedArr, notes });
+      const res = await careAPI.createLog(plantId, {
+        actions: selectedArr,
+        notes,
+        ...(hasSoilTest ? { soil_outcome: soilOutcome, soil_decision: soilDecision || null } : {}),
+      });
       const meta = res.data?._meta;
+      if (meta?.soil_coaching) toast.message(meta.soil_coaching);
       success(submitBtnRef.current || e.currentTarget);
       const label = count === 1 ? selectedArr[0] : `${count} actions`;
       toast.success(`${label} logged for ${plantName}`);
@@ -120,6 +138,50 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             );
           })}
         </div>
+
+        {selected.has('soil_check') && (
+          <div className="mb-3 p-3 bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px]" data-testid="care-soil-fields">
+            <p className="text-[11px] font-ui text-[#1C2E10] mb-2">Press a finger 2 inches into the soil. What did you feel?</p>
+            <div className="flex gap-2 mb-2">
+              {[['dry', 'Dry and dusty'], ['damp', 'Damp and cool']].map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={soilOutcome === value}
+                  onClick={() => setSoilOutcome(value)}
+                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-[11px] font-ui text-[#1A1A17] ${
+                    soilOutcome === value ? 'border-[#1C2E10] bg-[#EAF3DE]' : 'border-[#D3C9B8] bg-[#FDFAF6]'
+                  }`}
+                  data-testid={`care-soil-outcome-${value}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] font-ui text-[#1C2E10] mb-2">What will you do? (optional)</p>
+            <div className="flex gap-2">
+              {[['water', 'Water it'], ['wait', 'Wait']].map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={soilDecision === value}
+                  onClick={() => setSoilDecision(soilDecision === value ? '' : value)}
+                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-[11px] font-ui text-[#1A1A17] ${
+                    soilDecision === value ? 'border-[#1C2E10] bg-[#EAF3DE]' : 'border-[#D3C9B8] bg-[#FDFAF6]'
+                  }`}
+                  data-testid={`care-soil-decision-${value}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {soilError && (
+              <p role="alert" className="mt-2 text-[11px] font-ui text-red-700" data-testid="care-soil-error">
+                {soilError}
+              </p>
+            )}
+          </div>
+        )}
 
         {count > 0 && (
           <div
