@@ -6,6 +6,13 @@ Status: Draft for review. Not approved for planning.
 
 ## Revision notes
 
+**v5.1 (2026-10-14)** clarifies and extends v5:
+
+- The **Soil Finger-Test is the second lesson for every track**, offered when
+  the user comes back for lessons.
+- The readiness plant's earning is reworded to be clear: it earns from
+  readiness steps and lessons.
+
 **v5 (2026-10-14)** applies a second UX review of v4:
 
 - A short quiz now leads into the track's lesson, which is the onboarding. Each
@@ -228,8 +235,9 @@ Whether they stay is an open decision (section 12).
 - At **ready**, Pip asks "Ready to meet a real one?" and shows that species'
   real schedule. Adding a real plant makes it the hero. The readiness plant
   moves to the shelf as a keepsake, or the user can retire it.
-- The readiness plant earns growth only from readiness steps and lessons. It
-  earns nothing for care, because there is no care to do.
+- The readiness plant **does earn growth**. Each readiness step earns +10, and
+  the lessons behind them earn +15 each. It has no care actions, so it never
+  earns from care, and it never loses anything for skipping a step.
 
 ### Plant condition (sprite state)
 
@@ -296,15 +304,32 @@ Draft mapping, for content review:
 - Lesson text is used as already written. Only the closing action needs
   confirming for tracks other than Rebirth.
 
+### Lesson order
+
+- **Lesson 1** is the user's primary track lesson.
+- **Lesson 2 is the Soil Finger-Test, for every track.** It is queued as the
+  next lesson and offered when the user comes back for lessons, through the
+  lessons list and Pip's note slot. It is never forced in the same session.
+  Its last card, "Log my first soil test," creates the first soil test event.
+- **Lesson 3 onward** is Quick Wins and then the track's remaining content.
+- **Rebirth exception.** The Soil Finger-Test is already the Rebirth track's
+  lesson 1, so Rebirth users get it first, and their lesson 2 is Quick Wins.
+- **No-plant users.** The Soil Finger-Test's last card asks the user to go to
+  their nearest plant. For a user with no real plant, that card changes to
+  "Save this for your first plant," no soil test is logged, and the lesson is
+  offered again once a real plant is added.
+
 ### Week-1 flow
 
 1. Onboarding, then the quiz (three taps or fewer).
 2. The track lesson, shown without Pip.
 3. The first real action. The existing first-care celebration fires.
 4. The nook offer, with the Pip preview.
-5. If accepted, Pip appears on the sill and hosts Quick Wins and the remaining
-   lessons. If declined, the lessons appear without Pip.
-6. The tutorial ends when the lessons are finished or at day 7. Pip stops
+5. When the user comes back for lessons, lesson 2 (the Soil Finger-Test) is
+   next. It ends in the first soil test. Pip hosts it if the nook was
+   accepted, and it appears without Pip if not.
+6. Pip hosts Quick Wins and the remaining lessons if the nook was accepted.
+7. The tutorial ends when the lessons are finished or at day 7. Pip stops
    prompting. Pip then moves to the shelf once it unlocks at level 2.
 
 ### Pip's note, and personality
@@ -405,6 +430,9 @@ Layer tests, using fixed fake dates and a stubbed event log:
   declined, and re-enabled in Settings, with core features unchanged.
 - Quiz multi-select resolving to one primary track, and changing track later.
 - Each track lesson ending on a logged real action.
+- Lesson order: Soil Finger-Test as lesson 2 for every track, the Rebirth
+  exception, and the no-plant user seeing "Save this for your first plant"
+  and getting the lesson again after adding a real plant.
 - Real plant condition from schedule, health factors, and "looks off."
 - Starter schedule used and labeled when a plant has none.
 - Readiness plant moving through seed, sprouting, and ready, with no needs and
@@ -484,5 +512,10 @@ Verified by reading `grove-backend` and `grove-frontend`.
   bulk water round.
 - The content of the Chunky Aroid Mix lesson, and the tracks of the Chunky
   Aroid Mix and Plant Cluster lessons.
+- Whether "when they come back for lessons" means the next session, or
+  whenever the user next opens the lessons list. This spec assumes the lesson
+  is queued and never forced in the same session.
+- Whether Pip's note slot should also show a small picture of the nook, so one
+  card is both the daily note and the way into the nook.
 - Whether to cut the catalog or the species templates for v1.
 - Timing and tooling for the home-screen widget.
