@@ -92,6 +92,13 @@ export const missionAPI = {
   pingHealthCheck: () => api.post('/missions/health-check'),
 };
 
+// Lessons and quiz
+export const lessonAPI = {
+  queue: () => api.get('/lessons/queue'),
+  complete: (lessonId) => api.post(`/lessons/${lessonId}/complete`),
+  submitQuiz: (answers) => api.post('/users/me/quiz', { answers }),
+};
+
 // Plants
 export const plantAPI = {
   getAll: (params) => api.get('/plants', { params }),
