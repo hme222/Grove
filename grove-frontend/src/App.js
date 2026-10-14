@@ -23,6 +23,8 @@ import GrovesPage from "./pages/GrovesPage";
 import GroveDetailPage from "./pages/GroveDetailPage";
 import PublicBouquetPage from "./pages/PublicBouquetPage";
 import HelpPage from "./pages/HelpPage";
+import LessonsPage from "./pages/LessonsPage";
+import LessonPage from "./pages/LessonPage";
 // Phase 14C.4 — GoalsPage deprecated. Goals are now pinned locked badges
 // surfaced on /care/today. /care/goals redirects to /care/today.
 import ChallengesPage from "./pages/ChallengesPage";
@@ -135,6 +137,16 @@ function AppRoutes() {
         <Route path="/dual-path-landing" element={<DualPathLandingVariations />} />
         <Route path="/cozy-room-planner" element={<CozyRoomPlannerVariations />} />
         <Route path="/behavioral-change-widgets" element={<BehavioralChangeWidgets />} />
+        <Route path="/lessons" element={
+          <ProtectedRoute>
+            <AppLayout><LessonsPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/lessons/:lessonId" element={
+          <ProtectedRoute>
+            <LessonPage />
+          </ProtectedRoute>
+        } />
         <Route path="/help" element={
           <ProtectedRoute>
             <HelpPage />
