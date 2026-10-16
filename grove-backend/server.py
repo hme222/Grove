@@ -32,6 +32,7 @@ from hardiness_zones import (
 from seed import seed_database
 import missions as missions_mod
 import soil_check as soil_check_mod
+import notification_policy
 import tracks as tracks_mod
 import secrets
 import base64
@@ -3725,25 +3726,9 @@ async def start_challenge(slug: str, current_user: dict = Depends(get_current_us
 
 # ============ NOTIFICATIONS ROUTES ============
 
-# Per-user notification preferences. Defaults are true except kudos_received (false) per spec.
-DEFAULT_NOTIFICATION_PREFS = {
-    "push_care_due": True,
-    "push_care_overdue": True,
-    "push_streak_at_risk": True,
-    "push_streak_milestone": True,
-    "push_swap_match": True,
-    "push_swap_message": True,
-    "push_kudos_received": False,
-    "push_sitter_logged": True,
-    "push_bloom_hour": True,
-    "push_bouquet_reminder": True,
-    "push_grove_challenge": True,
-    "email_digest": True,
-    "email_swap_match": True,
-    "quiet_hours_enabled": False,
-    "quiet_hours_start": "22:00",
-    "quiet_hours_end": "08:00",
-}
+# Per-user notification preferences. Defaults, the legacy-snapshot migration,
+# and the care send policy (quiet hours + daily cap) live in notification_policy.
+DEFAULT_NOTIFICATION_PREFS = notification_policy.DEFAULT_NOTIFICATION_PREFS
 
 # Map notification type -> preference key that controls whether it should be created.
 # Keep this mapping narrow: most types are always recorded in-app even if push/email is off.
@@ -3755,9 +3740,7 @@ NOTIFICATION_OPT_OUT_KEYS = {
 
 async def get_user_notification_prefs(user_id: str) -> dict:
     user = await db.users.find_one({"id": user_id})
-    prefs = (user or {}).get("notification_preferences") or {}
-    merged = {**DEFAULT_NOTIFICATION_PREFS, **prefs}
-    return merged
+    return notification_policy.merge_prefs((user or {}).get("notification_preferences"))
 
 
 async def create_notification(
@@ -3874,6 +3857,7 @@ class NotificationPreferencesInput(BaseModel):
     quiet_hours_enabled: Optional[bool] = None
     quiet_hours_start: Optional[str] = None
     quiet_hours_end: Optional[str] = None
+    care_daily_cap: Optional[int] = Field(None, ge=1, le=3)
 
 
 @api_router.get("/users/me/notification-preferences")
@@ -3887,14 +3871,16 @@ async def update_notification_preferences(
     input: NotificationPreferencesInput,
     current_user: dict = Depends(get_current_user)
 ):
-    existing = await get_user_notification_prefs(current_user['user_id'])
-    updates = {k: v for k, v in input.dict().items() if v is not None}
-    new_prefs = {**existing, **updates}
+    # Store only what the user chose, so later default changes still reach
+    # every field they never touched.
+    user = await db.users.find_one({"id": current_user['user_id']}) or {}
+    updates = {k: v for k, v in input.model_dump().items() if v is not None}
+    stored = notification_policy.stored_after_update(user.get("notification_preferences"), updates)
     await db.users.update_one(
         {"id": current_user['user_id']},
-        {"$set": {"notification_preferences": new_prefs}}
+        {"$set": {"notification_preferences": stored}}
     )
-    return new_prefs
+    return notification_policy.merge_prefs(stored)
 
 # ============ DAILY MISSIONS + FIRST 90 SECONDS (Phase 11C) ============
 

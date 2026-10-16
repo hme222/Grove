@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
-import { ChevronLeft, Bell, Mail, Moon } from 'lucide-react';
+import { ChevronLeft, Bell, Mail, Moon, Gauge } from 'lucide-react';
+
+export const CARE_CAP_CHOICES = [1, 2, 3];
 
 const TOGGLE_GROUPS = [
   {
@@ -11,9 +13,9 @@ const TOGGLE_GROUPS = [
     icon: Bell,
     desc: 'In-app alerts that land in your notification center.',
     keys: [
-      { key: 'push_care_due', label: 'Plants due for care', help: 'When plants become due for watering.' },
-      { key: 'push_care_overdue', label: 'Overdue plants', help: 'When a plant goes multiple days overdue.' },
-      { key: 'push_streak_at_risk', label: 'Streak at risk', help: 'Heads-up before your streak breaks at midnight.' },
+      { key: 'push_care_due', label: 'Daily care check', help: 'One message that bundles every plant due for a check.' },
+      { key: 'push_care_overdue', label: 'Extra check-in nudges', help: 'A separate message when a plant has gone a while without a check. These plants are already in the daily care check.' },
+      { key: 'push_streak_at_risk', label: 'Streak reminders', help: 'A heads-up before a care streak resets. Off unless you want it.' },
       { key: 'push_streak_milestone', label: 'Streak milestones', help: 'Day 7, 14, 30, 60, 100 moments worth noting.' },
       { key: 'push_swap_match', label: 'Swap matches', help: 'When two groves align on plant wants.' },
       { key: 'push_swap_message', label: 'Swap messages', help: 'New messages inside an active swap.' },
@@ -91,12 +93,12 @@ export default function NotificationPreferencesPage() {
           data-testid={`pref-toggle-${k}`}
           disabled={isSaving}
           onClick={() => update({ [k]: !on })}
-          className={`shrink-0 w-11 h-6 rounded-full relative transition-colors duration-200 disabled:opacity-60 ${
+          className={`shrink-0 w-11 h-6 rounded-full relative motion-safe:transition-colors motion-safe:duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3B6D11] focus-visible:ring-offset-2 focus-visible:ring-offset-[#EDE5D8] disabled:opacity-60 ${
             on ? 'bg-[#3B6D11]' : 'bg-[#D3C9B8]'
           }`}
         >
           <span
-            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform duration-200 ${
+            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white motion-safe:transition-transform motion-safe:duration-200 ${
               on ? 'translate-x-[22px]' : 'translate-x-0.5'
             }`}
           />
@@ -145,6 +147,48 @@ export default function NotificationPreferencesPage() {
                 </div>
               </div>
             ))}
+
+            {/* Daily care limit */}
+            <fieldset
+              data-testid="pref-group-daily-limit"
+              aria-describedby="care-cap-desc"
+              className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4"
+            >
+              <legend className="sr-only">Daily limit</legend>
+              <div className="flex items-center gap-2 mb-1" aria-hidden="true">
+                <Gauge className="h-4 w-4 text-[#3B6D11]" />
+                <h3 className="font-plant text-[#1C2E10] text-sm">Daily limit</h3>
+              </div>
+              <p id="care-cap-desc" className="font-ui text-xs text-[#2B2B26] mb-3">
+                The most care messages Grove sends in a day. Extra plants wait for the next check.
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {CARE_CAP_CHOICES.map((n) => {
+                  const active = (prefs.care_daily_cap || 1) === n;
+                  return (
+                    <label key={n} className="relative block">
+                      <input
+                        type="radio"
+                        name="care_daily_cap"
+                        value={n}
+                        checked={active}
+                        disabled={saving === 'care_daily_cap'}
+                        onChange={() => update({ care_daily_cap: n })}
+                        data-testid={`pref-care-cap-${n}`}
+                        className="peer sr-only"
+                      />
+                      <span
+                        className={`block text-center rounded-[8px] border-[0.5px] px-3 py-2 text-sm font-ui cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-[#3B6D11] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#EDE5D8] peer-disabled:opacity-60 ${
+                          active ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#F5F0E8] text-[#1A1A17] hover:border-[#3B6D11]'
+                        }`}
+                      >
+                        {n} a day
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
 
             {/* Quiet hours */}
             <div
