@@ -8,7 +8,7 @@ import logging
 import re
 import uuid
 from datetime import datetime, timezone, timedelta, date
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Literal
 from pydantic import BaseModel, Field
 from pathlib import Path
 
@@ -662,6 +662,8 @@ class UserUpdate(BaseModel):
     hardiness_zone_system: Optional[str] = None  # "USDA" | "RHS"
     # Phase 14C.3 — verification flow (identity step)
     verification_phone: Optional[str] = None  # optional contact phone (never displayed publicly)
+    # survey-2026 — Care tips: "simple" (exact step) or "detailed" (step + why)
+    care_text_detail: Optional[Literal["simple", "detailed"]] = None
 
 @api_router.patch("/users/me")
 async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_user)):

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { careAPI, waterAPI, plantAPI, getFileUrl } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, userAPI, getFileUrl } from '../lib/api';
 import { PageHeader, FilterChips } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
@@ -16,7 +16,8 @@ import { Droplets, Check, Leaf, X, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
-import { dueLabel } from '../lib/careCopy';
+import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
+import CareTextToggle from '../components/CareTextToggle';
 
 const FILTERS = [
   { value: 'all', label: 'All due' },
@@ -30,14 +31,14 @@ const URGENCY_STYLES = {
     border: 'border-[#D4537E]/60',
     bg: 'bg-[#FBEAF0]',
     dot: 'bg-[#D4537E]',
-    label: 'text-[#D4537E]',
+    label: 'text-[#A33E63]', // 5.3:1 on the pink card; #D4537E was 3.4:1
     accent: '#D4537E',
   },
   needs_water: {
     border: 'border-[#C18A2A]/50',
     bg: 'bg-[#F7EED9]',
     dot: 'bg-[#C18A2A]',
-    label: 'text-[#8A6A3D]',
+    label: 'text-[#6B4E1F]', // 6.7:1 on the amber card; #8A6A3D was 4.3:1
     accent: '#C18A2A',
   },
   healthy: {
@@ -72,6 +73,24 @@ export default function CarePage() {
   const [sessionCount, setSessionCount] = useState(0); // session = plants logged this visit
   const [showFirstCare, setShowFirstCare] = useState(false);
   const [allPlants, setAllPlants] = useState([]); // for named-plant empty state
+  const textMode = careTextMode(user);
+  const [savingTextMode, setSavingTextMode] = useState(false);
+
+  // Simple shows the exact step; Detailed adds why. Saved to the profile.
+  const handleTextModeChange = async (mode) => {
+    if (mode === textMode) return;
+    const previous = textMode;
+    if (updateUser) updateUser({ care_text_detail: mode });
+    setSavingTextMode(true);
+    try {
+      await userAPI.updateMe({ care_text_detail: mode });
+    } catch {
+      if (updateUser) updateUser({ care_text_detail: previous });
+      toast.error("Couldn't save that setting. Try again.");
+    } finally {
+      setSavingTextMode(false);
+    }
+  };
 
   const fetchDue = async () => {
     try {
@@ -173,6 +192,9 @@ export default function CarePage() {
         }
       >
         <FilterChips filters={FILTERS} active={filter} onChange={setFilter} />
+        <div className="mt-2">
+          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />
+        </div>
       </PageHeader>
 
       <div className="max-w-[900px] mx-auto px-4 py-4">
@@ -237,12 +259,17 @@ export default function CarePage() {
                       <p className={`font-ui text-xs mt-1 ${style.label}`}>
                         {dueLabel(plant)}
                       </p>
-                      {plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
+                      {(status === 'urgent' || status === 'needs_water') && (
+                        <p data-testid="care-card-step" className="font-ui text-xs text-[#1C2E10] mt-0.5 leading-snug">
+                          {careStep(plant)}
+                        </p>
+                      )}
+                      {textMode === 'detailed' && plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
                         <p
                           data-testid="care-card-status-reason"
-                          className="font-ui italic text-[11px] text-[#5F5E5A] mt-0.5 leading-snug line-clamp-2"
+                          className="font-ui text-[11px] text-[#5F5E5A] mt-0.5 leading-snug"
                         >
-                          {plant.status_reason}
+                          <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
                       )}
                       <p className="font-latin text-[10px] text-[#2B2B26] mt-0.5 truncate">

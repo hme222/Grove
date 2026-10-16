@@ -26,3 +26,15 @@ export function dueLabel(plant, now = new Date()) {
   if (diffDays === 1) return 'Due tomorrow';
   return `Due in ${diffDays} days`;
 }
+
+// The one exact step, shown in both Simple and Detailed modes.
+export function careStep(plant) {
+  if (plant?.grow_medium === 'leca') return "Check the reservoir. Top it up if it's low.";
+  return "Check the top inch of soil. Water if it's dry.";
+}
+
+export const CARE_TEXT_MODES = ['simple', 'detailed'];
+
+export function careTextMode(user) {
+  return user?.care_text_detail === 'detailed' ? 'detailed' : 'simple';
+}
