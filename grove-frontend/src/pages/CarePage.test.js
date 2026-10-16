@@ -117,3 +117,28 @@ describe('Simple / Detailed care tips', () => {
     expect(toast.error).toHaveBeenCalled();
   });
 });
+
+describe('Undo on Water All', () => {
+  test('after Water All, Undo reverts the round', async () => {
+    waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r1', first_care_pending: false } });
+    waterAPI.undoRound.mockResolvedValue({ data: { undone: 1 } });
+    await mount();
+    await act(async () => { q('water-all-button').click(); });
+    expect(q('undo-snackbar').textContent).toContain('Watered 1 plant');
+    expect(document.activeElement).toBe(q('undo-snackbar-undo'));
+    await act(async () => { q('undo-snackbar-undo').click(); });
+    expect(waterAPI.undoRound).toHaveBeenCalledWith('r1');
+    expect(toast.success).toHaveBeenCalledWith('Water round undone');
+    expect(q('undo-snackbar')).toBeNull();
+  });
+
+  test('a failed undo shows the server reason and closes the bar', async () => {
+    waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r1' } });
+    waterAPI.undoRound.mockRejectedValue({ response: { data: { detail: 'Too late to undo that round.' } } });
+    await mount();
+    await act(async () => { q('water-all-button').click(); });
+    await act(async () => { q('undo-snackbar-undo').click(); });
+    expect(toast.error).toHaveBeenCalledWith('Too late to undo that round.');
+    expect(q('undo-snackbar')).toBeNull();
+  });
+});

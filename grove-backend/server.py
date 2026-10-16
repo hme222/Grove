@@ -1567,21 +1567,31 @@ async def get_water_round(current_user: dict = Depends(get_current_user)):
             excluded.append({**serialize_doc(p), "reason": f"Status: {p['status']}"})
     return {"included": included, "excluded": excluded}
 
+# Undo window for a water round. The UI offers Undo for about 8 seconds, but
+# the snackbar pauses while it has focus or hover, so the server allows longer.
+WATER_ROUND_UNDO_MINUTES = 15
+_ROUND_RESTORE_FIELDS = ("last_watered_at", "next_water_due", "status")
+
+
 @api_router.post("/plants/water-round/log")
 async def log_water_round(current_user: dict = Depends(get_current_user)):
     now = datetime.now(timezone.utc)
     plants = await db.plants.find({
         "user_id": current_user['user_id'], "is_archived": {"$ne": True}
     }).to_list(200)
-    count = 0
+    round_id = str(uuid.uuid4())
+    entries = []
     for p in plants:
         status = calculate_plant_status(p)
         if status in ['urgent', 'needs_water'] and p.get('grow_medium') != 'propagation_jar':
             freq = p.get('watering_frequency_days', 7)
+            log_id = str(uuid.uuid4())
+            previous = {k: p.get(k) for k in _ROUND_RESTORE_FIELDS}  # snapshot before the update
             await db.care_logs.insert_one({
-                "id": str(uuid.uuid4()), "plant_id": p['id'],
+                "id": log_id, "plant_id": p['id'],
                 "user_id": current_user['user_id'], "action": "water",
                 "notes": "Water round", "photo_url": "",
+                "round_id": round_id,
                 "logged_at": now.isoformat(), "created_at": now.isoformat()
             })
             await db.plants.update_one(
@@ -1592,13 +1602,54 @@ async def log_water_round(current_user: dict = Depends(get_current_user)):
                     "status": "healthy", "updated_at": now.isoformat()
                 }}
             )
-            count += 1
+            entries.append({
+                "plant_id": p['id'],
+                "log_id": log_id,
+                "previous": previous,
+            })
+    count = len(entries)
+    if count > 0:
+        # Kept so the round can be undone: which logs to remove, what to restore.
+        await db.water_rounds.insert_one({
+            "id": round_id, "user_id": current_user['user_id'],
+            "logged_at": now.isoformat(), "entries": entries, "undone": False,
+        })
     await update_streak(current_user['user_id'])
     if count > 0:
         await missions_mod.on_care_log(db, current_user['user_id'], {})
     user_doc = await db.users.find_one({"id": current_user['user_id']})
     first_care_pending = (count > 0) and not bool((user_doc or {}).get('first_care_celebrated'))
-    return {"watered": count, "first_care_pending": first_care_pending}
+    return {"watered": count, "first_care_pending": first_care_pending, "round_id": round_id if count else None}
+
+
+@api_router.post("/plants/water-round/{round_id}/undo")
+async def undo_water_round(round_id: str, current_user: dict = Depends(get_current_user)):
+    """Remove a water round's logs and put each plant's schedule back.
+
+    A plant that has been logged again since the round keeps its newer
+    schedule; only the round's own log is removed. Streak and mission
+    progress from the round are not rolled back.
+    """
+    rnd = await db.water_rounds.find_one({"id": round_id, "user_id": current_user['user_id']})
+    if not rnd:
+        raise HTTPException(status_code=404, detail="That water round wasn't found.")
+    if rnd.get('undone'):
+        raise HTTPException(status_code=409, detail="That water round was already undone.")
+    logged_at = datetime.fromisoformat(rnd['logged_at'])
+    if datetime.now(timezone.utc) - logged_at > timedelta(minutes=WATER_ROUND_UNDO_MINUTES):
+        raise HTTPException(status_code=410, detail="Too late to undo that round. Edit each plant's log instead.")
+    restored = 0
+    for entry in rnd.get('entries', []):
+        await db.care_logs.delete_one({"id": entry['log_id'], "user_id": current_user['user_id']})
+        plant = await db.plants.find_one({"id": entry['plant_id'], "user_id": current_user['user_id']})
+        if plant and plant.get('last_watered_at') == rnd['logged_at']:
+            await db.plants.update_one(
+                {"id": entry['plant_id']},
+                {"$set": {**entry.get('previous', {}), "updated_at": datetime.now(timezone.utc).isoformat()}}
+            )
+        restored += 1
+    await db.water_rounds.update_one({"id": round_id}, {"$set": {"undone": True}})
+    return {"undone": restored}
 
 @api_router.post("/plants")
 async def create_plant(input: PlantCreate, current_user: dict = Depends(get_current_user)):

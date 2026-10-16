@@ -142,6 +142,7 @@ export const careAPI = {
 export const waterAPI = {
   getRound: () => api.get('/plants/water-round'),
   logRound: () => api.post('/plants/water-round/log'),
+  undoRound: (roundId) => api.post(`/plants/water-round/${roundId}/undo`),
 };
 
 // Species

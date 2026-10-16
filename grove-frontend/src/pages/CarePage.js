@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { careAPI, waterAPI, plantAPI, userAPI, getFileUrl } from '../lib/api';
 import { PageHeader, FilterChips } from '../components/PageHeader';
@@ -18,6 +18,7 @@ import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics'
 import { useAuth } from '../contexts/AuthContext';
 import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
 import CareTextToggle from '../components/CareTextToggle';
+import UndoSnackbar from '../components/UndoSnackbar';
 
 const FILTERS = [
   { value: 'all', label: 'All due' },
@@ -73,6 +74,8 @@ export default function CarePage() {
   const [sessionCount, setSessionCount] = useState(0); // session = plants logged this visit
   const [showFirstCare, setShowFirstCare] = useState(false);
   const [allPlants, setAllPlants] = useState([]); // for named-plant empty state
+  const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
+  const [undoing, setUndoing] = useState(false);
   const textMode = careTextMode(user);
   const [savingTextMode, setSavingTextMode] = useState(false);
 
@@ -128,8 +131,11 @@ export default function CarePage() {
     impactMedium(e?.currentTarget);
     try {
       const res = await waterAPI.logRound();
-      toast.success(`Watered ${res.data.watered} plants`);
-      setSessionCount((c) => c + (res.data.watered || 0));
+      const watered = res.data.watered || 0;
+      // The Water All button disappears with the list, so the Undo bar takes focus.
+      if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered });
+      else toast.success(`Watered ${watered} plants`);
+      setSessionCount((c) => c + watered);
       maybeCelebrateFirstCare(res.data.first_care_pending);
       window.dispatchEvent(new Event('grove:mission-refresh'));
       // Animate everything out
@@ -142,6 +148,24 @@ export default function CarePage() {
       toast.error('Water round failed');
     } finally {
       setWateringAll(false);
+    }
+  };
+
+  const dismissUndo = useCallback(() => setLastRound(null), []);
+
+  const handleUndoRound = async () => {
+    if (!lastRound) return;
+    setUndoing(true);
+    try {
+      await waterAPI.undoRound(lastRound.roundId);
+      setSessionCount((c) => Math.max(0, c - lastRound.count));
+      toast.success('Water round undone');
+      fetchDue();
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || "Couldn't undo that. Try again.");
+    } finally {
+      setUndoing(false);
+      setLastRound(null);
     }
   };
 
@@ -345,6 +369,18 @@ export default function CarePage() {
               <X className="h-4 w-4" />
             </button>
           </div>
+        </div>
+      )}
+
+      {lastRound && (
+        <div className={`fixed left-0 right-0 z-50 mx-auto max-w-[600px] px-3 ${sessionActive ? 'bottom-[156px]' : 'bottom-[84px]'}`}>
+          <UndoSnackbar
+            message={`Watered ${lastRound.count} ${lastRound.count === 1 ? 'plant' : 'plants'}`}
+            onUndo={handleUndoRound}
+            onDismiss={dismissUndo}
+            busy={undoing}
+            autoFocus
+          />
         </div>
       )}
 
