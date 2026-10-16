@@ -30,7 +30,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'status-dots',
     title: 'Status Dots',
-    content: 'Green = all good. Amber = water soon. Pink = overdue. Teal = propagating. Scan your whole collection in seconds without opening each plant.',
+    content: 'Green = all good. Amber = water soon. Pink = needs a check. Teal = propagating. Scan your whole collection in seconds without opening each plant.',
   },
   {
     id: 'bulk-water',

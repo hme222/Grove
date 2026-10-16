@@ -16,10 +16,11 @@ import { Droplets, Check, Leaf, X, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
+import { dueLabel } from '../lib/careCopy';
 
 const FILTERS = [
   { value: 'all', label: 'All due' },
-  { value: 'urgent', label: 'Urgent' },
+  { value: 'urgent', label: 'Needs a check' },
   { value: 'needs_water', label: 'Water today' },
 ];
 
@@ -149,18 +150,6 @@ export default function CarePage() {
     filter === 'all' ? plants : plants.filter(p => p.status === filter)
   ), [filter, plants]);
 
-  const getDueLabel = (plant) => {
-    if (!plant.next_water_due) return 'Schedule needed';
-    const due = new Date(plant.next_water_due);
-    const now = new Date();
-    const diffDays = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
-    if (diffDays < -1) return `Overdue ${Math.abs(diffDays)} days`;
-    if (diffDays < 0) return 'Overdue today';
-    if (diffDays === 0) return 'Due today';
-    if (diffDays === 1) return 'Due tomorrow';
-    return `Due in ${diffDays} days`;
-  };
-
   const sessionActive = sessionCount > 0;
 
   return (
@@ -246,7 +235,7 @@ export default function CarePage() {
                         </h3>
                       </div>
                       <p className={`font-ui text-xs mt-1 ${style.label}`}>
-                        {getDueLabel(plant)}
+                        {dueLabel(plant)}
                       </p>
                       {plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
                         <p

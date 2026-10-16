@@ -118,9 +118,10 @@ def compute_status_reason(plant: dict, status: str) -> str:
         overdue_days, last_days = 0, None
 
     if status == 'urgent':
+        # Gentle check-in wording (2026 survey). The card already shows days since watering.
         if last_days is not None and last_days >= 1:
-            return f"Hasn't been watered in {last_days} days — overdue by {max(1, overdue_days)}."
-        return f"Overdue by {max(1, overdue_days)} days on its {freq}-day schedule."
+            return f"It's on a {freq}-day schedule, so the soil may be dry by now."
+        return f"About {max(1, overdue_days)} days past its {freq}-day schedule. The soil may be dry."
     if status == 'needs_water':
         return f"Soil-dry estimate based on your {freq}-day watering pattern."
     return ""

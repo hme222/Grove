@@ -41,7 +41,7 @@ export const TOOLTIPS = [
     id: 'status_dot_first_visit',
     target: 'collection-grid-plant-tile',
     title: 'Status dots',
-    body: 'Green = all good. Amber = water soon. Pink = overdue. Teal = propagating. Scan your whole collection in seconds.',
+    body: 'Green = all good. Amber = water soon. Pink = needs a check. Teal = propagating. Scan your whole collection in seconds.',
     position: 'bottom',
   },
   {

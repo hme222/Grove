@@ -11,7 +11,7 @@ const statusColors = {
 const statusLabels = {
   healthy: 'Healthy',
   needs_water: 'Due soon',
-  urgent: 'Overdue',
+  urgent: 'Needs a check',
   propagating: 'Propagating',
   dormant: 'Dormant',
 };
