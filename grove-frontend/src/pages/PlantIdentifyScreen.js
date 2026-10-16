@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { plantAPI, getFileUrl } from '../lib/api';
 import PlantImage from '../components/PlantImage';
 import ToxicityBadge from '../components/ToxicityBadge';
+import { confidenceText, identifyWhy } from '../lib/aiTrust';
 import { impactLight, impactMedium, success } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -229,7 +230,16 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         <p className="font-ui text-[10px] uppercase tracking-[0.1em] text-[#888780]">{lowConf ? 'We think this might be…' : 'Identified'}</p>
         <h1 className="font-plant text-[#1C2E10] text-lg leading-tight">{identified?.commonName || 'Plant'}</h1>
         {identified?.latinName && <p className="font-latin text-[11px] text-[#639922]">{identified.latinName}</p>}
-        <p className={`font-latin text-[10px] mt-0.5 ${lowConf ? 'text-[#BA7517]' : 'text-[#888780]'}`}>Confidence: {confidencePct}%</p>
+        <p
+          data-testid="identify-confidence"
+          className={`font-ui text-xs mt-1 ${lowConf ? 'text-[#8A5A0F]' : 'text-[#5F5E5A]'}`}
+        >
+          {confidenceText(identified?.confidence) || `Confidence: ${confidencePct}%`}
+        </p>
+        <p data-testid="identify-why" className="font-ui text-xs text-[#2B2B26] mt-1 leading-snug">
+          <span className="font-semibold">Why: </span>
+          {identifyWhy(identified)}
+        </p>
         {lowConf && identified?.message && (
           <p className="italic font-plant text-xs text-[#5F5E5A] mt-2">"{identified.message}"</p>
         )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { bouquetAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
+import { confidenceText } from '../lib/aiTrust';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { ArrowLeft, Sparkles, Edit2, Flower2, Droplets, Scissors, Camera, FileText, Share2 } from 'lucide-react';
@@ -218,9 +219,11 @@ export default function BouquetDetailPage() {
                         <span className="rounded-[20px] border-[0.5px] border-[#D4537E]/30 bg-white px-2 py-0.5 text-[9px] font-ui text-[#D4537E]">
                           {f.vase_life_days}d life
                         </span>
-                        <p className="font-latin text-[9px] text-[#D3C9B8] mt-1">
-                          {Math.round((f.ai_confidence || 0) * 100)}% confident
-                        </p>
+                        {confidenceText(f.ai_confidence) && (
+                          <p data-testid="bouquet-flower-confidence" className="font-ui text-[11px] text-[#5F5E5A] mt-1">
+                            {confidenceText(f.ai_confidence)}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2 mt-1.5">

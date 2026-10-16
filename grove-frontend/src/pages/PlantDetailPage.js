@@ -4,6 +4,7 @@ import { plantAPI, careAPI, roomAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
 import StatusDot from '../components/StatusDot';
 import ToxicityBadge from '../components/ToxicityBadge';
+import { confidenceText } from '../lib/aiTrust';
 import CareLogModal from '../components/CareLogModal';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -341,8 +342,16 @@ export default function PlantDetailPage() {
               {aiSchedule && (
                 <div className="mt-3 rounded-[8px] bg-[#EAF3DE] p-3 border-[0.5px] border-[#D3C9B8]">
                   <p className="font-ui text-sm text-[#1C2E10]">AI suggests every {aiSchedule.days} days</p>
-                  <p className="font-ui text-xs text-[#2B2B26] mt-1">{aiSchedule.reason}</p>
-                  <p className="font-latin text-[10px] text-[#D3C9B8] mt-1">Confidence: {aiSchedule.confidence}</p>
+                  {aiSchedule.reason && (
+                    <p className="font-ui text-xs text-[#2B2B26] mt-1">
+                      <span className="font-semibold">Why: </span>{aiSchedule.reason}
+                    </p>
+                  )}
+                  {confidenceText(aiSchedule.confidence) && (
+                    <p data-testid="ai-schedule-confidence" className="font-ui text-xs text-[#2B2B26] mt-1">
+                      {confidenceText(aiSchedule.confidence)}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
