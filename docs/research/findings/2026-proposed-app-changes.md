@@ -1,10 +1,25 @@
 # Proposed app changes from the 35-response survey
 
-Proposals only. **No app code was changed.** Evidence comes from [`2026-grove-concept-survey.md`](2026-grove-concept-survey.md), and every count can be reproduced with [`../scripts/survey_stats.py`](../scripts/survey_stats.py). File paths are relative to the repo root. Line numbers are from `feat/lessons-quiz-soil-test` at `98278a8`.
+Written as proposals. Eight of them (#1 to #8) have since shipped on `survey-2026-update`; see [Shipped on survey-2026-update](#shipped-on-survey-2026-update). Evidence comes from [`2026-grove-concept-survey.md`](2026-grove-concept-survey.md), and every count can be reproduced with [`../scripts/survey_stats.py`](../scripts/survey_stats.py). File paths are relative to the repo root. Line numbers are from `feat/lessons-quiz-soil-test` at `98278a8`.
 
 **Ranking:** strongest evidence first. That means how many people, whether it came up in more than one question or audience, and whether it's tied to a delete or churn answer. One exception is flagged below: #6 is a safety bug and should be fixed first whatever its rank.
 
 **Effort:** S = copy or default change, under half a day. M = a small component or preference plus wiring, 1 to 3 days. L = a new flow or backend work.
+
+## Shipped on survey-2026-update
+
+Status as of 2026-10-16. Hillary approved #1 to #8. #9 to #13 are still proposals.
+
+| # | Status | Commit | What shipped | Not done, and why |
+|---|---|---|---|---|
+| 1 | Shipped | `18576c4` | Pushes default to the care check only: `push_care_due`, plus `push_bouquet_reminder` and `push_sitter_logged`, which only fire once someone has a bouquet or a sitter. Quiet hours on by default, 21:00 to 08:00. A daily care cap of 1, adjustable to 3 under Notifications, Daily limit. Saved choices are kept: PATCH now stores only the keys a user changed. In older records (where the old PATCH saved every default), a value that differs from the old default is kept as a real choice. | No care sender exists yet. The cap and quiet hours are enforced in `notification_policy.may_send_care_notification`, which the sender must call when it's built. Email defaults are unchanged. Streak-milestone notifications in the in-app notification center are unchanged. |
+| 2 | Shipped | `18576c4` | `push_streak_at_risk` and `push_streak_milestone` default off. The help text now reads "A heads-up before a care streak resets. Off unless you want it." | None. |
+| 3 | Shipped (do-first safety fix) | `ce9fb26` | A missing or unrecognized toxicity value shows "Pet safety unknown — check before bringing it home" (neutral style), never "Pet-safe." One `ToxicityBadge` (icon, words and color) on Species detail, Add Plant, plant ID and plant detail. On plant ID and plant detail, toxicity comes from Grove's species library by `species_id` or exact Latin name, never from the model. | The Encyclopedia list still shows the raw value. It has no safe fallback bug, because it shows nothing when the value is missing. |
+| 4 | Shipped, partly | `c4db0d2` | Confidence on the AI schedule card, bouquet flowers and plant ID now uses text at 5.2:1 or higher contrast, in plain words ("High confidence (92%)", "Not sure, please check"). Plant ID adds a "Why:" line built from the species-library match: Latin name, family and cited source. With no match, it says the plant isn't in the library and to check the leaf shape. | The identify API returns no reason, matched traits or runner-up guesses, so top guesses can't be shown. A TODO in `server.py` and `aiTrust.js` names the fields to add: `matchedTraits` and `alternatives`. No reference photo, for the same reason. |
+| 5 | Shipped | `c913be6` | Plants and Bouquets segments on Collection. `?view=bouquets` makes the Bouquets segment linkable, and `/bouquets` routes are unchanged. The plant grid and its count hold plants only. People with no bouquets never see the switch. Also fixed a crash when Collection had a `?room=` filter. | None. |
+| 6 | Shipped | `153982e` | Care tips: Simple / Detailed on the Care page, saved as `users.care_text_detail`. Simple shows the exact step. Detailed adds "Why:" and the status reason. | Applies to Care page cards only. It isn't on the plant detail AI card or the bouquet care plan yet. |
+| 7 | Shipped | `8d4700a` | "Overdue N days" becomes "Check-in time · watered N days ago". The days-since number stays. The "Urgent" filter and status label become "Needs a check," and backend reasons drop "overdue by." | The optional direct-wording setting isn't built. Gentle wording is the only style for now. |
+| 8 | Shipped | `a8fd896` | After Water All, an Undo bar shows for 8 seconds. It takes focus, pauses while focused or hovered, closes with Escape, and respects reduced motion. Undo removes the round's logs and restores each plant's schedule. The server allows undo for 15 minutes. | Streak and mission progress from the round aren't rolled back. The optional soil-check step was skipped as non-trivial. |
 
 ## Summary
 
