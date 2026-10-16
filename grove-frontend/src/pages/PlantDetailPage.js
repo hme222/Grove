@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { plantAPI, careAPI, roomAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
 import StatusDot from '../components/StatusDot';
+import ToxicityBadge from '../components/ToxicityBadge';
 import CareLogModal from '../components/CareLogModal';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -258,6 +259,7 @@ export default function PlantDetailPage() {
                   {plant.grow_medium}
                 </span>
               </div>
+              <ToxicityBadge toxicity={plant.species_toxicity} size="sm" className="mt-1.5" testId="plant-toxicity" />
             </div>
             <div className="flex items-center gap-2">
               <button

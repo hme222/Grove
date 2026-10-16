@@ -4,6 +4,7 @@ import { Camera, Image as ImageIcon, RotateCcw, Sparkles, Edit3, Check, ArrowLef
 import { toast } from 'sonner';
 import { plantAPI, getFileUrl } from '../lib/api';
 import PlantImage from '../components/PlantImage';
+import ToxicityBadge from '../components/ToxicityBadge';
 import { impactLight, impactMedium, success } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -219,6 +220,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
   // Both review and low_confidence share the editable form, with header variant.
   const lowConf = step === 'low_confidence';
   const confidencePct = Math.round((identified?.confidence || 0) * 100);
+  const speciesEdited = (form.common_name || '') !== (identified?.commonName || '');
 
   return (
     <div className="max-w-[520px] mx-auto px-4 py-4 pb-24" data-testid={lowConf ? 'identify-low-conf' : 'identify-review'}>
@@ -231,6 +233,13 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         {lowConf && identified?.message && (
           <p className="italic font-plant text-xs text-[#5F5E5A] mt-2">"{identified.message}"</p>
         )}
+        {/* Pet safety is from Grove's species library. If the user renames the
+            species, the library match no longer applies, so it reads as unknown. */}
+        <ToxicityBadge
+          toxicity={speciesEdited ? null : identified?.toxicity}
+          className="mt-2"
+          testId="identify-toxicity"
+        />
       </div>
       <div className="h-px bg-[#D3C9B8] my-3" />
 

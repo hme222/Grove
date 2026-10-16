@@ -5,6 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import re
 import uuid
 from datetime import datetime, timezone, timedelta, date
 from typing import List, Optional, Dict
@@ -1446,6 +1447,38 @@ async def search_species(q: str = ""):
     ).limit(20).to_list(20)
     return [serialize_doc(s) for s in species]
 
+async def find_library_species(species_id: Optional[str] = None, latin_name: Optional[str] = None) -> Optional[dict]:
+    """Grove's own species record, by id or exact (case-insensitive) Latin name. None if no match."""
+    try:
+        if species_id:
+            found = await db.species.find_one({"id": species_id}, {"_id": 0})
+            if found:
+                return found
+        name = (latin_name or '').strip()
+        if name:
+            return await db.species.find_one(
+                {"latin_name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}}, {"_id": 0}
+            )
+    except Exception:
+        logger.exception("species library lookup failed")
+    return None
+
+
+def library_match_summary(species: Optional[dict]) -> Optional[dict]:
+    """The facts the plant-ID screen may show about a library match. Nothing invented."""
+    if not species:
+        return None
+    citations = species.get('citations') or []
+    source = next((c.get('label') for c in citations if isinstance(c, dict) and c.get('label')), None)
+    return {
+        "speciesId": species.get('id'),
+        "commonName": species.get('common_name'),
+        "latinName": species.get('latin_name'),
+        "family": species.get('family'),
+        "source": source,
+    }
+
+
 @api_router.get("/species/{species_id}")
 async def get_species(species_id: str):
     species = await db.species.find_one({"id": species_id})
@@ -1672,6 +1705,10 @@ async def get_plant(plant_id: str, current_user: dict = Depends(get_current_user
     # Phase 14 Part 4.4 — surface status reason
     plant['status'] = calculate_plant_status(plant)
     plant['status_reason'] = compute_status_reason(plant, plant['status'])
+    # Pet safety comes from Grove's species library, never from the AI.
+    # None means "unknown", and the UI must not read it as pet-safe.
+    match = await find_library_species(plant.get('species_id'), plant.get('latin_name'))
+    plant['species_toxicity'] = (match or {}).get('toxicity')
     return serialize_doc(plant)
 
 @api_router.patch("/plants/{plant_id}")
@@ -2224,6 +2261,13 @@ async def identify_plant(input: IdentifyPlantInput, current_user: dict = Depends
     }
     if not is_confident:
         out["message"] = "We're not fully sure on this one — try a closer photo in better light, or enter the name yourself."
+    # Toxicity and the "why" facts come from Grove's species library, not the model.
+    # TODO(api): the vision prompt returns no reason or runner-up guesses. To show
+    # matched traits and top guesses, add e.g. "matchedTraits": [str] and
+    # "alternatives": [{"commonName", "latinName", "confidence"}] to IDENTIFY_PROMPT.
+    match = await find_library_species(latin_name=latin) if latin else None
+    out["toxicity"] = (match or {}).get('toxicity')
+    out["libraryMatch"] = library_match_summary(match)
     return out
 
 

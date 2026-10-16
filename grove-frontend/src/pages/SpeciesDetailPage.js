@@ -2,11 +2,12 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { encyclopediaAPI, wantsAPI } from '../lib/api';
 import {
-  ChevronLeft, Leaf, Droplets, Sun, AlertTriangle, Sprout, Bug, BookOpen,
+  ChevronLeft, Leaf, Droplets, Sun, Sprout, Bug, BookOpen,
   ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Users, Loader2,
   Bookmark, BookmarkCheck, Camera,
 } from 'lucide-react';
 import SectionTutorial from '../components/SectionTutorial';
+import ToxicityBadge from '../components/ToxicityBadge';
 import { toast } from 'sonner';
 
 const LIGHT_COPY = {
@@ -14,13 +15,6 @@ const LIGHT_COPY = {
   medium: 'Medium · several feet from a window',
   bright_indirect: 'Bright indirect · near a window, no direct sun',
   bright_direct: 'Bright direct · several hours of full sun',
-};
-
-const TOXICITY_INFO = {
-  non_toxic: { color: 'text-[#3B6D11]', bg: 'bg-[#EAF3DE]', label: 'Pet-safe', icon: Heart },
-  'non-toxic': { color: 'text-[#3B6D11]', bg: 'bg-[#EAF3DE]', label: 'Pet-safe', icon: Heart },
-  mild: { color: 'text-[#8A6A3D]', bg: 'bg-[#FBFAF7]', label: 'Mildly toxic', icon: AlertTriangle },
-  toxic: { color: 'text-[#B42318]', bg: 'bg-[#FEE4E2]', label: 'Toxic if ingested', icon: AlertTriangle },
 };
 
 // Phase 14B.1 — Badge ladder. Order matters; the first-applicable badge per
@@ -147,9 +141,6 @@ export default function SpeciesDetailPage() {
   }
   if (!species) return null;
 
-  const toxKey = (species.toxicity || '').replace('-', '_');
-  const toxData = TOXICITY_INFO[toxKey] || TOXICITY_INFO.non_toxic;
-  const ToxIcon = toxData.icon;
   const lightCopy = LIGHT_COPY[species.default_light_level] || 'Bright indirect light';
   const nativeAlts = species.flags?.native_alternatives_us || [];
 
@@ -206,10 +197,7 @@ export default function SpeciesDetailPage() {
                 <span className="px-2 py-1 rounded-[20px] bg-[#EAF3DE] text-[#1C2E10] text-xs font-ui uppercase tracking-[0.12em]">
                   {species.family}
                 </span>
-                <span className={`px-2 py-1 rounded-[20px] ${toxData.bg} ${toxData.color} text-xs font-ui uppercase tracking-[0.12em] flex items-center gap-1`}>
-                  <ToxIcon className="h-3 w-3" />
-                  {toxData.label}
-                </span>
+                <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
               </div>
             </div>
             <button

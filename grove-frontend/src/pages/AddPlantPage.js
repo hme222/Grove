@@ -5,6 +5,7 @@ import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
 import { ArrowLeft, Search, Camera, Home, Edit3 } from 'lucide-react';
 import PhotoRequirement from '../components/PhotoRequirement';
+import ToxicityBadge from '../components/ToxicityBadge';
 import PlantIdentifyScreen from './PlantIdentifyScreen';
 import { useAuth } from '../contexts/AuthContext';
 import { impactLight } from '../lib/haptics';
@@ -211,9 +212,8 @@ function ManualEntryFlow({ onBack }) {
                 >
                   <p className="font-plant text-[#1C2E10] text-sm">{sp.common_name}</p>
                   <p className="font-latin text-[10px] text-[#2B2B26]">{sp.latin_name}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-ui text-[#639922]">{sp.toxicity}</span>
-                    <span className="text-[10px] font-ui text-[#D3C9B8]">\u00B7</span>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+                    <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" />
                     <span className="text-[10px] font-ui text-[#2B2B26]">Water every {sp.default_watering_days}d</span>
                   </div>
                 </button>
