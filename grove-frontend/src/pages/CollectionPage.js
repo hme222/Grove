@@ -28,6 +28,9 @@ export default function CollectionPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const roomFilter = searchParams.get('room') || '';
+  // Bouquets live in their own segment, never mixed into the plant grid
+  // (survey: 24/35 don't want them mixed in). `?view=bouquets` keeps it linkable.
+  const view = searchParams.get('view') === 'bouquets' ? 'bouquets' : 'plants';
   const [plants, setPlants] = useState([]);
   const [bouquets, setBouquets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -117,19 +120,21 @@ export default function CollectionPage() {
   const showSoftWarning = selectedCount > BULK_WARN_THRESHOLD;
   const actionSummary = useMemo(() => Array.from(bulkActions).join(' · '), [bulkActions]);
 
-  const totalCount = roomFilter ? filteredPlants.length : plants.length + bouquets.length;
-  const isEmpty = totalCount === 0 && !loading;
-
   // Filter plants by room if query param is set
   const filteredPlants = roomFilter
     ? plants.filter(p => p.room === roomFilter)
     : plants;
 
-  // Combined list, plants then bouquets, each tagged with type for rendering
-  const combined = [
-    ...filteredPlants.map(p => ({ ...p, _type: 'plant' })),
-    ...(roomFilter ? [] : bouquets.map(b => ({ ...b, _type: 'bouquet' }))),
-  ];
+  const showingBouquets = view === 'bouquets' && !roomFilter;
+  const totalCount = showingBouquets ? bouquets.length : filteredPlants.length;
+  const isEmpty = totalCount === 0 && !loading;
+  const showViewSwitch = !roomFilter && (bouquets.length > 0 || showingBouquets);
+
+  const setView = (next) => {
+    if (next === view) return;
+    if (selectionMode) exitSelectionMode();
+    setSearchParams(next === 'bouquets' ? { view: 'bouquets' } : {});
+  };
 
   return (
     <div>
@@ -140,6 +145,7 @@ export default function CollectionPage() {
         count={totalCount}
         rightContent={
           <div className="flex items-center gap-2">
+            {!showingBouquets && (
             <button
               onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
               data-testid="collection-select-button"
@@ -151,6 +157,7 @@ export default function CollectionPage() {
             >
               {selectionMode ? 'Cancel' : 'Select'}
             </button>
+            )}
             <button
               onClick={() => setShowTypePicker(true)}
               data-testid="collection-add-button"
@@ -164,6 +171,37 @@ export default function CollectionPage() {
       />
 
       <div className="max-w-[1100px] mx-auto px-4 py-4">
+        {showViewSwitch && (
+          <div
+            role="group"
+            aria-label="Show plants or bouquets"
+            data-testid="collection-view-switch"
+            className="inline-flex mb-3 rounded-[10px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-0.5"
+          >
+            {[
+              { value: 'plants', label: 'Plants', count: plants.length, Icon: Leaf },
+              { value: 'bouquets', label: 'Bouquets', count: bouquets.length, Icon: Flower2 },
+            ].map(({ value, label, count, Icon }) => {
+              const active = view === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setView(value)}
+                  data-testid={`collection-view-${value}`}
+                  className={`inline-flex items-center gap-1.5 rounded-[8px] px-3 py-1.5 font-ui text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3B6D11] focus-visible:ring-offset-1 motion-safe:transition-colors motion-safe:duration-150 ${
+                    active ? 'bg-[#1C2E10] text-[#F5F0E8]' : 'text-[#1C2E10] hover:bg-[#F5F0E8]'
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                  {label}
+                  <span className={active ? 'text-[#9FE1CB]' : 'text-[#5F5E5A]'}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
         {roomFilter && (
           <div className="flex items-center justify-between mb-3 px-1">
             <span className="font-plant text-sm text-[#1C2E10]">
@@ -191,11 +229,30 @@ export default function CollectionPage() {
               Show all plants
             </button>
           </div>
+        ) : showingBouquets ? (
+          isEmpty ? (
+            <div data-testid="collection-bouquets-empty" className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-6 text-center">
+              <p className="font-ui text-sm text-[#2B2B26]">No bouquets right now.</p>
+              <button
+                type="button"
+                onClick={() => navigate('/bouquets/new')}
+                className="mt-2 font-plant uppercase tracking-[0.08em] text-[10px] text-[#3B6D11] hover:text-[#1C2E10]"
+              >
+                Add a bouquet
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-2 sm:gap-3" data-testid="collection-bouquet-grid">
+              {bouquets.map(b => (
+                <BouquetTile key={`b-${b.id}`} bouquet={b} onClick={() => navigate(`/bouquets/${b.id}`)} />
+              ))}
+            </div>
+          )
         ) : isEmpty ? (
           <EmptyState config={EMPTY_STATES.collection_zero_plants} />
         ) : (
           <div className="grid grid-cols-3 gap-2 sm:gap-3" data-testid="collection-grid">
-            {combined.map(item => item._type === 'plant' ? (
+            {filteredPlants.map(item => (
               <PlantCard
                 key={`p-${item.id}`}
                 plant={item}
@@ -203,8 +260,6 @@ export default function CollectionPage() {
                 onSelect={toggleSelect}
                 selectionMode={selectionMode}
               />
-            ) : (
-              <BouquetTile key={`b-${item.id}`} bouquet={item} onClick={() => navigate(`/bouquets/${item.id}`)} />
             ))}
           </div>
         )}
