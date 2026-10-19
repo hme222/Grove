@@ -197,3 +197,21 @@ def test_the_three_level_badges_are_in_the_catalog_and_earnable():
         assert badge["tier"] == tier
         assert badge["family"] == "nook_level"
         assert f"nook_level_{number}" in badge_catalog.EARNABLE_SLUGS
+
+
+# ---------- review fixes ----------
+
+def test_quiet_mode_sees_a_plant_past_the_evaluation_cap(make_client):
+    plants = [{"id": f"p{n:02d}", "common_name": "Pothos", "created_at": f"2026-01-{n + 1:02d}", "looks_off": n == 30} for n in range(31)]
+    _, client = make_client(plants=plants)
+    body = client.get("/api/nook/state").json()
+    assert body["quiet"] is True
+    assert len(body["plants"]) <= 30
+
+
+def test_gallery_marks_nook_badges_as_not_pinnable(make_client):
+    db, client = make_client(user={"nook_enabled": True})
+    for number in (2, 3, 4):
+        db.badges.docs[number - 2].update({"name": "n", "category": "Achievement", "subcategory": "Pip's nook", "earnable": True, "family": "nook_level", "family_order": number})
+    items = client.get("/api/users/me/badges/catalog").json()["items"]
+    assert items and all(item["pinnable"] is False for item in items)

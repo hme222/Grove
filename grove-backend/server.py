@@ -1027,6 +1027,7 @@ async def get_my_badge_catalog(current_user: dict = Depends(get_current_user)):
             "icon": b.get("icon"),
             "tier": b.get("tier"),
             "earnable": bool(b.get("earnable")),
+            "pinnable": can_be_pinned_as_goal(slug),
             "family": family,
             "family_order": b.get("family_order", 0),
             "earned": is_earned,

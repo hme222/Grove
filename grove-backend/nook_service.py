@@ -83,7 +83,7 @@ async def build_state(
     plants = await db.plants.find({"user_id": user_id, "is_archived": {"$ne": True}}).to_list(200)
     plants.sort(key=lambda plant: plant.get("created_at") or "")
     rows: List[Dict] = []
-    for plant in plants[:MAX_PLANTS]:
+    for plant in plants:
         condition = nook.plant_condition(status_fn(plant), bool(plant.get("looks_off")), await scores_fn(plant))
         rows.append({
             "id": plant["id"],
@@ -92,6 +92,10 @@ async def build_state(
             "condition": condition,
             "looks_off": bool(plant.get("looks_off")),
         })
+
+    # Quiet mode looks at every active plant. Only the list the page shows is capped.
+    quiet = nook.is_quiet(row["condition"] for row in rows)
+    rows = rows[:MAX_PLANTS]
 
     chosen = user.get("nook_hero_plant_id")
     hero = next((row for row in rows if row["id"] == chosen), None) or (rows[0] if rows else None)
@@ -126,7 +130,7 @@ async def build_state(
         "shelf_plants": shelf,
         "plants": rows,
         "readiness": readiness,
-        "quiet": nook.is_quiet(row["condition"] for row in rows),
+        "quiet": quiet,
         "weekly_days": nook.weekly_days(await activity_stamps(db, user_id, user), now),
         "catalog_open": nook.catalog_open(user.get("created_at"), now, enabled),
     }

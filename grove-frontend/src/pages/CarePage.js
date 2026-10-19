@@ -9,6 +9,7 @@ import DailyMissionCard from '../components/DailyMissionCard';
 import NextLessonCard from '../components/NextLessonCard';
 import PipNoteCard from '../components/PipNoteCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
+import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
 import WorkingTowardSection from '../components/WorkingTowardSection';
 import DailyTriviaCard from '../components/DailyTriviaCard';
@@ -70,7 +71,7 @@ export default function CarePage() {
   const [wateringAll, setWateringAll] = useState(false);
   const [exiting, setExiting] = useState(new Set()); // plant ids currently animating out
   const [sessionCount, setSessionCount] = useState(0); // session = plants logged this visit
-  const [showFirstCare, setShowFirstCare] = useState(false);
+  const firstCare = useFirstCareCelebration(user, updateUser);
   const [allPlants, setAllPlants] = useState([]); // for named-plant empty state
 
   const fetchDue = async () => {
@@ -95,14 +96,7 @@ export default function CarePage() {
 
   useEffect(() => { fetchDue(); fetchAllPlantsLite(); }, []);
 
-  const maybeCelebrateFirstCare = (firstCarePending) => {
-    if (firstCarePending && user && !user.first_care_celebrated) {
-      setShowFirstCare(true);
-      // Optimistically mark on client so the overlay only fires once even if
-      // server sync is delayed.
-      if (updateUser) updateUser({ first_care_celebrated: true });
-    }
-  };
+  const maybeCelebrateFirstCare = firstCare.celebrate;
 
   const handleWaterAll = async (e) => {
     setWateringAll(true);
@@ -348,8 +342,8 @@ export default function CarePage() {
       )}
 
       <FirstCareCelebration
-        open={showFirstCare}
-        onClose={() => setShowFirstCare(false)}
+        open={firstCare.open}
+        onClose={firstCare.close}
       />
     </div>
   );
