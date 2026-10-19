@@ -33,6 +33,8 @@ from seed import seed_database
 import missions as missions_mod
 import soil_check as soil_check_mod
 import tracks as tracks_mod
+import nook as nook_mod
+import nook_service
 import secrets
 import base64
 
@@ -829,13 +831,105 @@ async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_curre
     # The soil lesson ends in a real soil test, so it cannot finish without a plant.
     if lesson_id == tracks_mod.SOIL_LESSON and not await _user_has_plant(user_id):
         raise HTTPException(status_code=409, detail="Add a plant before finishing this lesson.")
+    now_iso = datetime.now(timezone.utc).isoformat()
+    user = await db.users.find_one({"id": user_id}) or {}
+    updates = {"updated_at": now_iso}
+    # Remember when a lesson was first finished. The nook counts growth by day.
+    if lesson_id not in (user.get("lesson_completed_at") or {}):
+        updates[f"lesson_completed_at.{lesson_id}"] = now_iso
     await db.users.update_one(
         {"id": user_id},
         {"$addToSet": {"tutorials_seen": tracks_mod.lesson_tutorial_id(lesson_id)},
-         "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}},
+         "$set": updates},
     )
     await check_and_award_badges(user_id)
     return await _lesson_queue_for(user_id)
+
+
+# ============ PIP'S NOOK ============
+
+class NookSettingsBody(BaseModel):
+    enabled: Optional[bool] = None
+    hero_plant_id: Optional[str] = None
+
+
+class ReadinessBody(BaseModel):
+    species_id: str
+
+
+class LooksOffBody(BaseModel):
+    looks_off: bool
+
+
+async def _plant_health_scores(plant: dict) -> list:
+    """The 0-100 score of each factor in Grove's existing plant health check."""
+    logs = await db.care_logs.find({"plant_id": plant['id']}, {"_id": 0}).sort("logged_at", -1).limit(50).to_list(50)
+    return [factor["score"] for factor in compute_health_breakdown(plant, logs)["factors"]]
+
+
+async def _nook_state(user_id: str) -> dict:
+    now = datetime.now(timezone.utc)
+    state = await nook_service.build_state(db, user_id, now, calculate_plant_status, _plant_health_scores)
+    # Level badges are only given to people who opted in.
+    if state["enabled"]:
+        await nook_service.award_level_badges(db, user_id, state["level"], now.isoformat())
+    return state
+
+
+def _raise_nook_error(error: "nook_service.NookError"):
+    raise HTTPException(status_code=error.status, detail=error.detail)
+
+
+@api_router.get("/nook/state")
+async def get_nook_state(current_user: dict = Depends(get_current_user)):
+    return await _nook_state(current_user['user_id'])
+
+
+@api_router.post("/nook/seen")
+async def mark_nook_seen(current_user: dict = Depends(get_current_user)):
+    """Remember what the user has seen, so "your nook grew" shows once."""
+    await nook_service.mark_seen(db, current_user['user_id'], datetime.now(timezone.utc).isoformat())
+    return {"ok": True}
+
+
+@api_router.post("/users/me/nook")
+async def update_nook_settings(body: NookSettingsBody, current_user: dict = Depends(get_current_user)):
+    """Turn the nook on or off, or choose the hero plant. The first call records the offer."""
+    try:
+        return await nook_service.update_settings(
+            db, current_user['user_id'], body.enabled, body.hero_plant_id,
+            datetime.now(timezone.utc).isoformat(),
+        )
+    except nook_service.NookError as error:
+        _raise_nook_error(error)
+
+
+@api_router.post("/nook/readiness")
+async def start_nook_readiness(body: ReadinessBody, current_user: dict = Depends(get_current_user)):
+    try:
+        await nook_service.start_readiness(db, current_user['user_id'], body.species_id, datetime.now(timezone.utc).isoformat())
+    except nook_service.NookError as error:
+        _raise_nook_error(error)
+    return await _nook_state(current_user['user_id'])
+
+
+@api_router.post("/nook/readiness/steps/{step_id}")
+async def complete_nook_readiness_step(step_id: str, current_user: dict = Depends(get_current_user)):
+    try:
+        await nook_service.complete_readiness_step(db, current_user['user_id'], step_id, datetime.now(timezone.utc).isoformat())
+    except nook_service.NookError as error:
+        _raise_nook_error(error)
+    return await _nook_state(current_user['user_id'])
+
+
+@api_router.post("/plants/{plant_id}/looks-off")
+async def set_plant_looks_off(plant_id: str, body: LooksOffBody, current_user: dict = Depends(get_current_user)):
+    """The user's own call that a plant looks off. It overrides the sprite to needs-attention."""
+    try:
+        await nook_service.set_looks_off(db, current_user['user_id'], plant_id, body.looks_off, datetime.now(timezone.utc).isoformat())
+    except nook_service.NookError as error:
+        _raise_nook_error(error)
+    return {"looks_off": body.looks_off}
 
 
 @api_router.get("/users/me/stats")
@@ -883,6 +977,8 @@ async def get_my_badge_catalog(current_user: dict = Depends(get_current_user)):
 
     # Pull all 170 from db.badges, group by category.
     all_badges = await db.badges.find({}).to_list(500)
+    # The nook's level badges stay out of the gallery until the user opts in, unless already earned.
+    all_badges = nook_mod.visible_badges(all_badges, bool(user.get("nook_enabled")), earned_map.keys())
     # Sort by family_order within subcategory, then by slug
     def _sort_key(b):
         return (
