@@ -29,7 +29,7 @@ export default function CollectionPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const roomFilter = searchParams.get('room') || '';
   // Bouquets live in their own segment, never mixed into the plant grid
-  // (survey: 24/35 don't want them mixed in). `?view=bouquets` keeps it linkable.
+  // (survey: 24/37 don't want them mixed in). `?view=bouquets` keeps it linkable.
   const view = searchParams.get('view') === 'bouquets' ? 'bouquets' : 'plants';
   const [plants, setPlants] = useState([]);
   const [bouquets, setBouquets] = useState([]);

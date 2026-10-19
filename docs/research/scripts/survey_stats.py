@@ -6,7 +6,7 @@ Standard library only. Run from anywhere:
     python3 docs/research/scripts/survey_stats.py
     python3 docs/research/scripts/survey_stats.py path/to/other.csv
 
-Input: the anonymized Google Form export (35 responses, R01-R35). The file has
+Input: the anonymized Google Form export (37 responses, R01-R37). The file has
 no emails, phone numbers, or times of day, and this script never prints any.
 
 How multi-select answers are counted: Google Forms joins choices with ", ",
@@ -28,7 +28,7 @@ from collections import Counter, OrderedDict
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CSV = os.path.join(HERE, "..", "data", "grove-concept-survey-2026-anonymized.csv")
 
-LATE_RESPONSE_DATE = "9/24/2026"  # the response added after the 34-response analysis
+LATE_RESPONSE_DATE = "10/16/2026"  # R36-R37, added after the 35-response analysis
 
 # ---------------------------------------------------------------- columns
 # Matched by the start of the header text, so stray leading spaces in the
@@ -250,6 +250,10 @@ DELETE_CODES = {
     "R33": ["paywall / price"],
     "R34": ["no answer / not sure"],
     "R35": ["AI misidentification"],
+    # R36: "constant nothing alerts" is the notification theme; "ads" is ads.
+    # R37: "do many adds" read as ads; "words, font ... not easily visible" is legibility.
+    "R36": ["ads", "notification/reminder volume"],
+    "R37": ["ads", "text hard to read"],
 }
 
 
@@ -388,7 +392,7 @@ print("  By perspective chosen (this routed people to different question blocks)
 for k, n in Counter(r[C["perspective"]] for r in ROWS).most_common():
     print(f"  {n:>3}  {k}")
 
-heading("2. LAUNCH DEALBREAKERS - 'The Ultimate Trade-off' (pick 3), all 35")
+heading(f"2. LAUNCH DEALBREAKERS - 'The Ultimate Trade-off' (pick 3), all {N}")
 trade, _ = table_multi(ROWS, "tradeoff", denom=N)
 print("  Rank order (ties share a rank):")
 ordered = sorted(FEATURES, key=lambda o: -trade[o])
@@ -407,7 +411,7 @@ for opt in FEATURES:
     if trade[opt] != trade_early[opt]:
         print(f"    {short(opt, 60)}: {trade_early[opt]} -> {trade[opt]}")
 
-heading("3. CATEGORY PICKS (pick 2 per category), all 35")
+heading(f"3. CATEGORY PICKS (pick 2 per category), all {N}")
 for key in ("cat_care", "cat_scan", "cat_social"):
     print(f"  -- {key}")
     counts, _ = table_multi(ROWS, key, denom=N)
@@ -491,7 +495,7 @@ for r in ROWS:
     codes = DELETE_CODES.get(r["respondent"], ["UNCODED"])
     theme_counts.update(codes)
     print(f"  {r['respondent']}  [{'; '.join(codes)}]  {short(r[C['delete']], 80)}")
-print("  Theme totals (a response can carry two themes; percentages of 35):")
+print(f"  Theme totals (a response can carry two themes; percentages of {N}):")
 for k, v in theme_counts.most_common():
     print(f"  {v:>3}  {pct(v, N):>4}  {k}")
 notif = sorted(r for r, c in DELETE_CODES.items() if "notification/reminder volume" in c)
@@ -546,13 +550,13 @@ table_multi(ROWS, "community_motive", denom=N)
 print("  Swap safety:")
 table_single(ROWS, C["swap_safety"])
 
-heading("13. THE LATE RESPONSE (what changed vs the 34-response analysis)")
+heading("13. THE LATE RESPONSES (what changed vs the 35-response analysis)")
 for r in LATE:
     print(f"  {r['respondent']}  group={r['_group']}  work={r[C['florist_work']]}")
     for key in ("ai_features", "tradeoff", "qr_contents", "ai_text_conditions", "frustration",
                 "vase_countdown", "delete", "biggest_problem"):
         print(f"    {key}: {short(r[C[key]], 150)}")
-print("  Counts on 34 vs 35 for the AI-trust questions:")
+print(f"  Counts on {len(EARLIER)} vs {N} for the AI-trust questions:")
 for key, opt in [("ai_features", "I would not use any AI features in a plant app"),
                  ("ai_trust", OPTIONS["ai_trust"][0]),
                  ("ai_trust", OPTIONS["ai_trust"][1]),

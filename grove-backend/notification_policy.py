@@ -3,9 +3,9 @@
 Pure functions, no database access, so they can be unit tested.
 
 Why these defaults (2026 concept survey, docs/research/findings):
-- 11 of 35 people would delete the app over notification volume, the
+- 12 of 37 people would delete the app over notification volume, the
   largest delete trigger. Reminders are also the #1 dealbreaker if missing
-  (26 of 35), so care reminders stay on and everything else goes quiet.
+  (28 of 37), so care reminders stay on and everything else goes quiet.
 - On by default: the daily care check (`push_care_due`), plus the two care
   types that only fire once someone opts into the thing behind them: an
   active bouquet (`push_bouquet_reminder`) or a plant sitter

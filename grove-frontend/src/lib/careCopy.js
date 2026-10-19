@@ -1,5 +1,5 @@
 // Care-card wording. Gentle by default: a plant past its schedule gets a
-// check-in, not a deadline (survey: strict-new owners chose gentle 8 of 11).
+// check-in, not a deadline (survey: strict-new owners chose gentle 9 of 12).
 // The days-since number stays on the card so no information is lost.
 
 const DAY_MS = 1000 * 60 * 60 * 24;

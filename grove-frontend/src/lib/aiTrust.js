@@ -1,5 +1,5 @@
 // Plain-language confidence and "why" lines for AI output.
-// Survey: 20/35 trust AI more when it explains why; 15/35 want a confidence score.
+// Survey: 22/37 trust AI more when it explains why; 17/37 want a confidence score.
 
 // Plant ID treats < 0.7 as low confidence (PlantIdentifyScreen), so the bands match it.
 export function confidenceLevel(value) {
