@@ -66,14 +66,8 @@ export default function ProfilePage() {
     }
   };
 
-  const handleReplayOnboarding = async () => {
-    try {
-      await userAPI.updateMe({ onboarding_complete: false });
-      window.location.reload();
-    } catch (e) {
-      toast.error('Failed to reset onboarding');
-    }
-  };
+  // The slides, the quiz, then the first lesson. Replays for any account.
+  const handleReplayOnboarding = () => navigate('/first-run');
 
   const badgeIcons = {
     leaf: Leaf, flame: Flame, crown: Sparkles,
@@ -351,7 +345,7 @@ export default function ProfilePage() {
               className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-[#1C2E10] border-[0.5px] border-[#D3C9B8] hover:border-[#2D5016] transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <RefreshCw className="h-4 w-4" />
-              Replay Tutorial
+              Replay first-run
             </button>
           </div>
         </div>

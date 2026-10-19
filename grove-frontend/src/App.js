@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "@/App.css";
 import "@/lib/microAnimations.css";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TooltipProvider } from "./contexts/TooltipContext";
 import { Toaster } from "@/components/ui/sonner";
@@ -101,6 +101,18 @@ function AppRoutes() {
 
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
+  // /first-run replays the slides and the quiz for any signed-in account,
+  // whatever its age or saved track, so the first-run flow can always be seen.
+  const [replayFirstRun, setReplayFirstRun] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== '/first-run' || loading || !user) return;
+    setQuizDone(false);
+    setReplayFirstRun(true);
+    setShowOnboarding(true);
+    navigate('/', { replace: true });
+  }, [location.pathname, loading, user, navigate]);
 
   useEffect(() => {
     if (!loading && user && user.onboarding_complete === false) {
@@ -114,11 +126,12 @@ function AppRoutes() {
     updateUser({ onboarding_complete: true });
   };
 
-  const showQuiz = !showOnboarding && !quizDone && shouldShowQuiz(user);
+  const showQuiz = !showOnboarding && !quizDone && (replayFirstRun || shouldShowQuiz(user));
 
   const handleQuizDone = (data) => {
     updateUser({ primary_track: data.primary_track });
     setQuizDone(true);
+    setReplayFirstRun(false);
     const first = data.queue && data.queue[0];
     if (first) navigate(lessonPath(first));
   };
@@ -142,6 +155,7 @@ function AppRoutes() {
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
+        <Route path="/first-run" element={user ? null : <Navigate to="/login" replace />} />
         <Route path="/landing" element={<LandingVariations />} />
         <Route path="/post-onboarding" element={<PostOnboarding />} />
         <Route path="/quick-wins" element={<QuickWinVariations />} />
