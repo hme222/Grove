@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 // Steps through a lesson's cards. The last card hands over to
 // `renderFinalCard`, which holds the lesson's "your turn" action. Card text
 // comes from Grove's own lesson files and may contain simple HTML.
-export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
+export default function LessonPlayer({ cards, renderFinalCard, onExit, host }) {
   const [index, setIndex] = useState(0);
   const headingRef = useRef(null);
   const card = cards[index];
@@ -32,6 +32,12 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
             Card {index + 1} of {cards.length}
           </p>
         </div>
+
+        {host && (
+          <div className="mb-3" data-testid="lesson-host">
+            {host}
+          </div>
+        )}
 
         <div className={`rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-gradient-to-br ${card.accent || ''} bg-[#FDFAF6] p-6`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-[#3B6D11]'}`} strokeWidth={1.75} aria-hidden="true" />}

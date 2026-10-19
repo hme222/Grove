@@ -7,11 +7,17 @@ import LessonPlayer from '../lessons/LessonPlayer';
 import SoilTestStep from '../lessons/SoilTestStep';
 import MarkDoneStep from '../lessons/MarkDoneStep';
 import FirstCareCelebration from '../components/FirstCareCelebration';
+import { useAuth } from '../contexts/AuthContext';
+import PipPanel from '../nook/PipPanel';
+import { usePipForm } from '../nook/usePipForm';
 
 export default function LessonPage() {
   const { lessonId } = useParams();
   const navigate = useNavigate();
   const cards = LESSON_CARDS[lessonId];
+  const { user, updateUser } = useAuth();
+  const nookOn = !!user?.nook_enabled;
+  const pipForm = usePipForm(nookOn);
   const [hasPlant, setHasPlant] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [error, setError] = useState('');
@@ -48,6 +54,10 @@ export default function LessonPage() {
     setError('');
     try {
       await lessonAPI.complete(lessonId);
+      // Keep the signed-in user in step, so the nook offer can follow the first lesson.
+      const entry = `lesson:${lessonId}`;
+      const seen = user?.tutorials_seen || [];
+      if (updateUser && !seen.includes(entry)) updateUser({ tutorials_seen: [...seen, entry] });
       navigate('/lessons');
     } catch (_e) {
       setError('Could not save your progress. Try again.');
@@ -76,11 +86,18 @@ export default function LessonPage() {
 
   return (
     <>
-      <LessonPlayer cards={cards} renderFinalCard={renderFinalCard} onExit={() => navigate('/lessons')} />
+      <LessonPlayer
+        cards={cards}
+        renderFinalCard={renderFinalCard}
+        onExit={() => navigate('/lessons')}
+        host={nookOn ? <PipPanel form={pipForm} label="Pip" /> : null}
+      />
       <FirstCareCelebration
         open={celebrate}
         onClose={() => {
           setCelebrate(false);
+          // The celebration has played, so the nook offer may follow.
+          if (updateUser) updateUser({ first_care_celebrated: true });
           finish();
         }}
       />

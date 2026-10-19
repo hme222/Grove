@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { careAPI } from '../lib/api';
 import { toast } from 'sonner';
-import { Droplets, Wind, Utensils, Scissors, FlowerIcon, SproutIcon, Camera, FileText, RotateCw, ClipboardCheck, Hand } from 'lucide-react';
+import { Droplets, Wind, Utensils, Scissors, FlowerIcon, SproutIcon, Camera, FileText, RotateCw, ClipboardCheck, Hand, Sun, Sparkles } from 'lucide-react';
 import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
 
 // Phase 14A.2 — multi-action care log. Users can select several actions in a
@@ -16,6 +16,8 @@ const CARE_ACTIONS = [
   { value: 'prune', label: 'Prune', icon: Scissors, color: '#2D5016' },
   { value: 'check', label: 'Check', icon: ClipboardCheck, color: '#185FA5' },
   { value: 'soil_check', label: 'Soil test', icon: Hand, color: '#BA7517' },
+  { value: 'light_check', label: 'Light check', icon: Sun, color: '#BA7517' },
+  { value: 'clean', label: 'Wipe leaves', icon: Sparkles, color: '#5DCAA5' },
   { value: 'repot', label: 'Repot', icon: FlowerIcon, color: '#BA7517' },
   { value: 'propagate', label: 'Propagate', icon: SproutIcon, color: '#185FA5' },
   { value: 'photo', label: 'Photo', icon: Camera, color: '#D4537E' },
@@ -92,7 +94,8 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       const meta = res.data?._meta;
       if (meta?.soil_coaching) toast.message(meta.soil_coaching);
       success(submitBtnRef.current || e.currentTarget);
-      const label = count === 1 ? selectedArr[0] : `${count} actions`;
+      const tile = CARE_ACTIONS.find((action) => action.value === selectedArr[0]);
+      const label = count === 1 ? (tile ? tile.label : selectedArr[0]) : `${count} actions`;
       toast.success(`${label} logged for ${plantName}`);
       handleReset();
       onLogged?.(meta);
