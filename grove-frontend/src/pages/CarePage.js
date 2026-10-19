@@ -7,6 +7,7 @@ import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
 import NextLessonCard from '../components/NextLessonCard';
+import PipNoteCard from '../components/PipNoteCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
 import WorkingTowardSection from '../components/WorkingTowardSection';
@@ -301,7 +302,7 @@ export default function CarePage() {
           Positioned below the care queue so the urgent count + plant grid
           remain the primary above-the-fold focus. */}
       <div className="max-w-[900px] mx-auto px-4 pb-2">
-        <DailyTriviaCard />
+        {user?.nook_enabled ? <PipNoteCard /> : <DailyTriviaCard />}
       </div>
 
       {/* Sticky in-progress session bar (above bottom nav) */}
