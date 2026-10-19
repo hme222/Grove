@@ -37,7 +37,7 @@ export default function AdminDemoPage() {
     }
   };
 
-  useEffect(() => { fetchStatus(); }, []);
+  useEffect(() => { fetchStatus(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleReset = async (username) => {
     if (!confirm(`Reset ${username}? This will clear all data for this account. You'll need to run the seed script again to restore.`)) {

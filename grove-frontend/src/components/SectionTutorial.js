@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI } from '../lib/api';
 import { Leaf, Droplets, Users, BookOpen, Sun, X } from 'lucide-react';
@@ -52,7 +52,8 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
   const { user, refreshUser } = useAuth();
   const [open, setOpen] = useState(false);
 
-  const seen = user?.tutorials_seen || [];
+  const tutorialsSeen = user?.tutorials_seen;
+  const seen = useMemo(() => tutorialsSeen || [], [tutorialsSeen]);
   const copy = TUTORIAL_COPY[tutorialId];
 
   useEffect(() => {

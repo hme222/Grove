@@ -50,7 +50,7 @@ export default function FloristDashboard() {
     }
   };
 
-  useEffect(() => { fetchPortfolio(); }, []);
+  useEffect(() => { fetchPortfolio(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];

@@ -60,7 +60,7 @@ export default function SwapChatPage() {
     };
     document.addEventListener('visibilitychange', onVis);
     return () => { cancelled = true; clearTimeout(timer); document.removeEventListener('visibilitychange', onVis); };
-  }, [swapId, swap?.status]);
+  }, [swapId, swap?.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-scroll on new messages
   useEffect(() => {
