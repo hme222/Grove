@@ -21,10 +21,15 @@ export const LESSON_META = {
     title: 'Habit Stacking',
     blurb: 'Tie plant care to a habit you already have.',
   },
-  'window-blueprint': {
-    id: 'window-blueprint',
-    title: 'Window Blueprint',
-    blurb: 'Match your plants to the light in your window.',
+  'light-basics': {
+    id: 'light-basics',
+    title: "Your spot's light",
+    blurb: 'Try a hand test and learn direct from indirect light.',
+  },
+  'window-map': {
+    id: 'window-map',
+    title: 'Your window',
+    blurb: 'Pick your window and see how it lights a room.',
   },
 };
 

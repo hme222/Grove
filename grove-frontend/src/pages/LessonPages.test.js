@@ -63,7 +63,7 @@ const queueData = (over = {}) => ({
     primary_track: 'rescue',
     queue: ['plant-er', 'soil-finger-test'],
     completed: [],
-    library: ['soil-finger-test', 'plant-parent-reset', 'plant-er', 'habit-stacking', 'window-blueprint'],
+    library: ['soil-finger-test', 'plant-parent-reset', 'plant-er', 'habit-stacking', 'light-basics', 'window-map'],
     has_plant: true,
     ...over,
   },
@@ -185,11 +185,11 @@ describe('LessonPage', () => {
 });
 
 describe('LessonsPage', () => {
-  test('shows the next lesson, what comes after it, and all five lessons', async () => {
+  test('shows the next lesson, what comes after it, and all six lessons', async () => {
     await mount(<LessonsPage />);
     expect(q('lessons-up-next').textContent).toContain('Plant ER');
     expect(q('lessons-then').textContent).toBe('After that: Soil Finger-Test');
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 
   test('start opens the next lesson', async () => {
@@ -213,14 +213,14 @@ describe('LessonsPage', () => {
     await mount(<LessonsPage />);
     expect(q('lessons-all-done')).not.toBeNull();
     expect(q('lessons-up-next')).toBeNull();
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 
-  test('if lessons cannot be loaded it says so and still lists the five lessons', async () => {
+  test('if lessons cannot be loaded it says so and still lists the six lessons', async () => {
     lessonAPI.queue.mockRejectedValue(new Error('network'));
     await mount(<LessonsPage />);
     expect(container.querySelector('[role="alert"]').textContent).toContain('Could not load your lessons');
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 });
 
