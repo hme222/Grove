@@ -43,7 +43,7 @@ def test_queue_puts_soil_lesson_second_for_every_other_track():
     assert tracks.build_lesson_queue("reset", []) == ["plant-parent-reset", "soil-finger-test"]
     assert tracks.build_lesson_queue("rescue", []) == ["plant-er", "soil-finger-test"]
     assert tracks.build_lesson_queue("steady_sprout", []) == ["habit-stacking", "soil-finger-test"]
-    assert tracks.build_lesson_queue("seedling", []) == ["window-blueprint", "soil-finger-test"]
+    assert tracks.build_lesson_queue("seedling", []) == ["light-basics", "soil-finger-test"]
 
 
 def test_queue_for_rebirth_starts_with_soil_lesson():
@@ -72,3 +72,27 @@ def test_completed_lessons_reads_only_known_lesson_entries():
 
 def test_completed_lessons_handles_missing_list():
     assert tracks.completed_lessons(None) == []
+
+
+def test_the_library_lists_the_two_light_lessons_and_not_the_retired_one():
+    assert "light-basics" in tracks.LIBRARY_LESSON_IDS
+    assert "window-map" in tracks.LIBRARY_LESSON_IDS
+    assert "window-blueprint" not in tracks.LIBRARY_LESSON_IDS
+    assert "window-blueprint" in tracks.LEGACY_LESSON_IDS
+
+
+def test_the_retired_lesson_is_still_read_from_the_records():
+    assert tracks.completed_lessons(["lesson:window-blueprint"]) == ["window-blueprint"]
+
+
+def test_finishing_the_old_lesson_credits_part_one_only():
+    done = ["window-blueprint"]
+    credited = tracks.with_legacy_credit(done)
+    assert "light-basics" in credited and "window-map" not in credited
+    assert done == ["window-blueprint"]
+    assert tracks.with_legacy_credit(["plant-er"]) == ["plant-er"]
+
+
+def test_a_seedling_user_who_finished_the_old_lesson_only_has_soil_left():
+    credited = tracks.with_legacy_credit(["window-blueprint"])
+    assert tracks.build_lesson_queue("seedling", credited) == ["soil-finger-test"]

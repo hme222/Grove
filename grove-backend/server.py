@@ -786,12 +786,14 @@ async def _user_has_plant(user_id: str) -> bool:
 async def _lesson_queue_for(user_id: str) -> dict:
     user = await db.users.find_one({"id": user_id}) or {}
     track = user.get("primary_track") or tracks_mod.DEFAULT_TRACK
-    done = tracks_mod.completed_lessons(user.get("tutorials_seen"))
+    done = tracks_mod.with_legacy_credit(tracks_mod.completed_lessons(user.get("tutorials_seen")))
     return {
         "primary_track": track,
         "queue": tracks_mod.build_lesson_queue(track, done),
         "completed": done,
-        "library": list(tracks_mod.LESSON_IDS),
+        "library": list(tracks_mod.LIBRARY_LESSON_IDS),
+        "up_next": "window-map" if "light-basics" in done and "window-map" not in done else None,
+        "progress": user.get("lesson_progress") or {},
         "has_plant": await _user_has_plant(user_id),
     }
 
@@ -825,7 +827,7 @@ async def get_lesson_queue(current_user: dict = Depends(get_current_user)):
 @api_router.post("/lessons/{lesson_id}/complete")
 async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_current_user)):
     """Mark a lesson complete. Safe to call twice."""
-    if lesson_id not in tracks_mod.LESSON_IDS:
+    if lesson_id not in tracks_mod.LIBRARY_LESSON_IDS:
         raise HTTPException(status_code=404, detail="Lesson not found")
     user_id = current_user['user_id']
     # The soil lesson ends in a real soil test, so it cannot finish without a plant.
