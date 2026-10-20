@@ -29,7 +29,7 @@ Why it matters: light is the cause behind most struggling plants, and a person w
 
 ## Non-goals
 
-- Grow lights, glass types, multiple windows, light meters, and exact sun maths by latitude. (My call. Grow lights get no card in this version.)
+- Glass types, one home-wide window map, light meters, balcony and skylight options, and exact sun maths by latitude. For a balcony or skylight the person picks the closest match.
 - Light never changes a real plant's condition on screen. Condition still comes only from the schedule, "looks off", and Grove's health check, as the nook spec says.
 - No score, level or number for light. The interface does not show lux, hours, or growth.
 
@@ -65,8 +65,13 @@ Both parts are hosted by Pip, with Pip's panel above the card as in Plan 2. Each
 2. **What can you see out of the window?** Open sky, a tree, or a building. A tree or building dims the light by roughly one level.
 3. **Seasons.** A summer and winter switch on the map. In winter the sun sits low and the patch reaches deeper into the room. In summer it is high and short. A north room that is fine in July can be dark in January.
 4. **West and southwest glass is hot** (one line, with the curtain as the fix). **North glass runs cold in winter** (one line: keep leaves off the glass). Both are tips inside existing cards, not cards of their own. (My call.)
-5. **Pick your window.** A compass with eight directions plus "Not sure". Choosing "Not sure" shows the shadow test and a short "check with your phone's compass" tip, then the person picks.
-   - A hemisphere question appears here once: "Are you in the northern or southern hemisphere?" with the answer saved. In the southern hemisphere N and S are swapped in all copy and drawings. (My call; the default is north.)
+5. **Pick the window for your plant's spot.** This is two questions, with the compass only as a shortcut.
+   - "Which window is nearest the spot where your plant will go?" It is the one window for that first plant, not one for the whole home.
+   - "When does the sun reach it?" Morning, midday, afternoon, no sun (just bright sky), I'm not sure, or there's no window here.
+   - "I'm not sure" shows the hand-shadow test, then the person answers again.
+   - Morning, midday, afternoon and no sun map to E, S, W and N. "I know the direction" opens the eight-direction compass, which saves the exact direction.
+   - A hemisphere question appears here once, with the answer saved: "Are you in the northern or southern hemisphere?" In the southern hemisphere N and S are swapped in all copy and drawings. (My call; the default is north.)
+   - "No window" leads to a grow-light card: a lamp or grow light is the honest answer for a dark spot, with one plain line on choosing one that suits low-light plants. The nook is shown lit by a lamp with no sun patch.
 6. **Your nook, lit your way.** The nook shows with the person's window light, with a list of Grove's species that fit that light, and one closing line from Pip: "I'm Pip. I'm your guide, not a plant. I'll sit where your light is good." This is the end of the lesson. (My call: the "what Pip is" line closes the lesson but the final picture is the nook, because Pip was already introduced by the nook offer.)
 
 Cards use short, warm, plain copy with no guilt. Part 2 can be taken without Part 1, but is queued after it.
@@ -75,24 +80,26 @@ Cards use short, warm, plain copy with no guilt. Part 2 can be taken without Par
 
 New fields on the user, saved by one endpoint (`POST /api/users/me/window`) and read from `/api/users/me` and the nook state:
 
-- `window_direction`: one of `N NE E SE S SW W NW`. `unsure` is never saved: "Not sure" leads to the shadow test and phone-compass tip, then the person picks their best guess. (My call.)
+- `window_sun`: `morning`, `midday`, `afternoon`, `none`, or `nowindow`. `unsure` is never saved: "Not sure" leads to the shadow test, then the person answers.
+- `window_direction`: one of `N NE E SE S SW W NW`, saved only when the person used the compass shortcut. Otherwise it is worked out from `window_sun`.
 - `window_view`: `open`, `tree`, or `building`. It is asked on the same card as the direction, optional, and defaults to `open`. (My call.)
 - `hemisphere`: `north` or `south`.
 
 All three are optional and independent of `nook_enabled`. Saving happens when the person picks on the window card, so a pick survives leaving the lesson. Saving never marks a lesson done by itself; the existing mark-done step does that. If the user has started the nook's readiness plant, saving a window also completes its `light-spot` step (+10 growth, once, through the existing readiness code). (My call.)
 
-The nook state gains `window: {direction, view, hemisphere, season}` (season from the current date and hemisphere) and `fits`, a short list of species names for the window's light level. It never includes numbers.
+The nook state gains `window: {sun, direction, view, hemisphere, season}` (season from the current date and hemisphere) and `fits`, a short list of species names for the window's light level. It never includes numbers.
 
 ## What the nook does with it
 
 - `drawRoom.js` accepts a `window` view and draws the sun patch for that direction, with a short, soft patch for N or NE and a long, warm one for S, SW and W. A tree or building view softens it one step. Season changes the patch length. The picture is a rough sketch, not a sun simulator.
-- If no direction is saved, the nook looks as it does today.
+- For `nowindow`, the nook shows a lamp glow on the floor with no sun patch and no window light.
+- If nothing is saved, the nook looks as it does today.
 - The nook page writes the same information in text: "Your window faces southwest and looks out on a tree. Mornings are gentle and afternoons are warm."
 - Reduced motion and no canvas behave as they do today.
 
 ## Light level for a window (rules)
 
-A pure module (`light.py` and a matching small frontend helper) maps direction, view, season and hemisphere to a base light level, with `fits` chosen from species whose `default_light_level` equals that level or the one below it. It is the single source for both the lesson's "what a plant gets" text and the nook. The N/S swap for the southern hemisphere is done once here.
+A pure module (`light.py` and a matching small frontend helper) maps direction, view, season and hemisphere to a base light level, with `fits` chosen from species whose `default_light_level` equals that level or the one below it. For `nowindow` the level is low and `fits` lists low-light species only. It is the single source for both the lesson's "what a plant gets" text and the nook. The N/S swap for the southern hemisphere is done once here.
 
 ## Calls on how it fits the code (my calls)
 
@@ -112,7 +119,7 @@ A pure module (`light.py` and a matching small frontend helper) maps direction, 
 
 ## Left to the builder
 
-The exact pixel art for the sun patches, the card wording within the intent above, and the helper and endpoint names.
+The exact pixel art for the sun patches and the lamp glow, the card wording within the intent above, and the helper and endpoint names.
 
 ## Open for the owner
 
