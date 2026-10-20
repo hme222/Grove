@@ -2,13 +2,14 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import LessonPage from './LessonPage';
 import LessonsPage from './LessonsPage';
-import { lessonAPI, plantAPI, careAPI, nookAPI } from '../lib/api';
+import { lessonAPI, plantAPI, careAPI, nookAPI, lightAPI } from '../lib/api';
 
 jest.mock('../lib/api', () => ({
   lessonAPI: { queue: jest.fn(), complete: jest.fn() },
   plantAPI: { getAll: jest.fn() },
   careAPI: { createLog: jest.fn() },
   nookAPI: { state: jest.fn() },
+  lightAPI: { progress: jest.fn() },
 }));
 
 // Jest here cannot load react-router-dom v7, the `@/` alias, or the real card pages.
@@ -63,6 +64,7 @@ const queueData = (over = {}) => ({
     primary_track: 'rescue',
     queue: ['plant-er', 'soil-finger-test'],
     completed: [],
+    progress: {},
     library: ['soil-finger-test', 'plant-parent-reset', 'plant-er', 'habit-stacking', 'light-basics', 'window-map'],
     has_plant: true,
     ...over,
@@ -76,6 +78,7 @@ beforeEach(() => {
   nookAPI.state.mockResolvedValue({ data: { pip: { form: 'leafy' } } });
   lessonAPI.queue.mockResolvedValue(queueData());
   lessonAPI.complete.mockResolvedValue(queueData());
+  lightAPI.progress.mockResolvedValue({ data: {} });
   plantAPI.getAll.mockResolvedValue({ data: { plants: [{ id: 'p1', common_name: 'Pothos' }] } });
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -184,6 +187,47 @@ describe('LessonPage', () => {
   });
 });
 
+describe('LessonPage resume and progress', () => {
+  test('a lesson resumes on the saved card', async () => {
+    lessonAPI.queue.mockResolvedValue(queueData({ progress: { 'plant-er': 1 } }));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-headline').textContent).toBe('ER last');
+  });
+
+  test('a finished lesson starts again from the first card', async () => {
+    lessonAPI.queue.mockResolvedValue(queueData({ progress: { 'plant-er': 1 }, completed: ['plant-er'] }));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-headline').textContent).toBe('ER one');
+  });
+
+  test('advancing saves progress, and a failure does not block the next card', async () => {
+    lightAPI.progress.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    await flush();
+    expect(lightAPI.progress).toHaveBeenCalledWith('plant-er', 1);
+    expect(q('lesson-headline').textContent).toBe('ER last');
+  });
+
+  test('progress is kept on the signed-in user too', async () => {
+    mockUser = { nook_enabled: false, tutorials_seen: [], lesson_progress: { 'soil-finger-test': 1 } };
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    expect(mockUpdateUser).toHaveBeenCalledWith({ lesson_progress: { 'soil-finger-test': 1, 'plant-er': 1 } });
+  });
+
+  test('the lesson still opens on the first card if the queue cannot be loaded', async () => {
+    lessonAPI.queue.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-headline').textContent).toBe('ER one');
+  });
+});
+
 describe('LessonsPage', () => {
   test('shows the next lesson, what comes after it, and all six lessons', async () => {
     await mount(<LessonsPage />);
@@ -257,7 +301,7 @@ describe('LessonPage and the nook', () => {
     await click(q('lesson-next'));
     await click(q('mark-done-done'));
     await flush();
-    expect(mockUpdateUser).not.toHaveBeenCalled();
+    expect(mockUpdateUser.mock.calls.filter(([change]) => 'tutorials_seen' in change)).toHaveLength(0);
   });
 
   test('when the first-care celebration closes the user is marked as celebrated', async () => {
