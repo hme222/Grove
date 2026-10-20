@@ -22,7 +22,7 @@ Per scoping round + user message:
 """
 from typing import List, Dict, Optional
 
-BADGE_SEED_VERSION = "14c3c-177-v2"
+BADGE_SEED_VERSION = "14c3c-180-v1"
 
 
 def _b(slug: str, name: str, category: str, subcategory: str,
@@ -94,6 +94,8 @@ EARNABLE_SLUGS = {
     "light_reader",
     # Time milestones (3)
     "grove_1_month", "grove_6_months", "grove_1_year",
+    # Pip's nook levels (3). Given by the nook state endpoint, not by check_and_award_badges.
+    "nook_level_2", "nook_level_3", "nook_level_4",
 }
 
 
@@ -647,9 +649,23 @@ _SEASONAL_NICHE_BADGES: List[Dict] = [
 # ---------------------------------------------------------------------------
 # Public exports
 # ---------------------------------------------------------------------------
+# Pip's nook levels. They are given by the nook state endpoint when a user who has
+# opted in reaches the level, and the gallery hides them until then.
+_NOOK_BADGES: List[Dict] = [
+    _b("nook_level_2", "Settling in", "Achievement", "Pip's nook",
+       "Reach level 2 in Pip's nook", icon="home", tier="bronze",
+       earnable=True, family="nook_level", family_order=1),
+    _b("nook_level_3", "Lived in", "Achievement", "Pip's nook",
+       "Reach level 3 in Pip's nook", icon="home", tier="silver",
+       earnable=True, family="nook_level", family_order=2),
+    _b("nook_level_4", "In bloom", "Achievement", "Pip's nook",
+       "Reach level 4 in Pip's nook", icon="flower", tier="gold",
+       earnable=True, family="nook_level", family_order=3),
+]
+
 BADGE_CATALOG: List[Dict] = (
     _CARE_BADGES + _COLLECTION_BADGES + _COMMUNITY_BADGES
-    + _ACHIEVEMENT_BADGES + _SEASONAL_NICHE_BADGES
+    + _ACHIEVEMENT_BADGES + _SEASONAL_NICHE_BADGES + _NOOK_BADGES
 )
 
 
@@ -679,11 +695,11 @@ SLUG_TO_FAMILY: Dict[str, str] = {
 # Note: Supplement v2 § B.6 summary table claims 170 total, but the actual
 # badge listings in B.1-B.5 ladder out to 177. We trust the listings as the
 # source of truth and treat the header "~170" as approximate.
-assert len(BADGE_CATALOG) == 177, f"BADGE_CATALOG must contain 177 entries, found {len(BADGE_CATALOG)}"
+assert len(BADGE_CATALOG) == 180, f"BADGE_CATALOG must contain 180 entries, found {len(BADGE_CATALOG)}"
 _seen_slugs = set()
 for _b_doc in BADGE_CATALOG:
     if _b_doc["slug"] in _seen_slugs:
         raise RuntimeError(f"Duplicate badge slug: {_b_doc['slug']}")
     _seen_slugs.add(_b_doc["slug"])
 assert "verified_user" in EARNABLE_SLUGS
-assert len(EARNABLE_SLUGS) == 63, f"EARNABLE_SLUGS should contain 63 slugs, found {len(EARNABLE_SLUGS)}"
+assert len(EARNABLE_SLUGS) == 66, f"EARNABLE_SLUGS should contain 66 slugs, found {len(EARNABLE_SLUGS)}"

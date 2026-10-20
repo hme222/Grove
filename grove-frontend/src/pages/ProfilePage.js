@@ -10,6 +10,7 @@ import { LogOut, Sparkles, Leaf, Flame, HelpCircle, RefreshCw, Bell, Settings, F
 import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
+import NookSettings from '../components/NookSettings';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -331,6 +332,8 @@ export default function ProfilePage() {
           <h3 className="font-plant text-[#1C2E10] text-sm mb-3">Tutorials and tips</h3>
           <TutorialsAndTipsControls />
         </div>
+
+        <NookSettings />
 
         {/* About Grove */}
         <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4">
