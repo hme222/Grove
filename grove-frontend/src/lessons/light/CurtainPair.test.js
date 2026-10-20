@@ -30,4 +30,5 @@ test('a lesson room is bare: no Pip, and a plant on the table', () => {
   expect(view.pip).toBeNull();
   expect(view.hero).not.toBeNull();
   expect(view.unlocked).toEqual(['window', 'table', 'sill', 'floor']);
+  expect(view.hideGhosts).toBe(true);
 });

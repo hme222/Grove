@@ -5,5 +5,6 @@ export const lessonView = (window) => ({
   hero: { group: 'pothos', condition: 'fine' },
   readiness: null,
   shelfPlants: [],
+  hideGhosts: true,
   window,
 });

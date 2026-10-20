@@ -19,8 +19,12 @@ const rect = (ctx, x, y, w, h, color) => {
   ctx.fillRect(x, y, w, h);
 };
 
+// Lesson rooms turn the outlines off. Set at the start of each drawRoom call.
+let ghostsOn = true;
+
 // A faint outline that shows where something will appear once it unlocks.
 function ghost(ctx, x, y, w, h) {
+  if (!ghostsOn) return;
   ctx.fillStyle = ROOM.ghost;
   ctx.fillRect(x, y, w, 1);
   ctx.fillRect(x, y + h - 1, w, 1);
@@ -163,12 +167,14 @@ function drawHero(ctx, view) {
 
 // Draws the whole nook for one view. `tick` flips Pip's small bob; pass 0 for a still image.
 //   view = { unlocked: string[], pip: { form, location, mood } | null,
+//            hideGhosts?: true to skip the outlines of locked slots,
 //            window: the nook state's window | null (omit for the original beam),
 //            hero: { group, condition } | null,
 //            readiness: { state, group } | null,
 //            shelfPlants: { condition }[] }
 export function drawRoom(ctx, view, tick = 0) {
   const unlocked = view.unlocked || [];
+  ghostsOn = !view.hideGhosts;
   drawBackdrop(ctx, view.window);
   drawRugAndLamp(ctx, unlocked);
   drawHangingAndArt(ctx, unlocked);

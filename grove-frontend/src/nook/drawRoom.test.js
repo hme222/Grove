@@ -248,3 +248,15 @@ describe('window light', () => {
     });
   });
 });
+
+
+test('hideGhosts draws no outlines for locked slots, and the default still does', () => {
+  expect(ghosts(draw(view())).length).toBeGreaterThan(0);
+  expect(ghosts(draw(view({ hideGhosts: true })))).toHaveLength(0);
+  expect(ghosts(draw(view({ hideGhosts: true, hero: null })))).toHaveLength(0);
+});
+
+test('drawing a room with hidden outlines does not hide them in the next room', () => {
+  draw(view({ hideGhosts: true }));
+  expect(ghosts(draw(view())).length).toBeGreaterThan(0);
+});
