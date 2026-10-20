@@ -2,7 +2,23 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderLightCard } from './steps';
 
-jest.mock('../../lib/api', () => ({ lightAPI: { setReading: jest.fn(), prompt: jest.fn() } }));
+jest.mock('../../lib/api', () => ({
+  lightAPI: { setReading: jest.fn(), prompt: jest.fn() },
+  nookAPI: { state: jest.fn() },
+}));
+jest.mock('./WindowPickStep', () => ({
+  __esModule: true,
+  default: ({ onSaved }) =>
+    require('react').createElement('button', {
+      'data-testid': 'pick-mock',
+      onClick: () => onSaved({ sun: 'midday', direction: 'S', view: 'tree', hemisphere: 'south' }),
+    }, 'pick'),
+}));
+jest.mock('./WindowRoomStep', () => ({
+  __esModule: true,
+  default: ({ window }) => require('react').createElement('div', { 'data-testid': 'room-mock' }, window.direction),
+}));
+import { nookAPI } from '../../lib/api';
 jest.mock('./ShadowTestStep', () => ({
   __esModule: true,
   default: () => require('react').createElement('div', { 'data-testid': 'shadow-step' }, 'shadow'),
@@ -57,4 +73,47 @@ test('the curtain card shows the pair and a next button', () => {
   expect(container.querySelectorAll('[role="img"]')).toHaveLength(2);
   act(() => q('step-next').dispatchEvent(new MouseEvent('click', { bubbles: true })));
   expect(h.next).toHaveBeenCalledTimes(1);
+});
+
+const flush = () => act(async () => {});
+
+test('the window pick step remembers the pick for the room and for the signed-in user', () => {
+  const ctx = { user: {}, updateUser: jest.fn(), setWindow: jest.fn() };
+  show(renderLightCard({ interactive: 'window-pick' }, helpers(), ctx));
+  act(() => q('pick-mock').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  expect(ctx.setWindow).toHaveBeenCalledWith({ sun: 'midday', direction: 'S', view: 'tree', hemisphere: 'south' });
+  expect(ctx.updateUser).toHaveBeenCalledWith({ window_sun: 'midday', window_view: 'tree', hemisphere: 'south' });
+});
+
+test('the room card uses the window picked in this visit', async () => {
+  show(renderLightCard({ interactive: 'window-room', cta: 'Got it' }, helpers(), { user: {}, window: { direction: 'SW' } }));
+  await flush();
+  expect(q('room-mock').textContent).toBe('SW');
+  expect(nookAPI.state).not.toHaveBeenCalled();
+  expect(q('step-next')).not.toBeNull();
+});
+
+test('the room card loads the saved window when the lesson was resumed', async () => {
+  nookAPI.state.mockResolvedValue({ data: { window: { direction: 'E' } } });
+  show(renderLightCard({ interactive: 'window-room', cta: 'Got it' }, helpers(), { user: {}, window: null }));
+  await flush();
+  expect(q('room-mock').textContent).toBe('E');
+});
+
+test('with no window saved the room card says to pick one first, and still moves on', async () => {
+  nookAPI.state.mockResolvedValue({ data: { window: null } });
+  const h = helpers();
+  show(renderLightCard({ interactive: 'window-room', cta: 'Got it' }, h, { user: {}, window: null }));
+  await flush();
+  expect(q('room-none').textContent).toBe('Pick your window first and this will fill in.');
+  act(() => q('step-next').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  expect(h.next).toHaveBeenCalledTimes(1);
+});
+
+test('the room card still moves on if the saved window cannot be loaded', async () => {
+  nookAPI.state.mockRejectedValue(new Error('network'));
+  show(renderLightCard({ interactive: 'window-room', cta: 'Got it' }, helpers(), { user: {}, window: null }));
+  await flush();
+  expect(q('room-none')).not.toBeNull();
+  expect(q('step-next')).not.toBeNull();
 });

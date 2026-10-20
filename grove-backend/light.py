@@ -106,7 +106,8 @@ def guide(hemisphere: str, view: str) -> List[Dict]:
     """Every direction in both seasons, for the lesson's room chips."""
     return [
         {
-            "direction": direction, "season": season,
+            "direction": direction, "draw_direction": effective_direction(direction, hemisphere),
+            "season": season,
             "level": level_for(direction, view, season, hemisphere),
             "arrives": arrives(direction, hemisphere),
         }

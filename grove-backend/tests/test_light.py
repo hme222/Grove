@@ -118,3 +118,11 @@ def test_suit():
     assert light.suit("medium", "bright_indirect") == "suits"
     assert light.suit("bright_direct", "medium") == "prefers_brighter"
     assert light.suit("low", "bright_direct") == "prefers_dimmer"
+
+
+def test_guide_items_carry_the_direction_to_draw():
+    south = {(i["direction"], i["season"]): i for i in light.guide("south", "open")}
+    assert south[("N", "summer")]["draw_direction"] == "S"
+    assert south[("E", "winter")]["draw_direction"] == "E"
+    north = {(i["direction"], i["season"]): i for i in light.guide("north", "open")}
+    assert north[("SW", "summer")]["draw_direction"] == "SW"

@@ -21,6 +21,7 @@ export default function LessonPage() {
   const pipForm = usePipForm(nookOn);
   const [hasPlant, setHasPlant] = useState(false);
   const [resume, setResume] = useState({ ready: false, index: 0 });
+  const [pickedWindow, setPickedWindow] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
   const [error, setError] = useState('');
 
@@ -105,7 +106,7 @@ export default function LessonPage() {
         cards={cards}
         initialIndex={resume.index}
         onAdvance={onAdvance}
-        renderCard={(card, helpers) => renderLightCard(card, helpers, { user, updateUser, nookOn, finish })}
+        renderCard={(card, helpers) => renderLightCard(card, helpers, { user, updateUser, nookOn, finish, window: pickedWindow, setWindow: setPickedWindow })}
         renderFinalCard={renderFinalCard}
         onExit={() => navigate('/lessons')}
         host={nookOn ? <PipPanel form={pipForm} label="Pip" /> : null}
