@@ -9,5 +9,6 @@ export function buildView(state, mood) {
     hero: state.hero ? { group: state.hero.group, condition: state.hero.condition } : null,
     readiness: !state.hero && state.readiness ? { state: state.readiness.state, group: state.readiness.group } : null,
     shelfPlants: [...shelf, ...keepsake],
+    window: state.window || null,
   };
 }

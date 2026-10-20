@@ -178,3 +178,73 @@ test('drawSprite puts the bottom row on the base line and the centre column on t
     { x: 20, y: 10, w: 1, h: 1, color: PALETTE.g },
   ]);
 });
+
+
+describe('window light', () => {
+  const lit = (over) => view({ window: { draw_direction: 'S', direction: 'S', season: 'summer', view: 'open', lamp: false, ...over } });
+  const BEAMS = [ROOM.beam, ROOM.beamCool, ROOM.beamWarm, ROOM.beamHot, ROOM.beamSoft];
+  const anyBeam = (calls) => calls.filter((c) => BEAMS.includes(c.color));
+
+  test('a south window draws a warm beam in the floor rows', () => {
+    const beam = withColor(draw(lit()), ROOM.beamWarm);
+    expect(beam.length).toBeGreaterThan(0);
+    beam.forEach((c) => expect(c.y).toBeGreaterThanOrEqual(56));
+  });
+
+  test('a west window draws a hot beam and an east window a cool one', () => {
+    expect(withColor(draw(lit({ draw_direction: 'W' })), ROOM.beamHot).length).toBeGreaterThan(0);
+    expect(withColor(draw(lit({ draw_direction: 'E' })), ROOM.beamCool).length).toBeGreaterThan(0);
+  });
+
+  test('a north window draws no beam at all', () => {
+    expect(anyBeam(draw(lit({ draw_direction: 'N' })))).toHaveLength(0);
+  });
+
+  test('no window in the view draws the original beam', () => {
+    expect(withColor(draw(view()), ROOM.beam).length).toBeGreaterThan(0);
+  });
+
+  test('a longer reach draws more rows of beam', () => {
+    const rows = (d) => withColor(draw(lit({ draw_direction: d })), ROOM.beamCool).length + withColor(draw(lit({ draw_direction: d })), ROOM.beamWarm).length;
+    expect(rows('S')).toBeGreaterThan(rows('NE'));
+  });
+
+  test('a tree softens the beam', () => {
+    const calls = draw(lit({ view: 'tree' }));
+    expect(withColor(calls, ROOM.beamSoft).length).toBeGreaterThan(0);
+    expect(withColor(calls, ROOM.beamWarm)).toHaveLength(0);
+  });
+
+  test('a lamp glows on the floor and the pane is dark when there is no window', () => {
+    const calls = draw(view({ window: { lamp: true } }));
+    const glow = withColor(calls, ROOM.lamp);
+    expect(glow.length).toBeGreaterThan(0);
+    glow.forEach((c) => expect(c.y).toBeGreaterThanOrEqual(56));
+    expect(withColor(calls, ROOM.skyDark).length).toBeGreaterThan(0);
+    expect(withColor(calls, ROOM.sky)).toHaveLength(0);
+    expect(anyBeam(calls)).toHaveLength(0);
+  });
+
+  test('a null Pip draws no Pip', () => {
+    expect(inkX(draw(view()))).not.toHaveLength(0);
+    expect(inkX(draw(view({ pip: null })))).toHaveLength(0);
+  });
+
+  test('nothing is drawn outside the room for any window', () => {
+    const windows = [
+      ...['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].flatMap((d) =>
+        ['summer', 'winter'].map((season) => ({ draw_direction: d, season, view: 'open', lamp: false }))
+      ),
+      { draw_direction: 'S', season: 'winter', view: 'tree', lamp: false },
+      { lamp: true },
+    ];
+    windows.forEach((w) => {
+      draw(view({ window: w }), 1).forEach((c) => {
+        expect(c.x).toBeGreaterThanOrEqual(0);
+        expect(c.y).toBeGreaterThanOrEqual(0);
+        expect(c.x + c.w).toBeLessThanOrEqual(ROOM_W);
+        expect(c.y + c.h).toBeLessThanOrEqual(ROOM_H);
+      });
+    });
+  });
+});
