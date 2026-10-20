@@ -1,7 +1,7 @@
 """A small in-memory stand-in for the database, shared by the nook tests.
 
 It supports exactly what the nook code uses: equality filters, `$ne`, `$in`,
-`find().sort().limit().to_list()`, and `$set` / `$addToSet` updates, including
+`find().sort().limit().to_list()`, and `$set` / `$unset` / `$addToSet` updates, including
 dotted keys such as `readiness_plant.steps.drainage`.
 """
 
@@ -66,6 +66,8 @@ class Collection:
             return
         for key, value in update.get("$set", {}).items():
             _set_path(doc, key, value)
+        for key in update.get("$unset", {}):
+            doc.pop(key, None)
         for key, value in update.get("$addToSet", {}).items():
             items = doc.setdefault(key, [])
             if value not in items:
