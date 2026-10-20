@@ -17,11 +17,14 @@ jest.mock('./ClosingStep', () => ({
 }));
 jest.mock('./WindowPickStep', () => ({
   __esModule: true,
-  default: ({ onSaved }) =>
-    require('react').createElement('button', {
-      'data-testid': 'pick-mock',
-      onClick: () => onSaved({ sun: 'midday', direction: 'S', view: 'tree', hemisphere: 'south' }),
-    }, 'pick'),
+  default: ({ onSaved, onLater, initialView, initialHemisphere }) =>
+    require('react').createElement('div', { 'data-testid': 'pick-wrap' },
+      require('react').createElement('button', {
+        'data-testid': 'pick-mock',
+        onClick: () => onSaved({ sun: 'midday', direction: 'S', view: 'tree', hemisphere: 'south' }),
+      }, 'pick'),
+      require('react').createElement('button', { 'data-testid': 'pick-later-mock', onClick: () => onLater() }, 'later'),
+      require('react').createElement('span', { 'data-testid': 'pick-initial' }, `${initialView}-${initialHemisphere}`)),
 }));
 jest.mock('./WindowRoomStep', () => ({
   __esModule: true,
@@ -30,7 +33,10 @@ jest.mock('./WindowRoomStep', () => ({
 import { nookAPI } from '../../lib/api';
 jest.mock('./ShadowTestStep', () => ({
   __esModule: true,
-  default: () => require('react').createElement('div', { 'data-testid': 'shadow-step' }, 'shadow'),
+  default: ({ onSaved, onLater }) =>
+    require('react').createElement('div', { 'data-testid': 'shadow-step' },
+      require('react').createElement('button', { 'data-testid': 'shadow-saved', onClick: () => onSaved('crisp') }, 'saved'),
+      require('react').createElement('button', { 'data-testid': 'shadow-later-mock', onClick: () => onLater() }, 'later')),
 }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -91,7 +97,7 @@ test('the window pick step remembers the pick for the room and for the signed-in
   show(renderLightCard({ interactive: 'window-pick' }, helpers(), ctx));
   act(() => q('pick-mock').dispatchEvent(new MouseEvent('click', { bubbles: true })));
   expect(ctx.setWindow).toHaveBeenCalledWith({ sun: 'midday', direction: 'S', view: 'tree', hemisphere: 'south' });
-  expect(ctx.updateUser).toHaveBeenCalledWith({ window_sun: 'midday', window_view: 'tree', hemisphere: 'south' });
+  expect(ctx.updateUser).toHaveBeenCalledWith({ window_sun: 'midday', window_view: 'tree', hemisphere: 'south', light_prompt_pending: false });
 });
 
 test('the room card uses the window picked in this visit', async () => {
@@ -144,4 +150,37 @@ test('the closing card gets the ending, the picked window, and the lesson finish
 test('the closing card copes with no window picked and no finish control given', () => {
   show(renderLightCard({ interactive: 'closing' }, helpers(), { user: {}, nookOn: false, window: null }));
   expect(q('closing-mock').textContent).toBe('false-none');
+});
+
+
+test('saving a shadow reading keeps the signed-in user in step and clears the pending prompt', () => {
+  const ctx = { user: {}, updateUser: jest.fn() };
+  show(renderLightCard({ interactive: 'shadow-test' }, helpers(), ctx));
+  act(() => q('shadow-saved').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  expect(ctx.updateUser).toHaveBeenCalledWith({ light_reading: 'crisp', light_prompt_pending: false });
+});
+
+test('later marks the prompt pending on the signed-in user, unless it was already dismissed', () => {
+  const ctx = { user: {}, updateUser: jest.fn() };
+  show(renderLightCard({ interactive: 'shadow-test' }, helpers(), ctx));
+  act(() => q('shadow-later-mock').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  expect(ctx.updateUser).toHaveBeenCalledWith({ light_prompt_pending: true });
+  const dismissed = { user: { light_prompt_dismissed: true }, updateUser: jest.fn() };
+  show(renderLightCard({ interactive: 'window-pick' }, helpers(), dismissed));
+  act(() => q('pick-later-mock').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  expect(dismissed.updateUser).not.toHaveBeenCalled();
+  const fresh = { user: {}, updateUser: jest.fn() };
+  show(renderLightCard({ interactive: 'window-pick' }, helpers(), fresh));
+  act(() => q('pick-later-mock').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  expect(fresh.updateUser).toHaveBeenCalledWith({ light_prompt_pending: true });
+});
+
+test('the window pick starts from the saved hemisphere and view', () => {
+  show(renderLightCard({ interactive: 'window-pick' }, helpers(), { user: { hemisphere: 'south', window_view: 'tree' }, updateUser: jest.fn() }));
+  expect(q('pick-initial').textContent).toBe('tree-south');
+});
+
+test('the curtain card is labelled for the person\'s hemisphere', () => {
+  show(renderLightCard({ interactive: 'curtain', cta: 'Got it' }, helpers(), { user: { hemisphere: 'south' } }));
+  expect([...container.querySelectorAll('[role="img"]')].map((el) => el.getAttribute('aria-label'))[0]).toBe('North window, no curtain');
 });

@@ -26,10 +26,11 @@ const chosen = (on) => `${button} ${on ? 'border-[#1C2E10] bg-[#EAF3DE] ring-1 r
 
 // Part 2, card 1: which window, and when the sun reaches it. The compass is an optional shortcut.
 // A pick is saved once, then the lesson moves on. Nothing is saved for "not sure" or "later".
-export default function WindowPickStep({ next, onSaved }) {
+// The hemisphere and view start from what the person saved before, so a retake never resets them.
+export default function WindowPickStep({ next, onSaved, onLater, initialView, initialHemisphere }) {
   const [mode, setMode] = useState('timing'); // timing | compass | unsure
-  const [view, setView] = useState('open');
-  const [hemisphere, setHemisphere] = useState('north');
+  const [view, setView] = useState(VIEWS.some((v) => v.value === initialView) ? initialView : 'open');
+  const [hemisphere, setHemisphere] = useState(HEMISPHERES.some((h) => h.value === initialHemisphere) ? initialHemisphere : 'north');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const busy = useRef(false);
@@ -57,6 +58,7 @@ export default function WindowPickStep({ next, onSaved }) {
     setSaving(true);
     try {
       await lightAPI.prompt('later');
+      if (onLater) onLater();
     } catch (_e) {
       // The reminder is a nicety. The lesson carries on without it.
     } finally {

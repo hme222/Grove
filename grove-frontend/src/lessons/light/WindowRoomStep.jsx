@@ -49,10 +49,10 @@ export default function WindowRoomStep({ window }) {
   }, [lamp, item, window, direction, season, viewKind]);
 
   const label = lamp
-    ? 'A nook room lit by a lamp.'
-    : `A nook room lit through a ${directionName(direction)} window, ${season}.`;
+    ? 'A room lit by a lamp.'
+    : `A room lit through a ${directionName(direction)} window, ${season}.`;
   const text = lamp
-    ? "There's no window here, so the nook is lit by a lamp."
+    ? "There's no window here, so the room is lit by a lamp."
     : item
       ? `Facing ${directionName(direction)}, ${season}: ${levelName(item.level)}. ${item.arrives}`
       : windowSentence(window);
@@ -98,8 +98,17 @@ export default function WindowRoomStep({ window }) {
       )}
 
       <ul className="text-xs font-ui text-[#2B2B26] list-disc pl-4 space-y-1" data-testid="room-footnotes">
-        <li>West and southwest glass gets hot. A sheer curtain helps.</li>
-        <li>North glass runs cold in winter. Keep leaves off it.</li>
+        {hemisphere === 'south' ? (
+          <>
+            <li>West and northwest glass gets hot. A sheer curtain helps.</li>
+            <li>South glass runs cold in winter. Keep leaves off it.</li>
+          </>
+        ) : (
+          <>
+            <li>West and southwest glass gets hot. A sheer curtain helps.</li>
+            <li>North glass runs cold in winter. Keep leaves off it.</li>
+          </>
+        )}
       </ul>
     </div>
   );

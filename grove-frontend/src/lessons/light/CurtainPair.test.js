@@ -32,3 +32,10 @@ test('a lesson room is bare: no Pip, and a plant on the table', () => {
   expect(view.unlocked).toEqual(['window', 'table', 'sill', 'floor']);
   expect(view.hideGhosts).toBe(true);
 });
+
+
+test('in the southern hemisphere the sunny window is the north one', () => {
+  act(() => root.render(<CurtainPair hemisphere="south" />));
+  const names = [...container.querySelectorAll('[role="img"]')].map((el) => el.getAttribute('aria-label'));
+  expect(names).toEqual(['North window, no curtain', 'North window, sheer curtain']);
+});

@@ -12,7 +12,7 @@ const choiceClass =
 
 // Part 1, card 1: the hand-shadow test. A choice is saved once, then the lesson moves on.
 // "Later" leaves a one-time reminder on Care Today and moves on.
-export default function ShadowTestStep({ next, onSaved }) {
+export default function ShadowTestStep({ next, onSaved, onLater }) {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const busy = useRef(false);
@@ -40,6 +40,7 @@ export default function ShadowTestStep({ next, onSaved }) {
     setSaving(true);
     try {
       await lightAPI.prompt('later');
+      if (onLater) onLater();
     } catch (_e) {
       // The reminder is a nicety. The lesson carries on without it.
     } finally {

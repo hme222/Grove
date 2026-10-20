@@ -77,7 +77,7 @@ export const WINDOW_MAP_CARDS = [
   },
   {
     ...part2,
-    header: 'Card 4 of 4 · Your nook',
+    header: 'Card 4 of 4 · Your light',
     headline: 'That is your light.',
     body: 'A last look at the light you picked.',
     icon: Sparkles,

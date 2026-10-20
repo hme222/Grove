@@ -12,13 +12,14 @@ let root;
 const q = (id) => container.querySelector(`[data-testid="${id}"]`);
 const click = (id) => act(() => q(id).dispatchEvent(new MouseEvent('click', { bubbles: true })));
 const flush = () => act(async () => {});
-const mount = async () => {
+const mount = async (props) => {
   const next = jest.fn();
   const onSaved = jest.fn();
+  const onLater = jest.fn();
   await act(async () => {
-    root.render(<WindowPickStep next={next} onSaved={onSaved} />);
+    root.render(<WindowPickStep next={next} onSaved={onSaved} onLater={onLater} {...props} />);
   });
-  return { next, onSaved };
+  return { next, onSaved, onLater };
 };
 const SUMMARY = { sun: 'afternoon', direction: 'W', draw_direction: 'W', view: 'open', hemisphere: 'north', season: 'summer', level: 'bright_direct', arrives: 'x', lamp: false };
 
@@ -116,4 +117,32 @@ test('every choice is a labelled button at least 44px tall', async () => {
     expect(q(id).textContent.trim().length).toBeGreaterThan(0);
     expect(q(id).className).toContain('min-h-[44px]');
   });
+});
+
+
+test('later tells the page the prompt is pending, but only when it was saved', async () => {
+  const { onLater } = await mount();
+  click('pick-later');
+  await flush();
+  expect(onLater).toHaveBeenCalledTimes(1);
+  lightAPI.prompt.mockRejectedValue(new Error('network'));
+  const second = await mount();
+  click('pick-later');
+  await flush();
+  expect(second.onLater).not.toHaveBeenCalled();
+});
+
+test('the saved hemisphere and view are the starting choices, and are what gets sent', async () => {
+  await mount({ initialView: 'tree', initialHemisphere: 'south' });
+  expect(q('view-tree').getAttribute('aria-pressed')).toBe('true');
+  expect(q('hemi-south').getAttribute('aria-pressed')).toBe('true');
+  click('pick-morning');
+  await flush();
+  expect(lightAPI.setWindow).toHaveBeenCalledWith({ sun: 'morning', view: 'tree', hemisphere: 'south' });
+});
+
+test('an unknown saved value falls back to the defaults', async () => {
+  await mount({ initialView: 'pond', initialHemisphere: 'east' });
+  expect(q('view-open').getAttribute('aria-pressed')).toBe('true');
+  expect(q('hemi-north').getAttribute('aria-pressed')).toBe('true');
 });

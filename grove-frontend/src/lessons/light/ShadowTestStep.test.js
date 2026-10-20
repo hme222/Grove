@@ -15,10 +15,11 @@ const flush = () => act(async () => {});
 const mount = async (props) => {
   const next = jest.fn();
   const onSaved = jest.fn();
+  const onLater = jest.fn();
   await act(async () => {
-    root.render(<ShadowTestStep next={next} onSaved={onSaved} {...props} />);
+    root.render(<ShadowTestStep next={next} onSaved={onSaved} onLater={onLater} {...props} />);
   });
-  return { next, onSaved };
+  return { next, onSaved, onLater };
 };
 
 beforeEach(() => {
@@ -92,4 +93,17 @@ test('every choice is a labelled button at least 44px tall', async () => {
     expect(q(id).textContent.trim().length).toBeGreaterThan(0);
     expect(q(id).className).toContain('min-h-[44px]');
   });
+});
+
+
+test('later tells the page the prompt is pending, but only when it was saved', async () => {
+  const { onLater } = await mount();
+  click(q('shadow-later'));
+  await flush();
+  expect(onLater).toHaveBeenCalledTimes(1);
+  lightAPI.prompt.mockRejectedValue(new Error('network'));
+  const second = await mount();
+  click(q('shadow-later'));
+  await flush();
+  expect(second.onLater).not.toHaveBeenCalled();
 });

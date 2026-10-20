@@ -45,13 +45,20 @@ function RoomCard({ card, helpers, picked }) {
   );
 }
 
+// "I'll check at noon" leaves a prompt on Care Today. Keep the signed-in user in step with that,
+// unless the person already dismissed the prompt for good.
+const markPending = (ctx) => () => {
+  if (ctx.updateUser && !ctx.user?.light_prompt_dismissed) ctx.updateUser({ light_prompt_pending: true });
+};
+
 export function renderLightCard(card, helpers, ctx) {
   switch (card.interactive) {
     case 'shadow-test':
       return (
         <ShadowTestStep
           next={helpers.next}
-          onSaved={(reading) => ctx.updateUser && ctx.updateUser({ light_reading: reading })}
+          onSaved={(reading) => ctx.updateUser && ctx.updateUser({ light_reading: reading, light_prompt_pending: false })}
+          onLater={markPending(ctx)}
         />
       );
     case 'reading-note': {
@@ -70,7 +77,7 @@ export function renderLightCard(card, helpers, ctx) {
     case 'curtain':
       return (
         <div className="space-y-3">
-          <CurtainPair />
+          <CurtainPair hemisphere={ctx.user?.hemisphere} />
           <StepNext cta={card.cta} onClick={helpers.next} />
         </div>
       );
@@ -78,10 +85,13 @@ export function renderLightCard(card, helpers, ctx) {
       return (
         <WindowPickStep
           next={helpers.next}
+          initialView={ctx.user?.window_view}
+          initialHemisphere={ctx.user?.hemisphere}
+          onLater={markPending(ctx)}
           onSaved={(summary) => {
             if (ctx.setWindow) ctx.setWindow(summary);
             if (ctx.updateUser) {
-              ctx.updateUser({ window_sun: summary.sun, window_view: summary.view, hemisphere: summary.hemisphere });
+              ctx.updateUser({ window_sun: summary.sun, window_view: summary.view, hemisphere: summary.hemisphere, light_prompt_pending: false });
             }
           }}
         />

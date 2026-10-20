@@ -38,3 +38,11 @@ test('the copy never counts hours and never says wrong', () => {
     expect(text).not.toContain('wrong');
   });
 });
+
+
+test('no card mentions the nook, because the lessons work without it', () => {
+  all.forEach((card) => {
+    const text = `${card.header} ${card.headline} ${card.body} ${card.cta || ''}`.toLowerCase();
+    expect(text).not.toContain('nook');
+  });
+});

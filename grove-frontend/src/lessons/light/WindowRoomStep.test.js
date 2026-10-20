@@ -115,3 +115,21 @@ test('every chip and switch is a button at least 44px tall', async () => {
     expect(q(id).className).toContain('min-h-[44px]');
   });
 });
+
+
+test('a south-hemisphere user gets footnotes about the right glass', async () => {
+  await mount({ ...WINDOW, hemisphere: 'south' });
+  const text = q('room-footnotes').textContent;
+  expect(text).toContain('West and northwest glass gets hot. A sheer curtain helps.');
+  expect(text).toContain('South glass runs cold in winter. Keep leaves off it.');
+  expect(text).not.toContain('North glass');
+});
+
+test('nothing in the room step says nook, with or without a window', async () => {
+  await mount();
+  const labels = [...container.querySelectorAll('[aria-label]')].map((el) => el.getAttribute('aria-label')).join(' ');
+  expect(`${container.textContent} ${labels}`.toLowerCase()).not.toContain('nook');
+  await mount({ sun: 'nowindow', direction: null, draw_direction: null, view: 'open', hemisphere: 'north', season: 'summer', level: 'low', arrives: 'x', lamp: true });
+  const lampLabels = [...container.querySelectorAll('[aria-label]')].map((el) => el.getAttribute('aria-label')).join(' ');
+  expect(`${container.textContent} ${lampLabels}`.toLowerCase()).not.toContain('nook');
+});
