@@ -6,6 +6,15 @@ jest.mock('../../lib/api', () => ({
   lightAPI: { setReading: jest.fn(), prompt: jest.fn() },
   nookAPI: { state: jest.fn() },
 }));
+jest.mock('./FitsStep', () => ({
+  __esModule: true,
+  default: ({ cta }) => require('react').createElement('div', { 'data-testid': 'fits-mock' }, cta),
+}));
+jest.mock('./ClosingStep', () => ({
+  __esModule: true,
+  default: ({ nookOn, picked, markDone }) =>
+    require('react').createElement('div', { 'data-testid': 'closing-mock' }, `${nookOn}-${picked ? picked.direction : 'none'}`, markDone),
+}));
 jest.mock('./WindowPickStep', () => ({
   __esModule: true,
   default: ({ onSaved }) =>
@@ -116,4 +125,23 @@ test('the room card still moves on if the saved window cannot be loaded', async 
   await flush();
   expect(q('room-none')).not.toBeNull();
   expect(q('step-next')).not.toBeNull();
+});
+
+test('the fits card gets the fits step with its button text', () => {
+  show(renderLightCard({ interactive: 'fits', cta: 'Got it' }, helpers(), { user: {} }));
+  expect(q('fits-mock').textContent).toBe('Got it');
+});
+
+test('the closing card gets the ending, the picked window, and the lesson finish control', () => {
+  const ctx = {
+    user: {}, nookOn: true, window: { direction: 'S' },
+    renderMarkDone: () => React.createElement('span', { 'data-testid': 'md' }, 'finish'),
+  };
+  show(renderLightCard({ interactive: 'closing' }, helpers(), ctx));
+  expect(q('closing-mock').textContent).toBe('true-Sfinish');
+});
+
+test('the closing card copes with no window picked and no finish control given', () => {
+  show(renderLightCard({ interactive: 'closing' }, helpers(), { user: {}, nookOn: false, window: null }));
+  expect(q('closing-mock').textContent).toBe('false-none');
 });

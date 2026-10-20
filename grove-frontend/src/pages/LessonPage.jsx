@@ -83,13 +83,10 @@ export default function LessonPage() {
     else finish();
   };
 
-  const renderFinalCard = () => (
+  // The finish control, used by the last card of any lesson and by the light lesson's ending.
+  const renderMarkDone = () => (
     <>
-      {lessonId === 'soil-finger-test' ? (
-        <SoilTestStep hasPlant={hasPlant} onLogged={onSoilLogged} />
-      ) : (
-        <MarkDoneStep onDone={finish} onNotYet={() => navigate('/lessons')} />
-      )}
+      <MarkDoneStep onDone={finish} onNotYet={() => navigate('/lessons')} />
       {error && (
         <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="lesson-error">
           {error}
@@ -97,6 +94,20 @@ export default function LessonPage() {
       )}
     </>
   );
+
+  const renderFinalCard = () =>
+    lessonId === 'soil-finger-test' ? (
+      <>
+        <SoilTestStep hasPlant={hasPlant} onLogged={onSoilLogged} />
+        {error && (
+          <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="lesson-error">
+            {error}
+          </p>
+        )}
+      </>
+    ) : (
+      renderMarkDone()
+    );
 
   if (!resume.ready) return null;
 
@@ -106,7 +117,7 @@ export default function LessonPage() {
         cards={cards}
         initialIndex={resume.index}
         onAdvance={onAdvance}
-        renderCard={(card, helpers) => renderLightCard(card, helpers, { user, updateUser, nookOn, finish, window: pickedWindow, setWindow: setPickedWindow })}
+        renderCard={(card, helpers) => renderLightCard(card, helpers, { user, updateUser, nookOn, finish, window: pickedWindow, setWindow: setPickedWindow, renderMarkDone })}
         renderFinalCard={renderFinalCard}
         onExit={() => navigate('/lessons')}
         host={nookOn ? <PipPanel form={pipForm} label="Pip" /> : null}

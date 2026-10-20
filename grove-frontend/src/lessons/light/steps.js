@@ -3,14 +3,16 @@ import ShadowTestStep from './ShadowTestStep';
 import CurtainPair from './CurtainPair';
 import WindowPickStep from './WindowPickStep';
 import WindowRoomStep from './WindowRoomStep';
+import FitsStep from './FitsStep';
+import ClosingStep from './ClosingStep';
 import StepNext from './StepNext';
 import { nookAPI } from '../../lib/api';
 import { readingLine } from './lightCopy';
 
 // Maps a light-lesson card's `interactive` key to its step. Returns null for cards without one,
 // so the player shows its normal next button.
-// `ctx` is { user, updateUser, nookOn, finish, window, setWindow }, where `window` is the window
-// picked earlier in this visit.
+// `ctx` is { user, updateUser, nookOn, window, setWindow, renderMarkDone }, where `window` is the
+// window picked earlier in this visit and `renderMarkDone()` is the lesson's finish control.
 // The room card needs the person's window. After a resume it was picked in an earlier visit,
 // so it is read from the nook state, which carries it for everyone.
 function RoomCard({ card, helpers, picked }) {
@@ -86,6 +88,10 @@ export function renderLightCard(card, helpers, ctx) {
       );
     case 'window-room':
       return <RoomCard card={card} helpers={helpers} picked={ctx.window} />;
+    case 'fits':
+      return <FitsStep next={helpers.next} cta={card.cta} />;
+    case 'closing':
+      return <ClosingStep nookOn={!!ctx.nookOn} picked={ctx.window} markDone={ctx.renderMarkDone ? ctx.renderMarkDone() : null} />;
     default:
       return null;
   }

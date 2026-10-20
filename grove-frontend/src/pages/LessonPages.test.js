@@ -27,6 +27,7 @@ jest.mock('../lessons/registry', () => ({
       { header: 'Card 1 of 2', headline: 'Soil one', body: 'First.', cta: 'Next' },
       { header: 'Card 2 of 2', headline: 'Soil last', body: 'Your turn.', cta: 'Go' },
     ],
+    'window-map': [{ header: 'Card 1 of 1', headline: 'Closing', body: 'Last.', interactive: 'closing' }],
     'plant-er': [
       { header: 'Card 1 of 2', headline: 'ER one', body: 'First.', cta: 'Next' },
       { header: 'Card 2 of 2', headline: 'ER last', body: 'Your turn.', cta: 'Go' },
@@ -184,6 +185,28 @@ describe('LessonPage', () => {
     await mount(<LessonPage />);
     await toLastCard();
     expect(q('soil-step-no-plant')).not.toBeNull();
+  });
+});
+
+describe('the light lesson ending', () => {
+  test('the closing card ends in the usual finish control, which saves and returns', async () => {
+    mockParams = { lessonId: 'window-map' };
+    await mount(<LessonPage />);
+    expect(q('closing-step')).not.toBeNull();
+    await click(q('mark-done-done'));
+    await flush();
+    expect(lessonAPI.complete).toHaveBeenCalledWith('window-map');
+    expect(mockNavigate).toHaveBeenCalledWith('/lessons');
+  });
+
+  test('a failed finish on the closing card shows the error and stays', async () => {
+    lessonAPI.complete.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'window-map' };
+    await mount(<LessonPage />);
+    await click(q('mark-done-done'));
+    await flush();
+    expect(q('lesson-error').textContent).toBe('Could not save your progress. Try again.');
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
 
