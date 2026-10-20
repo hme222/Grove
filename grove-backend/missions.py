@@ -2,7 +2,7 @@
 Daily Missions for Grove (Phase 11C)
 
 Smart-rotation across four mission types:
-  - water_streak     → Water at least 1 plant today
+  - water_streak     → Check at least 1 plant today (any care log completes it)
   - photo_log        → Log a care action with a photo, OR upload a plant photo
   - health_check     → Open a plant's health panel today (or trigger /missions/daily/complete)
   - community_engage → React, comment, or post in the feed
@@ -25,8 +25,8 @@ MISSION_TYPES = ["water_streak", "photo_log", "health_check", "community_engage"
 
 MISSION_COPY: Dict[str, Dict[str, str]] = {
     "water_streak": {
-        "title": "Water one plant",
-        "subtitle": "Even one plant tended today keeps the rhythm going.",
+        "title": "Check one plant",
+        "subtitle": "Press a finger into the soil, then decide whether to water or wait.",
         "cta": "Open Care",
         "cta_path": "/care",
         "xp": 10,

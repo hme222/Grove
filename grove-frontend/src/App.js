@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "@/App.css";
 import "@/lib/microAnimations.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TooltipProvider } from "./contexts/TooltipContext";
 import { Toaster } from "@/components/ui/sonner";
@@ -23,6 +23,11 @@ import GrovesPage from "./pages/GrovesPage";
 import GroveDetailPage from "./pages/GroveDetailPage";
 import PublicBouquetPage from "./pages/PublicBouquetPage";
 import HelpPage from "./pages/HelpPage";
+import LessonsPage from "./pages/LessonsPage";
+import LessonPage from "./pages/LessonPage";
+import QuizFlow from "./components/QuizFlow";
+import { shouldShowQuiz } from "./lessons/quizGate";
+import { lessonPath } from "./lessons/lessonMeta";
 // Phase 14C.4 — GoalsPage deprecated. Goals are now pinned locked badges
 // surfaced on /care/today. /care/goals redirects to /care/today.
 import ChallengesPage from "./pages/ChallengesPage";
@@ -91,8 +96,11 @@ function CareWrapper({ children }) {
 }
 
 function AppRoutes() {
-  const { user, loading } = useAuth();
+  const { user, loading, updateUser } = useAuth();
+  const navigate = useNavigate();
+
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [quizDone, setQuizDone] = useState(false);
 
   useEffect(() => {
     if (!loading && user && user.onboarding_complete === false) {
@@ -102,6 +110,17 @@ function AppRoutes() {
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
+    // Onboarding saved this on the server; mirror it so the quiz can follow right away.
+    updateUser({ onboarding_complete: true });
+  };
+
+  const showQuiz = !showOnboarding && !quizDone && shouldShowQuiz(user);
+
+  const handleQuizDone = (data) => {
+    updateUser({ primary_track: data.primary_track });
+    setQuizDone(true);
+    const first = data.queue && data.queue[0];
+    if (first) navigate(lessonPath(first));
   };
 
   if (loading) {
@@ -118,6 +137,7 @@ function AppRoutes() {
   return (
     <>
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+      {showQuiz && <QuizFlow onDone={handleQuizDone} />}
       <Routes>
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
@@ -135,6 +155,16 @@ function AppRoutes() {
         <Route path="/dual-path-landing" element={<DualPathLandingVariations />} />
         <Route path="/cozy-room-planner" element={<CozyRoomPlannerVariations />} />
         <Route path="/behavioral-change-widgets" element={<BehavioralChangeWidgets />} />
+        <Route path="/lessons" element={
+          <ProtectedRoute>
+            <AppLayout><LessonsPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/lessons/:lessonId" element={
+          <ProtectedRoute>
+            <LessonPage />
+          </ProtectedRoute>
+        } />
         <Route path="/help" element={
           <ProtectedRoute>
             <HelpPage />

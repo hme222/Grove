@@ -31,6 +31,8 @@ from hardiness_zones import (
 )
 from seed import seed_database
 import missions as missions_mod
+import soil_check as soil_check_mod
+import tracks as tracks_mod
 import secrets
 import base64
 
@@ -767,6 +769,74 @@ async def reset_tutorial(body: TutorialSeenBody, current_user: dict = Depends(ge
          "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}},
     )
     return {"replayed": body.tutorial_id}
+
+# ============ LESSONS AND QUIZ ============
+
+class QuizBody(BaseModel):
+    answers: List[str] = []
+
+
+async def _user_has_plant(user_id: str) -> bool:
+    count = await db.plants.count_documents({"user_id": user_id, "is_archived": {"$ne": True}})
+    return count > 0
+
+
+async def _lesson_queue_for(user_id: str) -> dict:
+    user = await db.users.find_one({"id": user_id}) or {}
+    track = user.get("primary_track") or tracks_mod.DEFAULT_TRACK
+    done = tracks_mod.completed_lessons(user.get("tutorials_seen"))
+    return {
+        "primary_track": track,
+        "queue": tracks_mod.build_lesson_queue(track, done),
+        "completed": done,
+        "library": list(tracks_mod.LESSON_IDS),
+        "has_plant": await _user_has_plant(user_id),
+    }
+
+
+@api_router.post("/users/me/quiz")
+async def submit_quiz(body: QuizBody, current_user: dict = Depends(get_current_user)):
+    """Save quiz answers and pick the primary lesson track.
+
+    An empty list (the quiz was skipped) falls back to the default track.
+    """
+    track = tracks_mod.resolve_primary_track(body.answers)
+    known = [a for a in body.answers if a in tracks_mod.QUIZ_OPTION_TRACK]
+    now = datetime.now(timezone.utc).isoformat()
+    await db.users.update_one(
+        {"id": current_user['user_id']},
+        {"$set": {
+            "quiz_answers": known,
+            "primary_track": track,
+            "quiz_completed_at": now,
+            "updated_at": now,
+        }},
+    )
+    return await _lesson_queue_for(current_user['user_id'])
+
+
+@api_router.get("/lessons/queue")
+async def get_lesson_queue(current_user: dict = Depends(get_current_user)):
+    return await _lesson_queue_for(current_user['user_id'])
+
+
+@api_router.post("/lessons/{lesson_id}/complete")
+async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_current_user)):
+    """Mark a lesson complete. Safe to call twice."""
+    if lesson_id not in tracks_mod.LESSON_IDS:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    user_id = current_user['user_id']
+    # The soil lesson ends in a real soil test, so it cannot finish without a plant.
+    if lesson_id == tracks_mod.SOIL_LESSON and not await _user_has_plant(user_id):
+        raise HTTPException(status_code=409, detail="Add a plant before finishing this lesson.")
+    await db.users.update_one(
+        {"id": user_id},
+        {"$addToSet": {"tutorials_seen": tracks_mod.lesson_tutorial_id(lesson_id)},
+         "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}},
+    )
+    await check_and_award_badges(user_id)
+    return await _lesson_queue_for(user_id)
+
 
 @api_router.get("/users/me/stats")
 async def get_my_stats(current_user: dict = Depends(get_current_user)):
@@ -1705,6 +1775,9 @@ class CareLogCreate(BaseModel):
     notes: Optional[str] = None
     root_length_cm: Optional[float] = None
     water_level_pct: Optional[int] = None
+    # Soil test (action "soil_check"): what the user felt and what they chose.
+    soil_outcome: Optional[str] = None
+    soil_decision: Optional[str] = None
 
 class BulkCareLogCreate(BaseModel):
     plant_ids: List[str]
@@ -1717,7 +1790,7 @@ class BulkCareLogCreate(BaseModel):
 VALID_CARE_ACTIONS = {
     'water', 'mist', 'fertilize', 'rotate', 'prune', 'check',
     'change_water', 'flush', 'repot', 'propagate', 'photo',
-    'clean', 'stake', 'inspect', 'health_check'
+    'clean', 'stake', 'inspect', 'health_check', 'soil_check'
 }
 
 def _normalize_actions(single: Optional[str], many: Optional[List[str]]) -> List[str]:
@@ -1753,6 +1826,12 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
     actions = _normalize_actions(input.action, input.actions)
     if not actions:
         raise HTTPException(status_code=400, detail="At least one action is required")
+    # Validate a soil test up front so a bad request writes no logs at all.
+    if soil_check_mod.SOIL_ACTION in actions:
+        try:
+            soil_check_mod.soil_fields(soil_check_mod.SOIL_ACTION, input.soil_outcome, input.soil_decision)
+        except soil_check_mod.SoilCheckError as e:
+            raise HTTPException(status_code=400, detail=str(e))
     # Phase 14A.2: share a group_id across multi-action logs created together so
     # the timeline and care log views can collapse them into a single "care sweep".
     group_id = str(uuid.uuid4()) if len(actions) > 1 else None
@@ -1768,6 +1847,7 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
             "logged_at": now.isoformat(), "created_at": now.isoformat(),
             "group_id": group_id,
         }
+        log.update(soil_check_mod.soil_fields(act, input.soil_outcome, input.soil_decision))
         await db.care_logs.insert_one(log)
         logs_out.append(log)
         if act in ['water', 'mist', 'change_water', 'flush'] and not watering_applied:
@@ -1800,6 +1880,8 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
         'group_id': group_id,
         'logs': [serialize_doc({k: v for k, v in l.items() if k != '_id'}) for l in logs_out],
     }
+    if soil_check_mod.SOIL_ACTION in actions:
+        primary['_meta']['soil_coaching'] = soil_check_mod.soil_coaching(input.soil_outcome, input.soil_decision)
     return primary
 
 @api_router.post("/care-logs/bulk")
@@ -1808,6 +1890,8 @@ async def bulk_care_log(input: BulkCareLogCreate, current_user: dict = Depends(g
     actions = _normalize_actions(input.action, input.actions)
     if not actions:
         raise HTTPException(status_code=400, detail="At least one action is required")
+    if soil_check_mod.SOIL_ACTION in actions:
+        raise HTTPException(status_code=400, detail="A soil test is logged one plant at a time.")
     if not input.plant_ids:
         raise HTTPException(status_code=400, detail="Select at least one plant")
     group_id = str(uuid.uuid4())

@@ -6,6 +6,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
+import NextLessonCard from '../components/NextLessonCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
 import WorkingTowardSection from '../components/WorkingTowardSection';
@@ -186,6 +187,7 @@ export default function CarePage() {
       </PageHeader>
 
       <div className="max-w-[900px] mx-auto px-4 py-4">
+        <NextLessonCard />
         <DailyMissionCard />
         <ScheduleReviewBanner />
         <WorkingTowardSection />

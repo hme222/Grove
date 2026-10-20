@@ -40,7 +40,7 @@ import { Progress } from "@/components/ui/progress";
 /* ================================================================
    Shared lesson data (verbatim from brief)
    ================================================================ */
-const LESSONS = [
+export const LESSONS = [
   {
     n: 1,
     header: "Lesson 1 of 5 · Mindset Reset",
