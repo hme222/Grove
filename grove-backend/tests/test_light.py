@@ -126,3 +126,25 @@ def test_guide_items_carry_the_direction_to_draw():
     assert south[("E", "winter")]["draw_direction"] == "E"
     north = {(i["direction"], i["season"]): i for i in light.guide("north", "open")}
     assert north[("SW", "summer")]["draw_direction"] == "SW"
+
+
+def test_sun_timing_means_the_same_sun_in_either_hemisphere():
+    # In the south the sunny window faces north, so the physical direction swaps.
+    assert light.direction_for_sun("midday", "south") == "N"
+    assert light.direction_for_sun("none", "south") == "S"
+    assert light.direction_for_sun("morning", "south") == "E"
+    assert light.direction_for_sun("midday") == "S"
+    assert light.sun_for_direction("N", "south") == "midday"
+    assert light.sun_for_direction("S", "south") == "none"
+    assert light.sun_for_direction("N") == "none"
+
+
+def test_a_southern_midday_window_gets_full_sun():
+    summary = light.window_summary("midday", None, "open", "south", on(1))
+    assert summary["direction"] == "N" and summary["draw_direction"] == "S"
+    assert summary["level"] == "bright_direct"
+    assert summary["arrives"] == light.arrives("S")
+    assert summary["sun"] == "midday"
+    shady = light.window_summary("none", None, "open", "south", on(7))
+    assert shady["direction"] == "S" and shady["draw_direction"] == "N"
+    assert shady["arrives"] == light.arrives("N")

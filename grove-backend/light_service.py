@@ -36,14 +36,13 @@ async def save_window(db, user_id: str, sun: Optional[str], direction: Optional[
     chosen_hemisphere = hemisphere or user.get("hemisphere") or "north"
     if sun == "nowindow":
         direction = None
-    saved_sun = sun or light.sun_for_direction(direction)
+    saved_sun = sun or light.sun_for_direction(direction, chosen_hemisphere)
 
     fields = {
         "window_sun": saved_sun,
         "window_view": chosen_view,
         "hemisphere": chosen_hemisphere,
         "light_prompt_pending": False,
-        "light_prompt_dismissed": True,
         "updated_at": now_iso,
     }
     update = {"$set": fields}
@@ -68,8 +67,7 @@ async def save_reading(db, user_id: str, reading: str, now_iso: str) -> Dict:
         raise LightError(422, "Unknown light reading.")
     await db.users.update_one(
         {"id": user_id},
-        {"$set": {"light_reading": reading, "light_prompt_pending": False,
-                  "light_prompt_dismissed": True, "updated_at": now_iso}},
+        {"$set": {"light_reading": reading, "light_prompt_pending": False, "updated_at": now_iso}},
     )
     return {"light_reading": reading}
 

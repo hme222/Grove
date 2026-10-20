@@ -68,10 +68,11 @@ def test_saving_a_window_needs_a_timing_or_a_direction_and_valid_values():
     assert "window_sun" not in user_of(db)
 
 
-def test_saving_a_window_dismisses_the_prompt():
+def test_saving_a_window_clears_the_pending_prompt_but_does_not_dismiss_it():
     db = make_db({"light_prompt_pending": True})
     save(db, sun="midday")
-    assert user_of(db)["light_prompt_pending"] is False and user_of(db)["light_prompt_dismissed"] is True
+    assert user_of(db)["light_prompt_pending"] is False
+    assert user_of(db).get("light_prompt_dismissed") is not True
 
 
 def test_saving_a_window_completes_the_readiness_light_spot_step_once():
@@ -88,10 +89,11 @@ def test_saving_a_window_without_a_readiness_plant_still_works_and_writes_nothin
     assert "readiness_plant" not in user_of(db)
 
 
-def test_saving_a_reading_keeps_the_value_and_dismisses_the_prompt():
+def test_saving_a_reading_keeps_the_value_and_clears_the_pending_prompt():
     db = make_db({"light_prompt_pending": True})
     assert run(light_service.save_reading(db, "u1", "soft", NOW_ISO)) == {"light_reading": "soft"}
-    assert user_of(db)["light_reading"] == "soft" and user_of(db)["light_prompt_dismissed"] is True
+    assert user_of(db)["light_reading"] == "soft" and user_of(db)["light_prompt_pending"] is False
+    assert user_of(db).get("light_prompt_dismissed") is not True
     with pytest.raises(light_service.LightError):
         run(light_service.save_reading(db, "u1", "blurry", NOW_ISO))
 
@@ -152,3 +154,21 @@ def test_fits_names_the_users_plants_and_matching_species():
     ]
     assert [s["common_name"] for s in result["species"]] == ["Jade", "Pothos"]
     assert set(result["species"][0]) == {"id", "slug", "common_name"}
+
+
+def test_a_later_after_the_shadow_test_still_leaves_a_prompt():
+    db = make_db()
+    run(light_service.save_reading(db, "u1", "crisp", NOW_ISO))
+    assert run(light_service.set_prompt(db, "u1", "later", NOW_ISO))["light_prompt_pending"] is True
+
+
+def test_saving_by_compass_in_the_south_keeps_the_sun_timing_true():
+    db = make_db()
+    save(db, direction="N", hemisphere="south")
+    assert user_of(db)["window_sun"] == "midday"
+
+
+def test_saving_by_timing_in_the_south_gives_a_full_sun_summary():
+    db = make_db()
+    summary = save(db, sun="midday", hemisphere="south")
+    assert summary["level"] == "bright_direct" and summary["direction"] == "N"

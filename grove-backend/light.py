@@ -46,12 +46,17 @@ _ARRIVES = {
 _NO_WINDOW = "No window here. A lamp or grow light will do the work."
 
 
-def direction_for_sun(sun: str) -> Optional[str]:
-    return _SUN_TO_DIRECTION.get(sun)
+def direction_for_sun(sun: str, hemisphere: str = "north") -> Optional[str]:
+    """The physical direction a window faces when the sun reaches it at this time of day.
+
+    The timing table is written for the northern hemisphere, so a southern window swaps.
+    """
+    direction = _SUN_TO_DIRECTION.get(sun)
+    return effective_direction(direction, hemisphere) if direction else None
 
 
-def sun_for_direction(direction: str) -> str:
-    return _DIRECTION_TO_SUN[direction]
+def sun_for_direction(direction: str, hemisphere: str = "north") -> str:
+    return _DIRECTION_TO_SUN[effective_direction(direction, hemisphere)]
 
 
 def effective_direction(direction: str, hemisphere: str) -> str:
@@ -90,11 +95,11 @@ def window_summary(sun, direction, view, hemisphere, now) -> Optional[Dict]:
             "hemisphere": hemisphere, "season": season, "level": "low",
             "arrives": _NO_WINDOW, "lamp": True,
         }
-    chosen = direction or direction_for_sun(sun)
+    chosen = direction or direction_for_sun(sun, hemisphere)
     if chosen not in DIRECTIONS:
         return None
     return {
-        "sun": sun or sun_for_direction(chosen), "direction": chosen,
+        "sun": sun or sun_for_direction(chosen, hemisphere), "direction": chosen,
         "draw_direction": effective_direction(chosen, hemisphere), "view": view,
         "hemisphere": hemisphere, "season": season,
         "level": level_for(chosen, view, season, hemisphere),
