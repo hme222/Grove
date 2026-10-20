@@ -7,6 +7,7 @@ import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
 import NextLessonCard from '../components/NextLessonCard';
+import LightPromptCard from '../components/LightPromptCard';
 import PipNoteCard from '../components/PipNoteCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
@@ -182,6 +183,7 @@ export default function CarePage() {
       </PageHeader>
 
       <div className="max-w-[900px] mx-auto px-4 py-4">
+        <LightPromptCard />
         <NextLessonCard />
         <DailyMissionCard />
         <ScheduleReviewBanner />

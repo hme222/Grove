@@ -7,6 +7,7 @@ import { lessonPath } from '../lessons/lessonMeta';
 import NookCanvas from '../nook/NookCanvas';
 import ReadinessPanel from '../nook/ReadinessPanel';
 import { buildView } from '../nook/buildView';
+import { windowSentence } from '../nook/windowLight';
 import { pipMood } from '../nook/pipMood';
 import { CONDITION_LABELS, PLANT_SOURCE, QUIET_LESSON, pipLine, unlockedItems } from '../nook/nookCopy';
 
@@ -163,6 +164,11 @@ export default function NookPage() {
           <p className="text-sm text-[#1A1A17]" data-testid="nook-next">
             {state.next_unlock ? `Next: ${state.next_unlock}.` : 'Everything is unlocked.'}
           </p>
+          {state.window && (
+            <p className="text-sm text-[#1A1A17]" data-testid="nook-window">
+              {windowSentence(state.window)}
+            </p>
+          )}
           <p className="text-sm text-[#1A1A17]" data-testid="nook-items">
             {items.length > 0 ? `In the nook: ${items.join(', ')}.` : 'Nothing is unlocked yet.'}
           </p>

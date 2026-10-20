@@ -1,5 +1,6 @@
 import { PALETTE, ROOM } from './palette';
 import { pipSprite, plantSprite, seedlingSprite, CENTER } from './sprites';
+import { lightPatch } from './windowLight';
 
 // The nook is a fixed 128 x 80 pixel scene. Every position below is in those
 // logical pixels. The canvas is scaled up by whole numbers only.
@@ -18,8 +19,12 @@ const rect = (ctx, x, y, w, h, color) => {
   ctx.fillRect(x, y, w, h);
 };
 
+// Lesson rooms turn the outlines off. Set at the start of each drawRoom call.
+let ghostsOn = true;
+
 // A faint outline that shows where something will appear once it unlocks.
 function ghost(ctx, x, y, w, h) {
+  if (!ghostsOn) return;
   ctx.fillStyle = ROOM.ghost;
   ctx.fillRect(x, y, w, 1);
   ctx.fillRect(x, y + h - 1, w, 1);
@@ -39,7 +44,7 @@ export function drawSprite(ctx, rows, cx, baseY) {
   });
 }
 
-function drawBackdrop(ctx) {
+function drawBackdrop(ctx, window) {
   rect(ctx, 0, 0, ROOM_W, 56, ROOM.wall);
   rect(ctx, 0, 40, ROOM_W, 14, ROOM.wainscot);
   rect(ctx, 0, 40, ROOM_W, 1, ROOM.wainscotLine);
@@ -49,9 +54,25 @@ function drawBackdrop(ctx) {
   [20, 52, 90, 110].forEach((x, i) => rect(ctx, x, 56 + i * 5, 1, 5, ROOM.plank));
   // window, sill, and the light it throws on the floor
   rect(ctx, 14, 8, 30, 30, ROOM.windowFrame);
-  [[16, 10], [30, 10], [16, 24], [30, 24]].forEach(([x, y]) => rect(ctx, x, y, 12, 12, ROOM.sky));
+  const patch = lightPatch(window);
+  const pane = patch.kind === 'lamp' ? ROOM.skyDark : ROOM.sky;
+  [[16, 10], [30, 10], [16, 24], [30, 24]].forEach(([x, y]) => rect(ctx, x, y, 12, 12, pane));
   rect(ctx, 12, 38, 34, 2, ROOM.sill);
-  for (let y = 56; y < 80; y += 1) rect(ctx, Math.round(22 + (y - 56) * 0.9), y, 28, 1, ROOM.beam);
+  drawLight(ctx, patch);
+}
+
+const BEAM_COLORS = { cool: ROOM.beamCool, warm: ROOM.beamWarm, hot: ROOM.beamHot };
+
+// The light on the floor: the original beam, a sun patch for the window, a lamp glow, or none.
+function drawLight(ctx, patch) {
+  if (patch.kind === 'default') {
+    for (let y = 56; y < 80; y += 1) rect(ctx, Math.round(22 + (y - 56) * 0.9), y, 28, 1, ROOM.beam);
+  } else if (patch.kind === 'sun') {
+    const color = patch.soft ? ROOM.beamSoft : BEAM_COLORS[patch.tint];
+    for (let y = 56; y < 56 + patch.reach; y += 1) rect(ctx, Math.round(22 + (y - 56) * 0.9), y, 28, 1, color);
+  } else if (patch.kind === 'lamp') {
+    [[12, 66, 22], [8, 68, 30], [8, 70, 30], [12, 72, 22]].forEach(([x, y, w]) => rect(ctx, x, y, w, 2, ROOM.lamp));
+  }
 }
 
 function drawTable(ctx) {
@@ -145,18 +166,22 @@ function drawHero(ctx, view) {
 }
 
 // Draws the whole nook for one view. `tick` flips Pip's small bob; pass 0 for a still image.
-//   view = { unlocked: string[], pip: { form, location, mood },
+//   view = { unlocked: string[], pip: { form, location, mood } | null,
+//            hideGhosts?: true to skip the outlines of locked slots,
+//            window: the nook state's window | null (omit for the original beam),
 //            hero: { group, condition } | null,
 //            readiness: { state, group } | null,
 //            shelfPlants: { condition }[] }
 export function drawRoom(ctx, view, tick = 0) {
   const unlocked = view.unlocked || [];
-  drawBackdrop(ctx);
+  ghostsOn = !view.hideGhosts;
+  drawBackdrop(ctx, view.window);
   drawRugAndLamp(ctx, unlocked);
   drawHangingAndArt(ctx, unlocked);
   drawShelf(ctx, unlocked, view.shelfPlants || []);
   drawTable(ctx);
   drawHero(ctx, view);
+  if (!view.pip) return;
   const spot = PIP_SPOTS[view.pip.location] || PIP_SPOTS.sill;
   const bob = tick % 2 ? -1 : 0;
   drawSprite(ctx, pipSprite(view.pip.form, view.pip.mood), spot.cx, spot.baseY + bob);

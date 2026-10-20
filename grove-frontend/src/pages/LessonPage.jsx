@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { lessonAPI } from '../lib/api';
+import { lessonAPI, lightAPI } from '../lib/api';
 import { LESSON_CARDS } from '../lessons/registry';
 import { LESSON_META } from '../lessons/lessonMeta';
 import LessonPlayer from '../lessons/LessonPlayer';
@@ -9,6 +9,7 @@ import MarkDoneStep from '../lessons/MarkDoneStep';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import { useAuth } from '../contexts/AuthContext';
 import PipPanel from '../nook/PipPanel';
+import { renderLightCard } from '../lessons/light/steps';
 import { usePipForm } from '../nook/usePipForm';
 
 export default function LessonPage() {
@@ -19,6 +20,8 @@ export default function LessonPage() {
   const nookOn = !!user?.nook_enabled;
   const pipForm = usePipForm(nookOn);
   const [hasPlant, setHasPlant] = useState(false);
+  const [resume, setResume] = useState({ ready: false, index: 0 });
+  const [pickedWindow, setPickedWindow] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
   const [error, setError] = useState('');
 
@@ -27,15 +30,26 @@ export default function LessonPage() {
     lessonAPI
       .queue()
       .then((res) => {
-        if (alive) setHasPlant(!!res.data?.has_plant);
+        if (!alive) return;
+        setHasPlant(!!res.data?.has_plant);
+        // A lesson that is already done starts again from the first card.
+        const done = (res.data?.completed || []).includes(lessonId);
+        setResume({ ready: true, index: done ? 0 : res.data?.progress?.[lessonId] || 0 });
       })
       .catch(() => {
-        if (alive) setHasPlant(false);
+        if (!alive) return;
+        setHasPlant(false);
+        setResume({ ready: true, index: 0 });
       });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [lessonId]);
+
+  const onAdvance = (index) => {
+    lightAPI.progress(lessonId, index).catch(() => {});
+    if (updateUser) updateUser({ lesson_progress: { ...(user?.lesson_progress || {}), [lessonId]: index } });
+  };
 
   if (!cards || !LESSON_META[lessonId]) {
     return (
@@ -69,13 +83,10 @@ export default function LessonPage() {
     else finish();
   };
 
-  const renderFinalCard = () => (
+  // The finish control, used by the last card of any lesson and by the light lesson's ending.
+  const renderMarkDone = () => (
     <>
-      {lessonId === 'soil-finger-test' ? (
-        <SoilTestStep hasPlant={hasPlant} onLogged={onSoilLogged} />
-      ) : (
-        <MarkDoneStep onDone={finish} onNotYet={() => navigate('/lessons')} />
-      )}
+      <MarkDoneStep onDone={finish} onNotYet={() => navigate('/lessons')} />
       {error && (
         <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="lesson-error">
           {error}
@@ -84,10 +95,29 @@ export default function LessonPage() {
     </>
   );
 
+  const renderFinalCard = () =>
+    lessonId === 'soil-finger-test' ? (
+      <>
+        <SoilTestStep hasPlant={hasPlant} onLogged={onSoilLogged} />
+        {error && (
+          <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="lesson-error">
+            {error}
+          </p>
+        )}
+      </>
+    ) : (
+      renderMarkDone()
+    );
+
+  if (!resume.ready) return null;
+
   return (
     <>
       <LessonPlayer
         cards={cards}
+        initialIndex={resume.index}
+        onAdvance={onAdvance}
+        renderCard={(card, helpers) => renderLightCard(card, helpers, { user, updateUser, nookOn, finish, window: pickedWindow, setWindow: setPickedWindow, renderMarkDone })}
         renderFinalCard={renderFinalCard}
         onExit={() => navigate('/lessons')}
         host={nookOn ? <PipPanel form={pipForm} label="Pip" /> : null}

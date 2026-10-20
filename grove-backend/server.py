@@ -35,6 +35,8 @@ import soil_check as soil_check_mod
 import tracks as tracks_mod
 import nook as nook_mod
 import nook_service
+import light as light_mod
+import light_service
 import secrets
 import base64
 
@@ -786,12 +788,14 @@ async def _user_has_plant(user_id: str) -> bool:
 async def _lesson_queue_for(user_id: str) -> dict:
     user = await db.users.find_one({"id": user_id}) or {}
     track = user.get("primary_track") or tracks_mod.DEFAULT_TRACK
-    done = tracks_mod.completed_lessons(user.get("tutorials_seen"))
+    done = tracks_mod.with_legacy_credit(tracks_mod.completed_lessons(user.get("tutorials_seen")))
     return {
         "primary_track": track,
         "queue": tracks_mod.build_lesson_queue(track, done),
         "completed": done,
-        "library": list(tracks_mod.LESSON_IDS),
+        "library": list(tracks_mod.LIBRARY_LESSON_IDS),
+        "up_next": "window-map" if "light-basics" in done and "window-map" not in done else None,
+        "progress": user.get("lesson_progress") or {},
         "has_plant": await _user_has_plant(user_id),
     }
 
@@ -825,7 +829,7 @@ async def get_lesson_queue(current_user: dict = Depends(get_current_user)):
 @api_router.post("/lessons/{lesson_id}/complete")
 async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_current_user)):
     """Mark a lesson complete. Safe to call twice."""
-    if lesson_id not in tracks_mod.LESSON_IDS:
+    if lesson_id not in tracks_mod.LIBRARY_LESSON_IDS:
         raise HTTPException(status_code=404, detail="Lesson not found")
     user_id = current_user['user_id']
     # The soil lesson ends in a real soil test, so it cannot finish without a plant.
@@ -930,6 +934,80 @@ async def set_plant_looks_off(plant_id: str, body: LooksOffBody, current_user: d
     except nook_service.NookError as error:
         _raise_nook_error(error)
     return {"looks_off": body.looks_off}
+
+
+# ============ LIGHT LESSONS ============
+
+class WindowBody(BaseModel):
+    sun: Optional[str] = None
+    direction: Optional[str] = None
+    view: Optional[str] = None
+    hemisphere: Optional[str] = None
+
+
+class ReadingBody(BaseModel):
+    reading: str
+
+
+class ProgressBody(BaseModel):
+    card: int
+
+
+class LightPromptBody(BaseModel):
+    action: str
+
+
+def _raise_light_error(error: "light_service.LightError"):
+    raise HTTPException(status_code=error.status, detail=error.detail)
+
+
+@api_router.post("/users/me/window")
+async def save_my_window(body: WindowBody, current_user: dict = Depends(get_current_user)):
+    """Save the window for the person's first plant. Returns what the nook shows for it."""
+    try:
+        return await light_service.save_window(
+            db, current_user['user_id'], body.sun, body.direction, body.view, body.hemisphere,
+            datetime.now(timezone.utc).isoformat(),
+        )
+    except light_service.LightError as error:
+        _raise_light_error(error)
+
+
+@api_router.post("/users/me/light-reading")
+async def save_my_light_reading(body: ReadingBody, current_user: dict = Depends(get_current_user)):
+    try:
+        return await light_service.save_reading(db, current_user['user_id'], body.reading, datetime.now(timezone.utc).isoformat())
+    except light_service.LightError as error:
+        _raise_light_error(error)
+
+
+@api_router.post("/lessons/{lesson_id}/progress")
+async def save_lesson_progress(lesson_id: str, body: ProgressBody, current_user: dict = Depends(get_current_user)):
+    """Remember the card the person reached, so the lesson reopens there."""
+    try:
+        return await light_service.save_progress(db, current_user['user_id'], lesson_id, body.card, datetime.now(timezone.utc).isoformat())
+    except light_service.LightError as error:
+        _raise_light_error(error)
+
+
+@api_router.post("/users/me/light-prompt")
+async def update_light_prompt(body: LightPromptBody, current_user: dict = Depends(get_current_user)):
+    try:
+        return await light_service.set_prompt(db, current_user['user_id'], body.action, datetime.now(timezone.utc).isoformat())
+    except light_service.LightError as error:
+        _raise_light_error(error)
+
+
+@api_router.get("/light/fits")
+async def get_light_fits(current_user: dict = Depends(get_current_user)):
+    return await light_service.fits_for(db, current_user['user_id'], datetime.now(timezone.utc).isoformat())
+
+
+@api_router.get("/light/guide")
+async def get_light_guide(hemisphere: str = "north", view: str = "open", current_user: dict = Depends(get_current_user)):
+    if hemisphere not in light_mod.HEMISPHERES or view not in light_mod.VIEWS:
+        raise HTTPException(status_code=422, detail="Unknown hemisphere or view.")
+    return {"hemisphere": hemisphere, "view": view, "items": light_mod.guide(hemisphere, view)}
 
 
 @api_router.get("/users/me/stats")

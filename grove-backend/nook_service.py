@@ -8,6 +8,7 @@ import uuid
 from datetime import datetime
 from typing import Awaitable, Callable, Dict, List
 
+import light
 import nook
 import tracks
 
@@ -133,6 +134,10 @@ async def build_state(
         "quiet": quiet,
         "weekly_days": nook.weekly_days(await activity_stamps(db, user_id, user), now),
         "catalog_open": nook.catalog_open(user.get("created_at"), now, enabled),
+        "window": light.window_summary(
+            user.get("window_sun"), user.get("window_direction"),
+            user.get("window_view") or "open", user.get("hemisphere") or "north", now,
+        ),
     }
 
 

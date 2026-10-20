@@ -118,7 +118,14 @@ describe('buildView', () => {
       hero: { group: 'snake', condition: 'due-soon' },
       readiness: null,
       shelfPlants: [{ condition: 'fine' }],
+      window: null,
     });
+  });
+
+  test('passes the window through', () => {
+    const window = { draw_direction: 'S', season: 'summer', view: 'open', lamp: false };
+    expect(buildView({ ...state, window }, 'calm').window).toEqual(window);
+    expect(buildView({ ...state, window: undefined }, 'calm').window).toBeNull();
   });
 
   test('puts the readiness plant on the table only while there is no real plant', () => {

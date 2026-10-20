@@ -40,4 +40,10 @@ export const ROOM = {
   cord: '#6B5A4A',
   ghost: 'rgba(60,50,40,0.10)',
   beam: 'rgba(255,244,200,0.28)',
+  beamCool: 'rgba(240,244,205,0.30)',
+  beamWarm: 'rgba(255,232,150,0.36)',
+  beamHot: 'rgba(255,205,110,0.42)',
+  beamSoft: 'rgba(255,244,210,0.18)',
+  lamp: 'rgba(255,220,140,0.34)',
+  skyDark: '#8FA3B0',
 };

@@ -88,3 +88,23 @@ test.each([
   expect(q('next-lesson-card')).toBeNull();
   expect(q('lessons-link')).not.toBeNull();
 });
+
+test('with an empty queue it offers the suggested next light lesson', async () => {
+  lessonAPI.queue.mockResolvedValue({ data: { queue: [], up_next: 'window-map' } });
+  await mount();
+  expect(q('next-lesson-card').textContent).toContain('Your window');
+  await click(q('next-lesson-start'));
+  expect(mockNavigate).toHaveBeenCalledWith('/lessons/window-map');
+});
+
+test('the queue wins over the suggestion', async () => {
+  lessonAPI.queue.mockResolvedValue({ data: { queue: ['plant-er'], up_next: 'window-map' } });
+  await mount();
+  expect(q('next-lesson-card').textContent).toContain('Plant ER');
+});
+
+test('with neither it shows the quiet link to the lessons', async () => {
+  lessonAPI.queue.mockResolvedValue({ data: { queue: [], up_next: null } });
+  await mount();
+  expect(q('lessons-link')).not.toBeNull();
+});

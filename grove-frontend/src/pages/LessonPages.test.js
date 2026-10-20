@@ -2,13 +2,14 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import LessonPage from './LessonPage';
 import LessonsPage from './LessonsPage';
-import { lessonAPI, plantAPI, careAPI, nookAPI } from '../lib/api';
+import { lessonAPI, plantAPI, careAPI, nookAPI, lightAPI } from '../lib/api';
 
 jest.mock('../lib/api', () => ({
   lessonAPI: { queue: jest.fn(), complete: jest.fn() },
   plantAPI: { getAll: jest.fn() },
   careAPI: { createLog: jest.fn() },
   nookAPI: { state: jest.fn() },
+  lightAPI: { progress: jest.fn() },
 }));
 
 // Jest here cannot load react-router-dom v7, the `@/` alias, or the real card pages.
@@ -26,6 +27,7 @@ jest.mock('../lessons/registry', () => ({
       { header: 'Card 1 of 2', headline: 'Soil one', body: 'First.', cta: 'Next' },
       { header: 'Card 2 of 2', headline: 'Soil last', body: 'Your turn.', cta: 'Go' },
     ],
+    'window-map': [{ header: 'Card 1 of 1', headline: 'Closing', body: 'Last.', interactive: 'closing' }],
     'plant-er': [
       { header: 'Card 1 of 2', headline: 'ER one', body: 'First.', cta: 'Next' },
       { header: 'Card 2 of 2', headline: 'ER last', body: 'Your turn.', cta: 'Go' },
@@ -63,7 +65,8 @@ const queueData = (over = {}) => ({
     primary_track: 'rescue',
     queue: ['plant-er', 'soil-finger-test'],
     completed: [],
-    library: ['soil-finger-test', 'plant-parent-reset', 'plant-er', 'habit-stacking', 'window-blueprint'],
+    progress: {},
+    library: ['soil-finger-test', 'plant-parent-reset', 'plant-er', 'habit-stacking', 'light-basics', 'window-map'],
     has_plant: true,
     ...over,
   },
@@ -76,6 +79,7 @@ beforeEach(() => {
   nookAPI.state.mockResolvedValue({ data: { pip: { form: 'leafy' } } });
   lessonAPI.queue.mockResolvedValue(queueData());
   lessonAPI.complete.mockResolvedValue(queueData());
+  lightAPI.progress.mockResolvedValue({ data: {} });
   plantAPI.getAll.mockResolvedValue({ data: { plants: [{ id: 'p1', common_name: 'Pothos' }] } });
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -184,12 +188,82 @@ describe('LessonPage', () => {
   });
 });
 
+describe('the light lesson ending', () => {
+  test('the closing card ends in the usual finish control, which saves and returns', async () => {
+    mockParams = { lessonId: 'window-map' };
+    await mount(<LessonPage />);
+    expect(q('closing-step')).not.toBeNull();
+    await click(q('mark-done-done'));
+    await flush();
+    expect(lessonAPI.complete).toHaveBeenCalledWith('window-map');
+    expect(mockNavigate).toHaveBeenCalledWith('/lessons');
+  });
+
+  test('a failed finish on the closing card shows the error and stays', async () => {
+    lessonAPI.complete.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'window-map' };
+    await mount(<LessonPage />);
+    await click(q('mark-done-done'));
+    await flush();
+    expect(q('lesson-error').textContent).toBe('Could not save your progress. Try again.');
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+});
+
+describe('LessonPage resume and progress', () => {
+  test('a lesson resumes on the saved card', async () => {
+    lessonAPI.queue.mockResolvedValue(queueData({ progress: { 'plant-er': 1 } }));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-headline').textContent).toBe('ER last');
+  });
+
+  test('a finished lesson starts again from the first card', async () => {
+    lessonAPI.queue.mockResolvedValue(queueData({ progress: { 'plant-er': 1 }, completed: ['plant-er'] }));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-headline').textContent).toBe('ER one');
+  });
+
+  test('advancing saves progress, and a failure does not block the next card', async () => {
+    lightAPI.progress.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    await flush();
+    expect(lightAPI.progress).toHaveBeenCalledWith('plant-er', 1);
+    expect(q('lesson-headline').textContent).toBe('ER last');
+  });
+
+  test('progress is kept on the signed-in user too', async () => {
+    mockUser = { nook_enabled: false, tutorials_seen: [], lesson_progress: { 'soil-finger-test': 1 } };
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    expect(mockUpdateUser).toHaveBeenCalledWith({ lesson_progress: { 'soil-finger-test': 1, 'plant-er': 1 } });
+  });
+
+  test('the lesson still opens on the first card if the queue cannot be loaded', async () => {
+    lessonAPI.queue.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-headline').textContent).toBe('ER one');
+  });
+});
+
 describe('LessonsPage', () => {
-  test('shows the next lesson, what comes after it, and all five lessons', async () => {
+  test('shows the next lesson, what comes after it, and all six lessons', async () => {
     await mount(<LessonsPage />);
     expect(q('lessons-up-next').textContent).toContain('Plant ER');
     expect(q('lessons-then').textContent).toBe('After that: Soil Finger-Test');
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
+  });
+
+  test('the library marks the suggested next light lesson', async () => {
+    lessonAPI.queue.mockResolvedValue(queueData({ completed: ['light-basics'], up_next: 'window-map' }));
+    await mount(<LessonsPage />);
+    expect(q('lesson-row-window-map').textContent).toContain('Up next');
+    expect(q('lesson-row-habit-stacking').textContent).not.toContain('Up next');
   });
 
   test('start opens the next lesson', async () => {
@@ -213,14 +287,14 @@ describe('LessonsPage', () => {
     await mount(<LessonsPage />);
     expect(q('lessons-all-done')).not.toBeNull();
     expect(q('lessons-up-next')).toBeNull();
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 
-  test('if lessons cannot be loaded it says so and still lists the five lessons', async () => {
+  test('if lessons cannot be loaded it says so and still lists the six lessons', async () => {
     lessonAPI.queue.mockRejectedValue(new Error('network'));
     await mount(<LessonsPage />);
     expect(container.querySelector('[role="alert"]').textContent).toContain('Could not load your lessons');
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 });
 
@@ -257,7 +331,7 @@ describe('LessonPage and the nook', () => {
     await click(q('lesson-next'));
     await click(q('mark-done-done'));
     await flush();
-    expect(mockUpdateUser).not.toHaveBeenCalled();
+    expect(mockUpdateUser.mock.calls.filter(([change]) => 'tutorials_seen' in change)).toHaveLength(0);
   });
 
   test('when the first-care celebration closes the user is marked as celebrated', async () => {

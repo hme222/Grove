@@ -19,7 +19,7 @@ export default function NextLessonCard() {
     lessonAPI
       .queue()
       .then((res) => {
-        if (alive) setState({ loaded: true, lessonId: res.data?.queue?.[0] || null });
+        if (alive) setState({ loaded: true, lessonId: res.data?.queue?.[0] || res.data?.up_next || null });
       })
       .catch(() => {
         if (alive) setState({ loaded: true, lessonId: null });

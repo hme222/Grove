@@ -294,3 +294,26 @@ def test_looks_off_can_be_set_and_cleared_on_the_users_own_plant_only():
         run(nook_service.set_looks_off(db, "u1", "other", True, NOW_ISO))
     assert err.value.status == 404
     assert "looks_off" not in db.plants.docs[1]
+
+
+# ---------- the person's window ----------
+
+def test_state_has_no_window_until_one_is_saved():
+    assert state(make_db())["window"] is None
+
+
+def test_state_carries_the_saved_window():
+    window = state(make_db({"window_sun": "midday", "window_view": "tree", "hemisphere": "north"}))["window"]
+    assert window["level"] == "bright_indirect"
+    assert window["direction"] == "S"
+    assert window["lamp"] is False
+
+
+def test_state_window_for_no_window():
+    window = state(make_db({"window_sun": "nowindow"}))["window"]
+    assert window["lamp"] is True and window["direction"] is None
+
+
+def test_state_window_follows_the_hemisphere_in_the_drawing():
+    window = state(make_db({"window_sun": "none", "window_direction": "N", "hemisphere": "south"}))["window"]
+    assert window["direction"] == "N" and window["draw_direction"] == "S"

@@ -46,6 +46,7 @@ const STATE = (over = {}) => ({
   quiet: false,
   weekly_days: 2,
   catalog_open: false,
+  window: null,
   ...over,
 });
 
@@ -300,5 +301,17 @@ describe('getting ready for a first plant', () => {
     await mount();
     expect(q('readiness-panel')).toBeNull();
     expect(q('readiness-search')).toBeNull();
+  });
+
+  test('writes the window as text when one is saved, and says nothing when none is', async () => {
+    await mount();
+    expect(q('nook-window')).toBeNull();
+    nookAPI.state.mockResolvedValue({
+      data: STATE({ window: { sun: 'afternoon', direction: 'SW', draw_direction: 'SW', view: 'tree', season: 'summer', lamp: false, arrives: 'Hot sun from midday into the evening.' } }),
+    });
+    await act(async () => { root.unmount(); });
+    root = createRoot(container);
+    await mount();
+    expect(q('nook-window').textContent).toBe('Your window faces southwest and looks out on a tree. Hot sun from midday into the evening.');
   });
 });

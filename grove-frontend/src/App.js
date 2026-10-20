@@ -53,7 +53,6 @@ import LandingVariations from "./pages/LandingVariations";
 import PostOnboarding from "./pages/PostOnboarding";
 import QuickWinVariations from "./pages/QuickWinVariations";
 import ResetCourseVariation from "./pages/ResetCourseVariation";
-import WindowBlueprintVariations from "./pages/WindowBlueprintVariations";
 import SoilFingerTestVariation from "./pages/SoilFingerTestVariation";
 import PlantERVariations from "./pages/PlantERVariations";
 import HabitStackingVariations from "./pages/HabitStackingVariations";
@@ -159,7 +158,8 @@ function AppRoutes() {
         <Route path="/post-onboarding" element={<PostOnboarding />} />
         <Route path="/quick-wins" element={<QuickWinVariations />} />
         <Route path="/reset-course" element={<ResetCourseVariation />} />
-        <Route path="/window-blueprint" element={<WindowBlueprintVariations />} />
+        {/* The old lighting lesson was replaced by the two light lessons. */}
+        <Route path="/window-blueprint" element={<Navigate to="/lessons" replace />} />
         <Route path="/soil-finger-test" element={<SoilFingerTestVariation />} />
         <Route path="/plant-er" element={<PlantERVariations />} />
         <Route path="/habit-stacking" element={<HabitStackingVariations />} />

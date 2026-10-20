@@ -99,6 +99,16 @@ export const lessonAPI = {
   submitQuiz: (answers) => api.post('/users/me/quiz', { answers }),
 };
 
+// The light lessons
+export const lightAPI = {
+  setWindow: (body) => api.post('/users/me/window', body),
+  setReading: (reading) => api.post('/users/me/light-reading', { reading }),
+  progress: (lessonId, card) => api.post(`/lessons/${lessonId}/progress`, { card }),
+  prompt: (action) => api.post('/users/me/light-prompt', { action }),
+  fits: () => api.get('/light/fits'),
+  guide: (hemisphere, view) => api.get('/light/guide', { params: { hemisphere, view } }),
+};
+
 // Pip's nook
 export const nookAPI = {
   state: () => api.get('/nook/state'),

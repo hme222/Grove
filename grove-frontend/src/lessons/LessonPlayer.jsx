@@ -1,15 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
+const clampIndex = (value, count) => (Number.isInteger(value) ? Math.max(0, Math.min(value, count - 1)) : 0);
+
 // Steps through a lesson's cards. The last card hands over to
 // `renderFinalCard`, which holds the lesson's "your turn" action. Card text
 // comes from Grove's own lesson files and may contain simple HTML.
-export default function LessonPlayer({ cards, renderFinalCard, onExit, host }) {
-  const [index, setIndex] = useState(0);
+//   initialIndex  the card to open on, for resuming
+//   onAdvance     called with the new card number after the person moves
+//   renderCard    (card, { next, back, index, isLast }) => node | null. A node replaces the
+//                 card's next button (and the final-card hook on the last card).
+export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExit, host, initialIndex, onAdvance }) {
+  const [index, setIndex] = useState(() => clampIndex(initialIndex, cards.length));
   const headingRef = useRef(null);
   const card = cards[index];
   const isLast = index === cards.length - 1;
   const Icon = card.icon;
+
+  const go = (target) => {
+    const next = clampIndex(target, cards.length);
+    if (next === index) return;
+    setIndex(next);
+    if (onAdvance) onAdvance(next);
+  };
+  const next = () => go(index + 1);
+  const back = () => go(index - 1);
+  const custom = renderCard ? renderCard(card, { next, back, index, isLast }) : null;
+  const backButton = index > 0 && (
+    <button
+      type="button"
+      onClick={back}
+      className="flex items-center justify-center gap-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#2D5016]"
+      data-testid="lesson-back"
+    >
+      <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
+    </button>
+  );
 
   // Move focus to the new card's headline so keyboard and screen reader users land on it.
   useEffect(() => {
@@ -53,23 +79,19 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit, host }) {
         </div>
 
         <div className="mt-4">
-          {isLast && renderFinalCard ? (
+          {custom ? (
+            <>
+              {custom}
+              {index > 0 && <div className="mt-2">{backButton}</div>}
+            </>
+          ) : isLast && renderFinalCard ? (
             renderFinalCard(card)
           ) : (
             <div className="flex gap-2">
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setIndex((i) => i - 1)}
-                  className="flex items-center justify-center gap-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#2D5016]"
-                  data-testid="lesson-back"
-                >
-                  <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
-                </button>
-              )}
+              {backButton}
               <button
                 type="button"
-                onClick={() => setIndex((i) => Math.min(i + 1, cards.length - 1))}
+                onClick={next}
                 className="flex-1 flex items-center justify-center gap-2 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10] hover:bg-[#2D5016]"
                 data-testid="lesson-next"
               >
