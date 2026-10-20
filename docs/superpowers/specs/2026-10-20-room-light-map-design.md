@@ -121,6 +121,10 @@ A pure module (`light.py` and a matching small frontend helper) maps direction, 
 
 The exact pixel art for the sun patches and the lamp glow, the card wording within the intent above, and the helper and endpoint names.
 
+## Decided by the owner
+
+Which tracks get the lessons: **only the seedling track changes.** Its lesson swaps from `window-blueprint` to `light-basics`, and finishing `light-basics` suggests `window-map` as "up next". Every other track keeps its two-lesson queue. Both parts are in the lessons library for everyone. (The owner chose the recommendation "for now", so a later change to queue other tracks is expected and should not be blocked by this design.)
+
 ## Open for the owner
 
-1. Which tracks get these lessons, and how Part 2 follows Part 1. `build_lesson_queue` only has two slots per track, and both are already used.
+Nothing.
