@@ -259,6 +259,13 @@ describe('LessonsPage', () => {
     expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 
+  test('the library marks the suggested next light lesson', async () => {
+    lessonAPI.queue.mockResolvedValue(queueData({ completed: ['light-basics'], up_next: 'window-map' }));
+    await mount(<LessonsPage />);
+    expect(q('lesson-row-window-map').textContent).toContain('Up next');
+    expect(q('lesson-row-habit-stacking').textContent).not.toContain('Up next');
+  });
+
   test('start opens the next lesson', async () => {
     await mount(<LessonsPage />);
     await click(q('lessons-start'));

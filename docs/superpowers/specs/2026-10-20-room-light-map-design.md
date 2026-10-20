@@ -135,6 +135,15 @@ A pure module (`light.py` and a matching small frontend helper) maps direction, 
 
 The exact pixel art for the sun patches and the lamp glow, the card wording within the intent above, and the helper and endpoint names.
 
+## Plan differences (v1.1)
+
+Settled while planning and building; see the plan's "Decisions made while planning".
+- `window-blueprint` stays in the code as a retired lesson id so earned growth and badges are untouched.
+- "What fits" is its own endpoint (`GET /api/light/fits`), not part of the nook state.
+- The lesson also saves `lesson_progress`, `light_reading` and the two prompt flags, and the guide carries `draw_direction`.
+- A fifth interactive step, `reading-note`, reads the saved shadow back on Part 1 card 2.
+- The keepsake for people without the nook never mentions the nook, including for a lamp window.
+
 ## Decided by the owner
 
 Which tracks get the lessons: **only the seedling track changes.** Its lesson swaps from `window-blueprint` to `light-basics`, and finishing `light-basics` suggests `window-map` as "up next". Every other track keeps its two-lesson queue. Both parts are in the lessons library for everyone. (The owner chose the recommendation "for now", so a later change to queue other tracks is expected and should not be blocked by this design.)
