@@ -28,6 +28,9 @@ import LessonPage from "./pages/LessonPage";
 import QuizFlow from "./components/QuizFlow";
 import { shouldShowQuiz } from "./lessons/quizGate";
 import { lessonPath } from "./lessons/lessonMeta";
+import NookPage from "./pages/NookPage";
+import NookOfferCard from "./nook/NookOfferCard";
+import { shouldShowNookOffer } from "./nook/offerGate";
 // Phase 14C.4 — GoalsPage deprecated. Goals are now pinned locked badges
 // surfaced on /care/today. /care/goals redirects to /care/today.
 import ChallengesPage from "./pages/ChallengesPage";
@@ -101,6 +104,7 @@ function AppRoutes() {
 
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
+  const [offerDone, setOfferDone] = useState(false);
 
   useEffect(() => {
     if (!loading && user && user.onboarding_complete === false) {
@@ -123,6 +127,14 @@ function AppRoutes() {
     if (first) navigate(lessonPath(first));
   };
 
+  // Pip's nook is offered once, after a new user's first real action. It waits for the quiz.
+  const showOffer = !showOnboarding && !showQuiz && !offerDone && shouldShowNookOffer(user);
+
+  const handleOfferDone = (saved) => {
+    updateUser(saved);
+    setOfferDone(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F5F0E8]">
@@ -138,6 +150,7 @@ function AppRoutes() {
     <>
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
       {showQuiz && <QuizFlow onDone={handleQuizDone} />}
+      {showOffer && <NookOfferCard onDone={handleOfferDone} />}
       <Routes>
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
@@ -155,6 +168,11 @@ function AppRoutes() {
         <Route path="/dual-path-landing" element={<DualPathLandingVariations />} />
         <Route path="/cozy-room-planner" element={<CozyRoomPlannerVariations />} />
         <Route path="/behavioral-change-widgets" element={<BehavioralChangeWidgets />} />
+        <Route path="/nook" element={
+          <ProtectedRoute>
+            <AppLayout><NookPage /></AppLayout>
+          </ProtectedRoute>
+        } />
         <Route path="/lessons" element={
           <ProtectedRoute>
             <AppLayout><LessonsPage /></AppLayout>

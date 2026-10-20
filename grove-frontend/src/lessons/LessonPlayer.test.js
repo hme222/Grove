@@ -76,3 +76,11 @@ test('exit calls onExit', () => {
   click('lesson-exit');
   expect(onExit).toHaveBeenCalledTimes(1);
 });
+
+test('shows a host above the card when one is given, and nothing when not', () => {
+  render({ host: <div data-testid="the-host">Pip</div> });
+  expect(q('lesson-host').textContent).toBe('Pip');
+  expect(q('lesson-host').nextElementSibling.querySelector('[data-testid="lesson-headline"]')).not.toBeNull();
+  render({ host: null });
+  expect(q('lesson-host')).toBeNull();
+});

@@ -2,18 +2,23 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import LessonPage from './LessonPage';
 import LessonsPage from './LessonsPage';
-import { lessonAPI, plantAPI, careAPI } from '../lib/api';
+import { lessonAPI, plantAPI, careAPI, nookAPI } from '../lib/api';
 
 jest.mock('../lib/api', () => ({
   lessonAPI: { queue: jest.fn(), complete: jest.fn() },
   plantAPI: { getAll: jest.fn() },
   careAPI: { createLog: jest.fn() },
+  nookAPI: { state: jest.fn() },
 }));
 
 // Jest here cannot load react-router-dom v7, the `@/` alias, or the real card pages.
 const mockNavigate = jest.fn();
 let mockParams = {};
 jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useParams: () => mockParams }), { virtual: true });
+
+let mockUser = { nook_enabled: false, tutorials_seen: [] };
+const mockUpdateUser = jest.fn();
+jest.mock('../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser, updateUser: mockUpdateUser }) }));
 
 jest.mock('../lessons/registry', () => ({
   LESSON_CARDS: {
@@ -67,6 +72,8 @@ const queueData = (over = {}) => ({
 beforeEach(() => {
   jest.clearAllMocks();
   mockParams = {};
+  mockUser = { nook_enabled: false, tutorials_seen: [] };
+  nookAPI.state.mockResolvedValue({ data: { pip: { form: 'leafy' } } });
   lessonAPI.queue.mockResolvedValue(queueData());
   lessonAPI.complete.mockResolvedValue(queueData());
   plantAPI.getAll.mockResolvedValue({ data: { plants: [{ id: 'p1', common_name: 'Pothos' }] } });
@@ -214,5 +221,58 @@ describe('LessonsPage', () => {
     await mount(<LessonsPage />);
     expect(container.querySelector('[role="alert"]').textContent).toContain('Could not load your lessons');
     expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
+  });
+});
+
+describe('LessonPage and the nook', () => {
+  test('Pip hosts the lesson for people who turned the nook on', async () => {
+    mockUser = { nook_enabled: true, tutorials_seen: [] };
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-host').querySelector('canvas').getAttribute('aria-label')).toBe('Pip');
+    expect(nookAPI.state).toHaveBeenCalled();
+  });
+
+  test('there is no host, and no request for the nook, without it', async () => {
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-host')).toBeNull();
+    expect(nookAPI.state).not.toHaveBeenCalled();
+  });
+
+  test('finishing a lesson tells the signed-in user, so the nook offer can follow', async () => {
+    mockUser = { nook_enabled: false, tutorials_seen: ['collection'] };
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    await click(q('mark-done-done'));
+    await flush();
+    expect(mockUpdateUser).toHaveBeenCalledWith({ tutorials_seen: ['collection', 'lesson:plant-er'] });
+  });
+
+  test('a lesson already recorded is not added twice', async () => {
+    mockUser = { nook_enabled: false, tutorials_seen: ['lesson:plant-er'] };
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    await click(q('mark-done-done'));
+    await flush();
+    expect(mockUpdateUser).not.toHaveBeenCalled();
+  });
+
+  test('when the first-care celebration closes the user is marked as celebrated', async () => {
+    careAPI.createLog.mockResolvedValue({ data: { _meta: { soil_coaching: 'Fine.', first_care_pending: true } } });
+    mockParams = { lessonId: 'soil-finger-test' };
+    await mount(<LessonPage />);
+    await click(q('lesson-next'));
+    await flush();
+    await click(q('soil-outcome-damp'));
+    await click(q('soil-step-submit'));
+    await flush();
+    await click(q('soil-step-continue'));
+    await flush();
+    await click(q('celebration-close'));
+    await flush();
+    expect(mockUpdateUser).toHaveBeenCalledWith({ first_care_celebrated: true });
   });
 });

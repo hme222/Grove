@@ -99,6 +99,16 @@ export const lessonAPI = {
   submitQuiz: (answers) => api.post('/users/me/quiz', { answers }),
 };
 
+// Pip's nook
+export const nookAPI = {
+  state: () => api.get('/nook/state'),
+  seen: () => api.post('/nook/seen'),
+  settings: (data) => api.post('/users/me/nook', data),
+  startReadiness: (speciesId) => api.post('/nook/readiness', { species_id: speciesId }),
+  completeStep: (stepId) => api.post(`/nook/readiness/steps/${stepId}`),
+  looksOff: (plantId, looksOff) => api.post(`/plants/${plantId}/looks-off`, { looks_off: looksOff }),
+};
+
 // Plants
 export const plantAPI = {
   getAll: (params) => api.get('/plants', { params }),

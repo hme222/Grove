@@ -347,7 +347,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
   const earned = item.earned;
   const tierColor = item.tier ? TIER_COLORS[item.tier] : null;
   const sizeClass = compact ? 'w-10 h-10' : 'w-12 h-12';
-  const canPin = !earned && item.earnable && !!onTogglePin;
+  const canPin = !earned && item.earnable && item.pinnable !== false && !!onTogglePin;
   return (
     <div
       className={`relative rounded-[10px] border-[0.5px] p-3 flex flex-col items-center text-center transition-colors duration-150 ${
