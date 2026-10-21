@@ -14,6 +14,7 @@ import uuid
 import os
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
+from seed_photos import photo_fields
 from motor.motor_asyncio import AsyncIOMotorClient
 from passlib.context import CryptContext
 
@@ -257,6 +258,7 @@ async def seed_maya(db):
             "created_at": days_ago(28 - i * 2),
             "updated_at": last_watered
         }
+        plant.update(photo_fields(plant["common_name"]))
         await db.plants.insert_one(plant)
     print(f"  ✓ Created 6 plants")
     
@@ -509,6 +511,7 @@ async def seed_james(db):
             "created_at": days_ago(pdata["age_days"]),
             "updated_at": last_watered
         }
+        plant.update(photo_fields(plant["common_name"]))
         await db.plants.insert_one(plant)
     
     # Bulk remaining plants (39 more to reach 47 total)
@@ -544,6 +547,7 @@ async def seed_james(db):
             "created_at": days_ago(30 + i * 5),
             "updated_at": days_ago(1)
         }
+        plant.update(photo_fields(plant["common_name"]))
         await db.plants.insert_one(plant)
     
     print(f"  ✓ Created 47 plants")
@@ -868,6 +872,7 @@ async def seed_clare(db):
             "created_at": days_ago(2 + pi),
             "updated_at": days_ago(2)
         }
+        plant.update(photo_fields(plant["common_name"]))
         await db.plants.insert_one(plant)
     
     print(f"  ✓ Created 8 plants")
@@ -1097,6 +1102,7 @@ async def seed_supporting_accounts(db):
                 "created_at": days_ago(60),
                 "updated_at": days_ago(3)
             }
+            plant.update(photo_fields(plant["common_name"]))
             await db.plants.insert_one(plant)
         
         print(f"  ✓ Created @{username}")
