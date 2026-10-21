@@ -17,7 +17,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-SEEDED_USERNAMES = ("mayagreens", "rootsandstems", "clarenolan_studio")
+SEEDED_USERNAMES = (
+    "mayagreens", "rootsandstems", "clarenolan_studio",
+    # supporting grove members
+    "mossandleaf", "rootandgrove", "ferngrove", "leaflight", "grovekeeper", "morningcuttings",
+)
 
 PHOTOS = {'Aloe Vera': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Cape_Town_%28ZA%29%2C_Table_Mountain%2C_Aloe_vera_--_2024_--_2869.jpg/960px-Cape_Town_%28ZA%29%2C_Table_Mountain%2C_Aloe_vera_--_2024_--_2869.jpg',
                'credit': 'Dietmar Rabich / Wikimedia Commons, CC BY-SA 4.0',
@@ -118,13 +122,70 @@ PHOTOS = {'Aloe Vera': {'url': 'https://upload.wikimedia.org/wikipedia/commons/t
                'source': 'https://commons.wikimedia.org/wiki/File:Rosa_de_alabastro_(Echeveria_elegans),_jard%C3%ADn_del_molino,_Sierra_de_San_Felipe,_Set%C3%BAbal,_Portugal,_2012-05-11,_DD_01.JPG'}}
 
 
+
+# Photos for seeded bouquets, florist portfolio pieces and posts. Keys are
+# "bouquet:<name>", "portfolio:<title>" and "post:<username>". Clare's portfolio
+# and bouquets share a few photos on purpose: they are the same studio's work.
+SCENES = {'bouquet:Birthday flowers from mum': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg/960px-Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg',
+                                       'credit': 'Missvain / Wikimedia Commons, CC BY 4.0',
+                                       'source': 'https://commons.wikimedia.org/wiki/File:Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg'},
+ "bouquet:Partner's birthday": {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Flickr_-_ronsaunders47_-_Birthday_bouquet..jpg/960px-Flickr_-_ronsaunders47_-_Birthday_bouquet..jpg',
+                                'credit': 'Ronald Saunders from Warrington, UK / Wikimedia Commons, CC BY-SA '
+                                          '2.0',
+                                'source': 'https://commons.wikimedia.org/wiki/File:Flickr_-_ronsaunders47_-_Birthday_bouquet..jpg'},
+ 'bouquet:Housewarming': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Bouquet_of_red_roses.jpg/960px-Bouquet_of_red_roses.jpg',
+                          'credit': 'পাপৰি বৰা / Wikimedia Commons, CC BY-SA 4.0',
+                          'source': 'https://commons.wikimedia.org/wiki/File:Bouquet_of_red_roses.jpg'},
+ 'bouquet:Sarah & James — Wedding': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Wedding-Flowers.jpg/960px-Wedding-Flowers.jpg',
+                                     'credit': 'Djmuenchen s4l / Wikimedia Commons, CC BY-SA 4.0',
+                                     'source': 'https://commons.wikimedia.org/wiki/File:Wedding-Flowers.jpg'},
+ 'bouquet:Emma Thompson — Birthday': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Rose_bouquet%2C_D%C3%B6hren.jpg/960px-Rose_bouquet%2C_D%C3%B6hren.jpg',
+                                      'credit': 'Gerda Arendt / Wikimedia Commons, CC0',
+                                      'source': 'https://commons.wikimedia.org/wiki/File:Rose_bouquet,_D%C3%B6hren.jpg'},
+ 'bouquet:Harrington Corporate — Monday': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Tropical_flower_arrangement_wedding.jpg/960px-Tropical_flower_arrangement_wedding.jpg',
+                                           'credit': 'Photo by and (c)2007 Jina Lee / Wikimedia Commons, CC '
+                                                     'BY-SA 3.0',
+                                           'source': 'https://commons.wikimedia.org/wiki/File:Tropical_flower_arrangement_wedding.jpg'},
+ 'bouquet:Past Wedding 1': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Decorative_flowers_and_fruits_on_the_wedding_table_with_blurry_background.jpg/960px-Decorative_flowers_and_fruits_on_the_wedding_table_with_blurry_background.jpg',
+                            'credit': 'Shixart1985 / Wikimedia Commons, CC BY 2.0',
+                            'source': 'https://commons.wikimedia.org/wiki/File:Decorative_flowers_and_fruits_on_the_wedding_table_with_blurry_background.jpg'},
+ 'bouquet:Past Anniversary': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Red_roses_from_bouquet_2.jpg/960px-Red_roses_from_bouquet_2.jpg',
+                              'credit': 'Montanabw / Wikimedia Commons, CC BY-SA 4.0',
+                              'source': 'https://commons.wikimedia.org/wiki/File:Red_roses_from_bouquet_2.jpg'},
+ 'bouquet:Past Corporate': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/DFC_2281_Two_small_potted_cacti_with_rounded_clustered_forms_sit_side_by_side_on_a_windowsill_a_calm_seaside_view_blurred_in_the_background.jpg/960px-DFC_2281_Two_small_potted_cacti_with_rounded_clustered_forms_sit_side_by_side_on_a_windowsill_a_calm_seaside_view_blurred_in_the_background.jpg',
+                            'credit': 'PattayaPatrol / Wikimedia Commons, CC BY-SA 4.0',
+                            'source': 'https://commons.wikimedia.org/wiki/File:DFC_2281_Two_small_potted_cacti_with_rounded_clustered_forms_sit_side_by_side_on_a_windowsill_a_calm_seaside_view_blurred_in_the_background.jpg'},
+ 'portfolio:Spring Wedding Arch': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/DSCN0136_-_Flickr_-_Shward.jpg/960px-DSCN0136_-_Flickr_-_Shward.jpg',
+                                   'credit': 'Josh Ward from Eugene, Oregon, USA / Wikimedia Commons, CC BY '
+                                             '2.0',
+                                   'source': 'https://commons.wikimedia.org/wiki/File:DSCN0136_-_Flickr_-_Shward.jpg'},
+ 'portfolio:Editorial Shoot — Vogue': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/DFC_2281_Two_small_potted_cacti_with_rounded_clustered_forms_sit_side_by_side_on_a_windowsill_a_calm_seaside_view_blurred_in_the_background.jpg/960px-DFC_2281_Two_small_potted_cacti_with_rounded_clustered_forms_sit_side_by_side_on_a_windowsill_a_calm_seaside_view_blurred_in_the_background.jpg',
+                                       'credit': 'PattayaPatrol / Wikimedia Commons, CC BY-SA 4.0',
+                                       'source': 'https://commons.wikimedia.org/wiki/File:DFC_2281_Two_small_potted_cacti_with_rounded_clustered_forms_sit_side_by_side_on_a_windowsill_a_calm_seaside_view_blurred_in_the_background.jpg'},
+ 'portfolio:Corporate Event — Tech Launch': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Tropical_flower_arrangement_wedding.jpg/960px-Tropical_flower_arrangement_wedding.jpg',
+                                             'credit': 'Photo by and (c)2007 Jina Lee / Wikimedia Commons, '
+                                                       'CC BY-SA 3.0',
+                                             'source': 'https://commons.wikimedia.org/wiki/File:Tropical_flower_arrangement_wedding.jpg'},
+ 'post:rootsandstems': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Anthurium_waroqueanum.JPG/960px-Anthurium_waroqueanum.JPG',
+                        'credit': 'Pajast / Wikimedia Commons, Public domain',
+                        'source': 'https://commons.wikimedia.org/wiki/File:Anthurium_waroqueanum.JPG'},
+ 'post:clarenolan_studio': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Eustoma_russellianum_cultivar_1DS-II_3-7672.jpg/960px-Eustoma_russellianum_cultivar_1DS-II_3-7672.jpg',
+                            'credit': 'SAplants / Wikimedia Commons, CC BY-SA 4.0',
+                            'source': 'https://commons.wikimedia.org/wiki/File:Eustoma_russellianum_cultivar_1DS-II_3-7672.jpg'}}
+
 # Names the seed data uses for plants that share a photo with another entry.
-ALIASES = {"Chlorophytum comosum": "Spider Plant"}
+ALIASES = {"Chlorophytum comosum": "Spider Plant", "Monstera": "Monstera deliciosa"}
 
 
 def photo_fields(common_name):
     """Extra plant-document fields for a seeded plant; empty when there is no photo."""
     p = PHOTOS.get(ALIASES.get(common_name, common_name))
+    return {"photo_url": p["url"], "photo_credit": p["credit"]} if p else {}
+
+
+def scene_fields(kind, key):
+    """photo_url + photo_credit for a seeded bouquet, portfolio item or post; {} if none."""
+    p = SCENES.get(f"{kind}:{key}")
     return {"photo_url": p["url"], "photo_credit": p["credit"]} if p else {}
 
 
@@ -146,6 +207,21 @@ async def main():
             await db.plants.update_one({"id": plant["id"]}, {"$set": fields})
             updated += 1
     print(f"\nUpdated {updated} plants, {missing} without a matching photo.")
+
+    scenes = 0
+    for coll, kind, field in (("bouquets", "bouquet", "name"), ("portfolio_items", "portfolio", "title")):
+        async for doc in db[coll].find({"$or": [{"photo_url": ""}, {"photo_url": None}]}):
+            fields = scene_fields(kind, doc.get(field))
+            if fields:
+                await db[coll].update_one({"id": doc["id"]}, {"$set": fields})
+                scenes += 1
+    for username in ("rootsandstems", "clarenolan_studio"):
+        user = await db.users.find_one({"username": username})
+        post = user and await db.posts.find_one({"user_id": user["id"], "$or": [{"photo_url": ""}, {"photo_url": None}]})
+        if post:
+            await db.posts.update_one({"id": post["id"]}, {"$set": scene_fields("post", username)})
+            scenes += 1
+    print(f"Updated {scenes} bouquets, portfolio items and posts.")
 
 
 if __name__ == "__main__":

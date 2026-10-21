@@ -14,7 +14,7 @@ import uuid
 import os
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
-from seed_photos import photo_fields
+from seed_photos import photo_fields, scene_fields
 from motor.motor_asyncio import AsyncIOMotorClient
 from passlib.context import CryptContext
 
@@ -293,6 +293,7 @@ async def seed_maya(db):
         "is_active": False,
         "created_at": days_ago(21)
     }
+    bouquet.update(scene_fields("bouquet", bouquet.get("name")))
     await db.bouquets.insert_one(bouquet)
     
     # Bouquet flowers
@@ -591,6 +592,7 @@ async def seed_james(db):
             "is_active": False,
             "created_at": days_ago(bdata["days_ago"])
         }
+        bouquet.update(scene_fields("bouquet", bouquet.get("name")))
         await db.bouquets.insert_one(bouquet)
     
     print(f"  ✓ Created 2 bouquets")
@@ -759,6 +761,7 @@ async def seed_james(db):
         "created_at": days_ago(1),
         "updated_at": days_ago(1),
     }
+    james_post.update(scene_fields("post", "rootsandstems"))
     await db.posts.insert_one(james_post)
     print(f"  ✓ Seeded 1 feed post")
     
@@ -901,6 +904,7 @@ async def seed_clare(db):
             "florist_arrangement": True,
             "created_at": days_ago(days_ago_val)
         }
+        bouquet.update(scene_fields("bouquet", bouquet.get("name")))
         await db.bouquets.insert_one(bouquet)
     
     print(f"  ✓ Created 6 bouquets (18 total in production)")
@@ -922,6 +926,7 @@ async def seed_clare(db):
             "tags": [],
             "created_at": days_ago(60)
         }
+        item.update(scene_fields("portfolio", item.get("title")))
         await db.portfolio_items.insert_one(item)
     
     print(f"  ✓ Created 3 portfolio items")
@@ -1039,6 +1044,7 @@ async def seed_clare(db):
         "created_at": days_ago(2),
         "updated_at": days_ago(2),
     }
+    clare_post.update(scene_fields("post", "clarenolan_studio"))
     await db.posts.insert_one(clare_post)
     print(f"  ✓ Seeded 1 feed post")
 

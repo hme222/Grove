@@ -32,7 +32,8 @@ PER_PLANT = 4
 ALLOWED_LICENSES = ("cc0", "public domain", "cc by", "cc-by", "pd")
 SKIP_TITLE = re.compile(
     r"herbarium|illustration|drawing|plate|map|stamp|diagram|painting|engraving|"
-    r"botanical magazine|pressed|seed|fruit market|leaf litter|\.svg|\.tif|\.png|\.gif",
+    r"botanical magazine|pressed|seed|fruit market|leaf litter|\.svg|\.tif|\.png|\.gif|"
+    r"bride|groom|woman|women|man |girl|boy|people|portrait|couple|wearing|ceremony|crowd",
     re.I,
 )
 
@@ -70,6 +71,17 @@ PLANTS = {
     "Olive tree": "Olea europaea",
     "Rose bush": "Rosa garden bush flowers",
     "Succulent": "Echeveria elegans",
+    # Seeded posts, bouquets and florist portfolio pieces (see seed_photos.py SCENES)
+    "Lisianthus": "Eustoma grandiflorum",
+    "Anthurium warocqueanum": "Anthurium warocqueanum",
+    "Bouquet: gift": "flower bouquet gift",
+    "Bouquet: birthday": "birthday bouquet flowers",
+    "Bouquet: wedding": "wedding bouquet flowers",
+    "Bouquet: corporate": "flower arrangement lobby",
+    "Bouquet: anniversary": "red roses bouquet",
+    "Portfolio: wedding arch": "wedding flower arch",
+    "Portfolio: minimal arrangement": "minimalist flower arrangement vase",
+    "Portfolio: tropical arrangement": "tropical flower arrangement",
 }
 
 
