@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, definition and welcome screen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3EEE4}
+a{color:#3B6D11}a:hover{color:#202D14}
+input::placeholder{color:#7A776E}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #3B6D11}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.r2{animation-delay:.45s}.r3{animation-delay:.9s}.r4{animation-delay:1.2s}
+@keyframes lift{0%{opacity:0;transform:translateY(40px)}100%{opacity:1;transform:translateY(0)}}
+.lift{animation:lift 1.2s cubic-bezier(.2,.7,.2,1) .2s both}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0deg);opacity:.5}50%{transform:scale(1.05) rotate(20deg);opacity:1}}
+.spark{display:block;transform-origin:center;animation:twinkle 3.2s ease-in-out infinite}
+@keyframes draw{0%{stroke-dashoffset:1}100%{stroke-dashoffset:0}}
+.vine{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.4s cubic-bezier(.4,0,.2,1) 1.2s forwards}
+.v2{animation-delay:1.7s}.v3{animation-delay:2.2s}
+@media (prefers-reduced-motion: reduce){.rise,.lift,.spark{animation:none}.vine{animation:none;stroke-dashoffset:0}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #F3EEE4; color: #1A1A17; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em; color: #202D14">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #5F5E5A">iPhone · December</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); align-items: center; gap: 56px; width: 100%; max-width: 1120px; margin: 0 auto; padding: 8px 24px 48px; box-sizing: border-box">
+    <div style="display: flex; flex-direction: column; gap: 36px">
+      <section aria-label="Definition" style="display: flex; flex-direction: column; gap: 20px">
+        <div class="rise" style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px">
+          <h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(72px, 8.4vw, 116px); line-height: 0.9; letter-spacing: -0.02em; color: #202D14">grove</h1>
+          <span style="font-size: 19px; color: #5F5E5A">/ɡrōv/</span>
+          <span style="font-style: italic; font-size: 19px; color: #5F5E5A">noun</span>
+        </div>
+        <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px">
+          <li class="rise" style="display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(21px, 2vw, 26px); line-height: 1.35; color: #3A3934">
+            <span style="font-weight: 600">1.</span>
+            <span>A small group of trees growing closely together.</span>
+          </li>
+          <li class="rise r2" style="display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(21px, 2vw, 26px); line-height: 1.35; color: #202D14">
+            <span style="font-weight: 600">2.</span>
+            <span>A calm plant care app for people who are new to this. Tells you what each plant needs today, and why.</span>
+          </li>
+        </ol>
+      </section>
+
+      <div class="rise r3" style="height: 1px; max-width: 460px; background: #D3C9B8"></div>
+
+      <div class="rise r4" style="display: flex; flex-direction: column; gap: 12px">
+        <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 420px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 14px; background: #FBF8F1; border: 1px solid {{wellBorder}}">
+            <label for="email-s11" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+            <input id="email-s11" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #1A1A17; font-family: inherit; font-size: 16px">
+            <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 10px; background: #202D14; color: #F4F1E6; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+          </form>
+          <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="font-size: 15px; color: #B8335F">That email doesn't look quite right.</div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="display: flex; flex-direction: column; gap: 6px; font-size: 18px; line-height: 1.45">
+            <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+            <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #3B6D11; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+          </div>
+        </sc-if>
+        <div style="font-size: 14px; color: #5F5E5A">Coming to iPhone this December. Free to join.</div>
+      </div>
+    </div>
+
+    <div class="lift" style="display: flex; justify-content: center">
+      <div role="img" aria-label="The Grove app's welcome screen: Welcome to Grove. A grove is a small group of trees growing closely together. Grove is a safe space to learn about plants." style="width: 320px; max-width: 100%; height: 660px; box-sizing: border-box; padding: 11px; border-radius: 50px; background: #0B0F08; box-shadow: 0 40px 80px rgba(32, 45, 20, 0.28), 0 2px 6px rgba(32, 45, 20, 0.2)">
+        <div style="position: relative; height: 100%; box-sizing: border-box; padding: 40px 20px 20px; border-radius: 40px; background: #202D14; color: #F4F1E6; overflow: hidden; display: flex; flex-direction: column">
+          <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+            <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 18px; letter-spacing: 0.1em">Grove</span>
+          </div>
+          <div style="margin-top: 34px; font-weight: 300; font-size: 26px; line-height: 1.1">Welcome to <span style="position: relative; display: inline-block; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">Grove<span style="position: absolute; right: -16px; top: -10px" aria-hidden="true"><svg class="spark" width="14" height="14" viewBox="0 0 40 40" fill="#C3D98A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></span></span></div>
+          <svg style="display: block; width: 100%; height: 52px" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path class="vine" pathLength="1" d="M44 4C30 8 18 18 16 40C14 64 24 84 36 96" vector-effect="non-scaling-stroke"></path></svg>
+          <div style="margin: -14px 0 0 38%; font-size: 13px; line-height: 1.35">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together</div>
+          <svg style="display: block; width: 100%; height: 40px" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path class="vine v2" pathLength="1" d="M72 4C88 6 94 30 86 96" vector-effect="non-scaling-stroke"></path></svg>
+          <img src="/_blob/f92ee5a05bafb5c119573b1b240600ec" alt="" style="display: block; width: 100%; height: 160px; object-fit: cover; border-radius: 16px; -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%)">
+          <svg style="display: block; width: 100%; height: 36px; margin-top: -8px" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path class="vine v3" pathLength="1" d="M10 2C4 40 6 76 20 96" vector-effect="non-scaling-stroke"></path></svg>
+          <div style="margin: -6px 0 0 18%; font-size: 13px; line-height: 1.4">Grove is a <strong style="font-weight: 700; text-decoration: underline wavy #92B44B; text-underline-offset: 4px">safe space</strong> to learn about plants.</div>
+          <div style="margin: 22px 0 0 18%; font-style: italic; font-weight: 300; font-size: 13px; line-height: 1.4; color: #E6E7D6">Providing tools to help you feel confident in caring for your plants</div>
+          <div style="position: relative; margin-top: auto; height: 46px; border-radius: 10px; background: #92B44B; color: #1A2410; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700"><span style="position: absolute; left: 16px; top: 50%; width: 12px; height: 12px; margin-top: -8px; border-radius: 999px; border: 2px solid #2D3B1A" aria-hidden="true"></span>Continue</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#B8335F' : '#C9BFAE',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

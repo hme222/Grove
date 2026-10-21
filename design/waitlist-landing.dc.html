@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove waitlist</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#202D14}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+</style>
+</helmet>
+<div style="background: #202D14; color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; overflow: hidden">
+
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+    <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
+      <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+      </a>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #92B44B; color: #F4F1E6; text-decoration: none; font-size: 17px; font-weight: 500">Join the waitlist</a>
+    </nav>
+
+    <section id="top" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(460px, 100%), 1fr)); gap: 56px; align-items: center; padding: 56px 0 120px">
+      <div style="display: flex; flex-direction: column; gap: 28px">
+        <div style="display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">
+          <svg width="18" height="18" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path><path d="M8 24c.5 4 2 5.5 6 6-4 .5-5.5 2-6 6-.5-4-2-5.5-6-6 4-.5 5.5-2 6-6z"></path></svg>
+          Coming to the App Store this December
+        </div>
+        <h1 style="margin: 0; font-weight: 300; font-size: clamp(44px, 6vw, 76px); line-height: 1.04; letter-spacing: -0.01em; text-wrap: balance">Care for your plants and feel <span style="position: relative; display: inline-block; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">confident<svg style="position: absolute; left: 0; bottom: -14px; width: 100%; height: 20px" viewBox="0 0 132 18" preserveAspectRatio="none" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6c30-4 80-5 124-1"></path><path d="M14 11c28-3 62-4 100-1"></path><path d="M30 15c20-2 40-2 60 0"></path></svg></span> doing it</h1>
+        <p style="margin: 0; font-size: 21px; line-height: 1.5; color: #E6E7D6; max-width: 34rem; text-wrap: pretty">Grove is a <strong style="font-weight: 700">safe space</strong> to learn about plants. It tells you what each one needs today, explains why, and helps you recover when something goes wrong.</p>
+
+        <div id="join" style="display: flex; flex-direction: column; gap: 12px; max-width: 34rem">
+          <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 10px" novalidate>
+              <label for="email" style="font-size: 16px; font-weight: 500">Email address</label>
+              <div style="display: flex; flex-wrap: wrap; gap: 10px">
+                <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" aria-describedby="email-help" style="flex: 1 1 240px; min-width: 0; height: 56px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+                <button type="submit" style="flex: 0 0 auto; height: 56px; padding: 0 28px; border: 0; border-radius: 12px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+              </div>
+              <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+                <div role="alert" style="font-size: 16px; color: #E57A9C">That email doesn't look quite right. Check it and try again.</div>
+              </sc-if>
+              <div id="email-help" style="font-size: 15px; color: #B7C0A4">We'll email you once, on launch day. [CONFIRM: what else, if anything, you'll send]</div>
+            </form>
+          </sc-if>
+          <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+            <div role="status" style="display: flex; flex-direction: column; gap: 8px; padding: 24px 28px; border-radius: 22px; background: #2D3B1A">
+              <div style="font-size: 26px; font-weight: 300">You're on the list.</div>
+              <div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">We'll write to <strong style="font-weight: 700">{{email}}</strong> when Grove lands in the App Store.</div>
+              <button type="button" onClick="{{reset}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">Use a different email</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="position: relative; padding: 48px 0 72px">
+        <img src="/_blob/f92ee5a05bafb5c119573b1b240600ec" alt="Sunlight falling through a misty forest" style="display: block; width: 100%; aspect-ratio: 37 / 24; object-fit: cover; border-radius: 28px">
+        <svg style="position: absolute; right: 18%; top: 0; width: 120px; height: 64px" viewBox="0 0 120 64" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M110 4c-40 2-60 12-40 22 18 9 -10 22 -50 34"></path></svg>
+        <div style="position: absolute; left: 0; bottom: 0; max-width: 320px; padding: 16px 20px; border-radius: 16px; background: #202D14; font-size: 17px; line-height: 1.45">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together.</div>
+      </div>
+    </section>
+  </div>
+
+  <section style="background: #2D3B1A">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 104px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 56px">
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(32px, 4vw, 48px); line-height: 1.12; max-width: 42rem; text-wrap: balance">New to plants? That's who Grove is <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">for</span>.</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px; border-radius: 22px; background: #202D14">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z"></path></svg>
+          <h3 style="margin: 0; font-weight: 500; font-size: 24px">Know what to do today</h3>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Each plant gets one clear next step: water, wait, or check the soil. No guessing from a care tag.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px; border-radius: 22px; background: #202D14">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"></path><path d="M20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"></path></svg>
+          <h3 style="margin: 0; font-weight: 500; font-size: 24px">Learn as you go</h3>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Short lessons and quizzes explain the why behind each step, so the next plant is easier.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px; border-radius: 22px; background: #202D14">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"></path><path d="M4 4v4h4"></path></svg>
+          <h3 style="margin: 0; font-weight: 500; font-size: 24px">Mistakes are fixable</h3>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Logged the wrong thing? Undo it. Yellowing leaves? Grove helps you work out why and what to try.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 120px 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path><path d="M8 24c.5 4 2 5.5 6 6-4 .5-5.5 2-6 6-.5-4-2-5.5-6-6 4-.5 5.5-2 6-6z"></path></svg>
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(36px, 5vw, 60px); line-height: 1.08; max-width: 44rem; text-wrap: balance">Be first into the <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">Grove</span></h2>
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 36rem">Grove arrives on iPhone this December. Join the waitlist and we'll tell you the day it's ready.</p>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 32px; border-radius: 12px; background: #92B44B; color: #1A2410; text-decoration: none; font-size: 18px; font-weight: 700">Join the waitlist</a>
+    </div>
+  </section>
+
+  <footer style="background: #172010">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 15px; color: #B7C0A4">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span>
+        <span>© 2026</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <a href="#privacy">Privacy policy [ADD LINK]</a>
+        <a href="#contact">[YOUR CONTACT EMAIL]</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      inputBorder: s.error ? '#E57A9C' : '#4E6232',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      reset: () => this.setState({ done: false, email: '', error: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

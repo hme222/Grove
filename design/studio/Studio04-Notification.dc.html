@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, one reminder</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0F08}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #92B44B}
+@keyframes drop{0%{opacity:0;transform:translateY(-18px) scale(.98)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.drop{animation:drop .8s cubic-bezier(.2,.8,.2,1) .3s both}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+.r2{animation-delay:.9s}.r3{animation-delay:1.05s}
+@media (prefers-reduced-motion: reduce){.drop,.rise{animation:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #0B0F08; background-image: radial-gradient(ellipse 60% 45% at 50% 38%, #172010 0%, rgba(11, 15, 8, 0) 70%); color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; padding: 24px 24px 64px; text-align: center">
+    <div class="drop" style="width: 100%; max-width: 380px">
+      <sc-if value="{{cardOpen}}" hint-placeholder-val="{{ true }}">
+        <div role="group" aria-label="Example Grove notification" style="display: flex; flex-direction: column; gap: 12px; padding: 16px 18px; border-radius: 24px; background: rgba(244, 241, 230, 0.09); border: 1px solid rgba(244, 241, 230, 0.12); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5); text-align: left">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 7px; background: #202D14; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg></div>
+            <div style="flex: 1 1 auto; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #C9CDBB">Grove</div>
+            <div style="font-size: 13px; color: #A9B09A">9:00 am</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 17px; font-weight: 700">Monstera needs water</div>
+            <div style="font-size: 16px; line-height: 1.4; color: #E6E7D6">Water slowly until it drains. Everything else is fine today.</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button type="button" onClick="{{markDone}}" style="height: 44px; border: 0; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Done</button>
+            <button type="button" onClick="{{later}}" style="height: 44px; border: 0; border-radius: 12px; background: rgba(244, 241, 230, 0.1); color: #F4F1E6; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Later</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{cardClosed}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 8px 14px 20px; border-radius: 24px; background: rgba(244, 241, 230, 0.06); border: 1px solid rgba(244, 241, 230, 0.1); text-align: left; font-size: 16px; color: #E6E7D6">
+          <span>{{closedText}}</span>
+          <button type="button" onClick="{{reopen}}" style="min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 15px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">Undo</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <h1 class="rise r2" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(28px, 2.8vw, 36px); line-height: 1.2; max-width: 22ch; text-wrap: balance">One reminder a day. That's the whole idea.</h1>
+
+    <div class="rise r3" style="display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%">
+      <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid {{wellBorder}}">
+          <label for="email-s4" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+          <input id="email-s4" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 16px">
+          <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+        </form>
+        <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size: 15px; color: #E57A9C">That email doesn't look quite right.</div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; line-height: 1.45">
+          <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+          <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+        </div>
+      </sc-if>
+      <div style="font-size: 14px; color: #A9B09A">Quiet from 9pm to 8am. Coming to iPhone this December.</div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false, card: 'open', how: '' };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      cardOpen: s.card === 'open',
+      cardClosed: s.card !== 'open',
+      closedText: s.how === 'done' ? 'Logged. That’s it until tomorrow.' : 'No rush. It stays on today’s list in the app.',
+      markDone: () => this.setState({ card: 'closed', how: 'done' }),
+      later: () => this.setState({ card: 'closed', how: 'later' }),
+      reopen: () => this.setState({ card: 'open' }),
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#E57A9C' : '#2D3B1A',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

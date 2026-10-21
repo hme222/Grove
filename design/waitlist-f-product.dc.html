@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove waitlist, show the product</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#202D14}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+@keyframes twinkle{0%,100%{transform:scale(.55) rotate(0deg);opacity:.35}50%{transform:scale(1.1) rotate(25deg);opacity:1}}
+@keyframes pop{0%{transform:translateY(12px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.spark{display:block;transform-origin:center;animation:twinkle 3s ease-in-out infinite}
+.d1{animation-delay:.8s}.d2{animation-delay:1.6s}
+.pop{animation:pop .25s ease-out both}
+@media (prefers-reduced-motion: reduce){.spark,.pop{animation:none}}
+</style>
+</helmet>
+<div style="background: #202D14; color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; overflow: hidden">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+    <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
+      <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+      </a>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #92B44B; color: #F4F1E6; text-decoration: none; font-size: 17px; font-weight: 500">Join the waitlist</a>
+    </nav>
+
+    <section id="top" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap: 64px; align-items: center; padding: 40px 0 104px">
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <div style="font-weight: 500; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">iPhone app · December</div>
+        <h1 style="margin: 0; font-weight: 300; font-size: clamp(42px, 5.6vw, 70px); line-height: 1.05; text-wrap: balance">Open the app. See <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">exactly</span> what to do today.</h1>
+        <p style="margin: 0; font-size: 21px; line-height: 1.5; color: #E6E7D6; max-width: 32rem">Every plant gets one clear step. Tap it when you're done. Tapped the wrong one? Undo. Try it on the phone.</p>
+        <form id="join" onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 10px; max-width: 32rem" novalidate>
+          <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+            <label for="email-f" style="font-size: 16px; font-weight: 500">Email address</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <input id="email-f" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 220px; min-width: 0; height: 56px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+              <button type="submit" style="height: 56px; padding: 0 28px; border: 0; border-radius: 12px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+            </div>
+            <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="font-size: 16px; color: #E57A9C">That email doesn't look quite right. Mind checking it?</div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+            <div role="status" style="display: flex; align-items: center; gap: 12px; padding: 20px 24px; border-radius: 18px; background: #2D3B1A; font-size: 19px"><svg class="spark" width="24" height="24" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg><span>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> on launch day.</span></div>
+          </sc-if>
+        </form>
+      </div>
+
+      <div style="position: relative; display: flex; justify-content: center">
+        <div style="position: absolute; left: 8%; top: 6%" aria-hidden="true"><svg class="spark" width="34" height="34" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div style="position: absolute; right: 8%; bottom: 14%" aria-hidden="true"><svg class="spark d2" width="24" height="24" viewBox="0 0 40 40" fill="#C3D98A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div role="group" aria-label="Interactive preview of the Grove Today screen" style="position: relative; width: 340px; max-width: 100%; height: 680px; box-sizing: border-box; padding: 12px; border-radius: 52px; background: #0E1409; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35)">
+          <div style="position: relative; height: 100%; box-sizing: border-box; padding: 44px 18px 18px; border-radius: 42px; background: #202D14; overflow: hidden; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <div style="font-size: 14px; color: #B7C0A4">Thursday</div>
+              <div style="font-weight: 300; font-size: 30px">Today in your <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">grove</span></div>
+            </div>
+            <div style="font-size: 15px; color: #C3D98A">{{summary}}</div>
+            <sc-for list="{{plants}}" as="p" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 18px; background: #2D3B1A; opacity: {{p.opacity}}">
+                <div style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 999px; background: #3C4D26; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg></div>
+                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                  <div style="font-size: 17px; font-weight: 500">{{p.name}}</div>
+                  <div style="font-size: 14px; color: #B7C0A4">{{p.task}}</div>
+                </div>
+                <sc-if value="{{p.actionable}}" hint-placeholder-val="{{ true }}">
+                  <button type="button" onClick="{{p.toggle}}" aria-label="{{p.aria}}" style="flex: 0 0 auto; min-width: 64px; height: 44px; padding: 0 14px; border-radius: 12px; border: {{p.btnBorder}}; background: {{p.btnBg}}; color: {{p.btnColor}}; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{p.btn}}</button>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{showUndo}}" hint-placeholder-val="{{ false }}">
+              <div class="pop" role="status" style="position: absolute; left: 14px; right: 14px; bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 16px; border-radius: 16px; background: #F4F1E6; color: #1A2410; font-size: 15px">
+                <span>{{undoText}}</span>
+                <button type="button" onClick="{{undo}}" style="min-height: 44px; padding: 0 14px; border: 0; border-radius: 10px; background: transparent; color: #2D5016; font-family: inherit; font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer">Undo</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section style="background: #2D3B1A">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 48px">
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(32px, 4vw, 46px); line-height: 1.12; max-width: 40rem; text-wrap: balance">Built for people who are <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">new</span> to this</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 32px; border-radius: 22px; background: #202D14">
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 32px; color: #C3D98A">Do</div>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">A short list of what needs you today. Plants that are fine stay quiet.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 32px; border-radius: 22px; background: #202D14">
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 32px; color: #C3D98A">Understand</div>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Tap any step to see why, in plain words, with a short lesson if you want more.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 32px; border-radius: 22px; background: #202D14">
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 32px; color: #C3D98A">Undo</div>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Every log can be taken back, so trying something never feels risky.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 112px 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center">
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(36px, 5vw, 56px); line-height: 1.08; max-width: 40rem; text-wrap: balance">Get it the day it <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">launches</span></h2>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 32px; border-radius: 12px; background: #92B44B; color: #1A2410; text-decoration: none; font-size: 18px; font-weight: 700">Join the waitlist</a>
+    </div>
+  </section>
+
+  <footer style="background: #172010">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 15px; color: #B7C0A4">
+      <span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span> © 2026</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px"><a href="#privacy">Privacy policy [ADD LINK]</a><a href="#contact">[YOUR CONTACT EMAIL]</a></div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, doneIds: [], last: null };
+  }
+  renderVals() {
+    const s = this.state;
+    const base = [
+      { id: 'mon', name: 'Monstera', task: 'Water today, until it drains', verb: 'Watered', actionable: true },
+      { id: 'pot', name: 'Pothos', task: 'Check the soil with a finger', verb: 'Checked', actionable: true },
+      { id: 'snk', name: 'Snake plant', task: 'All good. Next water in 9 days', verb: '', actionable: false }
+    ];
+    const left = base.filter((p) => p.actionable && s.doneIds.indexOf(p.id) < 0).length;
+    const lastPlant = base.find((p) => p.id === s.last);
+    return {
+      summary: left === 0 ? 'All done for today. Nice work.' : left + ' thing' + (left === 1 ? '' : 's') + ' to do',
+      plants: base.map((p) => {
+        const isDone = s.doneIds.indexOf(p.id) >= 0;
+        return {
+          ...p,
+          task: isDone ? p.verb + ' just now' : p.task,
+          opacity: isDone ? '0.7' : '1',
+          btn: isDone ? 'Done' : 'Do it',
+          aria: (isDone ? 'Done: ' : 'Mark done: ') + p.name,
+          btnBg: isDone ? 'transparent' : '#92B44B',
+          btnColor: isDone ? '#C3D98A' : '#1A2410',
+          btnBorder: isDone ? '1.5px solid #4E6232' : '0',
+          toggle: () => {
+            if (isDone) return;
+            this.setState({ doneIds: s.doneIds.concat([p.id]), last: p.id });
+          }
+        };
+      }),
+      showUndo: !!lastPlant,
+      undoText: lastPlant ? lastPlant.verb + ' ' + lastPlant.name : '',
+      undo: () => this.setState({ doneIds: s.doneIds.filter((id) => id !== s.last), last: null }),
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      inputBorder: s.error ? '#E57A9C' : '#4E6232',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

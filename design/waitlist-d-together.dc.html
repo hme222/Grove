@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove waitlist, together</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#202D14}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+@keyframes twinkle{0%,100%{transform:scale(.55) rotate(0deg);opacity:.35}50%{transform:scale(1.1) rotate(25deg);opacity:1}}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}15%{opacity:1}50%{transform:translate(10px,-60px)}85%{opacity:.9}100%{transform:translate(-6px,-130px);opacity:0}}
+@keyframes sway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+.spark{display:block;transform-origin:center;animation:twinkle 3s ease-in-out infinite}
+.fly{display:block;animation:rise 7s ease-in-out infinite}
+.d1{animation-delay:.9s}.d2{animation-delay:1.8s}.d3{animation-delay:2.7s}.d4{animation-delay:3.6s}.d5{animation-delay:4.5s}
+.tree{transform-box:fill-box;transform-origin:50% 100%;animation:sway 6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.spark,.fly,.tree{animation:none}}
+</style>
+</helmet>
+<div style="background: #202D14; color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; overflow: hidden">
+
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+    <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
+      <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+      </a>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1.5px solid #92B44B; color: #F4F1E6; text-decoration: none; font-size: 17px; font-weight: 500">Join us</a>
+    </nav>
+
+    <section id="top" style="display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 32px 0 112px; text-align: center">
+      <div style="position: relative; width: 100%; max-width: 560px">
+        <svg viewBox="0 0 560 240" style="display: block; width: 100%; height: auto" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="A hand-drawn cluster of trees growing close together">
+          <path d="M20 226c120-8 400-8 520 0" stroke="#3C4D26" stroke-width="2"></path>
+          <g class="tree" style="animation-delay: .4s"><path d="M120 226v-60" stroke="#92B44B" stroke-width="2"></path><path d="M120 176c-34 0-48-24-38-46 6-14 20-20 28-18 4-20 30-26 42-10 18-2 30 18 22 34 12 20-6 40-26 40-8 0-20 0-28 0z" fill="#2D3B1A" stroke="#92B44B" stroke-width="2"></path></g>
+          <g class="tree"><path d="M280 226v-90" stroke="#92B44B" stroke-width="2"></path><path d="M280 150c-46 0-66-30-54-60 6-18 22-28 36-26 6-30 46-38 62-14 26-2 42 26 30 50 16 30-10 50-36 50z" fill="#3C4D26" stroke="#C3D98A" stroke-width="2"></path></g>
+          <g class="tree" style="animation-delay: 1.2s"><path d="M430 226v-56" stroke="#92B44B" stroke-width="2"></path><path d="M430 182c-30 0-44-20-36-40 4-12 16-18 24-16 4-18 28-22 38-8 16-2 26 16 20 30 10 18-6 34-24 34z" fill="#2D3B1A" stroke="#92B44B" stroke-width="2"></path></g>
+          <g class="tree" style="animation-delay: 2s"><path d="M200 226v-36" stroke="#92B44B" stroke-width="2"></path><path d="M200 196c-20 0-30-14-24-28 4-8 12-12 18-10 4-12 20-14 26-4 12 0 18 12 14 22 6 12-4 20-16 20z" fill="#3C4D26" stroke="#92B44B" stroke-width="2"></path></g>
+          <g class="tree" style="animation-delay: 2.8s"><path d="M356 226v-30" stroke="#92B44B" stroke-width="2"></path><path d="M356 200c-16 0-24-12-20-22 2-8 10-10 14-8 4-10 16-12 22-4 10 0 14 10 12 18 4 10-4 16-14 16z" fill="#2D3B1A" stroke="#C3D98A" stroke-width="2"></path></g>
+        </svg>
+        <div style="position: absolute; left: 14%; top: 34%" aria-hidden="true"><svg class="fly" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.5" fill="#E8D77A"></circle></svg></div>
+        <div style="position: absolute; left: 38%; top: 50%" aria-hidden="true"><svg class="fly d2" width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.5" fill="#E8D77A"></circle></svg></div>
+        <div style="position: absolute; left: 62%; top: 30%" aria-hidden="true"><svg class="fly d4" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.5" fill="#C3D98A"></circle></svg></div>
+        <div style="position: absolute; left: 82%; top: 48%" aria-hidden="true"><svg class="fly d1" width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.5" fill="#E8D77A"></circle></svg></div>
+        <div style="position: absolute; left: 28%; top: 70%" aria-hidden="true"><svg class="fly d3" width="7" height="7" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.5" fill="#F4F1E6"></circle></svg></div>
+        <div style="position: absolute; left: 72%; top: 66%" aria-hidden="true"><svg class="fly d5" width="7" height="7" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.5" fill="#E8D77A"></circle></svg></div>
+        <div style="position: absolute; right: 2%; top: 0" aria-hidden="true"><svg class="spark d1" width="36" height="36" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div style="position: absolute; left: 4%; top: 8%" aria-hidden="true"><svg class="spark d3" width="24" height="24" viewBox="0 0 40 40" fill="#F4F1E6"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+      </div>
+
+      <div style="font-weight: 500; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Coming to the App Store this December</div>
+      <h1 style="margin: 0; font-weight: 300; font-size: clamp(44px, 6.4vw, 80px); line-height: 1.04; letter-spacing: -0.01em; max-width: 16ch; text-wrap: balance">Trees grow better together. So do <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">plant people.</span></h1>
+      <p style="margin: 0; font-size: 21px; line-height: 1.55; color: #E6E7D6; max-width: 38rem; text-wrap: pretty">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together. Grove is where new plant owners learn, ask questions, and grow their confidence side by side.</p>
+
+      <div id="join" style="width: 100%; max-width: 36rem; display: flex; flex-direction: column; gap: 12px; text-align: left">
+        <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 10px" novalidate>
+            <label for="email-d" style="font-size: 16px; font-weight: 500">Email address</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <input id="email-d" name="email" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" aria-describedby="email-d-help" style="flex: 1 1 220px; min-width: 0; height: 56px; box-sizing: border-box; padding: 0 20px; border-radius: 999px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+              <button type="submit" style="flex: 0 0 auto; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Plant me in the Grove</button>
+            </div>
+            <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="font-size: 16px; color: #E57A9C">That email doesn't look quite right. Mind checking it?</div>
+            </sc-if>
+            <div id="email-d-help" style="font-size: 15px; color: #B7C0A4">One note when we open. [CONFIRM: anything else you'll send]</div>
+          </form>
+        </sc-if>
+        <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="display: flex; flex-direction: column; gap: 8px; padding: 24px 28px; border-radius: 26px; background: #2D3B1A">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 300">
+              <svg class="spark" width="24" height="24" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+              Welcome to the Grove.
+            </div>
+            <div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> when the doors open.</div>
+            <button type="button" onClick="{{reset}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">Use a different email</button>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+  </div>
+
+  <section style="background: #2D3B1A">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 104px 24px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 56px; align-items: center">
+      <div style="position: relative">
+        <img src="/_blob/f92ee5a05bafb5c119573b1b240600ec" alt="Sunlight through a misty forest" style="display: block; width: 100%; aspect-ratio: 37 / 24; object-fit: cover; border-radius: 28px">
+        <div style="position: absolute; right: -10px; top: -14px" aria-hidden="true"><svg class="spark d2" width="40" height="40" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 28px">
+        <h2 style="margin: 0; font-weight: 300; font-size: clamp(32px, 4vw, 46px); line-height: 1.12; text-wrap: balance">Nobody figures out plants <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">alone</span></h2>
+        <div style="display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; gap: 16px; align-items: flex-start">
+            <div style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #3C4D26"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8D77A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 4px"><h3 style="margin: 0; font-weight: 500; font-size: 22px">A clear next step, every day</h3><p style="margin: 0; font-size: 18px; line-height: 1.5; color: #E6E7D6">Water, wait, or check the soil, for each plant you own.</p></div>
+          </div>
+          <div style="display: flex; gap: 16px; align-items: flex-start">
+            <div style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #3C4D26"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8D77A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"></path><path d="M20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 4px"><h3 style="margin: 0; font-weight: 500; font-size: 22px">Lessons that explain why</h3><p style="margin: 0; font-size: 18px; line-height: 1.5; color: #E6E7D6">Short, friendly, and made for people just starting out.</p></div>
+          </div>
+          <div style="display: flex; gap: 16px; align-items: flex-start">
+            <div style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #3C4D26"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8D77A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"></circle><circle cx="16" cy="9" r="3"></circle><path d="M3 19c.8-3 2.8-4.5 5-4.5s4.2 1.5 5 4.5"></path><path d="M13.5 15.2c.8-.5 1.6-.7 2.5-.7 2.2 0 4.2 1.5 5 4.5"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 4px"><h3 style="margin: 0; font-weight: 500; font-size: 22px">Your own little grove</h3><p style="margin: 0; font-size: 18px; line-height: 1.5; color: #E6E7D6">Share wins, ask questions, and swap cuttings with other plant people. [CONFIRM: community ships in December]</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 120px 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center">
+      <div style="display: flex; gap: 14px; align-items: flex-end" aria-hidden="true">
+        <svg class="spark d2" width="22" height="22" viewBox="0 0 40 40" fill="#C3D98A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+        <svg class="spark" width="44" height="44" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+        <svg class="spark d1" width="26" height="26" viewBox="0 0 40 40" fill="#F4F1E6"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+      </div>
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(36px, 5vw, 60px); line-height: 1.08; max-width: 44rem; text-wrap: balance">Come grow with <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">us</span></h2>
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 36rem">Grove opens on iPhone this December. Join the waitlist and be one of the first trees in the grove.</p>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 32px; border-radius: 999px; background: #92B44B; color: #1A2410; text-decoration: none; font-size: 18px; font-weight: 700">Join the waitlist</a>
+    </div>
+  </section>
+
+  <footer style="background: #172010">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 15px; color: #B7C0A4">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span>
+        <span>© 2026</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <a href="#privacy">Privacy policy [ADD LINK]</a>
+        <a href="#contact">[YOUR CONTACT EMAIL]</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      inputBorder: s.error ? '#E57A9C' : '#4E6232',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      reset: () => this.setState({ done: false, email: '', error: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

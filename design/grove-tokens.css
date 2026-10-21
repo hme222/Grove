@@ -1,0 +1,62 @@
+/* Grove design tokens v0.3 — from the onboarding mock (Oct 2026).
+   Replaces the light "paper" palette in grove-frontend/src/index.css as the primary look.
+   Fonts: Google Fonts "Alegreya Sans" (300,400,500,700 + italics) and "Cormorant Garamond" (600,700). */
+:root {
+  /* Ground & surfaces */
+  --grove-understory: #172010; /* inputs, footer */
+  --grove-forest:     #202D14; /* the ground */
+  --grove-canopy:     #2D3B1A; /* cards */
+  --grove-moss:       #3C4D26; /* hairlines, chips */
+  --grove-input-line: #4E6232;
+  /* Accent */
+  --grove-lime:       #92B44B; /* primary action; one per screen */
+  --grove-root:       #1A2410; /* text on lime (6.8:1) */
+  --grove-sprout:     #C3D98A; /* links/highlights on dark (9.4:1) */
+  /* Text */
+  --grove-cream:      #F4F1E6; /* body text (12.8:1 on forest) */
+  --grove-sage:       #B7C0A4; /* secondary text (7.7:1 on forest) */
+  /* Signals */
+  --grove-sun:        #E8D77A; /* sparkle only */
+  --grove-bloom:      #E57A9C; /* warnings: 5.3:1 on forest, 4.3:1 on canopy (24px+ there) */
+  /* Light mode (carried from existing app) */
+  --grove-paper:      #F5F0E8;
+  --grove-ink:        #1A1A17;
+
+  --grove-font-display: 'Cormorant Garamond', Georgia, serif; /* wordmark + one key word */
+  --grove-font-ui: 'Alegreya Sans', Optima, Candara, sans-serif;
+
+  --grove-radius-control: 12px;
+  --grove-radius-sm: 14px;
+  --grove-radius-card: 22px;
+  --grove-button-height: 52px; /* min touch target 44px */
+
+  /* v0.2 — marketing surfaces (Studio 12) */
+  --grove-night:      #0B0F08; /* marketing page ground */
+  --grove-well:       #1C2416; /* input field on night */
+  --grove-fern-line:  #64793F; /* field border, 4.0:1 on night */
+  --grove-lichen:     #A9B09A; /* small print on night, 8.6:1 */
+  --grove-primary-marketing: #F4F1E6; /* cream button, text = night */
+  --grove-primary-app: #92B44B;       /* lime button, text = root */
+
+  --grove-radius-field: 16px;   /* joined email field */
+  --grove-radius-field-btn: 12px;
+  --grove-phone-radius: 56px;   /* marketing phone frame */
+  --grove-phone-screen-radius: 45px;
+
+  --grove-phone-bezel: 11px;           /* v0.3: real iPhone proportions, 364 x 763 outer */
+
+  --grove-ease-enter: cubic-bezier(.22,.61,.36,1);   /* v0.3 */
+  --grove-ease-reveal: cubic-bezier(.16,.8,.2,1);
+  --grove-ease-pen: cubic-bezier(.42,.08,.5,.96);    /* v0.3: line wipes, slow pen pace */
+  --grove-ease-pop: cubic-bezier(.34,1.56,.64,1);    /* v0.3: stars arriving */
+  --grove-dur-line-long: 2.2s;
+  --grove-dur-line-short: 1.5s;
+  --grove-line-wipe-edge: 14px;        /* soft edge of the downward wipe */
+  --grove-dur-enter: 1.6s;
+  --grove-dur-reveal: 1.6s;
+  --grove-stagger: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

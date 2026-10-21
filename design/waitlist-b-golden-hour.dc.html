@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove waitlist, golden hour</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#202D14}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+@keyframes twinkle{0%,100%{transform:scale(.55) rotate(0deg);opacity:.35}50%{transform:scale(1.1) rotate(25deg);opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.spark{display:block;transform-origin:center;animation:twinkle 3s ease-in-out infinite}
+.d1{animation-delay:.7s}.d2{animation-delay:1.4s}.d3{animation-delay:2.1s}
+.drift{animation:drift 6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.spark,.drift{animation:none}}
+</style>
+</helmet>
+<div style="background: #202D14; background-image: radial-gradient(ellipse 70% 50% at 78% 8%, rgba(232, 215, 122, 0.16), rgba(232, 215, 122, 0) 70%); color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; overflow: hidden">
+
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+    <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
+      <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+      </a>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1.5px solid #E8D77A; color: #F4F1E6; text-decoration: none; font-size: 17px; font-weight: 500">Save my spot</a>
+    </nav>
+
+    <section id="top" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(460px, 100%), 1fr)); gap: 64px; align-items: center; padding: 48px 0 112px">
+      <div style="display: flex; flex-direction: column; gap: 26px">
+        <div style="font-style: italic; font-weight: 300; font-size: 22px; color: #E8D77A">Hello, and welcome in.</div>
+        <h1 style="margin: 0; font-weight: 300; font-size: clamp(44px, 6vw, 74px); line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance">Every plant lover starts somewhere. Start <span style="position: relative; display: inline-block; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">here.<svg style="position: absolute; left: -4px; bottom: -12px; width: 110%; height: 18px" viewBox="0 0 132 18" preserveAspectRatio="none" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6c30-4 80-5 124-1"></path><path d="M14 11c28-3 62-4 100-1"></path></svg></span></h1>
+        <p style="margin: 0; font-size: 21px; line-height: 1.55; color: #E6E7D6; max-width: 33rem; text-wrap: pretty">No green thumb needed. Grove is a <strong style="font-weight: 700">safe space</strong> to learn what your plants need, one gentle step at a time. It lands in the App Store this December.</p>
+
+        <div id="join" style="display: flex; flex-direction: column; gap: 12px; max-width: 34rem; padding: 24px; border-radius: 26px; background: #2D3B1A">
+          <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 10px" novalidate>
+              <label for="email-b" style="font-size: 17px; font-weight: 500">Where should we send your invite?</label>
+              <div style="display: flex; flex-wrap: wrap; gap: 10px">
+                <input id="email-b" name="email" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" aria-describedby="email-b-help" style="flex: 1 1 220px; min-width: 0; height: 56px; box-sizing: border-box; padding: 0 20px; border-radius: 999px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+                <button type="submit" style="flex: 0 0 auto; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Save my spot</button>
+              </div>
+              <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+                <div role="alert" style="font-size: 16px; color: #E57A9C">Hmm, that email doesn't look quite right. Mind checking it?</div>
+              </sc-if>
+              <div id="email-b-help" style="font-size: 15px; color: #B7C0A4">One friendly note on launch day. [CONFIRM: anything else you'll send]</div>
+            </form>
+          </sc-if>
+          <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+            <div role="status" style="display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 300">
+                <svg class="spark" width="24" height="24" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+                You're in. We're so glad you're here.
+              </div>
+              <div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">We'll write to <strong style="font-weight: 700">{{email}}</strong> the day Grove opens.</div>
+              <button type="button" onClick="{{reset}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">Use a different email</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="position: relative; padding: 32px 24px 24px">
+        <div style="position: absolute; left: 0; top: 0" aria-hidden="true"><svg class="spark" width="44" height="44" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div style="position: absolute; right: 8px; top: 22%" aria-hidden="true"><svg class="spark d1" width="26" height="26" viewBox="0 0 40 40" fill="#F4F1E6"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div style="position: absolute; left: 6%; bottom: 18%" aria-hidden="true"><svg class="spark d2" width="20" height="20" viewBox="0 0 40 40" fill="#C3D98A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div style="position: absolute; right: 14%; bottom: 4px" aria-hidden="true"><svg class="spark d3" width="32" height="32" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+        <div class="drift" style="max-width: 440px; margin: 0 auto; padding: 10px; border-radius: 999px 999px 32px 32px; background: #E8D77A">
+          <img src="/_blob/f92ee5a05bafb5c119573b1b240600ec" alt="Warm sunlight falling through a misty forest" style="display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 999px 999px 24px 24px">
+        </div>
+        <div style="max-width: 360px; margin: 24px auto 0; text-align: center; font-size: 17px; line-height: 1.45; color: #E6E7D6">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together.</div>
+      </div>
+    </section>
+  </div>
+
+  <section style="background: #2D3B1A">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 104px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 56px">
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(32px, 4vw, 48px); line-height: 1.12; max-width: 44rem; text-wrap: balance">Killed a succulent or two? <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">Same.</span> Here's what's different.</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px; border-radius: 28px; background: #202D14">
+          <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 999px; background: #3C4D26"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8D77A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z"></path></svg></div>
+          <h3 style="margin: 0; font-weight: 500; font-size: 24px">You'll know what to do today</h3>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">One clear next step for each plant: water, wait, or check the soil.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px; border-radius: 28px; background: #202D14">
+          <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 999px; background: #3C4D26"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8D77A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"></path><path d="M20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"></path></svg></div>
+          <h3 style="margin: 0; font-weight: 500; font-size: 24px">You'll understand why</h3>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Short lessons explain the reason behind each step, so care starts to feel natural.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px; border-radius: 28px; background: #202D14">
+          <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 999px; background: #3C4D26"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8D77A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></div>
+          <h3 style="margin: 0; font-weight: 500; font-size: 24px">Mistakes are welcome</h3>
+          <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6E7D6">Undo a wrong log. Get calm help when a leaf turns yellow. Nobody judges here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 120px 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center">
+      <div style="display: flex; gap: 14px; align-items: flex-end" aria-hidden="true">
+        <svg class="spark d2" width="22" height="22" viewBox="0 0 40 40" fill="#C3D98A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+        <svg class="spark" width="44" height="44" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+        <svg class="spark d1" width="26" height="26" viewBox="0 0 40 40" fill="#F4F1E6"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+      </div>
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(36px, 5vw, 60px); line-height: 1.08; max-width: 44rem; text-wrap: balance">There's room for you in the <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">Grove</span></h2>
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 36rem">Coming to iPhone this December. Save your spot and we'll let you know the moment it's ready.</p>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 32px; border-radius: 999px; background: #92B44B; color: #1A2410; text-decoration: none; font-size: 18px; font-weight: 700">Save my spot</a>
+    </div>
+  </section>
+
+  <footer style="background: #172010">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 15px; color: #B7C0A4">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span>
+        <span>© 2026</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <a href="#privacy">Privacy policy [ADD LINK]</a>
+        <a href="#contact">[YOUR CONTACT EMAIL]</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      inputBorder: s.error ? '#E57A9C' : '#4E6232',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      reset: () => this.setState({ done: false, email: '', error: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

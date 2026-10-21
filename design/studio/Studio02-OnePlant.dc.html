@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, one plant</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3EEE4}
+a{color:#3B6D11}a:hover{color:#202D14}
+input::placeholder{color:#7A776E}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #3B6D11}
+@keyframes reveal{0%{opacity:0;transform:scale(1.03)}100%{opacity:1;transform:scale(1)}}
+.reveal{animation:reveal 1.4s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) .5s both}
+.r2{animation-delay:.7s}.r3{animation-delay:.9s}
+@media (prefers-reduced-motion: reduce){.reveal,.rise{animation:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); background: #F3EEE4; color: #1A1A17; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <div style="position: relative; min-height: 420px; display: flex; align-items: center; justify-content: center; padding: 32px; background: #E9E1D2; overflow: hidden">
+    <img class="reveal" src="/_blob/9afd240831b3df34808c72da340013f4" alt="Botanical illustration of a ZZ plant, from Curtis's Botanical Magazine" style="display: block; max-height: calc(100vh - 64px); max-width: 100%; height: auto; width: auto; box-shadow: 0 30px 60px rgba(26, 26, 23, 0.18)">
+  </div>
+
+  <div style="display: flex; flex-direction: column; padding: 24px clamp(24px, 5vw, 72px) 40px">
+    <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 24px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em; color: #202D14">Grove</span>
+      </div>
+      <div style="font-size: 14px; color: #5F5E5A">iPhone · December</div>
+    </header>
+
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 32px; max-width: 480px">
+      <div class="rise" style="display: flex; flex-direction: column; gap: 6px">
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; color: #5F5E5A">Zamioculcas zamiifolia</div>
+        <h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(40px, 4.4vw, 60px); line-height: 1.02; color: #202D14">ZZ plant</h1>
+      </div>
+      <p class="rise r2" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(22px, 2vw, 26px); line-height: 1.35; color: #3A3934">Stores water in its roots and forgives a missed week. Water only when the soil is fully dry.</p>
+      <dl class="rise r2" style="margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 18px 0; border-top: 1px solid #C9BFAE; border-bottom: 1px solid #C9BFAE">
+        <div style="display: flex; flex-direction: column; gap: 4px"><dt style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #5F5E5A">Water</dt><dd style="margin: 0; font-size: 17px">About every 14 days</dd></div>
+        <div style="display: flex; flex-direction: column; gap: 4px"><dt style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #5F5E5A">Light</dt><dd style="margin: 0; font-size: 17px">Low light is fine</dd></div>
+        <div style="display: flex; flex-direction: column; gap: 4px"><dt style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #5F5E5A">Pets</dt><dd style="margin: 0; font-size: 17px">Mildly toxic</dd></div>
+      </dl>
+      <div class="rise r3" style="display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 18px; color: #202D14">Grove knows this for every plant you own.</div>
+        <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 420px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 14px; background: #FBF8F1; border: 1px solid {{wellBorder}}">
+            <label for="email-s2" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+            <input id="email-s2" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #1A1A17; font-family: inherit; font-size: 16px">
+            <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 10px; background: #202D14; color: #F4F1E6; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+          </form>
+          <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="font-size: 15px; color: #B8335F">That email doesn't look quite right.</div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="display: flex; flex-direction: column; gap: 6px; font-size: 18px; line-height: 1.45">
+            <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+            <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #3B6D11; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="padding-top: 24px; font-size: 13px; line-height: 1.5; color: #5F5E5A">From Grove's plant library. Illustration: Curtis's Botanical Magazine, public domain.</div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#B8335F' : '#C9BFAE',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, the welcome screen rises</title>
+<script src="./support.js"></script>
+<script src="/_blob/f9bfe17fe76786ab9a4f64cc7909e407"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0F08}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #92B44B}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header data-g="header" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
+  </header>
+
+  <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 24px 40px; text-align: center">
+    <h1 data-g="headline" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.22; max-width: 24ch; text-wrap: balance">A safe space to learn about plants. Opening this December.</h1>
+    <div data-g="form" style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%">
+      <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+        <form data-g="field" onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid {{wellBorder}}">
+          <label for="email-s12" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+          <input id="email-s12" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 16px">
+          <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+        </form>
+        <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size: 15px; color: #E57A9C">That email doesn't look quite right.</div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+        <div data-g="status" role="status" style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; line-height: 1.45">
+          <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+          <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+        </div>
+      </sc-if>
+    </div>
+    <div data-g="proof" style="font-size: 14px; color: #A9B09A">For people who are new to plants. Free to join.</div>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; justify-content: center; align-items: flex-start; min-height: 360px; position: relative; perspective: 1400px">
+    <div data-g="glow" aria-hidden="true" style="position: absolute; left: 50%; top: 40px; width: 760px; height: 560px; margin-left: -380px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(146, 180, 75, 0.20) 0%, rgba(146, 180, 75, 0.06) 40%, rgba(11, 15, 8, 0) 70%); pointer-events: none"></div>
+    <div data-g="phone" role="img" aria-label="The Grove app's welcome screen: Welcome to Grove. A grove is a small group of trees growing closely together. Grove is a safe space to learn about plants. Providing tools to help you feel confident in caring for your plants." style="position: absolute; top: 0; width: 364px; height: 763px; box-sizing: border-box; padding: 11px; border-radius: 56px; background: #050604; box-shadow: 0 0 0 1px #3A4A26, inset 0 0 0 1px #1A2112, 0 -20px 80px rgba(146, 180, 75, 0.12); will-change: transform">
+      <div aria-hidden="true" style="position: absolute; left: -4px; top: 134px; width: 4px; height: 31px; border-radius: 2px 0 0 2px; background: #2A3320"></div>
+      <div aria-hidden="true" style="position: absolute; left: -4px; top: 188px; width: 4px; height: 57px; border-radius: 2px 0 0 2px; background: #2A3320"></div>
+      <div aria-hidden="true" style="position: absolute; left: -4px; top: 258px; width: 4px; height: 57px; border-radius: 2px 0 0 2px; background: #2A3320"></div>
+      <div aria-hidden="true" style="position: absolute; right: -4px; top: 214px; width: 4px; height: 90px; border-radius: 0 2px 2px 0; background: #2A3320"></div>
+      <div style="position: relative; width: 342px; height: 741px; border-radius: 45px; background: #202D14; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 430px; height: 932px; transform: scale(0.795349); transform-origin: 0 0; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision">
+          <div style="position: absolute; left: 152px; top: 11px; width: 126px; height: 37px; border-radius: 20px; background: #000; z-index: 5"></div>
+          <div data-s="brand" style="position: absolute; left: 19px; top: 29px">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin-left: 19px"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+            <div style="margin-top: 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 21px; line-height: 1; letter-spacing: 0.12em">Grove</div>
+          </div>
+          <div data-s="welcome" style="position: absolute; left: 20px; top: 138px; white-space: nowrap; line-height: 1"><span style="font-weight: 300; font-size: 26px">Welcome to </span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 29px">Grove</span></div>
+          <div data-s="def" style="position: absolute; left: 184px; top: 231px; width: 236px; font-size: 17px; line-height: 20px">A <b style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 18px">grove</b> is a small group of trees growing closely together</div>
+          <img data-s="forest" src="/_blob/208e8aac7988088150d7a4b7104b72e6" alt="" style="position: absolute; left: 14px; top: 330px; width: 402px; height: 272px; display: block">
+          <div data-s="safe" style="position: absolute; left: 103px; top: 650px; white-space: nowrap; font-size: 17px; line-height: 20px">Grove is a <b style="font-weight: 700">safe space</b> to learn about plants.</div>
+          <div data-s="tools" style="position: absolute; left: 103px; top: 726px; width: 310px; font-style: italic; font-weight: 300; font-size: 17px; line-height: 20px">Providing tools to help you feel confident in caring for your plants</div>
+          <div data-s="cta" style="position: absolute; left: 20px; top: 804px; width: 390px; height: 46px; border-radius: 10px; background: #92B44B; display: flex; align-items: center; justify-content: center; color: #34461C; font-size: 17px">
+            <svg width="18" height="18" viewBox="0 0 18 18" style="position: absolute; left: 18px; top: 13px"><circle cx="9" cy="9" r="7" fill="none" stroke="#487840" stroke-width="1.8"></circle></svg>
+            Continue
+          </div>
+          <svg viewBox="0 0 430 932" width="430" height="932" fill="none" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0; top: 0; overflow: visible; z-index: 3">
+            <path data-d="s1" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" stroke="#92B44B" stroke-width="3" d="M157 167C180 166 205 166 216 167C223 168 223 173 216 176C190 190 140 205 115 216C102 223 101 233 112 238C127 245 150 249 173 250"></path>
+            <path data-d="s2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" stroke="#92B44B" stroke-width="3" d="M299 272C315 269 340 268 352 271C364 276 368 290 364 300C358 315 345 325 331 336"></path>
+            <path data-d="s3" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" stroke="#92B44B" stroke-width="3" d="M49 596C42 610 36 622 37 632C38 645 48 652 62 655C72 657 84 658 94 658"></path>
+            <path data-d="ss" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" stroke="#92B44B" stroke-width="2" d="M182 675C202 673 226 672 244 673C226 676 206 678 189 680C206 682 222 682 235 683C222 685 210 685 202 686C214 686 226 685 234 685"></path>
+            <path data-d="conf" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" stroke="#92B44B" stroke-opacity="0.5" stroke-width="1.3" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729"></path>
+            <g data-sg fill="#E8E66A" stroke="none">
+              <path data-spark="1" d="M228 127.5Q228 133 233.5 133Q228 133 228 138.5Q228 133 222.5 133Q228 133 228 127.5Z"></path>
+              <path data-spark="2" d="M221.5 131.5Q221.5 136 226 136Q221.5 136 221.5 140.5Q221.5 136 217 136Q221.5 136 221.5 131.5Z"></path>
+              <path data-spark="3" d="M230 135.5Q230 140 234.5 140Q230 140 230 144.5Q230 140 225.5 140Q230 140 230 135.5Z"></path>
+            </g>
+          </svg>
+        </div>
+        <div data-g="sheen" aria-hidden="true" style="position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, rgba(244, 241, 230, 0) 0%, rgba(244, 241, 230, 0.10) 50%, rgba(244, 241, 230, 0) 100%); pointer-events: none; opacity: 0"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false };
+  }
+  componentDidMount() {
+    this.startMotion(0);
+  }
+  componentWillUnmount() {
+    if (this.mm) this.mm.revert();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const gsap = window.gsap;
+    if (!gsap || !this.motionOk) return;
+    if (!prevState.done && this.state.done) {
+      const status = document.querySelector('[data-g="status"]');
+      if (status) gsap.from(status, { y: 12, autoAlpha: 0, duration: 0.7, ease: 'power3.out' });
+      const phone = document.querySelector('[data-g="phone"]');
+      if (phone) gsap.fromTo(phone, { y: 0 }, { y: -18, duration: 0.5, ease: 'power2.out', yoyo: true, repeat: 1 });
+    }
+    if (!prevState.error && this.state.error) {
+      const field = document.querySelector('[data-g="field"]');
+      if (field) gsap.fromTo(field, { x: -8 }, { x: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+    }
+  }
+  startMotion(tries) {
+    const gsap = window.gsap;
+    if (!gsap) {
+      if (tries < 10) setTimeout(() => this.startMotion(tries + 1), 100);
+      return;
+    }
+    const q = (k) => document.querySelector('[data-g="' + k + '"]');
+    const header = q('header'), headline = q('headline'), form = q('form'), proof = q('proof');
+    const phone = q('phone'), glow = q('glow'), sheen = q('sheen');
+    if (!phone) return;
+    this.mm = gsap.matchMedia();
+    this.mm.add({ motion: '(prefers-reduced-motion: no-preference)', fine: '(pointer: fine)' }, (ctx) => {
+      const c = ctx.conditions;
+      this.motionOk = !!c.motion;
+      if (!c.motion) return;
+
+      const s = (k) => phone.querySelector('[data-s="' + k + '"]');
+      const d = (k) => phone.querySelector('[data-d="' + k + '"]');
+      const sparks = phone.querySelectorAll('[data-spark]');
+      const sg = phone.querySelector('[data-sg]');
+
+      // Intro: the page settles and the phone rises once.
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.from(header, { y: -10, autoAlpha: 0, duration: 0.6 })
+        .from(headline, { y: 18, autoAlpha: 0, filter: 'blur(8px)', duration: 1.1 }, 0.1)
+        .from(form, { y: 14, autoAlpha: 0, duration: 0.8 }, 0.35)
+        .from(proof, { autoAlpha: 0, duration: 0.8 }, 0.55)
+        .from(glow, { autoAlpha: 0, scale: 0.6, duration: 2.2, ease: 'power2.out' }, 0.4)
+        .from(phone, { y: 280, autoAlpha: 0, scale: 0.94, duration: 1.9, ease: 'expo.out' }, 0.45)
+        .fromTo(sheen, { left: '-60%', opacity: 1 }, { left: '120%', opacity: 1, duration: 1.4, ease: 'power2.inOut' }, 2.2)
+        .set(sheen, { opacity: 0 });
+
+      // The welcome screen builds slowly, holds, fades, and starts again.
+      const top = [s('brand'), s('welcome')];
+      const lowerText = [s('safe'), s('tools'), s('cta')];
+      const lowerLines = [d('s3'), d('ss'), d('conf')];
+      const all = top.concat([sg, s('def'), s('forest'), d('s1'), d('s2')], lowerText, lowerLines);
+      gsap.set(all, { autoAlpha: 0 });
+      gsap.set(sg, { transformOrigin: '50% 50%' });
+      gsap.set(sparks, { transformOrigin: '50% 50%' });
+
+      const loop = gsap.timeline({ repeat: -1, repeatDelay: 0.8, delay: 1.1, defaults: { ease: 'power2.out' } });
+      // Squiggles draw from their top end down, easing off into each turn like a hand.
+      const penEase = (t) => { const b = t * t * (3 - 2 * t) * 0.55 + t * 0.45; return b + 0.02 * Math.sin(t * Math.PI * 6); };
+      const draw = (k, at, dur) => {
+        const el = d(k);
+        loop.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1, ease: 'none' }, at)
+          .fromTo(el, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: dur, ease: penEase }, at);
+      };
+      // 1. Grove and "Welcome to Grove" appear together
+      loop.fromTo(top, { autoAlpha: 0, y: 10, filter: 'blur(4px)' }, { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.6, stagger: 0.25 }, 0)
+      // 2. The stars arrive and start to twinkle
+        .fromTo(sg, { autoAlpha: 0, scale: 0, rotation: -45 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: 1.0, ease: 'back.out(2.2)' }, 1.9);
+      // 3. The hand-drawn squiggle
+      draw('s1', 3.0, 2.2);
+      // 4. "A grove is..."
+      loop.fromTo(s('def'), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 1.3 }, 4.9);
+      // 5. Second squiggle, then the picture (with the rest of the screen, mostly below the fold)
+      draw('s2', 6.2, 1.5);
+      loop.fromTo(s('forest'), { autoAlpha: 0, scale: 1.04 }, { autoAlpha: 1, scale: 1, duration: 1.8 }, 7.2)
+        .fromTo(lowerLines, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.4 }, 7.6)
+        .fromTo(lowerText, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.4 }, 7.6)
+      // Hold, then fade everything out together before the next pass
+        .to(all, { autoAlpha: 0, duration: 1.2, ease: 'power1.inOut' }, 13.5);
+
+      // Stars twinkle, each on its own rhythm.
+      sparks.forEach((sp, i) => {
+        gsap.to(sp, { scale: 0.35, opacity: 0.35, rotation: '+=45', duration: 0.9 + i * 0.35, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * 0.5, repeatDelay: 0.6 + i * 0.4 });
+      });
+
+      gsap.to(glow, { opacity: 0.65, scale: 1.06, duration: 4, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.6 });
+      gsap.to(phone, { y: -8, duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 3.6 });
+
+      if (c.fine) {
+        gsap.set(phone, { transformPerspective: 1400 });
+        const rx = gsap.quickTo(phone, 'rotationX', { duration: 0.9, ease: 'power3.out' });
+        const ry = gsap.quickTo(phone, 'rotationY', { duration: 0.9, ease: 'power3.out' });
+        const onMove = (e) => {
+          const nx = e.clientX / window.innerWidth - 0.5;
+          const ny = e.clientY / window.innerHeight - 0.5;
+          ry(nx * 8);
+          rx(-ny * 5);
+        };
+        window.addEventListener('pointermove', onMove);
+        return () => window.removeEventListener('pointermove', onMove);
+      }
+    });
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#E57A9C' : '#64793F',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

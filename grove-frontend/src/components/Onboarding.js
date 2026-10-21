@@ -4,6 +4,7 @@ import { GROVE_BRAND } from '@/constants/brand';
 import { X } from 'lucide-react';
 import api from '@/lib/api';
 import { toast } from 'sonner';
+import { WelcomeScreen } from '@/components/WelcomeScreen';
 
 const SCREENS = [
   {
@@ -76,6 +77,11 @@ export function Onboarding({ onComplete }) {
       setIsCompleting(false);
     }
   };
+
+  // The first screen is the designed Grove welcome (Studio 12): dark, hand-drawn lines, built in order.
+  if (screen.id === 'welcome') {
+    return <WelcomeScreen onContinue={handleNext} onSkip={handleSkip} disabled={isCompleting} />;
+  }
 
   return (
     <div

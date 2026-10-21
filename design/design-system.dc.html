@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove design system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+</style>
+</helmet>
+<div style="width: 1440px; height: 4300px; box-sizing: border-box; padding: 96px 112px; background: #202D14; color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; display: flex; flex-direction: column; gap: 104px">
+
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 48px">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 44px; letter-spacing: 0.08em; line-height: 1">Grove</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 620px; text-align: right; align-items: flex-end">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Design system · v0.3</div>
+      <h1 style="margin: 0; font-weight: 300; font-size: 56px; line-height: 1.05">A forest floor, <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">annotated</span></h1>
+      <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #B7C0A4">Deep forest ground, one lime accent, a serif for the words that matter, and hand-drawn marks that point the way. Built for new plant owners who need calm, clear next steps.</p>
+    </div>
+  </header>
+
+  <section style="display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #92B44B">01</div>
+      <h2 style="margin: 0; font-weight: 300; font-size: 36px">Color</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px">
+      <sc-for list="{{dark}}" as="c" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div style="height: 140px; border-radius: 14px; border: 1px solid #3C4D26; background: {{c.hex}}"></div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 18px; font-weight: 500">{{c.name}}</div>
+            <div style="font-size: 14px; color: #B7C0A4; font-family: ui-monospace, Menlo, monospace">{{c.hex}}</div>
+            <div style="font-size: 15px; color: #B7C0A4">{{c.role}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px">
+      <sc-for list="{{light}}" as="c" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div style="height: 88px; border-radius: 14px; border: 1px solid #3C4D26; background: {{c.hex}}"></div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 18px; font-weight: 500">{{c.name}}</div>
+            <div style="font-size: 14px; color: #B7C0A4; font-family: ui-monospace, Menlo, monospace">{{c.hex}}</div>
+            <div style="font-size: 15px; color: #B7C0A4">{{c.role}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+      <div style="padding: 20px 24px; border-radius: 14px; background: #2D3B1A; font-size: 16px; line-height: 1.5"><strong style="font-weight: 700">Cream on Forest</strong> 12.8:1 — all body text.</div>
+      <div style="padding: 20px 24px; border-radius: 14px; background: #92B44B; color: #1A2410; font-size: 16px; line-height: 1.5"><strong style="font-weight: 700">Root on Lime</strong> 6.8:1 — primary buttons.</div>
+      <div style="padding: 20px 24px; border-radius: 14px; background: #2D3B1A; font-size: 16px; line-height: 1.5"><strong style="font-weight: 700; color: #E57A9C">Bloom on Forest</strong> 5.3:1. On Canopy cards it drops to 4.3:1, so use it there only at 24px+.</div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #92B44B">02</div>
+      <h2 style="margin: 0; font-weight: 300; font-size: 36px">Type</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 64px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 28px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Display · Alegreya Sans Light 300 + Cormorant Garamond Bold 700 · 64/68</div>
+          <div style="font-weight: 300; font-size: 64px; line-height: 1.06">Welcome to <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">Grove</span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Heading · Alegreya Sans Light 300 · 36/42</div>
+          <div style="font-weight: 300; font-size: 36px; line-height: 1.17">Know what your plant needs today</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Body · Alegreya Sans Regular 400 · 19/29</div>
+          <div style="font-size: 19px; line-height: 1.53; max-width: 640px">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together. Bold the one idea a sentence is about, never more.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Voice · Alegreya Sans Light Italic 300 · 20/28</div>
+          <div style="font-style: italic; font-weight: 300; font-size: 20px; line-height: 1.4; color: #E6E7D6">Providing tools to help you feel confident in caring for your plants</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Label · Alegreya Sans Medium 500 · 13, +0.14em, caps</div>
+          <div style="font-weight: 500; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">Next watering · Thursday</div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 20px; padding: 32px; border-radius: 22px; background: #2D3B1A">
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 96px; line-height: 0.9; letter-spacing: 0.04em">Aa</div>
+        <div style="font-size: 16px; line-height: 1.55; color: #E6E7D6">Cormorant Garamond is the voice of the brand: the wordmark, and the single key word in a headline. Never set a whole paragraph in it.</div>
+        <div style="height: 1px; background: #3C4D26"></div>
+        <div style="font-weight: 300; font-size: 96px; line-height: 0.9">Aa</div>
+        <div style="font-size: 16px; line-height: 1.55; color: #E6E7D6">Alegreya Sans does everything else. It's humanist and a little calligraphic, close to the Optima-like face in the onboarding mock.</div>
+        <div style="height: 1px; background: #3C4D26"></div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4">Plant Latin names: Alegreya Sans Italic, never monospace.</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #92B44B">03</div>
+      <h2 style="margin: 0; font-weight: 300; font-size: 36px">Hand-drawn marks</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #2D3B1A; min-height: 220px; justify-content: space-between">
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 0">
+          <span style="font-size: 24px; font-weight: 700">safe space</span>
+          <svg width="132" height="18" viewBox="0 0 132 18" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6c30-4 80-5 124-1"></path><path d="M14 11c28-3 62-4 100-1"></path><path d="M30 15c20-2 40-2 60 0"></path></svg>
+        </div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4"><strong style="color: #F4F1E6; font-weight: 500">Scribble underline.</strong> One per screen, under the key phrase.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #2D3B1A; min-height: 220px; justify-content: space-between">
+        <div style="position: relative; align-self: flex-start; padding: 6px 12px">
+          <span style="font-size: 24px; font-style: italic; font-weight: 300">confident</span>
+          <svg style="position: absolute; left: -4px; top: 0" width="134" height="44" viewBox="0 0 134 44" fill="none" stroke="#C3D98A" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M70 6C30 4 4 12 6 24c2 12 50 16 90 12 30-3 36-14 28-22C114 6 80 3 52 6"></path></svg>
+        </div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4"><strong style="color: #F4F1E6; font-weight: 500">Loose circle.</strong> For a word that names a feeling.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #2D3B1A; min-height: 220px; justify-content: space-between">
+        <svg width="200" height="80" viewBox="0 0 200 80" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 10c60-6 70 6 20 26-34 14-10 30 40 30h120"></path></svg>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4"><strong style="color: #F4F1E6; font-weight: 500">Vine connector.</strong> Leads the eye from one line of copy to the next.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #2D3B1A; min-height: 220px; justify-content: space-between">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path><path d="M8 24c.5 4 2 5.5 6 6-4 .5-5.5 2-6 6-.5-4-2-5.5-6-6 4-.5 5.5-2 6-6z"></path></svg>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4"><strong style="color: #F4F1E6; font-weight: 500">Sprout sparkle.</strong> Only for welcomes and wins, never as decoration.</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #92B44B">04</div>
+      <h2 style="margin: 0; font-weight: 300; font-size: 36px">Components</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start">
+
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; border: 1px solid #3C4D26">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Buttons · 52px tall, 12px radius</div>
+        <button type="button" style="height: 52px; border: 0; border-radius: 12px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 500; cursor: pointer">Continue</button>
+        <button type="button" style="height: 52px; border: 1.5px solid #92B44B; border-radius: 12px; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 18px; font-weight: 500; cursor: pointer">Log watering</button>
+        <button type="button" style="height: 52px; border: 0; border-radius: 12px; background: transparent; color: #C3D98A; font-family: inherit; font-size: 18px; font-weight: 500; cursor: pointer; text-decoration: underline; text-underline-offset: 5px">Not now</button>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4">One lime button per screen. The mock's dim button label is too low-contrast, so it's now Root #1A2410.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; border: 1px solid #3C4D26">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">Input + chips</div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <label for="ds-email" style="font-size: 15px; font-weight: 500">Email address</label>
+          <input id="ds-email" type="email" placeholder="you@example.com" style="height: 52px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1.5px solid #4E6232; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <span style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; background: #3C4D26; font-size: 15px">Bright, indirect</span>
+          <span style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; background: #3C4D26; font-size: 15px">Water weekly</span>
+          <span style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #E57A9C; color: #F4F1E6; font-size: 15px">Toxic to pets</span>
+        </div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4">Inputs sit darker than the ground (Understory), so they read as wells to type into.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: #2D3B1A">
+        <img src="/_blob/f92ee5a05bafb5c119573b1b240600ec" alt="Sunlight through a misty forest" style="width: 100%; height: 180px; object-fit: cover; display: block">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px 24px">
+          <div style="font-weight: 500; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Next watering · Thursday</div>
+          <div style="font-size: 24px; font-weight: 300; line-height: 1.2">Monstera <span style="font-style: italic; color: #B7C0A4; font-size: 18px">Monstera deliciosa</span></div>
+          <div style="font-size: 16px; line-height: 1.5; color: #E6E7D6">Top two inches dry? Water until it drains.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+      <sc-for list="{{tokens}}" as="t" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; border-radius: 14px; background: #2D3B1A">
+          <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #B7C0A4">{{t.k}}</div>
+          <div style="font-size: 18px">{{t.v}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #92B44B">05</div>
+      <h2 style="margin: 0; font-weight: 300; font-size: 36px">Voice</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 22px; background: #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Say</div>
+        <div style="font-size: 20px; line-height: 1.5">"Leaves drooping? Check the soil first. It's usually water."</div>
+        <div style="font-size: 20px; line-height: 1.5">"Logged. You can undo this for the next 10 seconds."</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 22px; border: 1px solid #3C4D26">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #E57A9C">Avoid</div>
+        <div style="font-size: 20px; line-height: 1.5; color: #B7C0A4">"Your plant is dying!" Alarm makes new owners freeze.</div>
+        <div style="font-size: 20px; line-height: 1.5; color: #B7C0A4">"Optimize your plant's hydration cycle." Jargon. Talk like a friend who gardens.</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #92B44B">06</div>
+      <h2 style="margin: 0; font-weight: 300; font-size: 36px">Added in v0.2–v0.3, from Studio 12</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="height: 120px; border-radius: 14px; border: 1px solid #3C4D26; background: #0B0F08"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 18px; font-weight: 500">Night</div><div style="font-size: 14px; color: #B7C0A4; font-family: ui-monospace, Menlo, monospace">#0B0F08</div><div style="font-size: 15px; color: #B7C0A4">Page ground for marketing. Forest stays the app ground.</div></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="height: 120px; border-radius: 14px; border: 1px solid #3C4D26; background: #1C2416"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 18px; font-weight: 500">Well</div><div style="font-size: 14px; color: #B7C0A4; font-family: ui-monospace, Menlo, monospace">#1C2416</div><div style="font-size: 15px; color: #B7C0A4">Input fields on Night.</div></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="height: 120px; border-radius: 14px; border: 3px solid #64793F; background: #0B0F08"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 18px; font-weight: 500">Fern line</div><div style="font-size: 14px; color: #B7C0A4; font-family: ui-monospace, Menlo, monospace">#64793F</div><div style="font-size: 15px; color: #B7C0A4">Field borders. 4.0:1 on Night, so fields stay findable.</div></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="height: 120px; border-radius: 14px; border: 1px solid #3C4D26; background: #A9B09A"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 18px; font-weight: 500">Lichen</div><div style="font-size: 14px; color: #B7C0A4; font-family: ui-monospace, Menlo, monospace">#A9B09A</div><div style="font-size: 15px; color: #B7C0A4">Proof lines and small print on Night (8.6:1).</div></div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #0B0F08; border: 1px solid #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #A9B09A">Joined email field</div>
+        <div style="display: flex; align-items: center; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid #64793F">
+          <span style="flex: 1 1 auto; font-size: 16px; color: #8E9878">Your email address</span>
+          <span style="display: inline-flex; align-items: center; height: 48px; padding: 0 20px; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-size: 16px; font-weight: 700">Join the waitlist</span>
+        </div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4">One object: 16px outer radius, 12px button radius, 4px inset. Label is visually hidden but present. Focus shows a 2px Lime ring around the whole field.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #0B0F08; border: 1px solid #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #A9B09A">Two primaries, two jobs</div>
+        <div style="display: flex; gap: 10px">
+          <span style="display: inline-flex; align-items: center; height: 48px; padding: 0 18px; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-size: 16px; font-weight: 700">Cream</span>
+          <span style="display: inline-flex; align-items: center; height: 48px; padding: 0 18px; border-radius: 12px; background: #92B44B; color: #1A2410; font-size: 16px; font-weight: 700">Lime</span>
+        </div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4">Cream on Night is the marketing action. Lime is the in-app action (Continue, Do it). Never both on one screen.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 22px; background: #0B0F08; border: 1px solid #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #A9B09A">Quiet headline</div>
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 32px; line-height: 1.22">A safe space to learn about plants.</div>
+        <div style="font-size: 15px; line-height: 1.5; color: #B7C0A4">Cormorant Garamond 500, 28–36px, max 24 characters per line, centred. The page's only headline. Let the product be the big thing.</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 22px; background: #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Hand-drawn marks, v0.3 rules</div>
+        <svg width="176" height="121" viewBox="95 160 140 95" aria-hidden="true"><path fill="#92B44B" d="M157.0 167.7 L158.2 167.8 L159.3 167.8 L160.5 167.8 L161.7 167.9 L162.8 167.9 L164.0 167.9 L165.1 168.0 L166.3 168.0 L167.5 168.0 L168.6 168.0 L169.8 168.1 L171.0 168.1 L172.1 168.1 L173.3 168.1 L174.4 168.1 L175.6 168.1 L176.7 168.1 L177.8 168.1 L179.0 168.1 L180.1 168.1 L181.2 168.1 L182.3 168.1 L183.4 168.1 L184.6 168.1 L185.6 168.1 L186.7 168.1 L187.8 168.1 L188.9 168.1 L189.9 168.1 L191.0 168.1 L192.0 168.1 L193.1 168.1 L194.1 168.2 L195.1 168.2 L196.1 168.2 L197.1 168.2 L198.1 168.2 L199.0 168.2 L200.0 168.2 L200.9 168.2 L201.8 168.3 L202.7 168.3 L203.6 168.3 L204.5 168.3 L205.3 168.3 L206.2 168.3 L207.0 168.3 L207.8 168.4 L208.6 168.4 L209.3 168.4 L210.1 168.4 L210.8 168.4 L211.5 168.4 L212.2 168.5 L212.9 168.5 L213.5 168.5 L214.1 168.5 L214.7 168.6 L215.3 168.6 L215.8 168.6 L216.1 168.7 L216.4 168.7 L216.6 168.8 L216.9 168.8 L217.2 168.9 L217.4 168.9 L217.6 169.0 L217.9 169.1 L218.1 169.2 L218.3 169.2 L218.4 169.3 L218.6 169.4 L218.7 169.5 L218.9 169.6 L219.0 169.6 L219.1 169.7 L219.2 169.8 L219.3 169.9 L219.4 170.0 L219.5 170.1 L219.5 170.1 L219.6 170.2 L219.6 170.3 L219.6 170.3 L219.7 170.4 L219.7 170.5 L219.7 170.5 L219.7 170.6 L219.7 170.7 L219.7 170.8 L219.7 170.8 L219.7 170.9 L219.7 171.0 L219.7 171.1 L219.7 171.2 L219.6 171.3 L219.6 171.4 L219.6 171.5 L219.5 171.6 L219.4 171.8 L219.3 171.9 L219.2 172.0 L219.1 172.2 L219.0 172.3 L218.9 172.4 L218.7 172.6 L218.6 172.7 L218.4 172.9 L218.2 173.0 L218.0 173.2 L217.8 173.3 L217.6 173.5 L217.4 173.6 L217.1 173.8 L216.9 173.9 L216.6 174.1 L216.3 174.2 L216.0 174.3 L215.7 174.5 L215.3 174.7 L214.0 175.4 L212.6 176.0 L211.2 176.7 L209.8 177.4 L208.3 178.0 L206.8 178.7 L205.3 179.4 L203.7 180.0 L202.1 180.7 L200.5 181.4 L198.9 182.1 L197.2 182.8 L195.5 183.5 L193.8 184.2 L192.1 184.9 L190.3 185.6 L188.6 186.3 L186.8 187.0 L185.0 187.7 L183.1 188.4 L181.3 189.1 L179.5 189.8 L177.6 190.5 L175.7 191.2 L173.9 191.8 L172.0 192.5 L170.1 193.2 L168.2 193.8 L166.3 194.5 L164.4 195.2 L162.5 195.8 L160.6 196.5 L158.8 197.2 L156.9 198.0 L155.1 198.7 L153.2 199.4 L151.4 200.1 L149.6 200.8 L147.7 201.5 L145.9 202.2 L144.1 202.9 L142.4 203.6 L140.6 204.3 L138.9 205.0 L137.1 205.6 L135.4 206.2 L133.7 206.8 L132.0 207.5 L130.4 208.1 L128.8 208.7 L127.2 209.3 L125.6 209.8 L124.1 210.4 L122.6 211.0 L121.1 211.6 L119.7 212.2 L118.3 212.8 L116.9 213.3 L115.6 213.9 L114.3 214.5 L113.5 214.9 L112.9 215.3 L112.3 215.7 L111.7 216.1 L111.1 216.4 L110.5 216.8 L110.0 217.2 L109.4 217.7 L108.9 218.1 L108.4 218.5 L108.0 218.9 L107.5 219.3 L107.1 219.8 L106.7 220.2 L106.3 220.6 L105.9 221.1 L105.5 221.5 L105.2 221.9 L104.9 222.4 L104.6 222.8 L104.3 223.3 L104.1 223.8 L103.8 224.2 L103.6 224.7 L103.4 225.2 L103.3 225.6 L103.1 226.1 L103.0 226.6 L102.9 227.1 L102.8 227.5 L102.8 228.0 L102.7 228.5 L102.7 229.0 L102.7 229.5 L102.8 229.9 L102.8 230.4 L102.9 230.9 L103.0 231.4 L103.2 231.8 L103.3 232.3 L103.5 232.8 L103.7 233.2 L104.0 233.7 L104.2 234.1 L104.5 234.5 L104.8 234.9 L105.1 235.3 L105.5 235.8 L105.8 236.1 L106.2 236.5 L106.6 236.9 L107.0 237.3 L107.5 237.6 L107.9 238.0 L108.4 238.3 L108.9 238.6 L109.5 239.0 L110.0 239.3 L110.6 239.6 L111.1 239.9 L111.9 240.2 L112.7 240.6 L113.5 240.9 L114.3 241.3 L115.1 241.6 L116.0 242.0 L116.8 242.3 L117.7 242.6 L118.6 242.9 L119.5 243.2 L120.4 243.5 L121.3 243.8 L122.2 244.1 L123.1 244.3 L124.1 244.6 L125.0 244.8 L126.0 245.1 L126.9 245.3 L127.9 245.5 L128.9 245.8 L129.9 246.0 L130.9 246.2 L131.9 246.4 L133.0 246.6 L134.0 246.8 L135.0 247.0 L136.1 247.2 L137.1 247.3 L138.2 247.5 L139.2 247.7 L140.3 247.9 L141.4 248.0 L142.4 248.2 L143.5 248.4 L144.6 248.5 L145.7 248.7 L146.8 248.8 L147.9 248.9 L149.0 249.1 L150.1 249.2 L151.3 249.3 L152.4 249.4 L153.5 249.5 L154.6 249.6 L155.8 249.7 L156.9 249.8 L158.0 249.8 L159.2 249.9 L160.3 250.0 L161.5 250.0 L162.6 250.1 L163.8 250.1 L164.9 250.2 L166.1 250.2 L167.2 250.2 L168.4 250.3 L169.5 250.3 L170.7 250.3 L171.8 250.3 L173.0 250.3 L173.0 249.7 L171.9 249.6 L170.7 249.5 L169.6 249.4 L168.4 249.3 L167.3 249.1 L166.1 249.0 L165.0 248.9 L163.9 248.8 L162.7 248.6 L161.6 248.5 L160.5 248.3 L159.3 248.2 L158.2 248.0 L157.1 247.9 L156.0 247.7 L154.9 247.5 L153.8 247.4 L152.7 247.2 L151.6 247.0 L150.5 246.8 L149.4 246.6 L148.3 246.5 L147.2 246.3 L146.1 246.1 L145.0 245.9 L144.0 245.7 L142.9 245.5 L141.9 245.2 L140.8 245.0 L139.8 244.8 L138.7 244.6 L137.7 244.3 L136.7 244.1 L135.7 243.8 L134.7 243.6 L133.7 243.3 L132.7 243.1 L131.7 242.8 L130.8 242.5 L129.8 242.2 L128.9 242.0 L127.9 241.7 L127.0 241.4 L126.1 241.1 L125.2 240.8 L124.3 240.5 L123.4 240.2 L122.5 239.9 L121.7 239.6 L120.8 239.3 L120.0 239.0 L119.1 238.7 L118.3 238.4 L117.5 238.0 L116.7 237.7 L115.9 237.4 L115.1 237.1 L114.4 236.8 L113.6 236.5 L112.9 236.1 L112.4 235.9 L111.9 235.7 L111.4 235.5 L111.0 235.2 L110.6 235.0 L110.2 234.7 L109.8 234.5 L109.4 234.2 L109.1 234.0 L108.8 233.7 L108.5 233.4 L108.2 233.2 L108.0 232.9 L107.7 232.6 L107.5 232.4 L107.3 232.1 L107.1 231.8 L107.0 231.5 L106.8 231.2 L106.7 231.0 L106.5 230.7 L106.4 230.4 L106.4 230.1 L106.3 229.8 L106.2 229.5 L106.2 229.2 L106.2 228.9 L106.2 228.6 L106.2 228.3 L106.2 228.0 L106.2 227.6 L106.3 227.3 L106.4 227.0 L106.5 226.7 L106.6 226.3 L106.7 226.0 L106.8 225.6 L107.0 225.3 L107.2 224.9 L107.4 224.6 L107.6 224.2 L107.9 223.8 L108.1 223.5 L108.4 223.1 L108.7 222.8 L109.1 222.4 L109.4 222.0 L109.8 221.7 L110.2 221.3 L110.6 220.9 L111.0 220.6 L111.4 220.2 L111.9 219.9 L112.4 219.5 L112.9 219.2 L113.5 218.8 L114.0 218.5 L114.6 218.1 L115.2 217.8 L115.7 217.5 L116.9 217.0 L118.2 216.4 L119.6 215.9 L121.0 215.3 L122.4 214.7 L123.8 214.2 L125.3 213.6 L126.8 213.0 L128.4 212.3 L129.9 211.7 L131.5 211.1 L133.2 210.5 L134.8 209.8 L136.5 209.2 L138.2 208.6 L140.0 207.9 L141.7 207.3 L143.5 206.7 L145.3 206.1 L147.1 205.5 L148.9 204.8 L150.8 204.2 L152.6 203.6 L154.5 203.0 L156.4 202.4 L158.3 201.8 L160.2 201.1 L162.1 200.4 L164.0 199.8 L165.8 199.1 L167.7 198.4 L169.6 197.7 L171.5 197.0 L173.4 196.2 L175.2 195.5 L177.1 194.8 L178.9 194.0 L180.8 193.3 L182.6 192.6 L184.5 191.9 L186.3 191.2 L188.1 190.5 L189.9 189.7 L191.7 189.0 L193.5 188.3 L195.2 187.6 L196.9 186.9 L198.6 186.2 L200.3 185.5 L202.0 184.7 L203.6 184.0 L205.2 183.2 L206.7 182.5 L208.2 181.8 L209.7 181.0 L211.2 180.3 L212.6 179.5 L214.0 178.8 L215.4 178.0 L216.7 177.3 L217.0 177.2 L217.3 177.0 L217.7 176.9 L218.0 176.7 L218.3 176.5 L218.6 176.3 L219.0 176.1 L219.2 175.9 L219.5 175.7 L219.8 175.5 L220.1 175.3 L220.3 175.1 L220.6 174.9 L220.8 174.7 L221.0 174.5 L221.2 174.3 L221.4 174.1 L221.6 173.8 L221.8 173.6 L221.9 173.4 L222.1 173.1 L222.2 172.9 L222.3 172.6 L222.4 172.4 L222.5 172.1 L222.6 171.8 L222.7 171.6 L222.7 171.3 L222.7 171.0 L222.8 170.7 L222.7 170.5 L222.7 170.2 L222.7 169.9 L222.6 169.7 L222.5 169.4 L222.4 169.1 L222.3 168.9 L222.2 168.6 L222.0 168.4 L221.9 168.2 L221.7 168.0 L221.5 167.7 L221.3 167.5 L221.1 167.3 L220.9 167.2 L220.6 167.0 L220.4 166.8 L220.1 166.7 L219.9 166.5 L219.6 166.4 L219.3 166.2 L219.0 166.1 L218.7 166.0 L218.4 165.9 L218.0 165.8 L217.7 165.7 L217.3 165.6 L217.0 165.5 L216.6 165.4 L216.2 165.4 L215.6 165.3 L215.0 165.2 L214.4 165.2 L213.7 165.1 L213.1 165.0 L212.4 165.0 L211.7 164.9 L211.0 164.9 L210.2 164.8 L209.5 164.8 L208.7 164.7 L207.9 164.7 L207.1 164.6 L206.3 164.6 L205.4 164.6 L204.6 164.5 L203.7 164.5 L202.8 164.5 L201.9 164.4 L201.0 164.4 L200.0 164.4 L199.1 164.4 L198.1 164.4 L197.1 164.4 L196.1 164.4 L195.1 164.4 L194.1 164.4 L193.1 164.4 L192.0 164.4 L191.0 164.4 L189.9 164.4 L188.9 164.4 L187.8 164.4 L186.7 164.4 L185.6 164.4 L184.5 164.4 L183.4 164.5 L182.3 164.5 L181.2 164.5 L180.0 164.5 L178.9 164.6 L177.8 164.6 L176.6 164.7 L175.5 164.7 L174.3 164.8 L173.2 164.8 L172.0 164.9 L170.9 165.0 L169.7 165.0 L168.6 165.1 L167.4 165.2 L166.2 165.3 L165.1 165.4 L163.9 165.5 L162.7 165.6 L161.6 165.8 L160.4 165.9 L159.3 166.0 L158.1 166.1 L157.0 166.3Z"></path></svg>
+        <div style="font-size: 15px; line-height: 1.6; color: #E6E7D6">Traced from the welcome screen: one continuous line that underlines the word, hooks, sweeps down and back, then curls into the next line. <b>Tapered</b>: thin ends, about 3.5px at its widest (on a 430pt screen), with a slight natural swell. Lime #92B44B, drawn as a filled shape. No ink wobble, no pen tip.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 22px; background: #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Motion, v0.3</div>
+        <div style="font-size: 15px; line-height: 1.6; color: #E6E7D6">Enter: rise 10px with 4px blur, 1.6s, cubic-bezier(.22,.61,.36,1).<br><b>Line reveal</b>: a soft edge (14px fade) wipes <b>straight down</b>, top to bottom. Never traced along the path. Slow pen pace, cubic-bezier(.42,.08,.5,.96): 2.2s for a long line, 1.5s for a short one.<br><b>Stars</b>: pop in with a small overshoot (1s), then twinkle to 35% size and opacity, each on its own rhythm (1.8s, 2.5s, 3.2s).<br>Reduced motion: everything static.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 22px; background: #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Welcome sequence</div>
+        <div style="font-size: 15px; line-height: 1.6; color: #E6E7D6">One thing at a time: 1. Grove + “Welcome to Grove” 2. stars 3. first line wipes down 4. “A grove is…” 5. second line, then the photo with the rest of the screen.<br><b>In the app</b>: plays once (about 9s), tap to skip to the end.<br><b>On the landing page</b>: loops slowly (about 15s, 4s hold, 1.2s fade).</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 22px; background: #2D3B1A">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Phone frame (marketing only)</div>
+        <div style="font-size: 15px; line-height: 1.6; color: #E6E7D6">Real iPhone Pro Max proportions: screen 430 × 932pt scaled into 342 × 741, 11px black bezel, outer 364 × 763, 56px outer radius, 45px screen radius, Dynamic Island, side buttons. It <b>peeks</b>: it rises from the bottom and the fold crops it. The screen is live text and vectors, never a screenshot.</div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      dark: [
+        { name: 'Understory', hex: '#172010', role: 'Inputs, footer, deepest wells' },
+        { name: 'Forest', hex: '#202D14', role: 'The ground. Every dark screen.' },
+        { name: 'Canopy', hex: '#2D3B1A', role: 'Cards and raised surfaces' },
+        { name: 'Moss', hex: '#3C4D26', role: 'Hairlines, chips, dividers' },
+        { name: 'Lime', hex: '#92B44B', role: 'Primary action and marks. One per screen.' }
+      ],
+      light: [
+        { name: 'Sprout', hex: '#C3D98A', role: 'Links, highlights on dark' },
+        { name: 'Cream', hex: '#F4F1E6', role: 'Text on dark' },
+        { name: 'Sage', hex: '#B7C0A4', role: 'Secondary text on dark' },
+        { name: 'Sun', hex: '#E8D77A', role: 'Sparkle only' },
+        { name: 'Bloom', hex: '#E57A9C', role: 'Warnings: toxicity, plant trouble' }
+      ],
+      tokens: [
+        { k: 'Spacing', v: '4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 104' },
+        { k: 'Radius', v: '12 controls · 14 small · 22 cards · pill chips' },
+        { k: 'Touch target', v: '44px minimum, 52px buttons' },
+        { k: 'Light mode', v: 'Paper #F5F0E8 ground, Ink #1A1A17 text' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

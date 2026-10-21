@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove waitlist, start with the worry</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#202D14}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+@keyframes twinkle{0%,100%{transform:scale(.55) rotate(0deg);opacity:.35}50%{transform:scale(1.1) rotate(25deg);opacity:1}}
+@keyframes fadein{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+.spark{display:block;transform-origin:center;animation:twinkle 3s ease-in-out infinite}
+.d1{animation-delay:.8s}.d2{animation-delay:1.6s}
+.fade{animation:fadein .3s ease-out both}
+@media (prefers-reduced-motion: reduce){.spark,.fade{animation:none}}
+</style>
+</helmet>
+<div style="background: #202D14; color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; overflow: hidden">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+    <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
+      <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+      </a>
+      <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #92B44B; color: #F4F1E6; text-decoration: none; font-size: 17px; font-weight: 500">Join the waitlist</a>
+    </nav>
+
+    <section id="top" style="display: flex; flex-direction: column; gap: 40px; padding: 56px 0 96px">
+      <div style="display: flex; flex-direction: column; gap: 20px; max-width: 46rem">
+        <h1 style="margin: 0; font-weight: 300; font-size: clamp(42px, 6vw, 74px); line-height: 1.04; text-wrap: balance">Too much water, or not <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">enough?</span></h1>
+        <p style="margin: 0; font-size: 21px; line-height: 1.5; color: #E6E7D6; max-width: 36rem">That question is where most new plant owners get stuck. Pick what you're seeing and get a taste of how Grove helps.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 24px; align-items: stretch">
+        <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px">
+          <legend style="padding: 0; margin-bottom: 12px; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">What's your plant doing?</legend>
+          <sc-for list="{{symptoms}}" as="o" hint-placeholder-count="3">
+            <button type="button" onClick="{{o.pick}}" aria-pressed="{{o.pressed}}" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; padding: 14px 22px; border-radius: 18px; border: {{o.border}}; background: {{o.bg}}; color: #F4F1E6; font-family: inherit; font-size: 20px; text-align: left; cursor: pointer">
+              <span>{{o.label}}</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C3D98A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+            </button>
+          </sc-for>
+        </fieldset>
+
+        <div style="position: relative; display: flex; flex-direction: column; gap: 16px; padding: 32px; border-radius: 28px; background: #2D3B1A">
+          <div style="position: absolute; right: 22px; top: 22px" aria-hidden="true"><svg class="spark" width="28" height="28" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+          <div class="fade" role="status" aria-live="polite" style="display: flex; flex-direction: column; gap: 14px">
+            <div style="font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Grove says</div>
+            <div style="font-size: 30px; font-weight: 300; line-height: 1.2; padding-right: 36px">{{current.title}}</div>
+            <div style="display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: #202D14">
+              <div style="flex: 0 0 auto; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 22px; color: #92B44B">First</div>
+              <div style="font-size: 18px; line-height: 1.5">{{current.step}}</div>
+            </div>
+            <div style="font-size: 18px; line-height: 1.55; color: #E6E7D6"><strong style="font-weight: 700; color: #F4F1E6">Why:</strong> {{current.why}}</div>
+          </div>
+          <div style="margin-top: auto; font-size: 15px; color: #B7C0A4">A general example. In the app, advice is matched to your plant and its history.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="join" style="background: #2D3B1A">
+    <div style="max-width: 760px; margin: 0 auto; padding: 96px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; text-align: center; align-items: center">
+      <div style="display: flex; gap: 12px; align-items: flex-end" aria-hidden="true">
+        <svg class="spark d1" width="22" height="22" viewBox="0 0 40 40" fill="#C3D98A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+        <svg class="spark" width="40" height="40" viewBox="0 0 40 40" fill="#E8D77A"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
+      </div>
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(32px, 4.4vw, 52px); line-height: 1.1; text-wrap: balance">Get answers like this for <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">your</span> plants</h2>
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6">Grove comes to iPhone this December. Join the waitlist and we'll tell you the day it's ready.</p>
+      <div style="width: 100%; text-align: left">
+        <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 10px" novalidate>
+            <label for="email-g" style="font-size: 16px; font-weight: 500">Email address</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <input id="email-g" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 220px; min-width: 0; height: 56px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+              <button type="submit" style="height: 56px; padding: 0 28px; border: 0; border-radius: 12px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+            </div>
+            <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="font-size: 16px; color: #E57A9C">That email doesn't look quite right. Mind checking it?</div>
+            </sc-if>
+          </form>
+        </sc-if>
+        <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="padding: 20px 24px; border-radius: 18px; background: #202D14; font-size: 19px; text-align: center">You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> on launch day.</div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background: #172010">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 15px; color: #B7C0A4">
+      <span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span> © 2026</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px"><a href="#privacy">Privacy policy [ADD LINK]</a><a href="#contact">[YOUR CONTACT EMAIL]</a></div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { pick: 'droop', email: '', done: false, error: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const list = [
+      { id: 'droop', label: 'Drooping leaves', title: 'Drooping can mean too dry or too wet.', step: 'Push a finger about two inches into the soil. Dry? Water slowly until it drains. Wet? Hold off.', why: 'Roots sitting in soggy soil cannot take up water, so an overwatered plant droops just like a thirsty one.' },
+      { id: 'yellow', label: 'Yellow lower leaves', title: 'Often a sign of too much water.', step: 'Check that the pot has a drainage hole, and let the top inch of soil dry before you water again.', why: 'Waterlogged roots struggle to breathe. One old leaf yellowing now and then is normal, though.' },
+      { id: 'tips', label: 'Crispy brown tips', title: 'Usually dry air or uneven watering.', step: 'Water on a steadier rhythm, and move the plant away from heaters and air vents.', why: 'Leaf tips are the farthest point from the roots, so they dry out first when water runs short.' }
+    ];
+    const current = list.find((x) => x.id === s.pick) || list[0];
+    return {
+      symptoms: list.map((x) => ({
+        label: x.label,
+        pressed: x.id === s.pick ? 'true' : 'false',
+        bg: x.id === s.pick ? '#3C4D26' : '#202D14',
+        border: x.id === s.pick ? '1.5px solid #92B44B' : '1.5px solid #4E6232',
+        pick: () => this.setState({ pick: x.id })
+      })),
+      current: current,
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      inputBorder: s.error ? '#E57A9C' : '#4E6232',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

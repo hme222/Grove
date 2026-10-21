@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, quiet hours</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#06080A}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8A9088}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #92B44B}
+@keyframes glow{0%,100%{opacity:.85}50%{opacity:1}}
+.moon{animation:glow 8s ease-in-out infinite}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise 1s cubic-bezier(.2,.7,.2,1) both}
+.r2{animation-delay:.3s}.r3{animation-delay:.6s}
+@media (prefers-reduced-motion: reduce){.moon,.rise{animation:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #06080A; background-image: radial-gradient(ellipse 50% 40% at 50% 28%, #10161A 0%, rgba(6, 8, 10, 0) 72%); color: #EEEDE6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #9EA49C">iPhone · December</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 8px 24px 56px; text-align: center">
+    <svg class="moon" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M42 8a24 24 0 1 0 14 40A22 22 0 0 1 42 8z" fill="#E9E4CF"></path></svg>
+    <div class="rise" style="display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 4px 20px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: clamp(48px, 7vw, 96px); line-height: 1; letter-spacing: -0.01em">
+      <span>9:00 pm</span>
+      <span style="font-size: 0.5em; color: #6E746C" aria-hidden="true">to</span>
+      <span>8:00 am</span>
+    </div>
+    <h1 class="rise r2" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.25; max-width: 26ch; color: #DAD8CE; text-wrap: balance">Nothing from Grove while you sleep. One gentle reminder a day, and never at night.</h1>
+
+    <div class="rise r3" style="display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%">
+      <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #13181B; border: 1px solid {{wellBorder}}">
+          <label for="email-s10" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+          <input id="email-s10" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #EEEDE6; font-family: inherit; font-size: 16px">
+          <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #EEEDE6; color: #06080A; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+        </form>
+        <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size: 15px; color: #E57A9C">That email doesn't look quite right.</div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; line-height: 1.45">
+          <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December, during the day.</div>
+          <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+        </div>
+      </sc-if>
+      <div style="font-size: 14px; color: #9EA49C">Quiet hours are on by default. Coming to iPhone this December.</div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#E57A9C' : '#1F262A',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

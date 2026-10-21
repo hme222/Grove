@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, the grove</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0F08}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #92B44B}
+@keyframes grow{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+.tile{animation:grow .9s cubic-bezier(.2,.7,.2,1) both}
+.tile img{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.tile:hover img{transform:scale(1.04)}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) 1s both}
+.r2{animation-delay:1.15s}
+@media (prefers-reduced-motion: reduce){.tile,.rise{animation:none}.tile img{transition:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 40px; width: 100%; max-width: 1180px; margin: 0 auto; padding: 8px 24px 40px; box-sizing: border-box">
+    <ul aria-label="Plants in Grove's library" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr)); gap: 14px">
+      <sc-for list="{{tiles}}" as="t" hint-placeholder-count="10">
+        <li class="tile" style="display: flex; flex-direction: column; gap: 8px; animation-delay: {{t.delay}}">
+          <div style="height: clamp(140px, 21vh, 200px); overflow: hidden; background: #1C2416">
+            <img src="{{t.src}}" alt="Botanical illustration of {{t.name}}" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{t.focus}}">
+          </div>
+          <div style="font-size: 13px; color: #C9CDBB">{{t.name}}</div>
+        </li>
+      </sc-for>
+    </ul>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px">
+      <h1 class="rise" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(28px, 2.8vw, 38px); line-height: 1.18; max-width: 20ch; text-wrap: balance">Every plant in your grove, understood.</h1>
+      <div class="rise r2" style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px">
+        <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid {{wellBorder}}">
+            <label for="email-s9" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+            <input id="email-s9" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 16px">
+            <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+          </form>
+          <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="font-size: 15px; color: #E57A9C">That email doesn't look quite right.</div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="display: flex; flex-direction: column; gap: 6px; font-size: 18px; line-height: 1.45">
+            <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+            <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+          </div>
+        </sc-if>
+        <div style="font-size: 14px; color: #A9B09A">How much water, how much light, safe for pets or not. Coming to iPhone this December.</div>
+      </div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const plates = [
+      { name: 'English ivy', src: '/_blob/cfa430dfb8ec193158c052c79e227b56', focus: '50% 40%' },
+      { name: 'Bird of paradise', src: '/_blob/0b76cdae406a8c4968027edfd89109ef', focus: '45% 35%' },
+      { name: 'Hoya', src: '/_blob/e23f3026763551fc556fd5d0dff1d7f7', focus: '50% 55%' },
+      { name: 'Anemone', src: '/_blob/59192f95af3e411fac35e5f94be17c4e', focus: '50% 30%' },
+      { name: 'ZZ plant', src: '/_blob/9afd240831b3df34808c72da340013f4', focus: '50% 40%' },
+      { name: 'Calathea', src: '/_blob/1789b872a3aafde35e26c576e4205a13', focus: '50% 45%' },
+      { name: 'Black-eyed Susan', src: '/_blob/335fea500fac0f88b60e6e1119106b44', focus: '50% 25%' },
+      { name: 'Snake plant', src: '/_blob/027e6e68a73d04d1da249e142a8ccd9e', focus: '50% 50%' },
+      { name: 'Jade plant', src: '/_blob/c769110fc79bfab0077a0a9c9b477ed3', focus: '50% 45%' },
+      { name: 'Aloe vera', src: '/_blob/034f41debbab62ae7a32103a645a77e3', focus: '50% 40%' }
+    ];
+    return {
+      tiles: plates.map((p, i) => ({ name: p.name, src: p.src, focus: p.focus, delay: (i * 0.07).toFixed(2) + 's' })),
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#E57A9C' : '#2D3B1A',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

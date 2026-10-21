@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, soil test</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0F08}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #92B44B}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+.r2{animation-delay:.12s}.r3{animation-delay:.24s}
+@keyframes fade{0%{opacity:0}100%{opacity:1}}
+.fade{animation:fade .4s ease both}
+@media (prefers-reduced-motion: reduce){.rise,.fade{animation:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; padding: 16px 24px 56px; text-align: center">
+    <div class="rise" style="font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: #A9B09A">Try it. It takes five seconds.</div>
+    <h1 class="rise" style="margin: -16px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(32px, 3.4vw, 44px); line-height: 1.15; max-width: 20ch; text-wrap: balance">Push a finger into the soil. How does it feel?</h1>
+
+    <div class="rise r2" role="group" aria-label="Soil feels" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 320px; padding: 6px; box-sizing: border-box; border-radius: 18px; background: #1C2416">
+      <sc-for list="{{choices}}" as="c" hint-placeholder-count="2">
+        <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="height: 52px; border: 0; border-radius: 13px; background: {{c.bg}}; color: {{c.color}}; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">{{c.label}}</button>
+      </sc-for>
+    </div>
+
+    <div aria-live="polite" style="min-height: 84px; display: flex; align-items: flex-start; justify-content: center">
+      <sc-if value="{{hasAnswer}}" hint-placeholder-val="{{ false }}">
+        <p class="fade" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(22px, 2.2vw, 28px); line-height: 1.35; max-width: 30ch; color: #C3D98A">{{answer}}</p>
+      </sc-if>
+      <sc-if value="{{noAnswer}}" hint-placeholder-val="{{ true }}">
+        <p style="margin: 0; font-size: 16px; color: #A9B09A">Pick one. Grove explains, and never grades.</p>
+      </sc-if>
+    </div>
+
+    <div class="rise r3" style="display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%">
+      <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid {{wellBorder}}">
+          <label for="email-s6" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+          <input id="email-s6" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 16px">
+          <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+        </form>
+        <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size: 15px; color: #E57A9C">That email doesn't look quite right.</div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; line-height: 1.45">
+          <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+          <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+        </div>
+      </sc-if>
+      <div style="font-size: 14px; color: #A9B09A">That's Grove: one check, one clear answer, every day.</div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false, soil: null };
+  }
+  renderVals() {
+    const s = this.state;
+    const coaching = {
+      dry: 'Dry soil is ready for a drink. Water slowly until it runs from the drainage hole.',
+      damp: 'Damp soil means your plant is still drinking. Check again in a few days.'
+    };
+    const list = [{ id: 'dry', label: 'Dry' }, { id: 'damp', label: 'Damp' }];
+    return {
+      choices: list.map((c) => ({
+        label: c.label,
+        pressed: s.soil === c.id ? 'true' : 'false',
+        bg: s.soil === c.id ? '#F4F1E6' : 'transparent',
+        color: s.soil === c.id ? '#0B0F08' : '#F4F1E6',
+        pick: () => this.setState({ soil: c.id })
+      })),
+      hasAnswer: !!s.soil,
+      noAnswer: !s.soil,
+      answer: s.soil ? coaching[s.soil] : '',
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#E57A9C' : '#2D3B1A',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

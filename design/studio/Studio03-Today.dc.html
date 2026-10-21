@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, today quietly</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0F08}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #92B44B}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+.r2{animation-delay:.12s}.r3{animation-delay:.24s}
+@keyframes pop{0%{transform:translateY(12px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.pop{animation:pop .25s ease-out both}
+@media (prefers-reduced-motion: reduce){.rise,.pop{animation:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+    </div>
+    <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); align-items: center; gap: 48px; width: 100%; max-width: 1080px; margin: 0 auto; padding: 16px 24px 48px; box-sizing: border-box">
+    <div style="display: flex; flex-direction: column; gap: 28px; max-width: 420px">
+      <h1 class="rise" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(30px, 3vw, 38px); line-height: 1.2; text-wrap: balance">Open Grove. See what each plant needs today. Nothing more.</h1>
+      <div class="rise r2" style="display: flex; flex-direction: column; gap: 10px">
+        <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid {{wellBorder}}">
+            <label for="email-s3" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+            <input id="email-s3" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 16px">
+            <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+          </form>
+          <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="font-size: 15px; color: #E57A9C">That email doesn't look quite right.</div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+          <div role="status" class="pop" style="display: flex; flex-direction: column; gap: 8px; font-size: 18px; line-height: 1.45">
+            <div>You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+            <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+          </div>
+        </sc-if>
+      </div>
+      <div class="rise r3" style="font-size: 14px; line-height: 1.5; color: #A9B09A">Shaped by 37 plant owners. One reminder a day, never at night.</div>
+    </div>
+
+    <div class="rise r2" style="display: flex; justify-content: center">
+      <div role="group" aria-label="Interactive preview of the Grove Today screen" style="position: relative; width: 300px; height: 610px; box-sizing: border-box; padding: 11px; border-radius: 48px; background: #000; box-shadow: 0 0 0 1px #2D3B1A, 0 40px 80px rgba(0, 0, 0, 0.6)">
+        <div style="position: relative; height: 100%; box-sizing: border-box; padding: 40px 16px 16px; border-radius: 38px; background: #202D14; overflow: hidden; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 13px; color: #B7C0A4">Thursday</div>
+            <div style="font-weight: 400; font-size: 25px">Today in your <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600">grove</span></div>
+          </div>
+          <div style="font-size: 14px; color: #C3D98A">{{summary}}</div>
+          <sc-for list="{{plants}}" as="p" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 16px; background: #2D3B1A; opacity: {{p.opacity}}">
+              <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                <div style="font-size: 16px; font-weight: 500">{{p.name}}</div>
+                <div style="font-size: 13px; color: #B7C0A4">{{p.task}}</div>
+              </div>
+              <sc-if value="{{p.actionable}}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{p.toggle}}" aria-label="{{p.aria}}" style="flex: 0 0 auto; min-width: 60px; height: 44px; padding: 0 12px; border-radius: 12px; border: {{p.btnBorder}}; background: {{p.btnBg}}; color: {{p.btnColor}}; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{p.btn}}</button>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{showUndo}}" hint-placeholder-val="{{ false }}">
+            <div class="pop" role="status" style="position: absolute; left: 12px; right: 12px; bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 6px 6px 14px; border-radius: 14px; background: #F4F1E6; color: #1A2410; font-size: 14px">
+              <span>{{undoText}}</span>
+              <button type="button" onClick="{{undo}}" style="min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: #2D5016; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer">Undo</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false, doneIds: [], last: null };
+  }
+  renderVals() {
+    const s = this.state;
+    const base = [
+      { id: 'mon', name: 'Monstera', task: 'Water today, until it drains', verb: 'Watered', actionable: true },
+      { id: 'pot', name: 'Pothos', task: 'Check the soil with a finger', verb: 'Checked', actionable: true },
+      { id: 'snk', name: 'Snake plant', task: 'All good. Next water in 9 days', verb: '', actionable: false }
+    ];
+    const left = base.filter((p) => p.actionable && s.doneIds.indexOf(p.id) < 0).length;
+    const lastPlant = base.find((p) => p.id === s.last);
+    return {
+      summary: left === 0 ? 'All done for today.' : left + ' thing' + (left === 1 ? '' : 's') + ' to do',
+      plants: base.map((p) => {
+        const isDone = s.doneIds.indexOf(p.id) >= 0;
+        return {
+          name: p.name,
+          actionable: p.actionable,
+          task: isDone ? p.verb + ' just now' : p.task,
+          opacity: isDone ? '0.65' : '1',
+          btn: isDone ? 'Done' : 'Do it',
+          aria: (isDone ? 'Done: ' : 'Mark done: ') + p.name,
+          btnBg: isDone ? 'transparent' : '#92B44B',
+          btnColor: isDone ? '#C3D98A' : '#1A2410',
+          btnBorder: isDone ? '1.5px solid #4E6232' : '0',
+          toggle: () => { if (!isDone) this.setState({ doneIds: s.doneIds.concat([p.id]), last: p.id }); }
+        };
+      }),
+      showUndo: !!lastPlant,
+      undoText: lastPlant ? lastPlant.verb + ' ' + lastPlant.name : '',
+      undo: () => this.setState({ doneIds: s.doneIds.filter((id) => id !== s.last), last: null }),
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#E57A9C' : '#2D3B1A',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>

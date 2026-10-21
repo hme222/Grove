@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove waitlist, what happens next</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;family=Cormorant+Garamond:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#202D14}
+a{color:#C3D98A}a:hover{color:#F4F1E6}
+input::placeholder{color:#8E9878}
+summary{cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+@keyframes twinkle{0%,100%{transform:scale(.55) rotate(0deg);opacity:.35}50%{transform:scale(1.1) rotate(25deg);opacity:1}}
+.spark{display:block;transform-origin:center;animation:twinkle 3s ease-in-out infinite}
+.d1{animation-delay:.8s}.d2{animation-delay:1.6s}
+@media (prefers-reduced-motion: reduce){.spark{animation:none}}
+</style>
+</helmet>
+<div style="background: #202D14; color: #F4F1E6; font-family: 'Alegreya Sans', 'Optima', 'Candara', sans-serif; overflow: hidden">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+    <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
+      <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+      </a>
+      <a href="#faq" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; color: #C3D98A; font-size: 17px">Questions</a>
+    </nav>
+
+    <section id="top" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap: 64px; align-items: start; padding: 48px 0 104px">
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <h1 style="margin: 0; font-weight: 300; font-size: clamp(42px, 5.6vw, 70px); line-height: 1.05; text-wrap: balance">Help us grow <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">Grove</span></h1>
+        <p style="margin: 0; font-size: 21px; line-height: 1.5; color: #E6E7D6; max-width: 32rem">Grove is a safe space for new plant owners to learn what their plants need. It's coming to iPhone this December. Join now, and if you like, help shape it before then.</p>
+
+        <div id="join" style="display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 26px; background: #2D3B1A; max-width: 34rem">
+          <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 14px" novalidate>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <label for="email-h" style="font-size: 16px; font-weight: 500">Email address</label>
+                <input id="email-h" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" style="height: 56px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
+                <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+                  <div role="alert" style="font-size: 16px; color: #E57A9C">That email doesn't look quite right. Mind checking it?</div>
+                </sc-if>
+              </div>
+              <label for="beta-h" style="display: flex; gap: 14px; align-items: flex-start; min-height: 44px; padding: 14px 16px; border-radius: 14px; border: 1.5px solid #4E6232; cursor: pointer">
+                <input id="beta-h" type="checkbox" checked="{{beta}}" onChange="{{toggleBeta}}" style="flex: 0 0 auto; width: 22px; height: 22px; margin: 2px 0 0; accent-color: #92B44B">
+                <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 500">I'd like to try Grove early and share feedback</span><span style="font-size: 15px; line-height: 1.45; color: #B7C0A4">Optional. Some testers may be invited to a short video chat. [CONFIRM: format, length, any thank-you]</span></span>
+              </label>
+              <button type="submit" style="height: 56px; border: 0; border-radius: 12px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+            </form>
+          </sc-if>
+          <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+            <div role="status" style="display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 300"><svg class="spark" width="24" height="24" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>You're on the list.</div>
+              <div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">{{doneText}}</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0; padding-top: 12px">
+        <div style="font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A; margin-bottom: 24px">What happens after you join</div>
+        <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+          <li style="display: flex; gap: 20px">
+            <div style="display: flex; flex-direction: column; align-items: center">
+              <div style="width: 44px; height: 44px; border-radius: 999px; background: #92B44B; color: #1A2410; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 22px">1</div>
+              <div style="flex: 1 1 auto; width: 2px; min-height: 40px; background: #3C4D26"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 32px"><div style="font-size: 15px; color: #B7C0A4">Today</div><div style="font-size: 22px; font-weight: 500">You're on the list</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">A short confirmation email so you know it worked.</div></div>
+          </li>
+          <li style="display: flex; gap: 20px">
+            <div style="display: flex; flex-direction: column; align-items: center">
+              <div style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #92B44B; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 22px; color: #C3D98A">2</div>
+              <div style="flex: 1 1 auto; width: 2px; min-height: 40px; background: #3C4D26"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 32px"><div style="font-size: 15px; color: #B7C0A4">[MONTH] · only if you opted in</div><div style="font-size: 22px; font-weight: 500">Early access</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">Try Grove before launch and tell us what's confusing.</div></div>
+          </li>
+          <li style="display: flex; gap: 20px">
+            <div style="display: flex; flex-direction: column; align-items: center">
+              <div style="position: relative; width: 44px; height: 44px; border-radius: 999px; border: 2px solid #92B44B; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><svg class="spark d1" width="22" height="22" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 15px; color: #B7C0A4">December</div><div style="font-size: 22px; font-weight: 500">Grove launches</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">One email with the App Store link. That's it.</div></div>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <section id="faq" style="background: #2D3B1A">
+    <div style="max-width: 820px; margin: 0 auto; padding: 96px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px">
+      <h2 style="margin: 0; font-weight: 300; font-size: clamp(32px, 4vw, 46px); line-height: 1.12">Good <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">questions</span></h2>
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <details style="border-radius: 18px; background: #202D14; padding: 0 24px">
+          <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 20px; font-weight: 500">I've never kept a plant alive. Is this for me?<span style="color: #92B44B; font-size: 26px" aria-hidden="true">+</span></summary>
+          <p style="margin: 0 0 22px; font-size: 18px; line-height: 1.55; color: #E6E7D6">Yes. Grove is built for new plant owners first. It starts from zero and never assumes you know the jargon.</p>
+        </details>
+        <details style="border-radius: 18px; background: #202D14; padding: 0 24px">
+          <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 20px; font-weight: 500">How much will it cost?<span style="color: #92B44B; font-size: 26px" aria-hidden="true">+</span></summary>
+          <p style="margin: 0 0 22px; font-size: 18px; line-height: 1.55; color: #E6E7D6">[YOUR PRICING ANSWER]</p>
+        </details>
+        <details style="border-radius: 18px; background: #202D14; padding: 0 24px">
+          <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 20px; font-weight: 500">Is there an Android version?<span style="color: #92B44B; font-size: 26px" aria-hidden="true">+</span></summary>
+          <p style="margin: 0 0 22px; font-size: 18px; line-height: 1.55; color: #E6E7D6">Not at launch. Grove starts on iPhone. [CONFIRM: any Android plans you want to share]</p>
+        </details>
+        <details style="border-radius: 18px; background: #202D14; padding: 0 24px">
+          <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 20px; font-weight: 500">What do you do with my email?<span style="color: #92B44B; font-size: 26px" aria-hidden="true">+</span></summary>
+          <p style="margin: 0 0 22px; font-size: 18px; line-height: 1.55; color: #E6E7D6">We use it to tell you about Grove, and nothing else. [CONFIRM against your privacy policy]</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background: #172010">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 15px; color: #B7C0A4">
+      <span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span> © 2026</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px"><a href="#privacy">Privacy policy [ADD LINK]</a><a href="#contact">[YOUR CONTACT EMAIL]</a></div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', beta: false, done: false, error: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      beta: s.beta,
+      toggleBeta: (e) => this.setState({ beta: e.target.checked }),
+      showForm: !s.done,
+      done: s.done,
+      doneText: s.beta
+        ? 'Thanks for offering to help. Look for a confirmation email at ' + s.email + ', and we’ll be in touch about early access.'
+        : 'Look for a confirmation email at ' + s.email + '. Next stop: launch day.',
+      hasError: s.error,
+      inputBorder: s.error ? '#E57A9C' : '#4E6232',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

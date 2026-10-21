@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, specimen label</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EFE9DC}
+a{color:#3B6D11}a:hover{color:#202D14}
+input::placeholder{color:#7A776E}
+input:focus{outline:none}
+form:focus-within{box-shadow:0 0 0 2px #3B6D11}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.r2{animation-delay:.15s}.r3{animation-delay:.3s}
+@media (prefers-reduced-motion: reduce){.rise{animation:none}}
+</style>
+</helmet>
+<main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #EFE9DC; color: #1A1A17; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
+  <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em; color: #202D14">Grove</span>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 13px; color: #5F5E5A">iPhone · December 2026</div>
+  </header>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; padding: 16px 24px 56px">
+    <article class="rise" aria-label="Specimen label" style="width: 100%; max-width: 560px; box-sizing: border-box; padding: 10px; background: #FBF8F1; border: 1px solid #1A1A17; box-shadow: 0 1px 0 #1A1A17, 0 24px 48px rgba(26, 26, 23, 0.10)">
+      <div style="border: 1px solid #1A1A17; padding: 22px 26px 24px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; justify-content: space-between; gap: 12px; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #3A3934">
+          <span>Herbarium of the Grove</span>
+          <span>No. 0001</span>
+        </div>
+        <div style="height: 1px; background: #1A1A17"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #5F5E5A">Specimen</div>
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: clamp(30px, 3.4vw, 40px); line-height: 1.1; color: #202D14">The new plant owner</div>
+        </div>
+        <dl style="margin: 0; display: grid; grid-template-columns: 116px minmax(0, 1fr); row-gap: 10px; column-gap: 16px; font-size: 17px; line-height: 1.45">
+          <dt style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #5F5E5A; padding-top: 4px">Habitat</dt>
+          <dd style="margin: 0">Windowsills, bookshelves, the corner by the radiator.</dd>
+          <dt style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #5F5E5A; padding-top: 4px">Condition</dt>
+          <dd style="margin: 0">Enthusiastic. Unsure how much water is too much.</dd>
+          <dt style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #5F5E5A; padding-top: 4px">Treatment</dt>
+          <dd style="margin: 0">One clear step a day, and the reason behind it.</dd>
+        </dl>
+        <div style="height: 1px; background: #1A1A17"></div>
+        <div style="display: flex; justify-content: space-between; gap: 12px; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; color: #3A3934">
+          <span>Collected: Grove, for iPhone</span>
+          <span>Dec. 2026</span>
+        </div>
+      </div>
+    </article>
+
+    <div class="rise r2" style="display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%">
+      <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 420px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 14px; background: #FBF8F1; border: 1px solid {{wellBorder}}">
+          <label for="email-s5" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
+          <input id="email-s5" type="email" autocomplete="email" placeholder="Your email address" value="{{email}}" onInput="{{onEmail}}" style="flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #1A1A17; font-family: inherit; font-size: 16px">
+          <button type="submit" style="flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 10px; background: #202D14; color: #F4F1E6; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Join the waitlist</button>
+        </form>
+        <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size: 15px; color: #B8335F">That email doesn't look quite right.</div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; line-height: 1.45; text-align: center">
+          <div>Catalogued. We'll write to <strong style="font-weight: 700">{{email}}</strong> in December.</div>
+          <button type="button" onClick="{{toggleBeta}}" aria-pressed="{{betaPressed}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #3B6D11; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">{{betaLabel}}</button>
+        </div>
+      </sc-if>
+      <div class="rise r3" style="font-size: 14px; color: #5F5E5A">A calm plant care app for people new to plants.</div>
+    </div>
+  </div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', done: false, error: false, beta: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      email: s.email,
+      showForm: !s.done,
+      done: s.done,
+      hasError: s.error,
+      wellBorder: s.error ? '#B8335F' : '#1A1A17',
+      onEmail: (e) => this.setState({ email: e.target.value, error: false }),
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+        this.setState(ok ? { done: true, error: false } : { error: true });
+      },
+      betaPressed: s.beta ? 'true' : 'false',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      toggleBeta: () => this.setState({ beta: !s.beta })
+    };
+  }
+}
+</script>
+</body>
+</html>
