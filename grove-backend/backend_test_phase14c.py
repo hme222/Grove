@@ -10,7 +10,7 @@ import time
 from typing import Optional, Dict, Any
 from datetime import datetime, timezone, timedelta
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 class Phase14CTester:
     def __init__(self):

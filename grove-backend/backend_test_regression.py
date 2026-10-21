@@ -8,7 +8,7 @@ import requests
 import sys
 import base64
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 class RegressionTester:
     def __init__(self):

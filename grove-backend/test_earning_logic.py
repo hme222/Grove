@@ -2,7 +2,7 @@
 import requests
 import sys
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 def login(email, password):
     response = requests.post(

@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 from typing import Optional
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 # Test credentials
 TEST_USERS = {

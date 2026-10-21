@@ -17,7 +17,7 @@ import sys
 from datetime import datetime, timedelta
 
 class Phase14C4Tester:
-    def __init__(self, base_url="https://botanical-social.preview.emergentagent.com"):
+    def __init__(self, base_url="http://localhost:8000"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0

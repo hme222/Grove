@@ -14,7 +14,7 @@ import sys
 from datetime import datetime
 from typing import Dict, List, Optional
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 # Test credentials from review_request
 CLARE = {"email": "clare.testing@grove.app", "password": "GroveTesting2025!"}

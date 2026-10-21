@@ -9,7 +9,7 @@ import sys
 import time
 from typing import Optional
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 class Phase14B2Tester:
     def __init__(self):

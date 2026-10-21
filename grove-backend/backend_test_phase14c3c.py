@@ -12,7 +12,7 @@ import time
 from datetime import datetime, timezone
 from typing import Optional
 
-BASE_URL = "https://botanical-social.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:8000/api"
 
 # Test credentials from review_request
 CLARE = {"email": "clare.testing@grove.app", "password": "GroveTesting2025!"}
