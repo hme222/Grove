@@ -33,6 +33,13 @@ module.exports = async (req, res) => {
     return res.status(200).json({ ok: true });
   } catch (e) {
     console.error('waitlist error', e.message);
-    return res.status(500).json({ error: 'save_failed' });
+    // A coarse label only, so a failed deploy can be diagnosed without exposing the connection string.
+    const m = String(e.message);
+    const reason = /bad auth|Authentication failed/i.test(m) ? 'auth'
+      : /not authorized|requires authentication/i.test(m) ? 'permissions'
+      : /Server selection|timed out|ECONN|ENOTFOUND|querySrv/i.test(m) ? 'network'
+      : /URI|scheme|connection string/i.test(m) ? 'connection_string'
+      : 'unknown';
+    return res.status(500).json({ error: 'save_failed', reason });
   }
 };
