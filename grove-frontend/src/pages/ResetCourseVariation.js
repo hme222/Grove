@@ -563,7 +563,7 @@ const VariationFour = () => {
             <ChevronLeft className="h-4 w-4" />
           </button>
           <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70">
-            The Grove Journal
+            The FloraGrove Journal
           </p>
           <BookOpen className="h-4 w-4 text-emerald-800/70" />
         </div>
@@ -632,7 +632,7 @@ const VariationFour = () => {
 
 /* ================================================================
    VARIATION 5 — Conversational Chat
-   Lessons delivered as a warm chat with Grove assistant
+   Lessons delivered as a warm chat with FloraGrove assistant
    ================================================================ */
 const VariationFive = () => (
   <PhoneFrame tone="bg-[#F4F1E8]" testId="v5-chat">
@@ -648,7 +648,7 @@ const VariationFive = () => (
           </div>
           <div>
             <p className="text-sm font-semibold text-emerald-950">
-              Grove &middot; your plant coach
+              FloraGrove &middot; your plant coach
             </p>
             <p className="text-[10px] text-emerald-700">
               Reset chat &middot; step 4 of 5
@@ -662,7 +662,7 @@ const VariationFive = () => (
 
       {/* Chat scroll */}
       <div className="flex-1 space-y-3 overflow-y-auto px-4 py-5">
-        {/* Grove bubble — lesson 1 */}
+        {/* FloraGrove bubble — lesson 1 */}
         <div className="flex items-end gap-2">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-800 text-white">
             <Leaf className="h-3.5 w-3.5" />
@@ -688,7 +688,7 @@ const VariationFive = () => (
           </div>
         </div>
 
-        {/* Grove lesson 2 */}
+        {/* FloraGrove lesson 2 */}
         <div className="flex items-end gap-2">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-800 text-white">
             <Leaf className="h-3.5 w-3.5" />
@@ -717,7 +717,7 @@ const VariationFive = () => (
           </button>
         </div>
 
-        {/* Grove lesson 3 preview */}
+        {/* FloraGrove lesson 3 preview */}
         <div className="flex items-end gap-2">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-800 text-white">
             <Leaf className="h-3.5 w-3.5" />
@@ -879,7 +879,7 @@ const ResetCourseCarouselVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Plant Parent Reset &mdash; 5 carousel treatments
+              FloraGrove &middot; Plant Parent Reset &mdash; 5 carousel treatments
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">
@@ -919,7 +919,7 @@ const ResetCourseCarouselVariations = () => {
       <VariationLabel
         number={5}
         title="Conversational Chat"
-        subtitle="Grove delivers lessons as a warm coach chat. Quick-reply chips act as &ldquo;Got it&rdquo; buttons."
+        subtitle="FloraGrove delivers lessons as a warm coach chat. Quick-reply chips act as &ldquo;Got it&rdquo; buttons."
       />
       <VariationFive />
 

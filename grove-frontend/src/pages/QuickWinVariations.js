@@ -423,7 +423,7 @@ const VariationTwo = () => (
           <div className="flex-1">
             <p className="font-serif text-sm">After all 5 foundations:</p>
             <p className="mt-0.5 text-xs text-emerald-100/80">
-              Ready to design your first Grove room?
+              Ready to design your first FloraGrove room?
             </p>
           </div>
           <ChevronRight className="h-5 w-5 text-lime-200" />
@@ -888,7 +888,7 @@ const QuickWinsVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Quick Wins carousel concepts (mobile)
+              FloraGrove &middot; Quick Wins carousel concepts (mobile)
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">

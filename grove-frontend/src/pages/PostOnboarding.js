@@ -34,7 +34,7 @@ import { Separator } from "@/components/ui/separator";
  * PostOnboardingVariations
  * ------------------------------------------------------------
  * Standalone static React component. Shows FIVE distinct mobile
- * (portrait) post-onboarding welcome screen mockups for Grove.
+ * (portrait) post-onboarding welcome screen mockups for FloraGrove.
  *
  * Each variation is rendered inside a phone-frame wrapper, stacked
  * vertically with labeled section headers. No routing, no data
@@ -857,7 +857,7 @@ const PostOnboardingVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Post-onboarding concepts (mobile)
+              FloraGrove &middot; Post-onboarding concepts (mobile)
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">

@@ -632,7 +632,7 @@ const VariationFour = () => {
             <ChevronLeft className="h-4 w-4" />
           </button>
           <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70">
-            Grove Field Guide &middot; Ch. 01
+            FloraGrove Field Guide &middot; Ch. 01
           </p>
           <BookOpen className="h-4 w-4 text-emerald-800/70" />
         </div>
@@ -987,7 +987,7 @@ const WindowBlueprintVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; The Right Window Blueprint &mdash; 5 carousel treatments
+              FloraGrove &middot; The Right Window Blueprint &mdash; 5 carousel treatments
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">

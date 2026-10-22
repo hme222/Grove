@@ -24,7 +24,7 @@ import { Separator } from "@/components/ui/separator";
  * LandingVariations
  * ------------------------------------------------------------
  * A single static page that showcases 5 distinct landing screen
- * concepts for Grove. Each variation is a self-contained section
+ * concepts for FloraGrove. Each variation is a self-contained section
  * with no data fetching or backend dependencies.
  *
  * Variations:
@@ -67,7 +67,7 @@ const VariationOne = () => (
     <div className="mx-auto max-w-4xl px-6 py-32 text-left">
       <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-1 text-xs font-medium text-emerald-800">
         <Leaf className="h-3.5 w-3.5" />
-        Grove — plant care, without the guesswork
+        FloraGrove — plant care, without the guesswork
       </div>
 
       <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-emerald-950 md:text-7xl">
@@ -136,7 +136,7 @@ const VariationTwo = () => (
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-emerald-900/75">
           Tell us where the sun lands, how often you travel, and how you like to
-          be reminded. Grove turns that into a weekly rhythm you can actually
+          be reminded. FloraGrove turns that into a weekly rhythm you can actually
           keep — one tap at a time.
         </p>
 
@@ -266,7 +266,7 @@ const VariationThree = () => (
     <div className="mx-auto max-w-6xl px-6 py-24">
       <div className="max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-          How Grove works
+          How FloraGrove works
         </p>
         <h1 className="mt-4 font-serif text-4xl leading-tight text-emerald-950 md:text-5xl">
           From &ldquo;I keep killing them&rdquo; to
@@ -284,7 +284,7 @@ const VariationThree = () => (
           step="01"
           icon={Camera}
           title="Scan your space"
-          body="Snap a corner of any room. Grove maps the light, humidity, and drafts so recommendations match reality — not a stock guide."
+          body="Snap a corner of any room. FloraGrove maps the light, humidity, and drafts so recommendations match reality — not a stock guide."
           tone="bg-emerald-100/80"
         />
         <OnboardingStep
@@ -305,7 +305,7 @@ const VariationThree = () => (
           step="04"
           icon={Heart}
           title="Watch them thrive"
-          body="Track new leaves, first flowers, and rescue wins. Share victories with your Grove community when you&rsquo;re ready."
+          body="Track new leaves, first flowers, and rescue wins. Share victories with your FloraGrove community when you&rsquo;re ready."
           tone="bg-rose-100/70"
         />
       </div>
@@ -390,7 +390,7 @@ const VariationFour = () => (
             <span className="text-emerald-700">30 days in.</span>
           </h1>
           <p className="mt-5 text-base leading-relaxed text-emerald-900/75">
-            Across 14,200 first-month Grove users, small habits compound into
+            Across 14,200 first-month FloraGrove users, small habits compound into
             noticeably healthier plants — without adding chores to your week.
           </p>
 
@@ -456,7 +456,7 @@ const VariationFour = () => (
               <div className="mb-5 flex items-center justify-between">
                 <div>
                   <p className="font-serif text-lg text-emerald-950">
-                    Habit consistency, before vs. after Grove
+                    Habit consistency, before vs. after FloraGrove
                   </p>
                   <p className="text-xs text-emerald-900/60">
                     Sample: 14,200 users, first 30 days
@@ -544,7 +544,7 @@ const VariationFive = () => (
       </h1>
 
       <p className="mt-8 max-w-xl text-lg leading-relaxed text-emerald-900/80">
-        Grove is a small, quiet companion for your plants — shaped around
+        FloraGrove is a small, quiet companion for your plants — shaped around
         rhythms, not reminders. Six soft questions, one gentle plan, seasons of
         growing together.
       </p>
@@ -630,7 +630,7 @@ const LandingVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Landing concepts
+              FloraGrove &middot; Landing concepts
             </span>
           </div>
           <span className="text-xs text-emerald-800/60">

@@ -340,7 +340,7 @@ const VariationTwo = () => (
       {/* Diary page header */}
       <div className="mt-4 rounded-t-3xl border-2 border-b-0 p-4 pb-3 shadow-[0_3px_0_0_#3B2F2A]" style={{ borderColor: C.forest, background: C.paper }}>
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.3em]" style={{ color: C.forest + "AA" }}>
-          Grove Diary &middot; today&rsquo;s intention
+          FloraGrove Diary &middot; today&rsquo;s intention
         </p>
         <h1 className="mt-1 font-serif text-[22px] leading-tight" style={{ color: C.forest }}>
           Anchor your care routine.
@@ -484,7 +484,7 @@ const BehavioralChangeWidgets = () => (
             <Heart className="h-4 w-4" />
           </span>
           <span className="font-serif text-lg" style={{ color: C.forest }}>
-            Grove &middot; Behavioral-change widgets &mdash; CBT + habit-loop
+            FloraGrove &middot; Behavioral-change widgets &mdash; CBT + habit-loop
           </span>
         </div>
         <span className="hidden font-mono text-xs sm:block" style={{ color: C.forest + "AA" }}>

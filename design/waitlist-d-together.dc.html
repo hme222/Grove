@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Grove waitlist, together</title>
+<title>FloraGrove waitlist, together</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -29,8 +29,7 @@ input::placeholder{color:#8E9878}
   <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
     <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0">
       <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #F4F1E6; text-decoration: none">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
-        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+        <span style="white-space:nowrap;line-height:1;color:inherit" aria-label="FloraGrove"><span style="font-family:'Alegreya Sans',Optima,Candara,sans-serif;font-weight:300;font-size:34px">Flora</span><span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:38px">Gro<svg viewBox="0 0 32 30" style="display:inline-block;width:0.6em;height:0.56em;vertical-align:-0.03em;margin:0 -0.01em" aria-hidden="true"><path transform="translate(10.5 15) rotate(-24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="none" stroke="#92B44B" stroke-width="2.6"/><path transform="translate(21.5 15) rotate(24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="#92B44B"/></svg>e</span></span>
       </a>
       <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1.5px solid #92B44B; color: #F4F1E6; text-decoration: none; font-size: 17px; font-weight: 500">Join us</a>
     </nav>
@@ -57,7 +56,7 @@ input::placeholder{color:#8E9878}
 
       <div style="font-weight: 500; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #C3D98A">Coming to the App Store this December</div>
       <h1 style="margin: 0; font-weight: 300; font-size: clamp(44px, 6.4vw, 80px); line-height: 1.04; letter-spacing: -0.01em; max-width: 16ch; text-wrap: balance">Trees grow better together. So do <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">plant people.</span></h1>
-      <p style="margin: 0; font-size: 21px; line-height: 1.55; color: #E6E7D6; max-width: 38rem; text-wrap: pretty">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together. Grove is where new plant owners learn, ask questions, and grow their confidence side by side.</p>
+      <p style="margin: 0; font-size: 21px; line-height: 1.55; color: #E6E7D6; max-width: 38rem; text-wrap: pretty">A <strong style="font-weight: 700">grove</strong> is a small group of trees growing closely together. FloraGrove is where new plant owners learn, ask questions, and grow their confidence side by side.</p>
 
       <div id="join" style="width: 100%; max-width: 36rem; display: flex; flex-direction: column; gap: 12px; text-align: left">
         <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
@@ -65,7 +64,7 @@ input::placeholder{color:#8E9878}
             <label for="email-d" style="font-size: 16px; font-weight: 500">Email address</label>
             <div style="display: flex; flex-wrap: wrap; gap: 10px">
               <input id="email-d" name="email" type="email" autocomplete="email" placeholder="you@example.com" value="{{email}}" onInput="{{onEmail}}" aria-describedby="email-d-help" style="flex: 1 1 220px; min-width: 0; height: 56px; box-sizing: border-box; padding: 0 20px; border-radius: 999px; border: 1.5px solid {{inputBorder}}; background: #172010; color: #F4F1E6; font-family: inherit; font-size: 18px">
-              <button type="submit" style="flex: 0 0 auto; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Plant me in the Grove</button>
+              <button type="submit" style="flex: 0 0 auto; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: #92B44B; color: #1A2410; font-family: inherit; font-size: 18px; font-weight: 700; cursor: pointer">Plant me in the FloraGrove</button>
             </div>
             <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
               <div role="alert" style="font-size: 16px; color: #E57A9C">That email doesn't look quite right. Mind checking it?</div>
@@ -77,7 +76,7 @@ input::placeholder{color:#8E9878}
           <div role="status" style="display: flex; flex-direction: column; gap: 8px; padding: 24px 28px; border-radius: 26px; background: #2D3B1A">
             <div style="display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 300">
               <svg class="spark" width="24" height="24" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
-              Welcome to the Grove.
+              Welcome to the FloraGrove.
             </div>
             <div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">You're on the list. We'll write to <strong style="font-weight: 700">{{email}}</strong> when the doors open.</div>
             <button type="button" onClick="{{reset}}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer">Use a different email</button>
@@ -121,7 +120,7 @@ input::placeholder{color:#8E9878}
         <svg class="spark d1" width="26" height="26" viewBox="0 0 40 40" fill="#F4F1E6"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg>
       </div>
       <h2 style="margin: 0; font-weight: 300; font-size: clamp(36px, 5vw, 60px); line-height: 1.08; max-width: 44rem; text-wrap: balance">Come grow with <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700">us</span></h2>
-      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 36rem">Grove opens on iPhone this December. Join the waitlist and be one of the first trees in the grove.</p>
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 36rem">FloraGrove opens on iPhone this December. Join the waitlist and be one of the first trees in the grove.</p>
       <a href="#join" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 32px; border-radius: 999px; background: #92B44B; color: #1A2410; text-decoration: none; font-size: 18px; font-weight: 700">Join the waitlist</a>
     </div>
   </section>
@@ -129,7 +128,7 @@ input::placeholder{color:#8E9878}
   <footer style="background: #172010">
     <div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 15px; color: #B7C0A4">
       <div style="display: flex; align-items: center; gap: 10px">
-        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">Grove</span>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #F4F1E6">FloraGrove</span>
         <span>© 2026</span>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 24px">

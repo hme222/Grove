@@ -619,7 +619,7 @@ const VariationThree = () => {
 
 /* ================================================================
    VARIATION 4 — Chat-Bot Emergency Assistant
-   Grove appears as a calm coach guiding through triage
+   FloraGrove appears as a calm coach guiding through triage
    ================================================================ */
 const VariationFour = () => (
   <PhoneFrame tone="bg-[#F4F1E8]" testId="v4-chat-triage">
@@ -635,7 +635,7 @@ const VariationFour = () => (
           </div>
           <div>
             <p className="text-sm font-semibold text-emerald-950">
-              Grove ER &middot; your triage coach
+              FloraGrove ER &middot; your triage coach
             </p>
             <p className="text-[10px] text-emerald-700">
               Step 2 of 3 in progress
@@ -672,7 +672,7 @@ const VariationFour = () => (
 
       {/* Chat scroll */}
       <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-        {/* Grove greeting */}
+        {/* FloraGrove greeting */}
         <div className="flex items-end gap-2">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-800 text-white">
             <Stethoscope className="h-3.5 w-3.5" />
@@ -1032,7 +1032,7 @@ const PlantERVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Plant ER Triage &mdash; 5 carousel treatments
+              FloraGrove &middot; Plant ER Triage &mdash; 5 carousel treatments
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">
@@ -1065,7 +1065,7 @@ const PlantERVariations = () => {
       <VariationLabel
         number={4}
         title="Chat-Bot Emergency Assistant"
-        subtitle="Grove ER coach guides you through triage as a chat conversation, with a live 3-step progress strip up top (here: partway through Step 2)."
+        subtitle="FloraGrove ER coach guides you through triage as a chat conversation, with a live 3-step progress strip up top (here: partway through Step 2)."
       />
       <VariationFour />
 

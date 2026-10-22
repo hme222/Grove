@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Grove, definition</title>
+<title>FloraGrove, definition</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -25,8 +25,7 @@ form:focus-within{box-shadow:0 0 0 2px #3B6D11}
 <main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #F3EEE4; color: #1A1A17; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
   <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
     <div style="display: flex; align-items: center; gap: 8px">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
-      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em; color: #202D14">Grove</span>
+      <span style="white-space:nowrap;line-height:1;color:#202D14" aria-label="FloraGrove"><span style="font-family:'Alegreya Sans',Optima,Candara,sans-serif;font-weight:300;font-size:22px">Flora</span><span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:25px">Gro<svg viewBox="0 0 32 30" style="display:inline-block;width:0.6em;height:0.56em;vertical-align:-0.03em;margin:0 -0.01em" aria-hidden="true"><path transform="translate(10.5 15) rotate(-24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="none" stroke="#3F5A1A" stroke-width="2.6"/><path transform="translate(21.5 15) rotate(24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="#3F5A1A"/></svg>e</span></span>
     </div>
     <div style="font-size: 14px; color: #5F5E5A">iPhone · December</div>
   </header>
@@ -95,7 +94,7 @@ class Component extends DCLogic {
         this.setState(ok ? { done: true, error: false } : { error: true });
       },
       betaPressed: s.beta ? 'true' : 'false',
-      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test FloraGrove before launch?',
       toggleBeta: () => this.setState({ beta: !s.beta })
     };
   }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Grove, one plant</title>
+<title>FloraGrove, one plant</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -32,8 +32,7 @@ form:focus-within{box-shadow:0 0 0 2px #3B6D11}
   <div style="display: flex; flex-direction: column; padding: 24px clamp(24px, 5vw, 72px) 40px">
     <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 24px">
       <div style="display: flex; align-items: center; gap: 8px">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
-        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em; color: #202D14">Grove</span>
+        <span style="white-space:nowrap;line-height:1;color:#202D14" aria-label="FloraGrove"><span style="font-family:'Alegreya Sans',Optima,Candara,sans-serif;font-weight:300;font-size:22px">Flora</span><span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:25px">Gro<svg viewBox="0 0 32 30" style="display:inline-block;width:0.6em;height:0.56em;vertical-align:-0.03em;margin:0 -0.01em" aria-hidden="true"><path transform="translate(10.5 15) rotate(-24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="none" stroke="#3F5A1A" stroke-width="2.6"/><path transform="translate(21.5 15) rotate(24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="#3F5A1A"/></svg>e</span></span>
       </div>
       <div style="font-size: 14px; color: #5F5E5A">iPhone · December</div>
     </header>
@@ -50,7 +49,7 @@ form:focus-within{box-shadow:0 0 0 2px #3B6D11}
         <div style="display: flex; flex-direction: column; gap: 4px"><dt style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #5F5E5A">Pets</dt><dd style="margin: 0; font-size: 17px">Mildly toxic</dd></div>
       </dl>
       <div class="rise r3" style="display: flex; flex-direction: column; gap: 12px">
-        <div style="font-size: 18px; color: #202D14">Grove knows this for every plant you own.</div>
+        <div style="font-size: 18px; color: #202D14">FloraGrove knows this for every plant you own.</div>
         <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
           <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 420px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 14px; background: #FBF8F1; border: 1px solid {{wellBorder}}">
             <label for="email-s2" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Email address</label>
@@ -70,7 +69,7 @@ form:focus-within{box-shadow:0 0 0 2px #3B6D11}
       </div>
     </div>
 
-    <div style="padding-top: 24px; font-size: 13px; line-height: 1.5; color: #5F5E5A">From Grove's plant library. Illustration: Curtis's Botanical Magazine, public domain.</div>
+    <div style="padding-top: 24px; font-size: 13px; line-height: 1.5; color: #5F5E5A">From FloraGrove's plant library. Illustration: Curtis's Botanical Magazine, public domain.</div>
   </div>
 </main>
 </x-dc>
@@ -95,7 +94,7 @@ class Component extends DCLogic {
         this.setState(ok ? { done: true, error: false } : { error: true });
       },
       betaPressed: s.beta ? 'true' : 'false',
-      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test FloraGrove before launch?',
       toggleBeta: () => this.setState({ beta: !s.beta })
     };
   }

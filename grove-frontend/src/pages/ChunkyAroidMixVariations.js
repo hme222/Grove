@@ -1110,7 +1110,7 @@ const ChunkyAroidMixVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Chunky Aroid Mix &mdash; 5 carousel treatments
+              FloraGrove &middot; Chunky Aroid Mix &mdash; 5 carousel treatments
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">

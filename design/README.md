@@ -28,3 +28,6 @@ Waitlist placeholders still to fill: email provider (form is design-only), priva
 - Mark and app icon: the v on Root #202D14 (design/brand/icon-1024.png, favicon.svg).
 - Welcome screen: "Welcome to FloraGrove"; the first hand-drawn line and the stars were re-fitted to the new word position.
 - In the app: src/components/brand/FloraGroveWordmark.js and FloraGroveMark.js.
+
+## Final landing page
+12C is the chosen landing page: Studio 12 with the "Coming to iPhone · Dec 2026" pill and "Free to join. Coming to iPhone in December." under the button (design/studio/date/StudioDate-C-Pill.dc.html; design/studio/Studio12-Rise.dc.html matches it). The app (/waitlist) and grove-landing use it.

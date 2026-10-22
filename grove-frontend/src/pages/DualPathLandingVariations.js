@@ -359,7 +359,7 @@ const VariationOne = () => (
             <Leaf className="h-4 w-4" />
           </span>
           <div>
-            <p className="text-[13px] font-bold text-emerald-950">Grove</p>
+            <p className="text-[13px] font-bold text-emerald-950">FloraGrove</p>
             <p className="text-[10px] text-emerald-700">
               Welcome, Maya &middot; step 1 of 2
             </p>
@@ -434,7 +434,7 @@ const VariationTwo = () => (
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-800 text-white">
             <Leaf className="h-4 w-4" />
           </span>
-          <p className="text-[13px] font-bold text-emerald-950">Grove</p>
+          <p className="text-[13px] font-bold text-emerald-950">FloraGrove</p>
         </div>
         <button className="text-[11px] font-medium text-emerald-800/70">
           Skip
@@ -756,7 +756,7 @@ const VariationOneAltState = () => (
                 <Leaf className="h-4 w-4" />
               </span>
               <div>
-                <p className="text-[13px] font-bold text-emerald-950">Grove</p>
+                <p className="text-[13px] font-bold text-emerald-950">FloraGrove</p>
                 <p className="text-[10px] text-emerald-700">
                   Welcome, Maya &middot; step 1 of 2
                 </p>
@@ -799,7 +799,7 @@ const VariationOneAltState = () => (
                 Meet your first leafy soul.
               </h2>
               <p className="mt-1 text-[12px] leading-relaxed text-emerald-900/75">
-                Two quick ways to bring a plant into Grove &mdash; pick whichever
+                Two quick ways to bring a plant into FloraGrove &mdash; pick whichever
                 feels easier right now.
               </p>
               <RealPlantOptions />
@@ -844,7 +844,7 @@ const DualPathLandingVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
-              Grove &middot; Dual-path landing &mdash; 3 mobile variations
+              FloraGrove &middot; Dual-path landing &mdash; 3 mobile variations
             </span>
           </div>
           <span className="hidden text-xs text-emerald-800/60 sm:block">

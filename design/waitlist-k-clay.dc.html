@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Grove waitlist, clay and forest</title>
+<title>FloraGrove waitlist, clay and forest</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -28,8 +28,7 @@ summary::-webkit-details-marker{display:none}
   <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
     <nav style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 0">
       <a href="#top" style="display: flex; align-items: center; gap: 10px; color: #202D14; text-decoration: none">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A84F31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
-        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; line-height: 1">Grove</span>
+        <span style="white-space:nowrap;line-height:1;color:inherit" aria-label="FloraGrove"><span style="font-family:'Alegreya Sans',Optima,Candara,sans-serif;font-weight:300;font-size:34px">Flora</span><span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:38px">Gro<svg viewBox="0 0 32 30" style="display:inline-block;width:0.6em;height:0.56em;vertical-align:-0.03em;margin:0 -0.01em" aria-hidden="true"><path transform="translate(10.5 15) rotate(-24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="none" stroke="#3F5A1A" stroke-width="2.6"/><path transform="translate(21.5 15) rotate(24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="#3F5A1A"/></svg>e</span></span>
       </a>
       <a href="#join" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; background: #A84F31; color: #FFFBF4; text-decoration: none; font-size: 17px; font-weight: 700">Join the waitlist</a>
     </nav>
@@ -41,7 +40,7 @@ summary::-webkit-details-marker{display:none}
           iPhone · this December
         </div>
         <h1 style="margin: 0; font-weight: 300; font-size: clamp(42px, 5vw, 68px); line-height: 1.04; text-wrap: balance">Open the app. See <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; color: #E9C9B6">exactly</span> what to do today.</h1>
-        <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 30rem">One clear step per plant, the reason behind it, and an undo for every tap. Grove is a safe space for people new to plants.</p>
+        <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #E6E7D6; max-width: 30rem">One clear step per plant, the reason behind it, and an undo for every tap. FloraGrove is a safe space for people new to plants.</p>
 
         <div id="join">
           <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
@@ -73,7 +72,7 @@ summary::-webkit-details-marker{display:none}
         <div style="position: absolute; left: 50%; top: 56px; width: 420px; height: 720px; margin-left: -210px; border-radius: 999px 999px 0 0; background: #A84F31; opacity: 0.9" aria-hidden="true"></div>
         <div style="position: absolute; left: 10%; top: 12%" aria-hidden="true"><svg class="spark" width="34" height="34" viewBox="0 0 40 40" fill="#A84F31"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
         <div style="position: absolute; right: 10%; bottom: 14%" aria-hidden="true"><svg class="spark d2" width="24" height="24" viewBox="0 0 40 40" fill="#202D14"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div>
-        <div role="group" aria-label="Interactive preview of the Grove Today screen" style="position: relative; width: 320px; max-width: 100%; height: 640px; box-sizing: border-box; padding: 12px; border-radius: 52px; background: #0E1409; box-shadow: 0 30px 60px rgba(32, 45, 20, 0.3)">
+        <div role="group" aria-label="Interactive preview of the FloraGrove Today screen" style="position: relative; width: 320px; max-width: 100%; height: 640px; box-sizing: border-box; padding: 12px; border-radius: 52px; background: #0E1409; box-shadow: 0 30px 60px rgba(32, 45, 20, 0.3)">
           <div style="position: relative; height: 100%; box-sizing: border-box; padding: 44px 18px 18px; border-radius: 42px; background: #202D14; color: #F4F1E6; overflow: hidden; display: flex; flex-direction: column; gap: 14px">
             <div style="display: flex; flex-direction: column; gap: 2px">
               <div style="font-size: 14px; color: #B7C0A4">Thursday</div>
@@ -82,7 +81,7 @@ summary::-webkit-details-marker{display:none}
             <div style="font-size: 15px; color: #C3D98A">{{summary}}</div>
             <sc-for list="{{plants}}" as="p" hint-placeholder-count="3">
               <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 18px; background: #2D3B1A; opacity: {{p.opacity}}">
-                <div style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 999px; background: #3C4D26; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg></div>
+                <div style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 999px; background: #3C4D26; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><path transform="translate(25 34) rotate(-24)" d="M0 -20.0 C11.0 -10.0 11.0 10.0 0 20.0 C-11.0 10.0 -11.0 -10.0 0 -20.0Z" fill="none" stroke="#92B44B" stroke-width="3.8"/><path transform="translate(39 34) rotate(24)" d="M0 -20.0 C11.0 -10.0 11.0 10.0 0 20.0 C-11.0 10.0 -11.0 -10.0 0 -20.0Z" fill="#92B44B"/></svg></div>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
                   <div style="font-size: 17px; font-weight: 500">{{p.name}}</div>
                   <div style="font-size: 14px; color: #B7C0A4">{{p.task}}</div>
@@ -121,11 +120,11 @@ summary::-webkit-details-marker{display:none}
           </li>
           <li style="display: flex; gap: 20px">
             <div style="display: flex; flex-direction: column; align-items: center"><div style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #E9C9B6; box-sizing: border-box; color: #E9C9B6; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 22px">2</div><div style="flex: 1 1 auto; width: 2px; min-height: 36px; background: #3C4D26"></div></div>
-            <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 28px"><div style="font-size: 15px; color: #B7C0A4">[MONTH] · if you opted in</div><div style="font-size: 21px; font-weight: 500">Early access</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">Try Grove before launch and tell us what's confusing.</div></div>
+            <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 28px"><div style="font-size: 15px; color: #B7C0A4">[MONTH] · if you opted in</div><div style="font-size: 21px; font-weight: 500">Early access</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">Try FloraGrove before launch and tell us what's confusing.</div></div>
           </li>
           <li style="display: flex; gap: 20px">
             <div style="display: flex; flex-direction: column; align-items: center"><div style="width: 44px; height: 44px; border-radius: 999px; border: 2px solid #E9C9B6; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><svg class="spark d1" width="20" height="20" viewBox="0 0 40 40" fill="#E8D77A" aria-hidden="true"><path d="M22 2c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12 8-1 11-4 12-12z"></path></svg></div></div>
-            <div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 15px; color: #B7C0A4">December</div><div style="font-size: 21px; font-weight: 500">Grove launches</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">One email with the App Store link. That's it.</div></div>
+            <div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 15px; color: #B7C0A4">December</div><div style="font-size: 21px; font-weight: 500">FloraGrove launches</div><div style="font-size: 17px; line-height: 1.5; color: #E6E7D6">One email with the App Store link. That's it.</div></div>
           </li>
         </ol>
       </div>
@@ -135,7 +134,7 @@ summary::-webkit-details-marker{display:none}
         <div style="display: flex; flex-direction: column">
           <details style="border-bottom: 1px solid #3C4D26">
             <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 19px; font-weight: 500">I've never kept a plant alive. Is this for me?<span style="color: #E9C9B6; font-size: 24px" aria-hidden="true">+</span></summary>
-            <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: #E6E7D6">Yes. Grove is built for new plant owners first. It starts from zero and skips the jargon.</p>
+            <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: #E6E7D6">Yes. FloraGrove is built for new plant owners first. It starts from zero and skips the jargon.</p>
           </details>
           <details style="border-bottom: 1px solid #3C4D26">
             <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 19px; font-weight: 500">How much will it cost?<span style="color: #E9C9B6; font-size: 24px" aria-hidden="true">+</span></summary>
@@ -143,11 +142,11 @@ summary::-webkit-details-marker{display:none}
           </details>
           <details style="border-bottom: 1px solid #3C4D26">
             <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 19px; font-weight: 500">Is there an Android version?<span style="color: #E9C9B6; font-size: 24px" aria-hidden="true">+</span></summary>
-            <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: #E6E7D6">Not at launch. Grove starts on iPhone. [CONFIRM: any Android plans]</p>
+            <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: #E6E7D6">Not at launch. FloraGrove starts on iPhone. [CONFIRM: any Android plans]</p>
           </details>
           <details style="border-bottom: 1px solid #3C4D26">
             <summary style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; font-size: 19px; font-weight: 500">What do you do with my email?<span style="color: #E9C9B6; font-size: 24px" aria-hidden="true">+</span></summary>
-            <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: #E6E7D6">We use it to tell you about Grove, and nothing else. [CONFIRM against your privacy policy]</p>
+            <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: #E6E7D6">We use it to tell you about FloraGrove, and nothing else. [CONFIRM against your privacy policy]</p>
           </details>
         </div>
       </div>
@@ -163,7 +162,7 @@ summary::-webkit-details-marker{display:none}
 
   <footer style="border-top: 1px solid #DCCAB4">
     <div style="max-width: 1280px; margin: 0 auto; padding: 32px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 15px; color: #5C5246">
-      <span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #202D14">Grove</span> © 2026</span>
+      <span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.08em; color: #202D14">FloraGrove</span> © 2026</span>
       <div style="display: flex; flex-wrap: wrap; gap: 24px"><a href="#privacy">Privacy policy [ADD LINK]</a><a href="#contact">[YOUR CONTACT EMAIL]</a></div>
     </div>
   </footer>

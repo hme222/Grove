@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Grove, today quietly</title>
+<title>FloraGrove, today quietly</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -27,15 +27,14 @@ form:focus-within{box-shadow:0 0 0 2px #92B44B}
 <main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
   <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
     <div style="display: flex; align-items: center; gap: 8px">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
-      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+      <span style="white-space:nowrap;line-height:1;color:inherit" aria-label="FloraGrove"><span style="font-family:'Alegreya Sans',Optima,Candara,sans-serif;font-weight:300;font-size:22px">Flora</span><span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:25px">Gro<svg viewBox="0 0 32 30" style="display:inline-block;width:0.6em;height:0.56em;vertical-align:-0.03em;margin:0 -0.01em" aria-hidden="true"><path transform="translate(10.5 15) rotate(-24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="none" stroke="#92B44B" stroke-width="2.6"/><path transform="translate(21.5 15) rotate(24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="#92B44B"/></svg>e</span></span>
     </div>
     <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
   </header>
 
   <div style="flex: 1 1 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); align-items: center; gap: 48px; width: 100%; max-width: 1080px; margin: 0 auto; padding: 16px 24px 48px; box-sizing: border-box">
     <div style="display: flex; flex-direction: column; gap: 28px; max-width: 420px">
-      <h1 class="rise" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(30px, 3vw, 38px); line-height: 1.2; text-wrap: balance">Open Grove. See what each plant needs today. Nothing more.</h1>
+      <h1 class="rise" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(30px, 3vw, 38px); line-height: 1.2; text-wrap: balance">Open FloraGrove. See what each plant needs today. Nothing more.</h1>
       <div class="rise r2" style="display: flex; flex-direction: column; gap: 10px">
         <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
           <form onSubmit="{{submit}}" novalidate style="display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box; padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid {{wellBorder}}">
@@ -58,7 +57,7 @@ form:focus-within{box-shadow:0 0 0 2px #92B44B}
     </div>
 
     <div class="rise r2" style="display: flex; justify-content: center">
-      <div role="group" aria-label="Interactive preview of the Grove Today screen" style="position: relative; width: 300px; height: 610px; box-sizing: border-box; padding: 11px; border-radius: 48px; background: #000; box-shadow: 0 0 0 1px #2D3B1A, 0 40px 80px rgba(0, 0, 0, 0.6)">
+      <div role="group" aria-label="Interactive preview of the FloraGrove Today screen" style="position: relative; width: 300px; height: 610px; box-sizing: border-box; padding: 11px; border-radius: 48px; background: #000; box-shadow: 0 0 0 1px #2D3B1A, 0 40px 80px rgba(0, 0, 0, 0.6)">
         <div style="position: relative; height: 100%; box-sizing: border-box; padding: 40px 16px 16px; border-radius: 38px; background: #202D14; overflow: hidden; display: flex; flex-direction: column; gap: 12px">
           <div style="display: flex; flex-direction: column; gap: 2px">
             <div style="font-size: 13px; color: #B7C0A4">Thursday</div>
@@ -135,7 +134,7 @@ class Component extends DCLogic {
         this.setState(ok ? { done: true, error: false } : { error: true });
       },
       betaPressed: s.beta ? 'true' : 'false',
-      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test FloraGrove before launch?',
       toggleBeta: () => this.setState({ beta: !s.beta })
     };
   }

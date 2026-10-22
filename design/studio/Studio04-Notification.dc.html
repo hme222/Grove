@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Grove, one reminder</title>
+<title>FloraGrove, one reminder</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -27,8 +27,7 @@ form:focus-within{box-shadow:0 0 0 2px #92B44B}
 <main style="min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background: #0B0F08; background-image: radial-gradient(ellipse 60% 45% at 50% 38%, #172010 0%, rgba(11, 15, 8, 0) 70%); color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif">
   <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px)">
     <div style="display: flex; align-items: center; gap: 8px">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg>
-      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em">Grove</span>
+      <span style="white-space:nowrap;line-height:1;color:inherit" aria-label="FloraGrove"><span style="font-family:'Alegreya Sans',Optima,Candara,sans-serif;font-weight:300;font-size:22px">Flora</span><span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:25px">Gro<svg viewBox="0 0 32 30" style="display:inline-block;width:0.6em;height:0.56em;vertical-align:-0.03em;margin:0 -0.01em" aria-hidden="true"><path transform="translate(10.5 15) rotate(-24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="none" stroke="#92B44B" stroke-width="2.6"/><path transform="translate(21.5 15) rotate(24)" d="M0 -14.0 C6.5 -7.0 6.5 7.0 0 14.0 C-6.5 7.0 -6.5 -7.0 0 -14.0Z" fill="#92B44B"/></svg>e</span></span>
     </div>
     <div style="font-size: 14px; color: #A9B09A">iPhone · December</div>
   </header>
@@ -36,10 +35,10 @@ form:focus-within{box-shadow:0 0 0 2px #92B44B}
   <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; padding: 24px 24px 64px; text-align: center">
     <div class="drop" style="width: 100%; max-width: 380px">
       <sc-if value="{{cardOpen}}" hint-placeholder-val="{{ true }}">
-        <div role="group" aria-label="Example Grove notification" style="display: flex; flex-direction: column; gap: 12px; padding: 16px 18px; border-radius: 24px; background: rgba(244, 241, 230, 0.09); border: 1px solid rgba(244, 241, 230, 0.12); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5); text-align: left">
+        <div role="group" aria-label="Example FloraGrove notification" style="display: flex; flex-direction: column; gap: 12px; padding: 16px 18px; border-radius: 24px; background: rgba(244, 241, 230, 0.09); border: 1px solid rgba(244, 241, 230, 0.12); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5); text-align: left">
           <div style="display: flex; align-items: center; gap: 10px">
-            <div style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 7px; background: #202D14; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92B44B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z"></path><path d="M4.5 19.5 13 11"></path></svg></div>
-            <div style="flex: 1 1 auto; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #C9CDBB">Grove</div>
+            <div style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 7px; background: #202D14; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 64 64" aria-hidden="true"><path transform="translate(25 34) rotate(-24)" d="M0 -20.0 C11.0 -10.0 11.0 10.0 0 20.0 C-11.0 10.0 -11.0 -10.0 0 -20.0Z" fill="none" stroke="#92B44B" stroke-width="3.8"/><path transform="translate(39 34) rotate(24)" d="M0 -20.0 C11.0 -10.0 11.0 10.0 0 20.0 C-11.0 10.0 -11.0 -10.0 0 -20.0Z" fill="#92B44B"/></svg></div>
+            <div style="flex: 1 1 auto; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #C9CDBB">FloraGrove</div>
             <div style="font-size: 13px; color: #A9B09A">9:00 am</div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 2px">
@@ -111,7 +110,7 @@ class Component extends DCLogic {
         this.setState(ok ? { done: true, error: false } : { error: true });
       },
       betaPressed: s.beta ? 'true' : 'false',
-      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?',
+      betaLabel: s.beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test FloraGrove before launch?',
       toggleBeta: () => this.setState({ beta: !s.beta })
     };
   }

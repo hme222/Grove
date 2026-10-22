@@ -34,7 +34,7 @@ import { Progress } from "@/components/ui/progress";
 /**
  * CozyRoomPlannerVariations
  * ------------------------------------------------------------
- * Six mobile portrait mockups of Grove's dual-path landing
+ * Six mobile portrait mockups of FloraGrove's dual-path landing
  * screen using a "Lo-Fi Cozy" 8-bit aesthetic. Each screen
  * revolves around placing plants into North / South / East /
  * West lighting zones and getting a soft AI Spot-Check.
@@ -312,7 +312,7 @@ const VariationOne = () => (
             <Leaf className="h-4 w-4" />
           </span>
           <div>
-            <p className="font-serif text-[15px] font-bold" style={{ color: C.forest }}>Grove</p>
+            <p className="font-serif text-[15px] font-bold" style={{ color: C.forest }}>FloraGrove</p>
             <p className="font-mono text-[9px]" style={{ color: C.forest + "99" }}>
               Cozy room planner
             </p>
@@ -446,7 +446,7 @@ const VariationTwo = () => (
           <span className="flex h-9 w-9 items-center justify-center rounded-full border-2" style={{ background: C.forest, borderColor: C.forestDeep, color: C.cream }}>
             <Leaf className="h-4 w-4" />
           </span>
-          <p className="font-serif text-[15px] font-bold" style={{ color: C.forest }}>Grove</p>
+          <p className="font-serif text-[15px] font-bold" style={{ color: C.forest }}>FloraGrove</p>
         </div>
         <span className="font-mono text-[9px]" style={{ color: C.forest + "99" }}>
           plant stand · 4 shelves
@@ -527,7 +527,7 @@ const VariationThree = () => (
 
       <div className="flex items-center justify-between">
         <button style={{ color: C.forest }}><ChevronLeft className="h-4 w-4" /></button>
-        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.3em]" style={{ color: C.forest }}>Grove Journal · Day 1</p>
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.3em]" style={{ color: C.forest }}>FloraGrove Journal · Day 1</p>
         <BookOpen className="h-4 w-4" style={{ color: C.forest }} />
       </div>
 
@@ -593,7 +593,7 @@ const VariationThree = () => (
           Walked away. Small win.&rdquo;
         </p>
         <p className="mt-2 font-mono text-[9px]" style={{ color: C.forest + "AA" }}>
-          &mdash; entry auto-drafted by Grove
+          &mdash; entry auto-drafted by FloraGrove
         </p>
       </div>
 
@@ -680,7 +680,7 @@ const VariationFour = () => (
           <span className="flex h-9 w-9 items-center justify-center rounded-full border-2" style={{ background: C.forest, borderColor: C.forestDeep, color: C.cream }}>
             <Map className="h-4 w-4" />
           </span>
-          <p className="font-serif text-[15px] font-bold" style={{ color: C.forest }}>Grove Village</p>
+          <p className="font-serif text-[15px] font-bold" style={{ color: C.forest }}>FloraGrove Village</p>
         </div>
         <span className="font-mono text-[9px]" style={{ color: C.forest + "99" }}>choose a home</span>
       </div>
@@ -963,7 +963,7 @@ const CozyRoomPlannerVariations = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg" style={{ color: C.forest }}>
-              Grove &middot; Lo-Fi Cozy Room Planner &mdash; 6 mobile variations
+              FloraGrove &middot; Lo-Fi Cozy Room Planner &mdash; 6 mobile variations
             </span>
           </div>
           <span className="hidden font-mono text-xs sm:block" style={{ color: C.forest + "AA" }}>
