@@ -55,7 +55,7 @@ export default function CareGrowthPage() {
             <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
-              <p className="font-ui text-[9px] text-grove-cream uppercase tracking-[0.12em]">{label}</p>
+              <p className="font-ui text-[9px] text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
@@ -115,11 +115,11 @@ export default function CareGrowthPage() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest p-3">
-                <p className="font-latin text-[9px] text-grove-cream uppercase tracking-[0.12em]">Propagations</p>
+                <p className="font-latin text-[9px] text-grove-cream">Propagations</p>
                 <p className="font-plant text-grove-cream text-xl">{stats?.propagation_count || 0}</p>
               </div>
               <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest p-3">
-                <p className="font-latin text-[9px] text-grove-cream uppercase tracking-[0.12em]">Longest Streak</p>
+                <p className="font-latin text-[9px] text-grove-cream">Longest Streak</p>
                 <p className="font-plant text-grove-cream text-xl">{stats?.longest_streak || 0}d</p>
               </div>
             </div>

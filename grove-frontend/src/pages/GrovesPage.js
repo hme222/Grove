@@ -141,7 +141,7 @@ export default function GrovesPage() {
                       <button
                         onClick={() => handleJoin(grove.id)}
                         data-testid="grove-join-button"
-                        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout flex-shrink-0"
+                        className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout flex-shrink-0"
                       >
                         Join
                       </button>
@@ -162,7 +162,7 @@ export default function GrovesPage() {
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Name</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Name</label>
               <input
                 type="text"
                 value={newGrove.name}
@@ -173,7 +173,7 @@ export default function GrovesPage() {
               />
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Description</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Description</label>
               <textarea
                 value={newGrove.description}
                 onChange={(e) => setNewGrove(prev => ({...prev, description: e.target.value}))}
@@ -194,7 +194,7 @@ export default function GrovesPage() {
               onClick={handleCreate}
               disabled={creating || !newGrove.name.trim()}
               data-testid="grove-create-submit"
-              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50"
+              className="w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50"
             >
               {creating ? 'Creating...' : 'Create Grove'}
             </button>

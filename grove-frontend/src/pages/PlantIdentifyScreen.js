@@ -114,7 +114,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="mb-4 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-cream hover:text-grove-sprout"
+          className="mb-4 inline-flex items-center gap-1 font-plant text-[10px] text-grove-cream hover:text-grove-sprout"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
@@ -139,7 +139,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             type="button"
             onClick={(e) => { impactLight(e.currentTarget); cameraRef.current?.click(); }}
             data-testid="identify-take-photo"
-            className="relative overflow-hidden rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center justify-center gap-1.5"
+            className="relative overflow-hidden rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center justify-center gap-1.5"
           >
             <Camera className="h-4 w-4" /> Take photo
           </button>
@@ -147,7 +147,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             type="button"
             onClick={(e) => { impactLight(e.currentTarget); galleryRef.current?.click(); }}
             data-testid="identify-choose-existing"
-            className="relative overflow-hidden rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
+            className="relative overflow-hidden rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
           >
             <ImageIcon className="h-4 w-4" /> Choose existing
           </button>
@@ -180,7 +180,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
             <p className="font-plant text-grove-cream text-sm">Identifying your plant…</p>
           </div>
-          <p className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen mb-2">Checking</p>
+          <p className="font-ui text-[10px] text-grove-lichen mb-2">Checking</p>
           <ul className="space-y-1.5">
             {items.map(({ key, label }) => (
               <li key={key} className="flex items-center gap-2">
@@ -206,10 +206,10 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             Grove couldn't identify this plant right now. You can try again or enter the details yourself.
           </p>
           <div className="grid grid-cols-2 gap-2 mt-4">
-            <button onClick={reset} data-testid="identify-retry" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center gap-1.5">
+            <button onClick={reset} data-testid="identify-retry" className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center gap-1.5">
               <RotateCcw className="h-3.5 w-3.5" /> Try again
             </button>
-            <button onClick={onSwitchToManual} data-testid="identify-go-manual" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine">
+            <button onClick={onSwitchToManual} data-testid="identify-go-manual" className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine">
               Enter manually
             </button>
           </div>
@@ -227,7 +227,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
     <div className="max-w-[520px] mx-auto px-4 py-4 pb-24" data-testid={lowConf ? 'identify-low-conf' : 'identify-review'}>
       <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-[180px] mb-3" />
       <div className="mb-3">
-        <p className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen">{lowConf ? 'We think this might be…' : 'Identified'}</p>
+        <p className="font-ui text-[10px] text-grove-lichen">{lowConf ? 'We think this might be…' : 'Identified'}</p>
         <h1 className="font-plant text-grove-cream text-lg leading-tight">{identified?.commonName || 'Plant'}</h1>
         {identified?.latinName && <p className="font-latin text-[11px] text-[#639922]">{identified.latinName}</p>}
         <p
@@ -300,7 +300,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
 
       {/* Health */}
       <div className="mt-2 mb-3">
-        <p className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen">Health · initial reading</p>
+        <p className="font-ui text-[10px] text-grove-lichen">Health · initial reading</p>
         <div className="flex items-center gap-2 mt-1">
           <div className="flex-1 h-2 bg-grove-moss rounded-full overflow-hidden">
             <div className="h-full bg-grove-lime" style={{ width: `${identified?.healthScore || 80}%` }} />
@@ -321,7 +321,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           type="button"
           onClick={reset}
           data-testid="identify-rescan"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
+          className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
         >
           <RotateCcw className="h-3.5 w-3.5" /> Looks wrong? Re-scan
         </button>
@@ -330,7 +330,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           onClick={handleSave}
           disabled={saving || !form.common_name}
           data-testid="identify-add-plant"
-          className="relative overflow-hidden rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="relative overflow-hidden rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           <Sparkles className="h-3.5 w-3.5" />
           {saving ? 'Adding…' : 'Add to grove'}
@@ -343,14 +343,14 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
 function FieldRow({ label, display, children, editing, onEditToggle, testId }) {
   return (
     <div className="py-2" data-testid={testId}>
-      <p className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen mb-1">{label}</p>
+      <p className="font-ui text-[10px] text-grove-lichen mb-1">{label}</p>
       {editing ? (
         <div className="space-y-2">
           {children}
           <button
             type="button"
             onClick={onEditToggle}
-            className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sprout hover:text-grove-sprout inline-flex items-center gap-1"
+            className="font-plant text-[10px] text-grove-sprout hover:text-grove-sprout inline-flex items-center gap-1"
           >
             <Check className="h-3 w-3" /> Done
           </button>

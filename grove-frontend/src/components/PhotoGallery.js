@@ -132,7 +132,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
           onClick={handleAddClick}
           disabled={uploading || count >= cap}
           data-testid="photo-gallery-add"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+          className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
         >
           <Upload className="h-3 w-3" />
           {uploading ? 'Uploading…' : 'Add photo'}
@@ -263,7 +263,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
         />
       </div>
       <div>
-        <label className="block font-ui text-[11px] text-grove-cream uppercase tracking-[0.08em] mb-1">
+        <label className="block font-ui text-[11px] text-grove-cream mb-1">
           Taken on
         </label>
         <input
@@ -277,7 +277,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
         <p className="font-latin text-[10px] text-grove-lichen mt-1">Used to sort photos chronologically in the growth timeline.</p>
       </div>
       <div>
-        <label className="block font-ui text-[11px] text-grove-cream uppercase tracking-[0.08em] mb-1">
+        <label className="block font-ui text-[11px] text-grove-cream mb-1">
           Caption
         </label>
         <textarea
@@ -294,7 +294,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
           type="button"
           onClick={onCancel}
           data-testid="photo-edit-cancel"
-          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+          className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
         >
           <X className="h-3.5 w-3.5" />
           Cancel
@@ -310,7 +310,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
             onSave(patch);
           }}
           data-testid="photo-edit-save"
-          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center justify-center gap-2"
+          className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center justify-center gap-2"
         >
           <Check className="h-3.5 w-3.5" />
           Save

@@ -194,7 +194,7 @@ export default function SpeciesDetailPage() {
               <h2 className="font-plant text-2xl text-grove-cream">{species.common_name}</h2>
               <p className="font-latin text-base italic text-grove-cream mt-1">{species.latin_name}</p>
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                <span className="px-2 py-1 rounded-[20px] bg-grove-moss text-grove-cream text-xs font-ui uppercase tracking-[0.12em]">
+                <span className="px-2 py-1 rounded-[20px] bg-grove-moss text-grove-cream text-xs font-ui">
                   {species.family}
                 </span>
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
@@ -259,7 +259,7 @@ export default function SpeciesDetailPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-watering-card">
             <div className="flex items-center gap-2 mb-2">
               <Droplets className="h-5 w-5 text-grove-sprout" />
-              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Watering</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Watering</h3>
             </div>
             <p className="font-ui text-sm text-grove-cream">Every {species.default_watering_days} days</p>
             <p className="font-latin text-xs text-grove-cream mt-1 capitalize">Medium: {species.default_grow_medium || 'soil'}</p>
@@ -273,7 +273,7 @@ export default function SpeciesDetailPage() {
           >
             <div className="flex items-center gap-2 mb-2">
               <Sun className="h-5 w-5 text-grove-sun" />
-              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Light</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Light</h3>
             </div>
             <p className="font-ui text-sm text-grove-cream">{lightCopy}</p>
             <p className="font-latin text-[10px] text-grove-cream mt-1 underline">Tap for a primer on light</p>
@@ -283,7 +283,7 @@ export default function SpeciesDetailPage() {
             <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-origin-card">
               <div className="flex items-center gap-2 mb-2">
                 <Leaf className="h-5 w-5 text-grove-sprout" />
-                <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Origin</h3>
+                <h3 className="font-ui text-xs text-grove-cream">Origin</h3>
               </div>
               <p className="font-ui text-sm text-grove-cream">{species.native_range || species.native_habitat}</p>
             </div>
@@ -295,7 +295,7 @@ export default function SpeciesDetailPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-photo-gallery">
             <div className="flex items-center gap-2 mb-3">
               <Camera className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Photos</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Photos</h3>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-canopy">
@@ -328,7 +328,7 @@ export default function SpeciesDetailPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-companions">
             <div className="flex items-center gap-2 mb-3">
               <Sprout className="h-4 w-4 text-grove-sprout" />
-              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Pairs well with</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Pairs well with</h3>
             </div>
             <ul className="space-y-2">
               {species.companions.map((c) => (
@@ -363,7 +363,7 @@ export default function SpeciesDetailPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-bhl-gallery">
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Historical illustrations</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Historical illustrations</h3>
               <span className="font-latin italic text-[10px] text-grove-lichen">{species.bhl_illustrations.length} from BHL</span>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -399,7 +399,7 @@ export default function SpeciesDetailPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-citations">
             <div className="flex items-center gap-2 mb-2">
               <BookOpen className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">Sources</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Sources</h3>
             </div>
             <ul className="space-y-1.5">
               {species.citations.map((c, i) => (
@@ -451,7 +451,7 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
     <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-performance">
       <div className="flex items-center gap-2 mb-3">
         <BarChart3 className="h-4 w-4 text-grove-cream" />
-        <h3 className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream">How growers fare</h3>
+        <h3 className="font-ui text-xs text-grove-cream">How growers fare</h3>
         {sample && (
           <span
             data-testid="species-performance-confidence"
@@ -528,7 +528,7 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
         >
           <div className="flex items-center gap-1.5 mb-2">
             <Sparkles className="h-3 w-3 text-grove-sun" />
-            <span className="font-plant text-[10px] uppercase tracking-[0.12em] text-grove-sage">
+            <span className="font-plant text-[10px] text-grove-sage">
               Editorial summary
             </span>
           </div>
@@ -551,7 +551,7 @@ function PerfStat({ label, value, sub, testid }) {
       className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-2.5"
       data-testid={testid}
     >
-      <p className="font-ui text-[9px] uppercase tracking-[0.12em] text-grove-sage">{label}</p>
+      <p className="font-ui text-[9px] text-grove-sage">{label}</p>
       <p className="font-plant text-sm text-grove-cream mt-0.5 leading-tight">{value}</p>
       {sub && <p className="font-latin text-[10px] text-grove-lichen mt-0.5">{sub}</p>}
     </div>

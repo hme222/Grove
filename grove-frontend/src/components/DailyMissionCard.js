@@ -85,7 +85,7 @@ export default function DailyMissionCard({ onCompleted }) {
           {completed ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sage">
+          <p className="font-plant text-[10px] text-grove-sage">
             Today's mission
           </p>
           <h3
@@ -106,7 +106,7 @@ export default function DailyMissionCard({ onCompleted }) {
               type="button"
               onClick={handleCta}
               data-testid="daily-mission-cta"
-              className="relative overflow-hidden rounded-[8px] bg-grove-lime text-grove-root font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1"
+              className="relative overflow-hidden rounded-[8px] bg-grove-lime text-grove-root font-plant text-[10px] px-3 py-2 hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1"
             >
               {mission.cta || 'Begin'}
               <ArrowRight className="h-3 w-3" />

@@ -128,7 +128,7 @@ export default function FloristDashboard() {
               </DialogHeader>
               <div className="space-y-4 mt-4">
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Title
                   </label>
                   <Input
@@ -139,7 +139,7 @@ export default function FloristDashboard() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Description
                   </label>
                   <Textarea
@@ -150,7 +150,7 @@ export default function FloristDashboard() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Photo
                   </label>
                   {formData.photo_url ? (
@@ -186,7 +186,7 @@ export default function FloristDashboard() {
                 <Button
                   onClick={handleCreate}
                   disabled={creating}
-                  className="w-full rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root"
+                  className="w-full rounded-[12px] font-[Georgia] text-xs px-4 py-3 bg-grove-lime text-grove-root"
                 >
                   {creating ? 'Adding...' : 'Add to Portfolio'}
                 </Button>
@@ -200,7 +200,7 @@ export default function FloristDashboard() {
         {/* Pro Badge */}
         <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="px-3 py-1 rounded-[20px] bg-[#8A6A3D] text-grove-cream text-xs font-sans uppercase tracking-[0.12em]">
+            <div className="px-3 py-1 rounded-[20px] bg-[#8A6A3D] text-grove-cream text-xs font-sans">
               Pro
             </div>
             <div>

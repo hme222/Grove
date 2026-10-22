@@ -39,7 +39,7 @@ export default function CareLayout({ children }) {
                   key={tab.path}
                   onClick={() => navigate(tab.path)}
                   data-testid={tab.testid}
-                  className={`flex-shrink-0 px-3 py-3 text-xs font-plant uppercase tracking-[0.1em] border-b-2 transition-colors duration-150 ${
+                  className={`flex-shrink-0 px-3 py-3 text-xs font-plant border-b-2 transition-colors duration-150 ${
                     active
                       ? 'border-grove-fernLine text-grove-cream'
                       : 'border-transparent text-grove-cream hover:text-grove-cream'

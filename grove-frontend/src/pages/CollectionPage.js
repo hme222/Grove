@@ -149,7 +149,7 @@ export default function CollectionPage() {
             <button
               onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
               data-testid="collection-select-button"
-              className={`rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] transition-colors duration-150 ${
+              className={`rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] transition-colors duration-150 ${
                 selectionMode
                   ? 'border-grove-fernLine bg-grove-lime text-grove-root'
                   : 'border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine'
@@ -209,7 +209,7 @@ export default function CollectionPage() {
             </span>
             <button
               onClick={() => setSearchParams({})}
-              className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sprout hover:text-grove-cream"
+              className="font-plant text-[10px] text-grove-sprout hover:text-grove-cream"
             >
               Show all
             </button>
@@ -224,7 +224,7 @@ export default function CollectionPage() {
             <p className="text-sm text-grove-cream">No plants in "{roomFilter}"</p>
             <button
               onClick={() => setSearchParams({})}
-              className="mt-2 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sprout hover:text-grove-cream"
+              className="mt-2 font-plant text-[10px] text-grove-sprout hover:text-grove-cream"
             >
               Show all plants
             </button>
@@ -236,7 +236,7 @@ export default function CollectionPage() {
               <button
                 type="button"
                 onClick={() => navigate('/bouquets/new')}
-                className="mt-2 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sprout hover:text-grove-cream"
+                className="mt-2 font-plant text-[10px] text-grove-sprout hover:text-grove-cream"
               >
                 Add a bouquet
               </button>
@@ -360,7 +360,7 @@ export default function CollectionPage() {
                   type="button"
                   onClick={() => setBulkActionsOpen(true)}
                   data-testid="bulk-open-actions"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-2"
+                  className="rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-2"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Pick actions
@@ -371,7 +371,7 @@ export default function CollectionPage() {
                   onClick={handleBulkLog}
                   disabled={bulkRunning || bulkActions.size === 0}
                   data-testid="bulk-log-confirm"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-40 transition-colors duration-150 flex items-center gap-2"
+                  className="rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-40 transition-colors duration-150 flex items-center gap-2"
                 >
                   <Check className="h-3.5 w-3.5" />
                   {bulkRunning ? 'Logging…' : (bulkActions.size > 1 ? `Log ${bulkActions.size} actions` : 'Log care')}

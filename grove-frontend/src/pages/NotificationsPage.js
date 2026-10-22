@@ -76,7 +76,7 @@ export default function NotificationsPage() {
           unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="text-xs font-sans uppercase tracking-[0.12em] text-grove-sprout hover:text-grove-cream transition-colors"
+              className="text-xs font-sans text-grove-sprout hover:text-grove-cream transition-colors"
               data-testid="mark-all-read-button"
             >
               Mark all read

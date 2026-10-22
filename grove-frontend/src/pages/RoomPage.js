@@ -42,7 +42,7 @@ export default function RoomPage() {
             action={
               <button
                 onClick={() => navigate('/add-plant')}
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-6 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
+                className="rounded-[12px] font-ui text-xs px-6 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
               >
                 Add a Plant
               </button>

@@ -206,7 +206,7 @@ export default function FeedPage() {
             <button
               onClick={() => navigate('/groves')}
               data-testid="feed-open-groves-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
             >
               <Users className="h-3.5 w-3.5" />
               Groves
@@ -214,7 +214,7 @@ export default function FeedPage() {
             <button
               onClick={() => setShowCompose(!showCompose)}
               data-testid="feed-compose-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
             >
               Post Update
             </button>
@@ -248,7 +248,7 @@ export default function FeedPage() {
                 onClick={handlePost}
                 disabled={posting || !caption.trim()}
                 data-testid="feed-submit-post"
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5"
+                className="rounded-[12px] font-ui text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5"
               >
                 <Send className="h-3.5 w-3.5" />
                 {posting ? 'Posting...' : 'Post'}
@@ -345,7 +345,7 @@ export default function FeedPage() {
                           style={active ? { backgroundColor: activeColor } : undefined}
                         >
                           <Icon className="h-3.5 w-3.5" fill={active ? 'currentColor' : 'none'} />
-                          <span className="font-plant uppercase tracking-[0.08em] text-[10px]">{label}</span>
+                          <span className="font-plant text-[10px]">{label}</span>
                           {count > 0 && <span className="font-latin text-[10px]">{count}</span>}
                         </button>
                       );
@@ -365,7 +365,7 @@ export default function FeedPage() {
                     <div className="mt-3" data-testid="feed-comments-panel">
                       {/* Sticky conversation header */}
                       <div className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-grove-forest/95 backdrop-blur border-y-[0.5px] border-grove-moss/60 flex items-center justify-between">
-                        <p className="font-plant uppercase tracking-[0.12em] text-[10px] text-grove-cream">
+                        <p className="font-plant text-[10px] text-grove-cream">
                           Conversation · {post.comment_count || 0}
                         </p>
                         <p className="font-latin text-[9px] text-grove-cream truncate max-w-[60%]">

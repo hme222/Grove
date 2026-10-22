@@ -85,7 +85,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
         type="button"
         onClick={onBack}
         data-testid="photo-back"
-        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
+        className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
       >
         ← Back
       </button>
@@ -144,7 +144,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
               type="button"
               onClick={handleRetry}
               data-testid="photo-try-again"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center gap-1.5"
             >
               <RotateCcw className="h-3.5 w-3.5" /> Try again
             </button>
@@ -152,7 +152,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
               type="button"
               onClick={handleAccept}
               data-testid="photo-use-anyway"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine"
+              className="rounded-[12px] font-ui text-xs px-4 py-2 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine"
             >
               Use anyway
             </button>
@@ -183,7 +183,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             onClick={() => cameraInputRef.current?.click()}
             disabled={!!uploadingSource}
             data-testid="photo-take"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-60 flex items-center justify-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-60 flex items-center justify-center gap-1.5"
           >
             <Camera className="h-4 w-4" />
             {uploadingSource === 'camera' ? 'Uploading…' : 'Take photo'}
@@ -193,7 +193,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             onClick={() => galleryInputRef.current?.click()}
             disabled={!!uploadingSource}
             data-testid="photo-library"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine disabled:opacity-60 flex items-center justify-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine disabled:opacity-60 flex items-center justify-center gap-1.5"
           >
             <ImageIcon className="h-4 w-4" />
             {uploadingSource === 'gallery' ? 'Uploading…' : 'Choose existing'}
@@ -208,7 +208,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             type="button"
             onClick={handleRetry}
             data-testid="photo-retake"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
           >
             <RotateCcw className="h-4 w-4" /> Retake
           </button>
@@ -216,7 +216,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             type="button"
             onClick={handleAccept}
             data-testid="photo-use-this"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center justify-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center justify-center gap-1.5"
           >
             <Check className="h-4 w-4" /> Use this photo
           </button>

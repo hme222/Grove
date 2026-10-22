@@ -240,13 +240,13 @@ export default function SwapChatPage() {
           {/* Confirm/Cancel buttons */}
           <div className="flex items-center gap-2 px-4 py-2 border-b-[0.5px] border-grove-moss">
             {myConfirmed ? (
-              <span className="flex items-center gap-1 font-plant text-[10px] text-grove-sprout uppercase tracking-[0.08em]">
+              <span className="flex items-center gap-1 font-plant text-[10px] text-grove-sprout">
                 <CheckCircle2 className="h-3.5 w-3.5" /> You confirmed — waiting on them
               </span>
             ) : (
               <button
                 onClick={handleConfirm}
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+                className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
               >
                 Confirm swap
               </button>
@@ -254,7 +254,7 @@ export default function SwapChatPage() {
             <div className="flex-1" />
             <button
               onClick={handleCancel}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss text-grove-sage hover:border-grove-moss hover:text-[#BA1818]"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss text-grove-sage hover:border-grove-moss hover:text-[#BA1818]"
             >
               Cancel
             </button>

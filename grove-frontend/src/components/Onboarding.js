@@ -120,7 +120,7 @@ export function Onboarding({ onComplete }) {
               {screen.title}
             </h1>
             {screen.tagline && (
-              <p className={`font-sans text-sm uppercase tracking-[0.12em] ${screen.dark ? 'text-grove-sprout' : 'text-grove-sprout'}`}>
+              <p className={`font-sans text-sm ${screen.dark ? 'text-grove-sprout' : 'text-grove-sprout'}`}>
                 {screen.tagline}
               </p>
             )}
@@ -139,7 +139,7 @@ export function Onboarding({ onComplete }) {
                 ? 'border-grove-lime bg-grove-lime text-grove-sprout'
                 : 'border-grove-moss bg-grove-moss text-grove-cream'
             }`}>
-              <span className="font-plant uppercase tracking-[0.1em] text-[10px]">Quick tip</span>
+              <span className="font-plant text-[10px]">Quick tip</span>
               <span className="font-ui text-xs">{screen.tip}</span>
             </div>
           )}
@@ -149,7 +149,7 @@ export function Onboarding({ onComplete }) {
             onClick={handleNext}
             disabled={isCompleting}
             data-testid="onboarding-continue"
-            className={`w-full rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] transition-colors duration-150 ${
+            className={`w-full rounded-[12px] font-[Georgia] text-xs px-4 py-3 border-[0.5px] transition-colors duration-150 ${
               screen.dark
                 ? 'bg-grove-lime text-grove-cream border-grove-lime hover:bg-grove-sprout hover:border-grove-moss'
                 : 'bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout hover:border-grove-fernLine'

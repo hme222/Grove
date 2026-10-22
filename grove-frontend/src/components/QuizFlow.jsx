@@ -89,7 +89,7 @@ export default function QuizFlow({ onDone }) {
           type="button"
           onClick={start}
           aria-busy={saving}
-          className="mt-4 w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
+          className="mt-4 w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
           data-testid="quiz-start"
         >
           {saving ? 'Saving…' : 'Start my first lesson'}

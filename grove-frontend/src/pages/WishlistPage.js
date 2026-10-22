@@ -53,7 +53,7 @@ export default function WishlistPage() {
             </p>
             <button
               onClick={() => navigate('/feed')}
-              className="mt-3 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-grove-bloom text-grove-root hover:bg-[#B8406A] transition-colors duration-150"
+              className="mt-3 rounded-[12px] font-ui text-[10px] px-4 py-2.5 bg-grove-bloom text-grove-root hover:bg-[#B8406A] transition-colors duration-150"
             >
               Browse the feed
             </button>

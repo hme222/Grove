@@ -266,7 +266,7 @@ export default function PlantDetailPage() {
               <button
                 onClick={() => setCareModalOpen(true)}
                 data-testid="plant-log-care-button"
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
+                className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
               >
                 <Droplets className="h-3.5 w-3.5" />
                 Log Care
@@ -274,7 +274,7 @@ export default function PlantDetailPage() {
               <button
                 onClick={handleDelete}
                 data-testid="plant-delete-button"
-                className="w-8 h-8 rounded-[2px] border-[0.5px] border-grove-moss flex items-center justify-center text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
+                className="w-8 h-8 rounded-[12px] border-[0.5px] border-grove-moss flex items-center justify-center text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -333,7 +333,7 @@ export default function PlantDetailPage() {
                   onClick={handleAISchedule}
                   disabled={generatingSchedule}
                   data-testid="ai-schedule-button"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
                 >
                   <Sparkles className="h-3 w-3" />
                   {generatingSchedule ? 'Analyzing...' : 'AI Suggest'}
@@ -364,14 +364,14 @@ export default function PlantDetailPage() {
             </div>
 
             {/* Biography */}
-            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-lime p-4">
+            <div className="rounded-[14px] border-[0.5px] border-grove-fernLine/40 bg-grove-canopy p-4">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-plant text-grove-sprout text-sm">Plant Biography</h3>
                 <button
                   onClick={handleGenerateBiography}
                   disabled={generatingBio}
                   data-testid="generate-biography-button"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
                 >
                   <Sparkles className="h-3 w-3" />
                   {generatingBio ? 'Writing...' : biography ? 'Regenerate' : 'Generate'}
@@ -397,17 +397,17 @@ export default function PlantDetailPage() {
               <h3 className="font-plant text-grove-cream text-sm mb-2">Details</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-grove-cream uppercase tracking-[0.12em]">Acquired</span>
+                  <span className="font-ui text-xs text-grove-cream">Acquired</span>
                   <span className="font-latin text-xs text-grove-cream">{formatDate(plant.acquired_date)}</span>
                 </div>
                 {plant.acquired_from && (
                   <div className="flex justify-between">
-                    <span className="font-ui text-xs text-grove-cream uppercase tracking-[0.12em]">From</span>
+                    <span className="font-ui text-xs text-grove-cream">From</span>
                     <span className="font-ui text-xs text-grove-cream">{plant.acquired_from}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-grove-cream uppercase tracking-[0.12em]">Medium</span>
+                  <span className="font-ui text-xs text-grove-cream">Medium</span>
                   <span className="font-ui text-xs text-grove-cream">{plant.grow_medium}</span>
                 </div>
               </div>

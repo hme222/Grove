@@ -116,7 +116,7 @@ export default function NotificationPreferencesPage() {
             onClick={() => navigate('/profile')}
             data-testid="prefs-back"
             aria-label="Back to Profile"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             Back
@@ -211,7 +211,7 @@ export default function NotificationPreferencesPage() {
                 <div className="grid grid-cols-2 gap-3 mt-3">
                   {['quiet_hours_start', 'quiet_hours_end'].map((k) => (
                     <label key={k} className="block">
-                      <span className="font-latin text-[10px] text-grove-cream uppercase tracking-[0.12em]">
+                      <span className="font-latin text-[10px] text-grove-cream">
                         {k === 'quiet_hours_start' ? 'Start' : 'End'}
                       </span>
                       <input

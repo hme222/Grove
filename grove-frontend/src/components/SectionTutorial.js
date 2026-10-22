@@ -117,7 +117,7 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
             type="button"
             onClick={dismiss}
             data-testid={`section-tutorial-cta-${tutorialId}`}
-            className="mt-5 w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
+            className="mt-5 w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
           >
             Got it
           </button>
@@ -148,7 +148,7 @@ export function ReplayTutorialButton({ tutorialId, label, className }) {
       onClick={handle}
       disabled={busy}
       data-testid={`replay-tutorial-${tutorialId}`}
-      className={className || 'rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
+      className={className || 'rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
     >
       {busy ? 'Resetting…' : (label || 'Replay')}
     </button>

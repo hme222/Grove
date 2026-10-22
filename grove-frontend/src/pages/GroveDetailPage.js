@@ -106,7 +106,7 @@ export default function GroveDetailPage() {
             {grove?.is_member && (
               <button
                 onClick={handleLeave}
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
+                className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
               >
                 <LogOut className="h-3 w-3" />
                 Leave

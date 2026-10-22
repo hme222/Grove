@@ -158,14 +158,14 @@ export default function ChallengesPage() {
                           <button
                             onClick={() => handleStart(template.slug)}
                             disabled={starting === template.slug}
-                            className="rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+                            className="rounded-[12px] font-[Georgia] text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
                             data-testid="challenge-start-button"
                           >
                             {starting === template.slug ? 'Starting...' : 'Start'}
                           </button>
                         )}
                         {isActive && (
-                          <span className="text-xs text-grove-sprout font-sans uppercase tracking-[0.12em]">
+                          <span className="text-xs text-grove-sprout font-sans">
                             Active
                           </span>
                         )}

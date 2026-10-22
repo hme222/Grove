@@ -175,7 +175,7 @@ export default function EncyclopediaPage() {
             <button
               onClick={() => fetchSpecies(searchQuery, page - 1)}
               disabled={page === 1}
-              className="px-4 py-2 text-xs font-sans uppercase tracking-[0.12em] text-grove-cream border-[0.5px] border-grove-moss rounded-[2px] hover:border-grove-fernLine disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 text-xs font-sans text-grove-cream border-[0.5px] border-grove-moss rounded-[12px] hover:border-grove-fernLine disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
@@ -185,7 +185,7 @@ export default function EncyclopediaPage() {
             <button
               onClick={() => fetchSpecies(searchQuery, page + 1)}
               disabled={page >= Math.ceil(total / 20)}
-              className="px-4 py-2 text-xs font-sans uppercase tracking-[0.12em] text-grove-cream border-[0.5px] border-grove-moss rounded-[2px] hover:border-grove-fernLine disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 text-xs font-sans text-grove-cream border-[0.5px] border-grove-moss rounded-[12px] hover:border-grove-fernLine disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Next
             </button>

@@ -57,7 +57,7 @@ export default function RegisterPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Username</label>
+                <label className="font-ui text-xs text-grove-cream block mb-1.5">Username</label>
                 <input
                   type="text"
                   value={username}
@@ -69,7 +69,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Display Name</label>
+                <label className="font-ui text-xs text-grove-cream block mb-1.5">Display Name</label>
                 <input
                   type="text"
                   value={displayName}
@@ -80,7 +80,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Email</label>
+                <label className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
                 <input
                   type="email"
                   value={email}
@@ -92,7 +92,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Password</label>
+                <label className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
                 <input
                   type="password"
                   value={password}
@@ -108,7 +108,7 @@ export default function RegisterPage() {
                 type="submit"
                 disabled={loading}
                 data-testid="auth-register-submit-button"
-                className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+                className="w-full rounded-[12px] font-ui text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
               >
                 {loading ? 'Creating account...' : 'Create Account'}
               </button>

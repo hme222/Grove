@@ -621,7 +621,7 @@ const VariationFour = () => (
       </div>
 
       <div className="mt-14">
-        <p className="text-xs font-medium uppercase tracking-[0.25em] text-emerald-700">
+        <p className="text-xs font-medium text-emerald-700">
           Hello, Maya
         </p>
         <h1 className="mt-3 font-serif text-[36px] leading-[1.05] text-emerald-950">

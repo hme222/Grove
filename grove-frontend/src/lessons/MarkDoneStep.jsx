@@ -10,7 +10,7 @@ export default function MarkDoneStep({ onDone, onNotYet }) {
         <button
           type="button"
           onClick={onNotYet}
-          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream"
+          className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream"
           data-testid="mark-done-not-yet"
         >
           Not yet
@@ -18,7 +18,7 @@ export default function MarkDoneStep({ onDone, onNotYet }) {
         <button
           type="button"
           onClick={onDone}
-          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+          className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
           data-testid="mark-done-done"
         >
           Mark lesson done

@@ -98,7 +98,7 @@ export default function GoalsPage() {
               </DialogHeader>
               <div className="space-y-4 mt-4">
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Title
                   </label>
                   <Input
@@ -109,7 +109,7 @@ export default function GoalsPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Description
                   </label>
                   <Textarea
@@ -120,7 +120,7 @@ export default function GoalsPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Goal Type
                   </label>
                   <Select
@@ -138,7 +138,7 @@ export default function GoalsPage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
+                  <label className="font-sans text-xs text-grove-cream mb-2 block">
                     Target Value
                   </label>
                   <Input
@@ -151,7 +151,7 @@ export default function GoalsPage() {
                 <Button
                   onClick={handleCreate}
                   disabled={creating}
-                  className="w-full rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root"
+                  className="w-full rounded-[12px] font-[Georgia] text-xs px-4 py-3 bg-grove-lime text-grove-root"
                 >
                   {creating ? 'Creating...' : 'Create Goal'}
                 </Button>
@@ -206,7 +206,7 @@ export default function GoalsPage() {
                       {goal.current_value >= goal.target_value && (
                         <Button
                           onClick={() => handleComplete(goal.id)}
-                          className="w-full mt-3 rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-2 bg-grove-lime text-grove-root"
+                          className="w-full mt-3 rounded-[12px] font-[Georgia] text-xs px-4 py-2 bg-grove-lime text-grove-root"
                           data-testid="goal-complete-button"
                         >
                           <Check className="h-3.5 w-3.5 mr-2" />

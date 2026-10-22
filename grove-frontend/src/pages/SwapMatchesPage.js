@@ -41,7 +41,7 @@ export default function SwapMatchesPage() {
         rightContent={
           <button
             onClick={() => navigate('/swap')}
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <Repeat className="h-3.5 w-3.5" />
             Deck
@@ -61,7 +61,7 @@ export default function SwapMatchesPage() {
             </p>
             <button
               onClick={() => navigate('/swap')}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+              className="rounded-[12px] font-ui text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
             >
               Browse deck
             </button>

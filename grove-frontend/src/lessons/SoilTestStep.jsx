@@ -64,14 +64,14 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
           <button
             type="button"
             onClick={() => navigate('/lessons')}
-            className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream"
+            className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream"
           >
             Back to lessons
           </button>
           <button
             type="button"
             onClick={() => navigate('/add-plant')}
-            className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+            className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
             data-testid="soil-step-add-plant"
           >
             Add a plant
@@ -89,7 +89,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
         <button
           type="button"
           onClick={() => onLogged(saved)}
-          className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+          className="w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
           data-testid="soil-step-continue"
         >
           Finish lesson
@@ -216,7 +216,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
         type="button"
         onClick={submit}
         aria-busy={saving}
-        className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
+        className="w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
         data-testid="soil-step-submit"
       >
         {saving ? 'Saving…' : 'Log my soil test'}

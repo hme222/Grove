@@ -90,7 +90,7 @@ export default function ProfilePage() {
           <button
             onClick={logout}
             data-testid="profile-logout-button"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
           >
             <LogOut className="h-3.5 w-3.5" />
             Sign Out
@@ -127,20 +127,20 @@ export default function ProfilePage() {
             <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
-              <p className="font-ui text-[9px] text-grove-cream uppercase tracking-[0.12em]">{label}</p>
+              <p className="font-ui text-[9px] text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
 
         {/* Personality card */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-lime p-4">
+        <div className="rounded-[14px] border-[0.5px] border-grove-fernLine/40 bg-grove-canopy p-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-plant text-grove-sprout text-sm">Plant Personality</h3>
             <button
               onClick={handleGeneratePersonality}
               disabled={generatingPersonality}
               data-testid="generate-personality-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
             >
               <Sparkles className="h-3 w-3" />
               {generatingPersonality ? 'Analyzing...' : user?.personality_title ? 'Refresh' : 'Generate'}
@@ -167,7 +167,7 @@ export default function ProfilePage() {
               type="button"
               onClick={() => navigate('/badges')}
               data-testid="profile-badges-view-all"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               View all{badges.length > 0 ? ` (${badges.length})` : ''}
             </button>
@@ -182,7 +182,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/bouquets')}
               data-testid="profile-bouquets-link"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Flower2 className="h-4 w-4 text-grove-bloom" />
               Bouquets
@@ -190,7 +190,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/swap')}
               data-testid="profile-swap-link"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Repeat className="h-4 w-4 text-grove-sprout" />
               Swap
@@ -198,7 +198,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/wishlist')}
               data-testid="profile-wishlist-link"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Scissors className="h-4 w-4 text-grove-bloom" />
               Wishlist
@@ -206,7 +206,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/challenges')}
               data-testid="profile-challenges-link"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Trophy className="h-4 w-4 text-grove-sprout" />
               Challenges
@@ -214,7 +214,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/settings/notifications')}
               data-testid="profile-notifications-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Bell className="h-4 w-4" />
               Notification Settings
@@ -334,7 +334,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/help')}
               data-testid="profile-help-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <HelpCircle className="h-4 w-4" />
               Help & Tutorial
@@ -342,7 +342,7 @@ export default function ProfilePage() {
             <button
               onClick={handleReplayOnboarding}
               data-testid="profile-replay-onboarding-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <RefreshCw className="h-4 w-4" />
               Replay first-run
@@ -357,7 +357,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/florist')}
               data-testid="profile-florist-button"
-              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#8A6A3D] text-grove-cream hover:bg-[#6B5230] transition-colors duration-150"
+              className="w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-[#8A6A3D] text-grove-cream hover:bg-[#6B5230] transition-colors duration-150"
             >
               Portfolio & Insights
             </button>
@@ -371,7 +371,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/admin/demo')}
               data-testid="profile-admin-button"
-              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#B42318] text-grove-cream hover:bg-[#912018] transition-colors duration-150 flex items-center justify-center gap-2"
+              className="w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-[#B42318] text-grove-cream hover:bg-[#912018] transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <Settings className="h-4 w-4" />
               Demo Admin Panel
@@ -463,7 +463,7 @@ function TutorialsAndTipsControls() {
 
       {/* Section tutorials replay */}
       <div className="mt-4 pt-4 border-t-[0.5px] border-grove-moss">
-        <p className="font-plant text-grove-cream text-xs uppercase tracking-[0.08em] mb-2">Replay a section tutorial</p>
+        <p className="font-plant text-grove-cream text-xs mb-2">Replay a section tutorial</p>
         <div className="space-y-1.5">
           {Object.keys(TUTORIAL_COPY).map((tid) => {
             const meta = TUTORIAL_COPY[tid];
@@ -606,7 +606,7 @@ function HardinessZoneControls() {
             type="button"
             onClick={() => setEditing(true)}
             data-testid="zone-edit-location"
-            className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-1"
+            className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-1"
           >
             <Pencil className="h-3 w-3" />
             {zone ? 'Update location' : 'Add location'}
@@ -616,7 +616,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => setOverriding(true)}
               data-testid="zone-override"
-              className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Override zone
             </button>
@@ -664,7 +664,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => { setEditing(false); setPreview(null); }}
               data-testid="zone-edit-cancel"
-              className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Cancel
             </button>
@@ -673,7 +673,7 @@ function HardinessZoneControls() {
               onClick={saveLocation}
               disabled={saving}
               data-testid="zone-edit-save"
-              className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-1"
+              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-1"
             >
               <Check className="h-3 w-3" />
               {saving ? 'Saving\u2026' : 'Save'}
@@ -699,7 +699,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => setOverriding(false)}
               data-testid="zone-override-cancel"
-              className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Cancel
             </button>
@@ -708,7 +708,7 @@ function HardinessZoneControls() {
               onClick={saveOverride}
               disabled={saving || !manualZone.trim()}
               data-testid="zone-override-save"
-              className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
             >
               {saving ? 'Saving\u2026' : 'Set manually'}
             </button>
@@ -808,7 +808,7 @@ function VerificationStatusCard() {
               type="button"
               onClick={() => navigate('/verify')}
               data-testid="verification-start-btn"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
             >
               {needsRe ? 'Re-verify' : 'Start verification'}
             </button>
@@ -817,7 +817,7 @@ function VerificationStatusCard() {
             type="button"
             onClick={() => setReaderOpen(true)}
             data-testid="verification-read-pact-btn"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 inline-flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 inline-flex items-center gap-1.5"
           >
             <BookOpen className="h-3.5 w-3.5" />
             Read community guidelines
@@ -994,7 +994,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
             {it.name}
           </p>
           {it.tier && (
-            <span className="font-plant uppercase tracking-[0.08em] text-[8px] text-grove-sage mt-0.5">
+            <span className="font-plant text-[8px] text-grove-sage mt-0.5">
               {it.tier}
             </span>
           )}

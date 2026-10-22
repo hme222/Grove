@@ -548,7 +548,7 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
                 style={{ top: it._y - 8 }}
               >
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-grove-canopy to-transparent" />
-                <span className="font-latin text-[10px] uppercase tracking-[0.15em] text-grove-lichen whitespace-nowrap">
+                <span className="font-latin text-[10px] text-grove-lichen whitespace-nowrap">
                   {it.label}
                 </span>
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-grove-canopy to-transparent" />

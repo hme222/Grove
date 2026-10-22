@@ -128,7 +128,7 @@ export default function PublicBouquetPage() {
 
         {/* CTA */}
         <div className="text-center mt-8 mb-4">
-          <a href="/register" className="inline-flex items-center gap-1.5 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-6 py-3 bg-grove-bloom text-grove-root hover:bg-grove-sprout transition-colors">
+          <a href="/register" className="inline-flex items-center gap-1.5 rounded-[12px] font-ui text-xs px-6 py-3 bg-grove-bloom text-grove-root hover:bg-grove-sprout transition-colors">
             Track this bouquet in Grove <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>

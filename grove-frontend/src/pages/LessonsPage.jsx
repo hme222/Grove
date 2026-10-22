@@ -41,13 +41,13 @@ export default function LessonsPage() {
 
         {next && (
           <section className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="lessons-up-next">
-            <p className="text-[11px] font-ui uppercase tracking-[0.1em] text-grove-cream">Up next</p>
+            <p className="text-[11px] font-ui text-grove-cream">Up next</p>
             <p className="font-plant text-grove-cream text-xl">{LESSON_META[next].title}</p>
             <p className="text-sm text-grove-cream mb-3">{LESSON_META[next].blurb}</p>
             <button
               type="button"
               onClick={() => navigate(lessonPath(next))}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
               data-testid="lessons-start"
             >
               Start lesson

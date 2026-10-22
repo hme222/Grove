@@ -279,7 +279,7 @@ function WelcomeStep({ onContinue, onCancel }) {
           type="button"
           onClick={onContinue}
           data-testid="verify-welcome-continue"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
         >
           {WELCOME_COPY.cta}
         </button>
@@ -287,7 +287,7 @@ function WelcomeStep({ onContinue, onCancel }) {
           type="button"
           onClick={onCancel}
           data-testid="verify-welcome-cancel"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           Cancel
         </button>
@@ -325,7 +325,7 @@ function IdentityStep({
               )}
             </div>
             {emailConfirmed ? (
-              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant uppercase tracking-[0.08em] text-[10px]">
+              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-[10px]">
                 <CheckCircle2 className="h-4 w-4" /> Confirmed
               </span>
             ) : (
@@ -334,7 +334,7 @@ function IdentityStep({
                 onClick={onConfirmEmail}
                 disabled={submitting}
                 data-testid="verify-confirm-email-btn"
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+                className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
               >
                 Verify email
               </button>
@@ -359,7 +359,7 @@ function IdentityStep({
               </p>
             </div>
             {phoneSavedOrSkipped && (
-              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant uppercase tracking-[0.08em] text-[10px]">
+              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-[10px]">
                 <CheckCircle2 className="h-4 w-4" /> Done
               </span>
             )}
@@ -380,7 +380,7 @@ function IdentityStep({
                 onClick={onAddPhone}
                 disabled={submitting}
                 data-testid="verify-add-phone-btn"
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+                className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
               >
                 Add phone
               </button>
@@ -389,7 +389,7 @@ function IdentityStep({
                 onClick={onSkipPhone}
                 disabled={submitting}
                 data-testid="verify-skip-phone-btn"
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 disabled:opacity-50"
+                className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 disabled:opacity-50"
               >
                 Skip phone
               </button>
@@ -410,7 +410,7 @@ function IdentityStep({
           onClick={onContinue}
           disabled={!canContinue}
           data-testid="verify-identity-continue"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
         >
           Continue to pact
         </button>
@@ -418,7 +418,7 @@ function IdentityStep({
           type="button"
           onClick={onBack}
           data-testid="verify-identity-back"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           Back
         </button>
@@ -437,7 +437,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
       <p className="font-ui text-[13px] text-grove-sage mb-5">{PACT_INTRO.body}</p>
 
       <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-moss p-3 mb-4 flex items-center gap-2">
-        <span className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-cream">
+        <span className="font-plant text-[10px] text-grove-cream">
           Acknowledged
         </span>
         <span
@@ -564,7 +564,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
           onClick={onContinue}
           disabled={!allAcksTrue}
           data-testid="verify-pact-continue"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
         >
           {allAcksTrue ? 'Continue to final agreement' : `Acknowledge all 8 (${ackedCount}/8)`}
         </button>
@@ -572,7 +572,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
           type="button"
           onClick={onBack}
           data-testid="verify-pact-back"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           Back
         </button>
@@ -601,7 +601,7 @@ function FinalStep({ allAcksTrue, submitting, onAgree, onDecline, onBack }) {
           onClick={onAgree}
           disabled={!allAcksTrue || submitting}
           data-testid="verify-final-agree"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
         >
           {submitting ? 'Verifying…' : FINAL_COPY.ctaAgree}
         </button>
@@ -609,7 +609,7 @@ function FinalStep({ allAcksTrue, submitting, onAgree, onDecline, onBack }) {
           type="button"
           onClick={onDecline}
           data-testid="verify-final-decline"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className="rounded-[12px] font-ui text-[12px] px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           {FINAL_COPY.ctaDecline}
         </button>
@@ -643,7 +643,7 @@ function SuccessStep({ onBrowseSwaps }) {
           <Sparkles className="h-5 w-5" />
         </span>
         <div className="min-w-0">
-          <p className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sage">
+          <p className="font-plant text-[10px] text-grove-sage">
             {SUCCESS_COPY.badgeLabel}
           </p>
           <p className="font-plant text-[15px] text-grove-cream">{SUCCESS_COPY.badgeName}</p>
@@ -654,7 +654,7 @@ function SuccessStep({ onBrowseSwaps }) {
         type="button"
         onClick={onBrowseSwaps}
         data-testid="verify-success-browse"
-        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+        className="rounded-[12px] font-ui text-[12px] px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
       >
         {SUCCESS_COPY.cta}
       </button>

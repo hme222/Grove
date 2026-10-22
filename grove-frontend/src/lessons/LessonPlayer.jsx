@@ -35,7 +35,7 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
 
         <div className={`rounded-[14px] border-[0.5px] border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-6`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
-          <p className="text-[11px] font-ui uppercase tracking-[0.1em] text-grove-cream mb-2">{card.header}</p>
+          <p className="text-[11px] font-ui text-grove-cream mb-2">{card.header}</p>
           <h1
             ref={headingRef}
             tabIndex={-1}
@@ -55,7 +55,7 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
                 <button
                   type="button"
                   onClick={() => setIndex((i) => i - 1)}
-                  className="flex items-center justify-center gap-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
+                  className="flex items-center justify-center gap-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
                   data-testid="lesson-back"
                 >
                   <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
@@ -64,7 +64,7 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
               <button
                 type="button"
                 onClick={() => setIndex((i) => Math.min(i + 1, cards.length - 1))}
-                className="flex-1 flex items-center justify-center gap-2 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
+                className="flex-1 flex items-center justify-center gap-2 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
                 data-testid="lesson-next"
               >
                 <span dangerouslySetInnerHTML={{ __html: card.cta || 'Next' }} />

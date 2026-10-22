@@ -97,7 +97,7 @@ export default function HelpPage() {
               className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss px-4"
               data-testid={`help-section-${section.id}`}
             >
-              <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream py-4 hover:no-underline">
+              <AccordionTrigger className="font-sans text-xs text-grove-cream py-4 hover:no-underline">
                 {section.title}
               </AccordionTrigger>
               <AccordionContent className="text-sm text-grove-cream pb-4 leading-relaxed">

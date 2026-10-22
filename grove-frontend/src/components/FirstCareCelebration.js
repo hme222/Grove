@@ -82,7 +82,7 @@ export default function FirstCareCelebration({ open, onClose }) {
           <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-sprout flex items-center justify-center mb-4">
             <Sparkles className="h-7 w-7" />
           </div>
-          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sprout">
+          <p className="font-plant text-[10px] text-grove-sprout">
             First care logged
           </p>
           <h2 className="font-plant text-grove-cream text-2xl mt-1">
@@ -95,7 +95,7 @@ export default function FirstCareCelebration({ open, onClose }) {
             type="button"
             onClick={handleClose}
             data-testid="first-care-celebration-cta"
-            className="relative overflow-hidden mt-5 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-5 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
+            className="relative overflow-hidden mt-5 rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
           >
             Keep going
           </button>

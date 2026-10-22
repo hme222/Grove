@@ -125,7 +125,7 @@ export default function SwapsPage() {
 
         {/* Discovery surface — visible to everyone, transactable only by eligible users */}
         <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5">
-          <h3 className="font-plant text-grove-cream text-sm uppercase tracking-[0.08em]">What you'll trade</h3>
+          <h3 className="font-plant text-grove-cream text-sm">What you'll trade</h3>
           <ul className="mt-2 space-y-1.5 font-ui text-xs text-grove-cream leading-relaxed">
             <li>• Cuttings from your established plants — Pothos, Monstera, String of Pearls.</li>
             <li>• Divisions of clumping perennials — Snake Plant pups, Spider Plant runners.</li>
@@ -167,7 +167,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
         <button
           type="button"
           onClick={cta.onClick}
-          className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className="flex-shrink-0 rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           {cta.label}
         </button>

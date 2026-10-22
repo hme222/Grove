@@ -49,7 +49,7 @@ export default function WorkingTowardSection() {
         <Link
           to="/badges"
           data-testid="care-working-toward-manage"
-          className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sage hover:text-grove-sprout inline-flex items-center gap-1"
+          className="font-plant text-[10px] text-grove-sage hover:text-grove-sprout inline-flex items-center gap-1"
         >
           Manage <ArrowRight className="h-3 w-3" />
         </Link>

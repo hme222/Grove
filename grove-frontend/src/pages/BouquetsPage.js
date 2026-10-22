@@ -99,7 +99,7 @@ export default function BouquetsPage() {
             </div>
             <span
               data-testid="bouquet-limit-counter"
-              className={`font-plant text-xs uppercase tracking-[0.1em] px-2 py-1 rounded-[4px] border-[0.5px] ${
+              className={`font-plant text-xs px-2 py-1 rounded-[4px] border-[0.5px] ${
                 atLimit
                   ? 'border-grove-bloom/40 text-grove-bloom bg-grove-canopy'
                   : 'border-grove-moss text-grove-sprout bg-grove-forest'
@@ -127,7 +127,7 @@ export default function BouquetsPage() {
               >
                 <div className="aspect-square bg-grove-bloom/15 flex items-center justify-center">
                   {b.photo_url ? (
-                    <div className="w-full h-full bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                    <div className="w-full h-full bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="w-full h-full object-cover" /></div>
                   ) : (
                     <Flower2 className="h-10 w-10 text-grove-bloom opacity-30" />
                   )}

@@ -136,7 +136,7 @@ export default function SwapPage() {
           rightContent={
             <button
               onClick={() => navigate('/profile')}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               Back
@@ -170,7 +170,7 @@ export default function SwapPage() {
         rightContent={
           <button
             onClick={() => navigate('/swaps/matches')}
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <Users className="h-3.5 w-3.5" />
             Matches
@@ -227,7 +227,7 @@ export default function SwapPage() {
             <p className="font-ui text-sm text-grove-cream mb-4">Check back soon — new cuttings are always being added.</p>
             <button
               onClick={() => navigate('/swaps/matches')}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1.5"
             >
               <Users className="h-3.5 w-3.5" />
               View matches

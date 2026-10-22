@@ -123,7 +123,7 @@ export default function AdminDemoPage() {
                   {account.display_name} <span className="text-sm text-grove-cream">@{account.username}</span>
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="px-2 py-1 rounded-[20px] bg-grove-moss text-grove-cream text-xs font-sans uppercase tracking-[0.12em]">
+                  <span className="px-2 py-1 rounded-[20px] bg-grove-moss text-grove-cream text-xs font-sans">
                     {account.tier}
                   </span>
                   <span className="text-xs text-grove-cream">
@@ -139,7 +139,7 @@ export default function AdminDemoPage() {
                 
                 {/* Unlocks */}
                 <div className="flex items-center gap-3 mt-3">
-                  <span className="text-xs font-sans uppercase tracking-[0.12em] text-grove-cream">Unlocks:</span>
+                  <span className="text-xs font-sans text-grove-cream">Unlocks:</span>
                   {Object.entries(account.unlocks).map(([key, unlocked]) => (
                     <div key={key} className="flex items-center gap-1">
                       {unlocked ? (
@@ -156,14 +156,14 @@ export default function AdminDemoPage() {
 
             {/* Quick State Buttons */}
             <div className="space-y-3">
-              <h3 className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream">Quick State Actions</h3>
+              <h3 className="font-sans text-xs text-grove-cream">Quick State Actions</h3>
               <div className="grid grid-cols-2 gap-2">
                 {account.username === 'mayagreens' && (
                   <>
                     <Button
                       onClick={() => handleQuickState('mayagreens', 'set_streak_6', 'Streak set to 6 days')}
                       disabled={actionLoading === 'mayagreens-set_streak_6'}
-                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+                      className="rounded-[12px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
                     >
                       <Zap className="h-3 w-3 mr-1" />
                       Set streak to 6 days
@@ -171,7 +171,7 @@ export default function AdminDemoPage() {
                     <Button
                       onClick={() => handleQuickState('mayagreens', 'set_streak_7', 'Feed unlocked!')}
                       disabled={actionLoading === 'mayagreens-set_streak_7'}
-                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+                      className="rounded-[12px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
                     >
                       <Zap className="h-3 w-3 mr-1" />
                       Unlock feed (7 days)
@@ -184,7 +184,7 @@ export default function AdminDemoPage() {
                     <Button
                       onClick={() => handleQuickState('rootsandstems', 'set_streak_30', 'Swaps unlocked!')}
                       disabled={actionLoading === 'rootsandstems-set_streak_30'}
-                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+                      className="rounded-[12px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
                     >
                       <Zap className="h-3 w-3 mr-1" />
                       Unlock swaps (30 days)
@@ -197,7 +197,7 @@ export default function AdminDemoPage() {
               <Button
                 onClick={() => handleReset(account.username)}
                 disabled={actionLoading === `reset-${account.username}`}
-                className="w-full rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-transparent text-grove-bloom border-[0.5px] border-grove-moss hover:border-grove-moss"
+                className="w-full rounded-[12px] font-[Georgia] text-xs px-3 py-2 bg-transparent text-grove-bloom border-[0.5px] border-grove-moss hover:border-grove-moss"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
                 {actionLoading === `reset-${account.username}` ? 'Resetting...' : `Reset ${account.username}`}
@@ -208,7 +208,7 @@ export default function AdminDemoPage() {
 
         {/* Instructions */}
         <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
-          <h3 className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2">
+          <h3 className="font-sans text-xs text-grove-cream mb-2">
             Re-seed Instructions
           </h3>
           <p className="text-sm text-grove-cream mb-2">

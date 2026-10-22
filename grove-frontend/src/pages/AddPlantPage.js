@@ -63,7 +63,7 @@ export default function AddPlantPage() {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-3 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-cream hover:text-grove-sprout"
+        className="mb-3 inline-flex items-center gap-1 font-plant text-[10px] text-grove-cream hover:text-grove-sprout"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
@@ -162,7 +162,7 @@ function ManualEntryFlow({ onBack }) {
         rightContent={
           <button
             onClick={() => step === 'photo' ? setStep('details') : onBack()}
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
           >
             {step === 'photo' ? 'Back' : 'Cancel'}
           </button>
@@ -189,7 +189,7 @@ function ManualEntryFlow({ onBack }) {
         {showSearch ? (
           <div>
             <div className="mb-4">
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Search Species</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Search Species</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-sage" />
                 <input
@@ -221,7 +221,7 @@ function ManualEntryFlow({ onBack }) {
             </div>
             <button
               onClick={() => setShowSearch(false)}
-              className="w-full mt-4 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="w-full mt-4 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Or add custom plant
             </button>
@@ -244,7 +244,7 @@ function ManualEntryFlow({ onBack }) {
             {!selectedSpecies && (
               <>
                 <div>
-                  <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Plant Name *</label>
+                  <label className="font-ui text-xs text-grove-cream block mb-1.5">Plant Name *</label>
                   <input
                     type="text"
                     value={formData.common_name}
@@ -256,7 +256,7 @@ function ManualEntryFlow({ onBack }) {
                   />
                 </div>
                 <div>
-                  <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Latin Name</label>
+                  <label className="font-ui text-xs text-grove-cream block mb-1.5">Latin Name</label>
                   <input
                     type="text"
                     value={formData.latin_name}
@@ -268,7 +268,7 @@ function ManualEntryFlow({ onBack }) {
               </>
             )}
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Nickname</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Nickname</label>
               <input
                 type="text"
                 value={formData.nickname}
@@ -279,7 +279,7 @@ function ManualEntryFlow({ onBack }) {
               />
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Room</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Room</label>
               <div className="flex flex-wrap gap-1.5">
                 {ROOMS.map(room => (
                   <button
@@ -292,7 +292,7 @@ function ManualEntryFlow({ onBack }) {
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Grow Medium</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Grow Medium</label>
               <div className="flex flex-wrap gap-1.5">
                 {MEDIUMS.map(m => (
                   <button
@@ -305,7 +305,7 @@ function ManualEntryFlow({ onBack }) {
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Acquired From</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Acquired From</label>
               <div className="flex flex-wrap gap-1.5">
                 {SOURCES.map(s => (
                   <button
@@ -318,7 +318,7 @@ function ManualEntryFlow({ onBack }) {
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">
                 Watering Frequency
                 {formData.watering_frequency_days && (
                   <span className="text-[#639922] normal-case"> \u00B7 Every {formData.watering_frequency_days} days</span>
@@ -336,7 +336,7 @@ function ManualEntryFlow({ onBack }) {
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Notes</label>
+              <label className="font-ui text-xs text-grove-cream block mb-1.5">Notes</label>
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
@@ -348,7 +348,7 @@ function ManualEntryFlow({ onBack }) {
               type="submit"
               disabled={saving}
               data-testid="add-plant-submit"
-              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+              className="w-full rounded-[12px] font-ui text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
             >
               {saving ? 'Adding plant...' : 'Next \u2014 add a photo'}
             </button>

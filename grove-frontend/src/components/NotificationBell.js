@@ -171,7 +171,7 @@ export default function NotificationBell() {
                 <button
                   onClick={handleMarkAll}
                   data-testid="notification-mark-all-read"
-                  className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sprout hover:text-grove-sprout"
+                  className="font-plant text-[10px] text-grove-sprout hover:text-grove-sprout"
                 >
                   Mark all read
                 </button>

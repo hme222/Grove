@@ -32,7 +32,7 @@ export function EmptyState({ config, currentStreak }) {
           <h3 className="font-plant text-lg text-grove-cream">{config.heading}</h3>
           <p className="text-sm text-grove-cream">{config.body}</p>
           {config.streakProgress && currentStreak !== undefined && (
-            <p className="text-xs font-mono uppercase tracking-[0.12em] text-grove-sprout mt-3">
+            <p className="text-xs font-mono text-grove-sprout mt-3">
               Current Streak: {currentStreak} / 30 days
             </p>
           )}
@@ -41,7 +41,7 @@ export function EmptyState({ config, currentStreak }) {
           <Button
             onClick={handleCta}
             data-testid="empty-state-cta"
-            className="rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout hover:border-grove-fernLine transition-colors duration-150"
+            className="rounded-[12px] font-[Georgia] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout hover:border-grove-fernLine transition-colors duration-150"
           >
             {config.cta}
           </Button>

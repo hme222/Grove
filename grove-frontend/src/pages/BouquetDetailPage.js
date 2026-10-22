@@ -194,7 +194,7 @@ export default function BouquetDetailPage() {
                   onClick={handleIdentify}
                   disabled={identifying}
                   data-testid="identify-flowers-button"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2.5 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5 mx-auto"
+                  className="rounded-[12px] font-ui text-xs px-4 py-2.5 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5 mx-auto"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   {identifying ? 'Identifying...' : 'Identify Flowers'}
@@ -248,7 +248,7 @@ export default function BouquetDetailPage() {
                   onClick={handleCarePlan}
                   disabled={generatingPlan || (!bouquet.flowers || bouquet.flowers.length === 0)}
                   data-testid="generate-care-plan-button"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-2.5 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5 mx-auto"
+                  className="rounded-[12px] font-ui text-xs px-4 py-2.5 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5 mx-auto"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   {generatingPlan ? 'Generating...' : 'Generate Care Plan'}
@@ -340,7 +340,7 @@ export default function BouquetDetailPage() {
                 onClick={handleLogCare}
                 disabled={!careAction || loggingCare}
                 data-testid="bouquet-log-care-submit"
-                className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50"
+                className="w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50"
               >
                 {loggingCare ? 'Logging...' : 'Log Care'}
               </button>

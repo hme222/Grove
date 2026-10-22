@@ -45,7 +45,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
         </div>
         <div className="text-right">
           <p className="font-plant text-grove-cream text-2xl leading-none">{total}</p>
-          <p className="font-latin text-[9px] text-grove-cream uppercase tracking-[0.1em]">/ 100</p>
+          <p className="font-latin text-[9px] text-grove-cream">/ 100</p>
           {isEarly && (
             <span
               data-testid="plant-health-early-reading"
@@ -87,7 +87,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
           {/* How to reach 100 */}
           {(toImprove.length > 0 || tips.length > 0) && (
             <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest p-3" data-testid="plant-health-tips">
-              <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-cream mb-1.5">
+              <p className="font-plant text-[10px] text-grove-cream mb-1.5">
                 How to reach 100
               </p>
               <ul className="space-y-1.5">

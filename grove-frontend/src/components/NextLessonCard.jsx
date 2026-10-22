@@ -55,7 +55,7 @@ export default function NextLessonCard() {
       data-testid="next-lesson-card"
     >
       <div>
-        <p className="text-[11px] font-ui uppercase tracking-[0.1em] text-grove-cream">Your next lesson</p>
+        <p className="text-[11px] font-ui text-grove-cream">Your next lesson</p>
         <p className="font-plant text-grove-cream text-lg">{lesson.title}</p>
         <p className="text-xs font-ui text-grove-cream">{lesson.blurb}</p>
         <button
@@ -70,7 +70,7 @@ export default function NextLessonCard() {
       <button
         type="button"
         onClick={() => navigate(lessonPath(state.lessonId))}
-        className="shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+        className="shrink-0 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
         data-testid="next-lesson-start"
       >
         Start

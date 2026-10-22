@@ -212,7 +212,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
         <div className="flex gap-2 mt-2">
           <button
             onClick={() => { handleReset(); onClose(); }}
-            className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+            className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             data-testid="care-log-cancel"
           >
             Cancel
@@ -222,7 +222,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             onClick={handleLog}
             disabled={count === 0 || logging}
             data-testid="care-log-submit"
-            className="relative overflow-hidden flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+            className="relative overflow-hidden flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
           >
             {logging ? 'Logging…' : (count > 1 ? `Log ${count} actions` : 'Log Care')}
           </button>

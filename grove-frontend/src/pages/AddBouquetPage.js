@@ -35,7 +35,7 @@ export default function AddBouquetPage() {
       <PageHeader
         title="Add a bouquet"
         rightContent={
-          <button onClick={() => navigate(-1)} className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream">
+          <button onClick={() => navigate(-1)} className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream">
             Cancel
           </button>
         }
@@ -43,7 +43,7 @@ export default function AddBouquetPage() {
       <div className="max-w-[600px] mx-auto px-4 py-4">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Bouquet Name</label>
+            <label className="font-ui text-xs text-grove-cream block mb-1.5">Bouquet Name</label>
             <input
               type="text"
               value={formData.name}
@@ -55,7 +55,7 @@ export default function AddBouquetPage() {
           </div>
 
           <div>
-            <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Occasion</label>
+            <label className="font-ui text-xs text-grove-cream block mb-1.5">Occasion</label>
             <div className="flex flex-wrap gap-1.5">
               {OCCASIONS.map(o => (
                 <button
@@ -75,7 +75,7 @@ export default function AddBouquetPage() {
           </div>
 
           <div>
-            <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Description</label>
+            <label className="font-ui text-xs text-grove-cream block mb-1.5">Description</label>
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
@@ -89,7 +89,7 @@ export default function AddBouquetPage() {
             type="submit"
             disabled={saving}
             data-testid="add-bouquet-submit"
-            className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+            className="w-full rounded-[12px] font-ui text-xs px-4 py-3.5 border-[0.5px] bg-grove-bloom text-grove-root border-grove-bloom hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
           >
             {saving ? 'Adding...' : 'Add Bouquet'}
           </button>

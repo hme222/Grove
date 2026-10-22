@@ -47,7 +47,7 @@ export default function FirstSessionBanner() {
           <Sprout className="h-5 w-5 text-grove-sprout" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sprout">
+          <p className="font-plant text-[10px] text-grove-sprout">
             Welcome to Grove, {displayName}
           </p>
           <p className="font-ui text-sm leading-snug">
