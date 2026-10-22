@@ -20,24 +20,24 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
     <button
       onClick={handleClick}
       data-testid="collection-grid-plant-tile"
-      className={`relative rounded-[14px] border-[0.5px] border-[#D3C9B8] overflow-hidden aspect-square w-full text-left transition-colors duration-150 hover:border-[#2D5016] ${
-        selected ? 'ring-2 ring-[#5DCAA5]' : ''
+      className={`relative rounded-[14px] border-[0.5px] border-grove-moss overflow-hidden aspect-square w-full text-left transition-colors duration-150 hover:border-grove-fernLine ${
+        selected ? 'ring-2 ring-grove-lime' : ''
       }`}
     >
       {photoUrl ? (
-        <div className="w-full h-full bg-[#EAF3DE] flex items-center justify-center">
+        <div className="w-full h-full bg-grove-moss flex items-center justify-center">
           <img
             src={photoUrl}
             alt={plant.common_name}
-            className="max-w-full max-h-full w-auto h-auto object-contain"
+            className="w-full h-full object-cover"
             onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.nextSibling.style.display = 'flex'; }}
           />
         </div>
       ) : null}
       <div
-        className={`absolute inset-0 bg-[#EAF3DE] flex items-center justify-center ${photoUrl ? 'hidden' : 'flex'}`}
+        className={`absolute inset-0 bg-grove-moss flex items-center justify-center ${photoUrl ? 'hidden' : 'flex'}`}
       >
-        <Leaf className="h-8 w-8 text-[#3B6D11] opacity-40" />
+        <Leaf className="h-8 w-8 text-grove-sprout opacity-40" />
       </div>
       
       {/* Status dot */}
@@ -47,18 +47,18 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
       
       {/* Selection check */}
       {selectionMode && selected && (
-        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#5DCAA5] flex items-center justify-center">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-grove-lime flex items-center justify-center">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#1A2410" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
       )}
       
       {/* Name overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-[#1C2E10]/70 px-2 py-1.5">
-        <p className="font-plant text-[#F5F0E8] text-xs truncate">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-grove-night/90 via-grove-night/60 to-transparent px-2.5 pb-2 pt-6">
+        <p className="font-plant text-grove-cream text-sm truncate">
           {plant.nickname || plant.common_name}
         </p>
         {plant.latin_name && (
-          <p className="font-latin text-[#9FE1CB] text-[9px] truncate">
+          <p className="font-latin text-grove-sage text-[11px] truncate">
             {plant.latin_name}
           </p>
         )}

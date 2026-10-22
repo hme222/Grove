@@ -27,33 +27,33 @@ export default function PublicBouquetPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FBEAF0] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#D4537E] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-grove-bloom/15 flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-grove-bloom border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error || !bouquet) {
     return (
-      <div className="min-h-screen bg-[#FBEAF0] flex items-center justify-center">
+      <div className="min-h-screen bg-grove-bloom/15 flex items-center justify-center">
         <div className="text-center">
-          <Flower2 className="h-12 w-12 text-[#D4537E] opacity-30 mx-auto mb-3" />
-          <p className="font-plant text-[#1C2E10] text-xl">{error || 'Not found'}</p>
+          <Flower2 className="h-12 w-12 text-grove-bloom opacity-30 mx-auto mb-3" />
+          <p className="font-plant text-grove-cream text-xl">{error || 'Not found'}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FBEAF0]">
+    <div className="min-h-screen bg-grove-bloom/15">
       {/* Header */}
-      <div className="bg-white border-b-[0.5px] border-[#D4537E]/20 px-4 py-3 flex items-center justify-between">
+      <div className="bg-grove-canopy border-b-[0.5px] border-grove-bloom/20 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Leaf className="h-5 w-5 text-[#3B6D11]" />
-          <span className="font-plant text-[#1C2E10] text-sm tracking-[0.12em]">Grove</span>
+          <Leaf className="h-5 w-5 text-grove-sprout" />
+          <span className="font-plant text-grove-cream text-sm tracking-[0.12em]">Grove</span>
         </div>
         {bouquet.studio_name && (
-          <span className="font-ui text-[10px] text-[#D4537E]">{bouquet.studio_name}</span>
+          <span className="font-ui text-[10px] text-grove-bloom">{bouquet.studio_name}</span>
         )}
       </div>
 
@@ -61,37 +61,37 @@ export default function PublicBouquetPage() {
         {/* Bouquet info */}
         <div className="text-center mb-6">
           {bouquet.photo_url && (
-            <div className="rounded-[14px] overflow-hidden border-[0.5px] border-[#D4537E]/20 mb-4">
-              <div className="w-full aspect-[4/3] bg-[#FDF5F8] flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+            <div className="rounded-[14px] overflow-hidden border-[0.5px] border-grove-bloom/20 mb-4">
+              <div className="w-full aspect-[4/3] bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
             </div>
           )}
-          <h1 className="font-plant text-[#1C2E10] text-2xl">{bouquet.name}</h1>
+          <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name}</h1>
           {bouquet.occasion && (
-            <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-[#D4537E]/30 bg-white px-3 py-1 text-xs font-ui text-[#D4537E] capitalize mt-2">{bouquet.occasion}</span>
+            <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-3 py-1 text-xs font-ui text-grove-bloom capitalize mt-2">{bouquet.occasion}</span>
           )}
           {bouquet.personal_note && (
-            <p className="font-ui text-sm text-[#2B2B26] mt-3 italic">"{bouquet.personal_note}"</p>
+            <p className="font-ui text-sm text-grove-cream mt-3 italic">"{bouquet.personal_note}"</p>
           )}
         </div>
 
         {/* Flowers */}
         {bouquet.flowers?.length > 0 && (
           <div className="mb-6">
-            <h2 className="font-plant text-[#1C2E10] text-base mb-3">Flowers in this arrangement</h2>
+            <h2 className="font-plant text-grove-cream text-base mb-3">Flowers in this arrangement</h2>
             <div className="space-y-2">
               {bouquet.flowers.map((f, i) => (
-                <div key={i} className="rounded-[14px] border-[0.5px] border-[#D4537E]/20 bg-white p-3">
+                <div key={i} className="rounded-[14px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy p-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="font-plant text-[#1C2E10] text-sm">{f.common_name}</p>
-                      <p className="font-latin text-[10px] text-[#D4537E]">{f.latin_name}</p>
+                      <p className="font-plant text-grove-cream text-sm">{f.common_name}</p>
+                      <p className="font-latin text-[10px] text-grove-bloom">{f.latin_name}</p>
                     </div>
-                    <span className="rounded-[20px] border-[0.5px] border-[#D4537E]/30 bg-[#FBEAF0] px-2 py-0.5 text-[9px] font-ui text-[#D4537E]">
+                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-[9px] font-ui text-grove-bloom">
                       {f.vase_life_days}d life
                     </span>
                   </div>
                   {f.care_instructions && (
-                    <p className="font-ui text-xs text-[#2B2B26] mt-2">{f.care_instructions}</p>
+                    <p className="font-ui text-xs text-grove-cream mt-2">{f.care_instructions}</p>
                   )}
                 </div>
               ))}
@@ -102,23 +102,23 @@ export default function PublicBouquetPage() {
         {/* Care plan */}
         {bouquet.care_plan && (
           <div className="mb-6">
-            <h2 className="font-plant text-[#1C2E10] text-base mb-3">Care Instructions</h2>
+            <h2 className="font-plant text-grove-cream text-base mb-3">Care Instructions</h2>
             {bouquet.care_plan.immediate_steps?.length > 0 && (
-              <div className="rounded-[14px] border-[0.5px] border-[#D4537E]/20 bg-white p-4 mb-2">
-                <h3 className="font-plant text-[#D4537E] text-xs mb-2">Immediate</h3>
+              <div className="rounded-[14px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy p-4 mb-2">
+                <h3 className="font-plant text-grove-bloom text-xs mb-2">Immediate</h3>
                 <ul className="space-y-1">
                   {bouquet.care_plan.immediate_steps.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-[#D4537E]">•</span>{s}</li>
+                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-grove-bloom">•</span>{s}</li>
                   ))}
                 </ul>
               </div>
             )}
             {bouquet.care_plan.daily_steps?.length > 0 && (
-              <div className="rounded-[14px] border-[0.5px] border-[#D4537E]/20 bg-white p-4">
-                <h3 className="font-plant text-[#D4537E] text-xs mb-2">Daily</h3>
+              <div className="rounded-[14px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy p-4">
+                <h3 className="font-plant text-grove-bloom text-xs mb-2">Daily</h3>
                 <ul className="space-y-1">
                   {bouquet.care_plan.daily_steps.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-[#D4537E]">•</span>{s}</li>
+                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-grove-bloom">•</span>{s}</li>
                   ))}
                 </ul>
               </div>
@@ -128,18 +128,18 @@ export default function PublicBouquetPage() {
 
         {/* CTA */}
         <div className="text-center mt-8 mb-4">
-          <a href="/register" className="inline-flex items-center gap-1.5 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-6 py-3 bg-[#D4537E] text-white hover:bg-[#b8446a] transition-colors">
+          <a href="/register" className="inline-flex items-center gap-1.5 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-6 py-3 bg-grove-bloom text-grove-root hover:bg-grove-sprout transition-colors">
             Track this bouquet in Grove <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
 
         {/* Footer */}
-        <div className="mt-8 pt-6 border-t-[0.5px] border-[#D4537E]/20 text-center">
-          <p className="font-plant text-[#1C2E10] text-sm mb-2">{GROVE_BRAND.name}</p>
-          <p className="font-ui text-xs text-[#2B2B26] leading-relaxed max-w-md mx-auto">
+        <div className="mt-8 pt-6 border-t-[0.5px] border-grove-bloom/20 text-center">
+          <p className="font-plant text-grove-cream text-sm mb-2">{GROVE_BRAND.name}</p>
+          <p className="font-ui text-xs text-grove-cream leading-relaxed max-w-md mx-auto">
             {GROVE_BRAND.publicFooterDescription}
           </p>
-          <p className="font-ui text-[10px] text-[#D3C9B8] mt-3">Powered by Grove</p>
+          <p className="font-ui text-[10px] text-grove-sage mt-3">Powered by Grove</p>
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ export default function FirstCareCelebration({ open, onClose }) {
     const dx = Math.round(Math.cos(angle) * radius);
     const dy = Math.round(Math.sin(angle) * radius);
     const rot = Math.round((i * 47) % 90 - 45);
-    const color = i % 3 === 0 ? '#5DCAA5' : i % 3 === 1 ? '#C0DD97' : '#9FE1CB';
+    const color = i % 3 === 0 ? '#92B44B' : i % 3 === 1 ? '#C0DD97' : '#C3D98A';
     return { dx, dy, rot, color, delay: (i % 6) * 35 };
   });
 
@@ -46,7 +46,7 @@ export default function FirstCareCelebration({ open, onClose }) {
       role="dialog"
       aria-modal="true"
     >
-      <div className="relative max-w-[420px] w-full rounded-[18px] border-[0.5px] border-[#5DCAA5]/40 bg-[#FDFAF6] px-6 py-7 grove-celebrate-pop">
+      <div className="relative max-w-[420px] w-full rounded-[18px] border-[0.5px] border-grove-lime/40 bg-grove-canopy px-6 py-7 grove-celebrate-pop">
         {/* Burst leaves around the central icon */}
         <div className="absolute inset-0 pointer-events-none flex items-start justify-center">
           <div className="relative" style={{ width: 1, height: 1, marginTop: 70 }}>
@@ -73,29 +73,29 @@ export default function FirstCareCelebration({ open, onClose }) {
           onClick={handleClose}
           aria-label="Close"
           data-testid="first-care-celebration-close-x"
-          className="absolute top-3 right-3 w-8 h-8 rounded-full border-[0.5px] border-[#D3C9B8] text-[#5F5E5A] hover:bg-[#EAF3DE] flex items-center justify-center"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full border-[0.5px] border-grove-moss text-grove-sage hover:bg-grove-moss flex items-center justify-center"
         >
           <X className="h-4 w-4" />
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-full bg-[#1C2E10] text-[#9FE1CB] flex items-center justify-center mb-4">
+          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-sprout flex items-center justify-center mb-4">
             <Sparkles className="h-7 w-7" />
           </div>
-          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-[#3B6D11]">
+          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sprout">
             First care logged
           </p>
-          <h2 className="font-plant text-[#1C2E10] text-2xl mt-1">
+          <h2 className="font-plant text-grove-cream text-2xl mt-1">
             Your grove remembers.
           </h2>
-          <p className="font-ui text-sm text-[#2B2B26] mt-2 leading-relaxed">
+          <p className="font-ui text-sm text-grove-cream mt-2 leading-relaxed">
             That's the loop. Every drop, every photo, every small note from now on becomes part of your plant's living timeline.
           </p>
           <button
             type="button"
             onClick={handleClose}
             data-testid="first-care-celebration-cta"
-            className="relative overflow-hidden mt-5 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-5 py-3 bg-[#1C2E10] text-[#F5F0E8] border-[0.5px] border-[#1C2E10] hover:bg-[#2D5016] transition-colors duration-150"
+            className="relative overflow-hidden mt-5 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-5 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
           >
             Keep going
           </button>

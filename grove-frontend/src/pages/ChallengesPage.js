@@ -70,42 +70,42 @@ export default function ChallengesPage() {
       <div className="max-w-[1100px] mx-auto px-4 py-4 space-y-6">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <>
             {/* Active Challenges */}
             {activeChallenges.length > 0 && (
               <div>
-                <h2 className="font-plant text-[#1C2E10] text-sm mb-3">Your Active Challenges</h2>
+                <h2 className="font-plant text-grove-cream text-sm mb-3">Your Active Challenges</h2>
                 <div className="space-y-2">
                   {activeChallenges.map((goal) => {
                     const Icon = getChallengeIcon(goal.goal_type);
                     return (
                       <div
                         key={goal.id}
-                        className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] p-4"
+                        className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4"
                         data-testid="active-challenge"
                       >
                         <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 rounded-full bg-[#3B6D11] flex items-center justify-center flex-shrink-0">
-                            <Icon className="h-5 w-5 text-[#F5F0E8]" />
+                          <div className="w-10 h-10 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
+                            <Icon className="h-5 w-5 text-grove-cream" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-plant text-[#1C2E10] text-base">{goal.title}</h3>
+                            <h3 className="font-plant text-grove-cream text-base">{goal.title}</h3>
                             {goal.description && (
-                              <p className="text-sm text-[#2B2B26] mt-1">{goal.description}</p>
+                              <p className="text-sm text-grove-cream mt-1">{goal.description}</p>
                             )}
                             <div className="mt-3">
                               <div className="flex items-center justify-between text-xs font-mono mb-1">
-                                <span className="text-[#2B2B26]">Progress</span>
-                                <span className="text-[#3B6D11]">
+                                <span className="text-grove-cream">Progress</span>
+                                <span className="text-grove-sprout">
                                   {goal.current_value} / {goal.target_value}
                                 </span>
                               </div>
-                              <div className="w-full bg-[#EDE5D8] rounded-full h-2 overflow-hidden">
+                              <div className="w-full bg-grove-moss rounded-full h-2 overflow-hidden">
                                 <div
-                                  className="bg-[#3B6D11] h-full transition-all duration-300"
+                                  className="bg-grove-lime h-full transition-all duration-300"
                                   style={{ width: `${Math.min((goal.current_value / goal.target_value) * 100, 100)}%` }}
                                 />
                               </div>
@@ -121,7 +121,7 @@ export default function ChallengesPage() {
 
             {/* Available Challenges */}
             <div>
-              <h2 className="font-plant text-[#1C2E10] text-sm mb-3">
+              <h2 className="font-plant text-grove-cream text-sm mb-3">
                 {activeChallenges.length > 0 ? 'More Challenges' : 'Available Challenges'}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -131,26 +131,26 @@ export default function ChallengesPage() {
                   return (
                     <div
                       key={template.slug}
-                      className={`rounded-[14px] border-[0.5px] border-[#D3C9B8] p-4 ${
-                        isActive ? 'bg-[#EAF3DE] opacity-60' : 'bg-[#EDE5D8]'
+                      className={`rounded-[14px] border-[0.5px] border-grove-moss p-4 ${
+                        isActive ? 'bg-grove-moss opacity-60' : 'bg-grove-moss'
                       }`}
                       data-testid="challenge-template"
                     >
                       <div className="flex items-start gap-3 mb-3">
                         <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          isActive ? 'bg-[#D3C9B8]' : 'bg-[#3B6D11]'
+                          isActive ? 'bg-grove-moss' : 'bg-grove-lime'
                         }`}>
                           <Icon className={`h-6 w-6 ${
-                            isActive ? 'text-[#1C2E10]' : 'text-[#F5F0E8]'
+                            isActive ? 'text-grove-cream' : 'text-grove-cream'
                           }`} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-plant text-[#1C2E10] text-base">{template.title}</h3>
-                          <p className="text-sm text-[#2B2B26] mt-1">{template.description}</p>
+                          <h3 className="font-plant text-grove-cream text-base">{template.title}</h3>
+                          <p className="text-sm text-grove-cream mt-1">{template.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="text-xs font-mono text-[#2B2B26]">
+                        <div className="text-xs font-mono text-grove-cream">
                           Target: {template.target_value}
                           {template.duration_days && ` • ${template.duration_days} days`}
                         </div>
@@ -158,14 +158,14 @@ export default function ChallengesPage() {
                           <button
                             onClick={() => handleStart(template.slug)}
                             disabled={starting === template.slug}
-                            className="rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-2 bg-[#1C2E10] text-[#F5F0E8] border-[0.5px] border-[#1C2E10] hover:bg-[#2D5016] disabled:opacity-50 transition-colors duration-150"
+                            className="rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
                             data-testid="challenge-start-button"
                           >
                             {starting === template.slug ? 'Starting...' : 'Start'}
                           </button>
                         )}
                         {isActive && (
-                          <span className="text-xs text-[#3B6D11] font-sans uppercase tracking-[0.12em]">
+                          <span className="text-xs text-grove-sprout font-sans uppercase tracking-[0.12em]">
                             Active
                           </span>
                         )}

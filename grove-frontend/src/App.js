@@ -66,10 +66,10 @@ function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F0E8]">
+      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="font-plant text-[#1C2E10] text-lg">Loading Grove...</p>
+          <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="font-plant text-grove-cream text-lg">Loading Grove...</p>
         </div>
       </div>
     );
@@ -80,7 +80,7 @@ function ProtectedRoute({ children }) {
 
 function AppLayout({ children }) {
   return (
-    <div className="min-h-screen bg-[#F5F0E8] pb-[84px]">
+    <div className="min-h-screen bg-grove-forest pb-[84px]">
       {children}
       <BottomNav />
     </div>
@@ -138,10 +138,10 @@ function AppRoutes() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F0E8]">
+      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="font-plant text-[#1C2E10] text-lg">Loading Grove...</p>
+          <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="font-plant text-grove-cream text-lg">Loading Grove...</p>
         </div>
       </div>
     );

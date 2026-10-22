@@ -47,7 +47,7 @@ export default function WantListPage() {
       <div className="max-w-[1100px] mx-auto px-4 pt-4">
         {loading ? (
           <div className="flex items-center justify-center py-10">
-            <div className="w-5 h-5 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
           </div>
         ) : wants.length === 0 ? (
           <EmptyState
@@ -67,13 +67,13 @@ export default function WantListPage() {
                     type="button"
                     onClick={() => navigate(`/greenhouse/${s.id}`)}
                     data-testid={`want-list-item-${s.slug}`}
-                    className="w-full text-left rounded-[12px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-3 hover:border-[#3B6D11] transition-colors duration-150"
+                    className="w-full text-left rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-plant text-sm text-[#1C2E10]">{s.common_name}</p>
-                        <p className="font-latin italic text-[11px] text-[#3B3A33] mt-0.5">{s.latin_name}</p>
-                        <div className="flex flex-wrap gap-2 mt-1.5 text-[10px] font-ui text-[#5F5E5A]">
+                        <p className="font-plant text-sm text-grove-cream">{s.common_name}</p>
+                        <p className="font-latin italic text-[11px] text-grove-cream mt-0.5">{s.latin_name}</p>
+                        <div className="flex flex-wrap gap-2 mt-1.5 text-[10px] font-ui text-grove-sage">
                           {s.default_light_level && (
                             <span className="inline-flex items-center gap-1">
                               <Sun className="h-2.5 w-2.5" /> {LIGHT_LABEL[s.default_light_level] || s.default_light_level}
@@ -85,7 +85,7 @@ export default function WantListPage() {
                             </span>
                           )}
                           {s.flags?.native_to_na && (
-                            <span className="inline-flex items-center gap-1 text-[#3B6D11]">
+                            <span className="inline-flex items-center gap-1 text-grove-sprout">
                               <Leaf className="h-2.5 w-2.5" /> Native
                             </span>
                           )}
@@ -97,11 +97,11 @@ export default function WantListPage() {
                           onClick={(e) => handleRemove(e, s.id, s.common_name)}
                           aria-label="Remove from want list"
                           data-testid={`want-list-remove-${s.slug}`}
-                          className="w-7 h-7 rounded-full border-[0.5px] border-[#D3C9B8] bg-transparent text-[#5F5E5A] hover:text-[#E24B4A] hover:border-[#E24B4A] flex items-center justify-center transition-colors duration-150"
+                          className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-transparent text-grove-sage hover:text-grove-bloom hover:border-grove-moss flex items-center justify-center transition-colors duration-150"
                         >
                           <Trash2 className="h-3 w-3" />
                         </button>
-                        <ChevronRight className="h-4 w-4 text-[#5F5E5A]" />
+                        <ChevronRight className="h-4 w-4 text-grove-sage" />
                       </div>
                     </div>
                   </button>

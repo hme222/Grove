@@ -28,7 +28,7 @@ export default function SwapMatchesPage() {
       <div>
         <PageHeader title="Swap Matches" />
         <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -41,7 +41,7 @@ export default function SwapMatchesPage() {
         rightContent={
           <button
             onClick={() => navigate('/swap')}
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#3B6D11] flex items-center gap-1.5"
+            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <Repeat className="h-3.5 w-3.5" />
             Deck
@@ -52,16 +52,16 @@ export default function SwapMatchesPage() {
       <div className="max-w-[600px] mx-auto px-4 pt-4 space-y-3">
         {matches.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 mx-auto rounded-full bg-[#EAF3DE] border-[0.5px] border-[#D3C9B8] flex items-center justify-center mb-4">
-              <Sparkles className="h-7 w-7 text-[#3B6D11]" />
+            <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-[0.5px] border-grove-moss flex items-center justify-center mb-4">
+              <Sparkles className="h-7 w-7 text-grove-sprout" />
             </div>
-            <h2 className="font-plant text-[#1C2E10] text-lg mb-1">No matches yet</h2>
-            <p className="font-ui text-sm text-[#2B2B26] mb-4">
+            <h2 className="font-plant text-grove-cream text-lg mb-1">No matches yet</h2>
+            <p className="font-ui text-sm text-grove-cream mb-4">
               Keep swiping the deck — when someone likes your plants back, you'll match here.
             </p>
             <button
               onClick={() => navigate('/swap')}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016]"
+              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
             >
               Browse deck
             </button>
@@ -71,10 +71,10 @@ export default function SwapMatchesPage() {
             <button
               key={match.id}
               onClick={() => navigate(`/swaps/${match.id}`)}
-              className="w-full rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-4 flex items-center gap-3 text-left hover:border-[#3B6D11] transition-colors duration-150"
+              className="w-full rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4 flex items-center gap-3 text-left hover:border-grove-fernLine transition-colors duration-150"
             >
               {/* Plant thumbnail */}
-              <div className="w-14 h-14 rounded-[10px] bg-[#EAF3DE] flex-shrink-0 overflow-hidden flex items-center justify-center">
+              <div className="w-14 h-14 rounded-[10px] bg-grove-moss flex-shrink-0 overflow-hidden flex items-center justify-center">
                 {their_plant?.photo_url ? (
                   <img
                     src={getFileUrl(their_plant.photo_url)}
@@ -82,20 +82,20 @@ export default function SwapMatchesPage() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <Leaf className="h-6 w-6 text-[#3B6D11] opacity-30" />
+                  <Leaf className="h-6 w-6 text-grove-sprout opacity-30" />
                 )}
               </div>
 
               {/* Match info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <p className="font-plant text-[#1C2E10] text-sm truncate">
+                  <p className="font-plant text-grove-cream text-sm truncate">
                     {their_plant?.nickname || their_plant?.common_name || 'Plant'}
                   </p>
                   <StatusPill status={match.status} />
                 </div>
                 <div className="flex items-center gap-1 mt-0.5">
-                  <span className="font-ui text-[11px] text-[#5F5E5A]">
+                  <span className="font-ui text-[11px] text-grove-sage">
                     with @{other_user?.username || 'grower'}
                   </span>
                   {other_user && (
@@ -107,7 +107,7 @@ export default function SwapMatchesPage() {
                   )}
                 </div>
                 {their_plant?.latin_name && (
-                  <p className="font-latin italic text-[10px] text-[#888780] mt-0.5 truncate">
+                  <p className="font-latin italic text-[10px] text-grove-lichen mt-0.5 truncate">
                     {their_plant.latin_name}
                   </p>
                 )}
@@ -116,11 +116,11 @@ export default function SwapMatchesPage() {
               {/* Right side: unread badge + chevron */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 {unread_messages > 0 && (
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#3B6D11] text-white font-ui text-[10px]">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-grove-lime text-grove-root font-ui text-[10px]">
                     {unread_messages > 9 ? '9+' : unread_messages}
                   </span>
                 )}
-                <ChevronRight className="h-4 w-4 text-[#D3C9B8]" />
+                <ChevronRight className="h-4 w-4 text-grove-sage" />
               </div>
             </button>
           ))
@@ -132,9 +132,9 @@ export default function SwapMatchesPage() {
 
 function StatusPill({ status }) {
   const config = {
-    matched: { label: 'Matched', bg: 'bg-[#EAF3DE]', text: 'text-[#3B6D11]', border: 'border-[#3B6D11]' },
-    messaging: { label: 'Chatting', bg: 'bg-[#EAF3DE]', text: 'text-[#3B6D11]', border: 'border-[#3B6D11]' },
-    confirmed: { label: 'Confirmed', bg: 'bg-[#FBF1E1]', text: 'text-[#BA7517]', border: 'border-[#BA7517]' },
+    matched: { label: 'Matched', bg: 'bg-grove-moss', text: 'text-grove-sprout', border: 'border-grove-fernLine' },
+    messaging: { label: 'Chatting', bg: 'bg-grove-moss', text: 'text-grove-sprout', border: 'border-grove-fernLine' },
+    confirmed: { label: 'Confirmed', bg: 'bg-grove-sun/15', text: 'text-grove-sun', border: 'border-grove-moss' },
   };
   const c = config[status] || config.matched;
   return (

@@ -3,32 +3,32 @@
 // Safety rule: only an explicit non-toxic value may read as "Pet-safe".
 // A missing, empty, or unrecognized value is "unknown", never safe.
 // Every level carries its own icon and words, so meaning never rests on color.
-// Contrast (text on background): safe 5.4:1, mild 4.8:1, toxic 5.5:1, unknown 5.2:1.
+// Every level's text is at least 4.5:1 against the dark forest surface.
 
 export const TOXICITY_LEVELS = {
   non_toxic: {
     level: 'non_toxic',
     label: 'Pet-safe',
     icon: 'safe',
-    className: 'text-[#3B6D11] bg-[#EAF3DE] border-[#3B6D11]/30',
+    className: 'text-grove-sprout bg-grove-lime/15 border-grove-lime/40',
   },
   mild: {
     level: 'mild',
     label: 'Mildly toxic',
     icon: 'caution',
-    className: 'text-[#8A6A3D] bg-[#FBFAF7] border-[#8A6A3D]/40',
+    className: 'text-grove-sun bg-grove-sun/10 border-grove-sun/40',
   },
   toxic: {
     level: 'toxic',
     label: 'Toxic if ingested',
     icon: 'danger',
-    className: 'text-[#B42318] bg-[#FEE4E2] border-[#B42318]/40',
+    className: 'text-grove-bloom bg-grove-bloom/15 border-grove-bloom/40',
   },
   unknown: {
     level: 'unknown',
     label: 'Pet safety unknown — check before bringing it home',
     icon: 'unknown',
-    className: 'text-[#5F5E5A] bg-[#EDE5D8] border-[#D3C9B8]',
+    className: 'text-grove-sage bg-grove-moss border-grove-fernLine',
   },
 };
 

@@ -44,17 +44,17 @@ export default function QuizFlow({ onDone }) {
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-[#F5F0E8] px-4"
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-grove-forest px-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="quiz-title"
       data-testid="quiz-flow"
     >
       <div className="w-full max-w-md">
-        <h1 id="quiz-title" ref={headingRef} tabIndex={-1} className="font-plant text-[#1C2E10] text-3xl mb-2 focus:outline-none">
+        <h1 id="quiz-title" ref={headingRef} tabIndex={-1} className="font-plant text-grove-cream text-3xl mb-2 focus:outline-none">
           What&apos;s going on with your plants?
         </h1>
-        <p className="text-sm text-[#2B2B26] mb-4">
+        <p className="text-sm text-grove-cream mb-4">
           Pick everything that fits. This only chooses your first lesson, and you can change it any time.
         </p>
 
@@ -68,8 +68,8 @@ export default function QuizFlow({ onDone }) {
                 role="checkbox"
                 aria-checked={on}
                 onClick={() => toggle(option.id)}
-                className={`w-full text-left rounded-[8px] border-[0.5px] px-4 py-3 text-sm font-ui text-[#1A1A17] ${
-                  on ? 'border-[#1C2E10] bg-[#EAF3DE] ring-1 ring-[#1C2E10]/20' : 'border-[#D3C9B8] bg-[#FDFAF6] hover:border-[#2D5016]'
+                className={`w-full text-left rounded-[8px] border-[0.5px] px-4 py-3 text-sm font-ui text-grove-cream ${
+                  on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/20' : 'border-grove-moss bg-grove-canopy hover:border-grove-fernLine'
                 }`}
                 data-testid={`quiz-option-${option.id}`}
               >
@@ -89,7 +89,7 @@ export default function QuizFlow({ onDone }) {
           type="button"
           onClick={start}
           aria-busy={saving}
-          className="mt-4 w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10] hover:bg-[#2D5016]"
+          className="mt-4 w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
           data-testid="quiz-start"
         >
           {saving ? 'Saving…' : 'Start my first lesson'}
@@ -97,7 +97,7 @@ export default function QuizFlow({ onDone }) {
         <button
           type="button"
           onClick={() => submit([])}
-          className="mt-3 w-full text-center text-xs font-ui text-[#2B2B26] underline underline-offset-2"
+          className="mt-3 w-full text-center text-xs font-ui text-grove-cream underline underline-offset-2"
           data-testid="quiz-skip"
         >
           Skip for now

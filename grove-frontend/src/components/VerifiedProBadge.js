@@ -40,7 +40,7 @@ export default function VerifiedProBadge({
             role="img"
             aria-label="Verified Pro"
             data-testid="verified-pro-badge"
-            className={`inline-flex items-center justify-center text-[#3B6D11] flex-shrink-0 ${className}`}
+            className={`inline-flex items-center justify-center text-grove-sprout flex-shrink-0 ${className}`}
             onClick={(e) => e.stopPropagation()}
           >
             <BadgeCheck
@@ -53,7 +53,7 @@ export default function VerifiedProBadge({
         <TooltipContent
           side="top"
           align="center"
-          className="bg-[#1C2E10] text-[#F4ECD9] text-[11px] font-ui px-2 py-1 rounded-[4px] border-0"
+          className="bg-grove-lime text-grove-root text-[11px] font-ui px-2 py-1 rounded-[4px] border-0"
         >
           Verified Pro — manually verified by Grove
         </TooltipContent>

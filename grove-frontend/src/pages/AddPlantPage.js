@@ -63,12 +63,12 @@ export default function AddPlantPage() {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-3 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-[#1C2E10] hover:text-[#3B6D11]"
+        className="mb-3 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-cream hover:text-grove-sprout"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
-      <h1 className="font-plant text-[#1C2E10] text-xl mb-1">Add to your collection</h1>
-      <p className="font-plant italic text-[#5F5E5A] text-xs mb-5">Two ways in — both equally good.</p>
+      <h1 className="font-plant text-grove-cream text-xl mb-1">Add to your collection</h1>
+      <p className="font-plant italic text-grove-sage text-xs mb-5">Two ways in — both equally good.</p>
       <div className="space-y-2">
         {opts.map(({ key, icon: Icon, title, desc, testId, onClick }) => (
           <button
@@ -76,14 +76,14 @@ export default function AddPlantPage() {
             type="button"
             onClick={(e) => { impactLight(e.currentTarget); onClick(); }}
             data-testid={testId}
-            className="w-full text-left rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] px-3.5 py-4 hover:border-[#3B6D11] hover:bg-[#F5F0E8] flex items-start gap-3 transition-colors duration-150"
+            className="w-full text-left rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy px-3.5 py-4 hover:border-grove-fernLine hover:bg-grove-forest flex items-start gap-3 transition-colors duration-150"
           >
-            <div className="w-10 h-10 rounded-[10px] bg-[#EAF3DE] flex items-center justify-center flex-shrink-0">
-              <Icon className="h-5 w-5 text-[#3B6D11]" />
+            <div className="w-10 h-10 rounded-[10px] bg-grove-moss flex items-center justify-center flex-shrink-0">
+              <Icon className="h-5 w-5 text-grove-sprout" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-plant text-[#1C2E10] text-base leading-tight">{title}</p>
-              <p className="font-ui text-xs text-[#5F5E5A] mt-1 leading-snug">{desc}</p>
+              <p className="font-plant text-grove-cream text-base leading-tight">{title}</p>
+              <p className="font-ui text-xs text-grove-sage mt-1 leading-snug">{desc}</p>
             </div>
           </button>
         ))}
@@ -162,7 +162,7 @@ function ManualEntryFlow({ onBack }) {
         rightContent={
           <button
             onClick={() => step === 'photo' ? setStep('details') : onBack()}
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#2D5016] transition-colors duration-150"
+            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
           >
             {step === 'photo' ? 'Back' : 'Cancel'}
           </button>
@@ -176,10 +176,10 @@ function ManualEntryFlow({ onBack }) {
             onPhotoReady={handlePhotoReady}
           />
           {saving && (
-            <div className="fixed inset-0 bg-[#1C2E10]/50 z-50 flex items-center justify-center">
-              <div className="bg-[#F5F0E8] rounded-[14px] p-5 text-center">
-                <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                <p className="font-plant text-[#1C2E10] text-sm">Adding to your grove\u2026</p>
+            <div className="fixed inset-0 bg-grove-lime/50 z-50 flex items-center justify-center">
+              <div className="bg-grove-forest rounded-[14px] p-5 text-center">
+                <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                <p className="font-plant text-grove-cream text-sm">Adding to your grove\u2026</p>
               </div>
             </div>
           )}
@@ -189,15 +189,15 @@ function ManualEntryFlow({ onBack }) {
         {showSearch ? (
           <div>
             <div className="mb-4">
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Search Species</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Search Species</label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#D3C9B8]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-sage" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   data-testid="species-search-input"
-                  className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] pl-10 pr-4 py-3 text-sm font-ui text-[#1A1A17] placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] pl-10 pr-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   placeholder="Search by common or latin name..."
                 />
               </div>
@@ -208,20 +208,20 @@ function ManualEntryFlow({ onBack }) {
                   key={sp.id}
                   onClick={() => selectSpecies(sp)}
                   data-testid="species-option"
-                  className="w-full text-left rounded-[8px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] px-4 py-3 hover:border-[#2D5016] transition-colors duration-150"
+                  className="w-full text-left rounded-[8px] border-[0.5px] border-grove-moss bg-grove-moss px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
-                  <p className="font-plant text-[#1C2E10] text-sm">{sp.common_name}</p>
-                  <p className="font-latin text-[10px] text-[#2B2B26]">{sp.latin_name}</p>
+                  <p className="font-plant text-grove-cream text-sm">{sp.common_name}</p>
+                  <p className="font-latin text-[10px] text-grove-cream">{sp.latin_name}</p>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
                     <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" />
-                    <span className="text-[10px] font-ui text-[#2B2B26]">Water every {sp.default_watering_days}d</span>
+                    <span className="text-[10px] font-ui text-grove-cream">Water every {sp.default_watering_days}d</span>
                   </div>
                 </button>
               ))}
             </div>
             <button
               onClick={() => setShowSearch(false)}
-              className="w-full mt-4 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-[#D3C9B8] bg-transparent text-[#1C2E10] hover:border-[#2D5016] transition-colors duration-150"
+              className="w-full mt-4 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Or add custom plant
             </button>
@@ -229,96 +229,96 @@ function ManualEntryFlow({ onBack }) {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {selectedSpecies && (
-              <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] p-3 flex items-center justify-between">
+              <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 flex items-center justify-between">
                 <div>
-                  <p className="font-plant text-[#1C2E10] text-sm">{selectedSpecies.common_name}</p>
-                  <p className="font-latin text-[10px] text-[#2B2B26]">{selectedSpecies.latin_name}</p>
+                  <p className="font-plant text-grove-cream text-sm">{selectedSpecies.common_name}</p>
+                  <p className="font-latin text-[10px] text-grove-cream">{selectedSpecies.latin_name}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => { setSelectedSpecies(null); setShowSearch(true); setFormData(prev => ({...prev, common_name: '', latin_name: ''})); }}
-                  className="text-xs font-ui text-[#3B6D11] hover:text-[#2D5016]"
+                  className="text-xs font-ui text-grove-sprout hover:text-grove-sprout"
                 >Change</button>
               </div>
             )}
             {!selectedSpecies && (
               <>
                 <div>
-                  <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Plant Name *</label>
+                  <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Plant Name *</label>
                   <input
                     type="text"
                     value={formData.common_name}
                     onChange={(e) => setFormData(prev => ({...prev, common_name: e.target.value}))}
                     required
                     data-testid="plant-name-input"
-                    className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-4 py-3 text-sm font-ui text-[#1A1A17] placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+                    className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                     placeholder="e.g., Monstera Deliciosa"
                   />
                 </div>
                 <div>
-                  <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Latin Name</label>
+                  <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Latin Name</label>
                   <input
                     type="text"
                     value={formData.latin_name}
                     onChange={(e) => setFormData(prev => ({...prev, latin_name: e.target.value}))}
-                    className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-4 py-3 text-sm font-latin text-[#1A1A17] placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+                    className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-latin text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                     placeholder="e.g., Monstera deliciosa"
                   />
                 </div>
               </>
             )}
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Nickname</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Nickname</label>
               <input
                 type="text"
                 value={formData.nickname}
                 onChange={(e) => setFormData(prev => ({...prev, nickname: e.target.value}))}
                 data-testid="plant-nickname-input"
-                className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-4 py-3 text-sm font-ui text-[#1A1A17] placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                 placeholder="Give your plant a name"
               />
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Room</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Room</label>
               <div className="flex flex-wrap gap-1.5">
                 {ROOMS.map(room => (
                   <button
                     key={room}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, room: prev.room === room ? '' : room}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.room === room ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1A1A17] hover:border-[#2D5016]'}`}
+                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.room === room ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
                   >{room}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Grow Medium</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Grow Medium</label>
               <div className="flex flex-wrap gap-1.5">
                 {MEDIUMS.map(m => (
                   <button
                     key={m.value}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, grow_medium: m.value}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.grow_medium === m.value ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1A1A17] hover:border-[#2D5016]'}`}
+                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.grow_medium === m.value ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
                   >{m.label}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Acquired From</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Acquired From</label>
               <div className="flex flex-wrap gap-1.5">
                 {SOURCES.map(s => (
                   <button
                     key={s.value}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, acquired_from: prev.acquired_from === s.value ? '' : s.value}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.acquired_from === s.value ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1A1A17] hover:border-[#2D5016]'}`}
+                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.acquired_from === s.value ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
                   >{s.label}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">
                 Watering Frequency
                 {formData.watering_frequency_days && (
                   <span className="text-[#639922] normal-case"> \u00B7 Every {formData.watering_frequency_days} days</span>
@@ -330,17 +330,17 @@ function ManualEntryFlow({ onBack }) {
                     key={days}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, watering_frequency_days: days}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.watering_frequency_days === days ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1A1A17] hover:border-[#2D5016]'}`}
+                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.watering_frequency_days === days ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
                   >{days}d</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Notes</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Notes</label>
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
-                className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-4 py-3 text-sm font-ui text-[#1A1A17] placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5] resize-none h-24"
+                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-24"
                 placeholder="Any notes about your plant..."
               />
             </div>
@@ -348,7 +348,7 @@ function ManualEntryFlow({ onBack }) {
               type="submit"
               disabled={saving}
               data-testid="add-plant-submit"
-              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10] hover:bg-[#2D5016] disabled:opacity-50 transition-colors duration-150"
+              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
             >
               {saving ? 'Adding plant...' : 'Next \u2014 add a photo'}
             </button>

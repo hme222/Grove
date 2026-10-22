@@ -2,66 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Grove design tokens v0.3 (design/tokens.json). Dark forest is the primary look.
+   The shadcn variables below are HSL triplets of the same palette, so components in
+   components/ui follow the theme. Hex tokens live in tailwind.config.js as `grove-*`. */
 @layer base {
   :root {
-    --grove-paper: #F5F0E8;
-    --grove-parchment: #EDE5D8;
-    --grove-leaf: #EAF3DE;
-    --grove-stone: #D3C9B8;
-    --grove-ink: #1A1A17;
-    --grove-deep: #1C2E10;
-    --grove-bark: #2D5016;
-    --grove-canopy: #3B6D11;
-    --grove-fern: #639922;
-    --grove-moss: #5DCAA5;
-    --grove-dew: #9FE1CB;
-    --grove-bloom: #D4537E;
-    --grove-bloom-light: #FBEAF0;
+    --grove-forest: #202D14;
+    --grove-canopy: #2D3B1A;
+    --grove-moss: #3C4D26;
+    --grove-lime: #92B44B;
+    --grove-root: #1A2410;
+    --grove-cream: #F4F1E6;
+    --grove-sage: #B7C0A4;
+    --grove-bloom: #E57A9C;
 
-    --background: 40 33% 94%;
-    --foreground: 60 3% 10%;
-    --card: 38 28% 90%;
-    --card-foreground: 60 3% 10%;
-    --popover: 38 28% 90%;
-    --popover-foreground: 60 3% 10%;
-    --primary: 92 48% 12%;
-    --primary-foreground: 40 33% 94%;
-    --secondary: 78 38% 91%;
-    --secondary-foreground: 92 48% 12%;
-    --muted: 38 28% 90%;
-    --muted-foreground: 60 3% 18%;
-    --accent: 78 38% 91%;
-    --accent-foreground: 92 48% 12%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 35 18% 80%;
-    --input: 35 18% 80%;
-    --ring: 162 44% 58%;
+    --background: 91 38% 13%;
+    --foreground: 47 39% 93%;
+    --card: 85 39% 17%;
+    --card-foreground: 47 39% 93%;
+    --popover: 85 39% 17%;
+    --popover-foreground: 47 39% 93%;
+    --primary: 79 41% 50%;
+    --primary-foreground: 90 38% 10%;
+    --secondary: 86 34% 23%;
+    --secondary-foreground: 47 39% 93%;
+    --muted: 86 34% 23%;
+    --muted-foreground: 79 18% 70%;
+    --accent: 86 34% 23%;
+    --accent-foreground: 47 39% 93%;
+    --destructive: 341 67% 69%;
+    --destructive-foreground: 90 38% 10%;
+    --border: 86 34% 23%;
+    --input: 85 32% 29%;
+    --ring: 79 41% 50%;
     --radius: 14px;
-    --chart-1: 102 65% 25%;
-    --chart-2: 162 44% 58%;
-    --chart-3: 78 38% 91%;
-    --chart-4: 340 56% 58%;
-    --chart-5: 35 18% 80%;
+    --chart-1: 79 41% 50%;
+    --chart-2: 77 51% 70%;
+    --chart-3: 86 34% 23%;
+    --chart-4: 341 67% 69%;
+    --chart-5: 79 18% 70%;
   }
 }
 
 @layer base {
   * {
-    @apply border-[#D3C9B8];
+    @apply border-grove-moss;
   }
   body {
-    @apply bg-[#F5F0E8] text-[#1A1A17];
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    @apply bg-grove-forest text-grove-cream;
+    font-family: 'Alegreya Sans', Optima, Candara, system-ui, sans-serif;
+    font-size: 17px; /* Alegreya Sans runs small; 17px matches the 16px system face's x-height */
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: #92B44B;
+    color: #1A2410;
+  }
+  :focus-visible {
+    outline: 2px solid #C3D98A;
+    outline-offset: 2px;
   }
 }
 
+/* Display face: plant names and the occasional key word, never body copy. */
 .font-plant {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.005em;
 }
+/* Scientific names: italic, as botanists set them. */
 .font-latin {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-family: 'Alegreya Sans', Optima, Candara, sans-serif;
+  font-style: italic;
 }
 .font-ui {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Alegreya Sans', Optima, Candara, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

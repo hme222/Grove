@@ -16,7 +16,7 @@ function LightBad() {
   return (
     <BaseFrame tint="#F7E8DE">
       <circle cx="75" cy="20" r="14" fill="#F9D07A" />
-      <g fill="#9FE1CB" opacity="0.9">
+      <g fill="#C3D98A" opacity="0.9">
         <path d="M50 78 C 38 60, 42 48, 48 40 C 56 45, 58 58, 55 72 Z" />
         <path d="M55 72 C 68 60, 72 48, 68 40 C 60 45, 58 58, 55 72 Z" />
       </g>
@@ -41,7 +41,7 @@ function LightGood() {
 function CropBad() {
   return (
     <BaseFrame tint="#F0EDE3">
-      <g fill="#5DCAA5" opacity="0.95">
+      <g fill="#92B44B" opacity="0.95">
         <path d="M50 120 L50 50" stroke="#3B6D11" strokeWidth="3" />
         <path d="M50 90 C 28 70, 40 40, 54 40 C 64 60, 62 84, 50 90 Z" />
       </g>
@@ -54,7 +54,7 @@ function CropGood() {
     <BaseFrame tint="#E8EEDB">
       <g opacity="0.95">
         <path d="M50 85 L50 35" stroke="#3B6D11" strokeWidth="2" />
-        <path d="M50 60 C 38 50, 42 40, 48 36 C 54 42, 56 52, 52 60 Z" fill="#5DCAA5" />
+        <path d="M50 60 C 38 50, 42 40, 48 36 C 54 42, 56 52, 52 60 Z" fill="#92B44B" />
         <path d="M50 60 C 62 50, 58 40, 52 36 C 46 42, 44 52, 48 60 Z" fill="#3B6D11" />
         <rect x="40" y="84" width="20" height="8" fill="#854F0B" rx="1" />
       </g>
@@ -83,7 +83,7 @@ function BackgroundGood() {
       <rect x="0" y="60" width="100" height="40" fill="#EDE5D8" />
       <g opacity="0.95">
         <path d="M50 80 L50 38" stroke="#3B6D11" strokeWidth="2" />
-        <path d="M50 60 C 36 48, 42 36, 48 30 C 58 38, 58 54, 52 60 Z" fill="#5DCAA5" />
+        <path d="M50 60 C 36 48, 42 36, 48 30 C 58 38, 58 54, 52 60 Z" fill="#92B44B" />
         <rect x="42" y="80" width="18" height="6" fill="#854F0B" rx="1" />
       </g>
     </BaseFrame>
@@ -105,7 +105,7 @@ function AngleGood() {
   return (
     <BaseFrame tint="#E8EEDB">
       <path d="M50 80 L50 30" stroke="#3B6D11" strokeWidth="2" />
-      <path d="M50 50 C 36 40, 42 28, 48 24 C 58 32, 58 48, 52 50 Z" fill="#5DCAA5" />
+      <path d="M50 50 C 36 40, 42 28, 48 24 C 58 32, 58 48, 52 50 Z" fill="#92B44B" />
       <path d="M50 50 C 64 40, 58 28, 52 24 C 46 32, 46 48, 50 50 Z" fill="#3B6D11" />
       <rect x="42" y="80" width="18" height="6" fill="#854F0B" rx="1" />
     </BaseFrame>
@@ -117,7 +117,7 @@ function FocusBad() {
     <BaseFrame tint="#EEE3D3">
       <g filter="url(#blur)">
         <path d="M50 80 L50 32" stroke="#3B6D11" strokeWidth="3" />
-        <path d="M50 55 C 36 44, 42 32, 48 28 C 58 36, 58 52, 52 55 Z" fill="#5DCAA5" />
+        <path d="M50 55 C 36 44, 42 32, 48 28 C 58 36, 58 52, 52 55 Z" fill="#92B44B" />
       </g>
       <defs>
         <filter id="blur"><feGaussianBlur stdDeviation="2.4" /></filter>
@@ -130,7 +130,7 @@ function FocusGood() {
   return (
     <BaseFrame tint="#E8EEDB">
       <path d="M50 80 L50 32" stroke="#3B6D11" strokeWidth="2" />
-      <path d="M50 55 C 36 44, 42 32, 48 28 C 58 36, 58 52, 52 55 Z" fill="#5DCAA5" />
+      <path d="M50 55 C 36 44, 42 32, 48 28 C 58 36, 58 52, 52 55 Z" fill="#92B44B" />
       <path d="M50 55 C 64 44, 58 32, 52 28 C 46 36, 46 52, 50 55 Z" fill="#3B6D11" />
       <rect x="42" y="80" width="18" height="6" fill="#854F0B" rx="1" />
     </BaseFrame>
@@ -143,7 +143,7 @@ function HeroShot() {
       <rect x="0" y="0" width="180" height="100" rx="10" fill="#EDE5D8" />
       <rect x="0" y="58" width="180" height="42" fill="#D3C9B8" opacity="0.5" />
       <path d="M90 82 L90 32" stroke="#3B6D11" strokeWidth="2" />
-      <path d="M90 60 C 70 48, 78 30, 86 24 C 100 34, 102 56, 94 62 Z" fill="#5DCAA5" />
+      <path d="M90 60 C 70 48, 78 30, 86 24 C 100 34, 102 56, 94 62 Z" fill="#92B44B" />
       <path d="M90 60 C 110 48, 102 30, 94 24 C 80 34, 78 56, 88 62 Z" fill="#3B6D11" />
       <rect x="78" y="82" width="24" height="10" fill="#854F0B" rx="1.5" />
       <circle cx="160" cy="22" r="6" fill="#F9D07A" opacity="0.6" />
@@ -233,15 +233,15 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
           <article
             key={i}
             data-testid={`photo-guide-card-${i}`}
-            className="snap-center shrink-0 w-full max-w-[300px] rounded-[12px] border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] p-4"
+            className="snap-center shrink-0 w-full max-w-[300px] rounded-[12px] border-[0.5px] border-grove-moss bg-grove-forest p-4"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-4 w-4 text-[#3B6D11]" />
-              <h4 className="font-plant text-[13px] text-[#1C2E10]">{c.title}</h4>
+              <Sparkles className="h-4 w-4 text-grove-sprout" />
+              <h4 className="font-plant text-[13px] text-grove-cream">{c.title}</h4>
             </div>
 
             {c.hero ? (
-              <div className="rounded-[10px] overflow-hidden border-[0.5px] border-[#D3C9B8] mb-2">
+              <div className="rounded-[10px] overflow-hidden border-[0.5px] border-grove-moss mb-2">
                 <HeroShot />
               </div>
             ) : (
@@ -249,7 +249,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                 <figure className="flex-1 text-center">
                   <div className="relative inline-block">
                     <c.Bad />
-                    <span className="absolute inset-0 rounded-[10px] bg-[#D4537E]/12 pointer-events-none" />
+                    <span className="absolute inset-0 rounded-[10px] bg-grove-bloom/12 pointer-events-none" />
                   </div>
                   <figcaption className="mt-1 font-latin text-[9px] uppercase tracking-[0.15em] text-[#A32D2D]">
                     ✗ {c.BadLabel}
@@ -258,7 +258,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                 <figure className="flex-1 text-center">
                   <div className="relative inline-block">
                     <c.Good />
-                    <span className="absolute inset-0 rounded-[10px] bg-[#3B6D11]/8 pointer-events-none" />
+                    <span className="absolute inset-0 rounded-[10px] bg-grove-lime/8 pointer-events-none" />
                   </div>
                   <figcaption className="mt-1 font-latin text-[9px] uppercase tracking-[0.15em] text-[#27500A]">
                     ✓ {c.GoodLabel}
@@ -267,8 +267,8 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
               </div>
             )}
 
-            <p className="font-ui text-[11px] text-[#5F5E5A] leading-[1.55]">{c.body}</p>
-            <p className="font-latin text-[10px] text-[#888780] mt-2">{i + 1} of {CARDS.length}</p>
+            <p className="font-ui text-[11px] text-grove-sage leading-[1.55]">{c.body}</p>
+            <p className="font-latin text-[10px] text-grove-lichen mt-2">{i + 1} of {CARDS.length}</p>
           </article>
         ))}
       </div>
@@ -281,7 +281,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
           aria-label="Previous card"
           data-testid="photo-guide-prev"
           disabled={index === 0}
-          className="w-7 h-7 rounded-full border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] text-[#1C2E10] flex items-center justify-center disabled:opacity-40"
+          className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream flex items-center justify-center disabled:opacity-40"
         >
           <ChevronLeft className="h-3.5 w-3.5" />
         </button>
@@ -294,7 +294,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
               data-testid={`photo-guide-dot-${i}`}
               onClick={() => setIndex(i)}
               className={`h-1.5 rounded-full transition-all duration-200 ${
-                i === index ? 'w-5 bg-[#3B6D11]' : 'w-1.5 bg-[#D3C9B8]'
+                i === index ? 'w-5 bg-grove-lime' : 'w-1.5 bg-grove-moss'
               }`}
             />
           ))}
@@ -305,7 +305,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
           aria-label="Next card"
           data-testid="photo-guide-next"
           disabled={index === CARDS.length - 1}
-          className="w-7 h-7 rounded-full border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] text-[#1C2E10] flex items-center justify-center disabled:opacity-40"
+          className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream flex items-center justify-center disabled:opacity-40"
         >
           <ChevronRight className="h-3.5 w-3.5" />
         </button>

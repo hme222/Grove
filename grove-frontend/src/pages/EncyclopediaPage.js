@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import SectionTutorial from '../components/SectionTutorial';
 import { Search, Leaf, Layers } from 'lucide-react';
 import { toast } from 'sonner';
+import { getToxicityInfo } from '../lib/toxicity';
 
 export default function EncyclopediaPage() {
   const navigate = useNavigate();
@@ -58,12 +59,6 @@ export default function EncyclopediaPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const TOXICITY_COLORS = {
-    'non-toxic': 'text-[#3B6D11]',
-    'mild': 'text-[#8A6A3D]',
-    'toxic': 'text-[#B42318]',
-  };
-
   return (
     <div>
       <SectionTutorial tutorialId="greenhouse" />
@@ -74,10 +69,10 @@ export default function EncyclopediaPage() {
         {guilds.length > 0 && !searchQuery && (
           <div className="space-y-2" data-testid="greenhouse-guilds-row">
             <div className="flex items-center justify-between px-1">
-              <h2 className="font-plant text-[#1C2E10] text-sm uppercase tracking-[0.08em]">
+              <h2 className="font-plant text-grove-cream text-base">
                 Themed guilds
               </h2>
-              <span className="font-ui text-[10px] text-[#5F5E5A]">{guilds.length} curated</span>
+              <span className="font-ui text-[10px] text-grove-sage">{guilds.length} curated</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {guilds.map((g) => {
@@ -100,10 +95,10 @@ export default function EncyclopediaPage() {
                     >
                       <Layers className="h-3.5 w-3.5" style={{ color: accent }} />
                     </div>
-                    <p className="font-plant text-xs text-[#1C2E10] leading-tight">
+                    <p className="font-plant text-xs text-grove-cream leading-tight">
                       {g.name}
                     </p>
-                    <p className="font-latin text-[10px] text-[#5F5E5A] mt-1">
+                    <p className="font-latin text-[10px] text-grove-sage mt-1">
                       {g.species_count} species
                     </p>
                   </button>
@@ -115,12 +110,12 @@ export default function EncyclopediaPage() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#3B3A33]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-cream" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search species by common or latin name..."
-            className="pl-10 bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8]"
+            className="pl-10 bg-grove-forest border-[0.5px] border-grove-moss"
             data-testid="greenhouse-search"
           />
         </div>
@@ -128,11 +123,11 @@ export default function EncyclopediaPage() {
         {/* Species Grid */}
         {loading || searching ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
           </div>
         ) : species.length === 0 ? (
-          <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] p-6 text-center">
-            <p className="text-sm text-[#2B2B26]">
+          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center">
+            <p className="text-sm text-grove-cream">
               {searchQuery ? `No species found for "${searchQuery}"` : 'No species in Greenhouse yet'}
             </p>
           </div>
@@ -142,34 +137,32 @@ export default function EncyclopediaPage() {
               <div
                 key={s.id}
                 onClick={() => navigate(`/greenhouse/${s.id}`)}
-                className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4 cursor-pointer hover:border-[#3B6D11] transition-all duration-150"
+                className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 cursor-pointer hover:border-grove-fernLine transition-all duration-150"
                 data-testid="species-card"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div className="w-12 h-12 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {(s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image) ? (
                       <img src={s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <Leaf className="h-6 w-6 text-[#3B6D11]" />
+                      <Leaf className="h-6 w-6 text-grove-sprout" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-plant text-[#1C2E10] text-base truncate">{s.common_name}</h3>
-                    <p className="text-xs italic text-[#3B3A33] truncate">{s.latin_name}</p>
+                    <h3 className="font-plant text-grove-cream text-base truncate">{s.common_name}</h3>
+                    <p className="text-xs italic text-grove-sage truncate">{s.latin_name}</p>
                     <div className="flex items-center gap-2 mt-2">
-                      <span className="text-xs font-sans uppercase tracking-[0.12em] text-[#2B2B26]">
-                        {s.family}
-                      </span>
-                      {s.toxicity && (
-                        <span className={`text-xs font-sans uppercase tracking-[0.12em] ${TOXICITY_COLORS[s.toxicity] || 'text-[#2B2B26]'}`}>
-                          • {s.toxicity}
+                      <span className="text-xs text-grove-sage">{s.family}</span>
+                      {s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown' && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full border ${getToxicityInfo(s.toxicity).className}`}>
+                          {getToxicityInfo(s.toxicity).label}
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
                 {s.care_summary && (
-                  <p className="text-sm text-[#2B2B26] mt-3 line-clamp-2">{s.care_summary}</p>
+                  <p className="text-sm text-grove-cream mt-3 line-clamp-2">{s.care_summary}</p>
                 )}
               </div>
             ))}
@@ -182,17 +175,17 @@ export default function EncyclopediaPage() {
             <button
               onClick={() => fetchSpecies(searchQuery, page - 1)}
               disabled={page === 1}
-              className="px-4 py-2 text-xs font-sans uppercase tracking-[0.12em] text-[#1C2E10] border-[0.5px] border-[#D3C9B8] rounded-[2px] hover:border-[#3B6D11] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 text-xs font-sans uppercase tracking-[0.12em] text-grove-cream border-[0.5px] border-grove-moss rounded-[2px] hover:border-grove-fernLine disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
-            <span className="text-xs text-[#2B2B26]">
+            <span className="text-xs text-grove-cream">
               Page {page} of {Math.ceil(total / 20)}
             </span>
             <button
               onClick={() => fetchSpecies(searchQuery, page + 1)}
               disabled={page >= Math.ceil(total / 20)}
-              className="px-4 py-2 text-xs font-sans uppercase tracking-[0.12em] text-[#1C2E10] border-[0.5px] border-[#D3C9B8] rounded-[2px] hover:border-[#3B6D11] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 text-xs font-sans uppercase tracking-[0.12em] text-grove-cream border-[0.5px] border-grove-moss rounded-[2px] hover:border-grove-fernLine disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Next
             </button>

@@ -229,30 +229,30 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
 
   if (error) {
     return (
-      <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-6 text-center" data-testid="grove-chat-error">
-        <AlertCircle className="h-5 w-5 text-[#BA7517] mx-auto mb-2" />
-        <p className="font-plant text-sm text-[#1C2E10]">{error}</p>
+      <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center" data-testid="grove-chat-error">
+        <AlertCircle className="h-5 w-5 text-grove-sun mx-auto mb-2" />
+        <p className="font-plant text-sm text-grove-cream">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] flex flex-col overflow-hidden" data-testid="grove-chat" style={{ height: 'min(70vh, 640px)' }}>
+    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy flex flex-col overflow-hidden" data-testid="grove-chat" style={{ height: 'min(70vh, 640px)' }}>
       {/* Messages list */}
       <div
         ref={scrollerRef}
         onScroll={onScroll}
-        className="flex-1 overflow-y-auto p-3 space-y-2 bg-[#F5F0E8]"
+        className="flex-1 overflow-y-auto p-3 space-y-2 bg-grove-forest"
         data-testid="grove-chat-messages"
       >
         {initialLoading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="w-5 h-5 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
           </div>
         ) : messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6">
-            <p className="font-plant text-[#1C2E10] text-sm">No messages yet</p>
-            <p className="font-latin italic text-[12px] text-[#888780] mt-1">
+            <p className="font-plant text-grove-cream text-sm">No messages yet</p>
+            <p className="font-latin italic text-[12px] text-grove-lichen mt-1">
               Be the first to say hello.
             </p>
           </div>
@@ -279,20 +279,20 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
       </div>
 
       {/* Composer */}
-      <div className="border-t-[0.5px] border-[#D3C9B8] p-3 bg-[#FDFAF6]" data-testid="grove-chat-composer">
+      <div className="border-t-[0.5px] border-grove-moss p-3 bg-grove-canopy" data-testid="grove-chat-composer">
         {photoPath && (
-          <div className="mb-2 flex items-center gap-2 rounded-[8px] border-[0.5px] border-[#3B6D11] bg-[#EAF3DE] px-3 py-2">
+          <div className="mb-2 flex items-center gap-2 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-moss px-3 py-2">
             <img
               src={getFileUrl(photoPath)}
               alt="attachment preview"
               className="w-10 h-10 rounded-[6px] object-cover"
             />
-            <span className="font-ui text-[11px] text-[#5F5E5A] flex-1 truncate">Photo attached</span>
+            <span className="font-ui text-[11px] text-grove-sage flex-1 truncate">Photo attached</span>
             <button
               type="button"
               onClick={() => setPhotoPath(null)}
               data-testid="grove-chat-remove-photo"
-              className="p-1 rounded-[6px] hover:bg-white text-[#5F5E5A]"
+              className="p-1 rounded-[6px] hover:bg-grove-canopy text-grove-sage"
               aria-label="Remove photo"
             >
               <X className="h-3.5 w-3.5" />
@@ -313,11 +313,11 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             onClick={() => fileInputRef.current?.click()}
             disabled={photoUploading || !!photoPath}
             data-testid="grove-chat-attach-btn"
-            className="flex-shrink-0 w-9 h-9 rounded-full border-[0.5px] border-[#D3C9B8] bg-white text-[#3B6D11] hover:border-[#3B6D11] disabled:opacity-40 flex items-center justify-center"
+            className="flex-shrink-0 w-9 h-9 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-sprout hover:border-grove-fernLine disabled:opacity-40 flex items-center justify-center"
             aria-label="Attach photo"
           >
             {photoUploading ? (
-              <div className="w-3.5 h-3.5 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+              <div className="w-3.5 h-3.5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
             ) : (
               <ImageIcon className="h-4 w-4" />
             )}
@@ -334,24 +334,24 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             placeholder="Say something to your Grove…"
             rows={1}
             data-testid="grove-chat-input"
-            className="flex-1 resize-none rounded-[10px] border-[0.5px] border-[#D3C9B8] bg-white px-3 py-2 font-ui text-[13px] text-[#1C2E10] placeholder:text-[#888780] focus:outline-none focus:border-[#3B6D11] max-h-32"
+            className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[13px] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
           />
           <button
             type="button"
             onClick={handleSend}
             disabled={sending || (!body.trim() && !photoPath)}
             data-testid="grove-chat-send-btn"
-            className="flex-shrink-0 w-9 h-9 rounded-full bg-[#3B6D11] text-white hover:bg-[#2D5016] disabled:opacity-40 flex items-center justify-center"
+            className="flex-shrink-0 w-9 h-9 rounded-full bg-grove-lime text-grove-root hover:bg-grove-sprout disabled:opacity-40 flex items-center justify-center"
             aria-label="Send"
           >
             <Send className="h-4 w-4" />
           </button>
         </div>
         <div className="flex items-center justify-between mt-1">
-          <p className="font-latin italic text-[10px] text-[#888780]">
+          <p className="font-latin italic text-[10px] text-grove-lichen">
             Enter to send · Shift+Enter for newline · polls every 5 s
           </p>
-          <p className="font-ui text-[10px] text-[#888780]">
+          <p className="font-ui text-[10px] text-grove-lichen">
             {body.length > MAX_BODY_LEN * 0.8 && `${body.length}/${MAX_BODY_LEN}`}
           </p>
         </div>
@@ -387,7 +387,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
   if (msg.is_deleted) {
     return (
       <div className="flex justify-center my-1" data-testid={`chat-msg-${msg.id}`} data-deleted="true">
-        <span className="font-latin italic text-[11px] text-[#888780] px-3 py-1 rounded-[12px] bg-[#EDE5D8]">
+        <span className="font-latin italic text-[11px] text-grove-lichen px-3 py-1 rounded-[12px] bg-grove-moss">
           Message deleted
         </span>
       </div>
@@ -402,7 +402,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
     >
       <div
         className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
-          isOwn ? 'bg-[#3B6D11] text-white' : 'bg-[#EAF3DE] text-[#3B6D11]'
+          isOwn ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout'
         }`}
         title={msg.author_display_name || msg.author_username || ''}
       >
@@ -410,15 +410,15 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
       </div>
       <div className={`max-w-[78%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
         {!isOwn && (
-          <p className="font-plant text-[11px] text-[#5F5E5A] mb-0.5 ml-1">
+          <p className="font-plant text-[11px] text-grove-sage mb-0.5 ml-1">
             {msg.author_display_name || msg.author_username || ''}
           </p>
         )}
         <div
           className={`rounded-[12px] px-3 py-2 ${
             isOwn
-              ? 'bg-[#3B6D11] text-[#F5F0E8] rounded-tr-[2px]'
-              : 'bg-white border-[0.5px] border-[#D3C9B8] text-[#1C2E10] rounded-tl-[2px]'
+              ? 'bg-grove-lime text-grove-root rounded-tr-[2px]'
+              : 'bg-grove-canopy border-[0.5px] border-grove-moss text-grove-cream rounded-tl-[2px]'
           }`}
         >
           {msg.photo_path && (
@@ -444,14 +444,14 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                 onChange={(e) => setEditBody(e.target.value)}
                 rows={2}
                 data-testid={`chat-msg-${msg.id}-edit-input`}
-                className="w-full resize-none rounded-[6px] border-[0.5px] border-[#D3C9B8] bg-white text-[#1C2E10] px-2 py-1 font-ui text-[13px] focus:outline-none focus:border-[#3B6D11]"
+                className="w-full resize-none rounded-[6px] border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream px-2 py-1 font-ui text-[13px] focus:outline-none focus:border-grove-fernLine"
               />
               <div className="flex items-center gap-1.5 justify-end">
                 <button
                   type="button"
                   onClick={onEditCancel}
                   data-testid={`chat-msg-${msg.id}-edit-cancel`}
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[9px] px-2 py-1 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] bg-white hover:border-[#1C2E10]"
+                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[9px] px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
                 >
                   Cancel
                 </button>
@@ -459,7 +459,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditSave}
                   data-testid={`chat-msg-${msg.id}-edit-save`}
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[9px] px-2 py-1 bg-[#3B6D11] text-white hover:bg-[#2D5016] inline-flex items-center gap-1"
+                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[9px] px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
                 >
                   <Check className="h-3 w-3" /> Save
                 </button>
@@ -474,7 +474,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
           )}
         </div>
         <div className={`flex items-center gap-1.5 mt-0.5 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="font-latin italic text-[9px] text-[#888780]">
+          <span className="font-latin italic text-[9px] text-grove-lichen">
             {formatChatTime(msg.created_at)}
             {msg.edited && ' · edited'}
           </span>
@@ -485,7 +485,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditBegin}
                   data-testid={`chat-msg-${msg.id}-edit-btn`}
-                  className="text-[#888780] hover:text-[#1C2E10]"
+                  className="text-grove-lichen hover:text-grove-cream"
                   aria-label="Edit"
                 >
                   <Edit2 className="h-3 w-3" />
@@ -495,7 +495,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                 type="button"
                 onClick={onDelete}
                 data-testid={`chat-msg-${msg.id}-delete-btn`}
-                className="text-[#888780] hover:text-[#BA1818]"
+                className="text-grove-lichen hover:text-[#BA1818]"
                 aria-label="Delete"
               >
                 <Trash2 className="h-3 w-3" />

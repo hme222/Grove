@@ -33,10 +33,10 @@ export default function LessonPage() {
 
   if (!cards || !LESSON_META[lessonId]) {
     return (
-      <div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-grove-forest flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="font-plant text-[#1C2E10] text-xl mb-2">That lesson isn&apos;t here</p>
-          <button type="button" onClick={() => navigate('/lessons')} className="text-sm underline text-[#2D5016]">
+          <p className="font-plant text-grove-cream text-xl mb-2">That lesson isn&apos;t here</p>
+          <button type="button" onClick={() => navigate('/lessons')} className="text-sm underline text-grove-sprout">
             Back to lessons
           </button>
         </div>

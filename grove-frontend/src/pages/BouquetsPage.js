@@ -62,8 +62,8 @@ export default function BouquetsPage() {
             disabled={atLimit}
             className={`rounded-full w-9 h-9 flex items-center justify-center transition-colors duration-150 ${
               atLimit
-                ? 'bg-[#D3C9B8] text-[#F5F0E8] cursor-not-allowed'
-                : 'bg-[#D4537E] text-white hover:bg-[#b8446a]'
+                ? 'bg-grove-moss text-grove-root cursor-not-allowed'
+                : 'bg-grove-bloom text-grove-root hover:bg-grove-sprout'
             }`}
           >
             {atLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -78,19 +78,19 @@ export default function BouquetsPage() {
             data-testid="bouquet-limit-banner"
             className={`mb-4 rounded-[14px] border-[0.5px] px-4 py-3 flex items-center justify-between ${
               atLimit
-                ? 'border-[#D4537E]/40 bg-[#FBEAF0]'
-                : 'border-[#D3C9B8] bg-[#EDE5D8]'
+                ? 'border-grove-bloom/40 bg-grove-bloom/15'
+                : 'border-grove-moss bg-grove-moss'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${atLimit ? 'bg-[#D4537E]/15' : 'bg-[#F5F0E8]'}`}>
-                <Flower2 className={`h-4 w-4 ${atLimit ? 'text-[#D4537E]' : 'text-[#3B6D11]'}`} />
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${atLimit ? 'bg-grove-bloom/15' : 'bg-grove-forest'}`}>
+                <Flower2 className={`h-4 w-4 ${atLimit ? 'text-grove-bloom' : 'text-grove-sprout'}`} />
               </div>
               <div>
-                <p className="font-plant text-[#1C2E10] text-sm">
+                <p className="font-plant text-grove-cream text-sm">
                   {limits.active_count}/{limits.max_active} active bouquets
                 </p>
-                <p className="font-ui text-[11px] text-[#2B2B26] leading-snug">
+                <p className="font-ui text-[11px] text-grove-cream leading-snug">
                   {atLimit
                     ? 'Free tier is full. Archive one to add another, or upgrade for unlimited arrangements.'
                     : 'Bouquet tracking is free — keep up to 2 active at a time.'}
@@ -101,8 +101,8 @@ export default function BouquetsPage() {
               data-testid="bouquet-limit-counter"
               className={`font-plant text-xs uppercase tracking-[0.1em] px-2 py-1 rounded-[4px] border-[0.5px] ${
                 atLimit
-                  ? 'border-[#D4537E]/40 text-[#D4537E] bg-white'
-                  : 'border-[#D3C9B8] text-[#3B6D11] bg-[#F5F0E8]'
+                  ? 'border-grove-bloom/40 text-grove-bloom bg-grove-canopy'
+                  : 'border-grove-moss text-grove-sprout bg-grove-forest'
               }`}
             >
               {atLimit ? 'Full' : 'Free'}
@@ -112,7 +112,7 @@ export default function BouquetsPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#D4537E] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-bloom border-t-transparent rounded-full animate-spin" />
           </div>
         ) : bouquets.length === 0 ? (
           <EmptyState config={EMPTY_STATES.bouquet_none} />
@@ -123,28 +123,28 @@ export default function BouquetsPage() {
                 key={b.id}
                 onClick={() => navigate(`/bouquets/${b.id}`)}
                 data-testid="bouquet-card"
-                className="rounded-[14px] border-[0.5px] border-[#D4537E]/30 bg-[#FBEAF0] overflow-hidden text-left hover:border-[#D4537E] transition-colors duration-150"
+                className="rounded-[14px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 overflow-hidden text-left hover:border-grove-bloom transition-colors duration-150"
               >
-                <div className="aspect-square bg-[#FBEAF0] flex items-center justify-center">
+                <div className="aspect-square bg-grove-bloom/15 flex items-center justify-center">
                   {b.photo_url ? (
-                    <div className="w-full h-full bg-[#FDF5F8] flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                    <div className="w-full h-full bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
                   ) : (
-                    <Flower2 className="h-10 w-10 text-[#D4537E] opacity-30" />
+                    <Flower2 className="h-10 w-10 text-grove-bloom opacity-30" />
                   )}
                 </div>
                 <div className="px-3 py-2.5">
-                  <p className="font-plant text-[#1C2E10] text-sm truncate">{b.name || 'Bouquet'}</p>
+                  <p className="font-plant text-grove-cream text-sm truncate">{b.name || 'Bouquet'}</p>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <Calendar className="h-3 w-3 text-[#D4537E]" />
-                    <span className="font-latin text-[10px] text-[#D4537E]">{formatDate(b.received_date)}</span>
+                    <Calendar className="h-3 w-3 text-grove-bloom" />
+                    <span className="font-latin text-[10px] text-grove-bloom">{formatDate(b.received_date)}</span>
                     {b.vase_life_expected && (
-                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-[#D4537E]/30 bg-white px-1.5 py-0.5 text-[9px] font-ui text-[#D4537E]">
+                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-1.5 py-0.5 text-[9px] font-ui text-grove-bloom">
                         {b.vase_life_expected}d life
                       </span>
                     )}
                   </div>
                   {b.occasion && (
-                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-[#D4537E]/20 bg-white px-2 py-0.5 text-[9px] font-ui text-[#D4537E] mt-1.5 capitalize">
+                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy px-2 py-0.5 text-[9px] font-ui text-grove-bloom mt-1.5 capitalize">
                       {b.occasion}
                     </span>
                   )}

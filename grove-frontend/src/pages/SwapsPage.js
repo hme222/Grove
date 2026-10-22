@@ -37,7 +37,7 @@ export default function SwapsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-5 h-5 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -55,18 +55,18 @@ export default function SwapsPage() {
       <div className="max-w-[1100px] mx-auto px-4 pt-4 space-y-4">
         {!eligible && (
           <div
-            className="rounded-[14px] border-[0.5px] border-[#BA7517] bg-[#FBF1E1] p-5"
+            className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-sun/15 p-5"
             data-testid="swaps-locked-card"
           >
             <div className="flex items-start gap-3 mb-3">
               <span className="w-10 h-10 rounded-full bg-[#BA7517]/20 flex items-center justify-center flex-shrink-0">
-                <Lock className="h-5 w-5 text-[#7A4F0E]" />
+                <Lock className="h-5 w-5 text-grove-sun" />
               </span>
               <div className="flex-1">
-                <h2 className="font-plant text-[#1C2E10] text-lg leading-tight">
+                <h2 className="font-plant text-grove-cream text-lg leading-tight">
                   Swaps unlock at 3 months on Grove with a Pro subscription, after a one-time verification.
                 </h2>
-                <p className="font-ui text-xs text-[#5F5E5A] leading-relaxed mt-2">
+                <p className="font-ui text-xs text-grove-sage leading-relaxed mt-2">
                   The friction is intentional. We want growers who are committed before they trade plants — too many free communities have learned this the hard way.
                 </p>
               </div>
@@ -110,29 +110,29 @@ export default function SwapsPage() {
 
         {eligible && (
           <div
-            className="rounded-[14px] border-[0.5px] border-[#3B6D11] bg-[#EAF3DE] p-5 text-center"
+            className="rounded-[14px] border-[0.5px] border-grove-fernLine bg-grove-moss p-5 text-center"
             data-testid="swaps-eligible-card"
           >
-            <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3B6D11]/15 mb-3">
-              <Repeat className="h-6 w-6 text-[#3B6D11]" />
+            <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/15 mb-3">
+              <Repeat className="h-6 w-6 text-grove-sprout" />
             </span>
-            <h2 className="font-plant text-[#1C2E10] text-lg">You're cleared to swap</h2>
-            <p className="font-ui text-xs text-[#5F5E5A] mt-1 leading-relaxed">
+            <h2 className="font-plant text-grove-cream text-lg">You're cleared to swap</h2>
+            <p className="font-ui text-xs text-grove-sage mt-1 leading-relaxed">
               Swap listings ship next — for now this is your verified-grower lounge. Browse, want-list, and stay tuned.
             </p>
           </div>
         )}
 
         {/* Discovery surface — visible to everyone, transactable only by eligible users */}
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-5">
-          <h3 className="font-plant text-[#1C2E10] text-sm uppercase tracking-[0.08em]">What you'll trade</h3>
-          <ul className="mt-2 space-y-1.5 font-ui text-xs text-[#2B2B26] leading-relaxed">
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5">
+          <h3 className="font-plant text-grove-cream text-sm uppercase tracking-[0.08em]">What you'll trade</h3>
+          <ul className="mt-2 space-y-1.5 font-ui text-xs text-grove-cream leading-relaxed">
             <li>• Cuttings from your established plants — Pothos, Monstera, String of Pearls.</li>
             <li>• Divisions of clumping perennials — Snake Plant pups, Spider Plant runners.</li>
             <li>• Seeds you saved — Black-eyed Susan and Coneflower for native pollinator beds.</li>
             <li>• Bulbs and corms in season — Anemone, Dahlia tubers in autumn.</li>
           </ul>
-          <p className="font-latin italic text-[10px] text-[#888780] mt-3 leading-snug">
+          <p className="font-latin italic text-[10px] text-grove-lichen mt-3 leading-snug">
             All trades are between verified growers. Grove never handles money or shipping.
           </p>
         </div>
@@ -146,28 +146,28 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
     <li
       data-testid={testid}
       className={`rounded-[10px] border-[0.5px] p-3 flex items-start gap-3 ${
-        done ? 'bg-[#EAF3DE] border-[#3B6D11]' : 'bg-[#FDFAF6] border-[#D3C9B8]'
+        done ? 'bg-grove-moss border-grove-fernLine' : 'bg-grove-canopy border-grove-moss'
       }`}
     >
       <span className="flex-shrink-0 mt-0.5">
         {done ? (
-          <CheckCircle2 className="h-4 w-4 text-[#3B6D11]" />
+          <CheckCircle2 className="h-4 w-4 text-grove-sprout" />
         ) : (
-          <Circle className="h-4 w-4 text-[#5F5E5A]" />
+          <Circle className="h-4 w-4 text-grove-sage" />
         )}
       </span>
       <span className="flex-1 min-w-0">
-        <p className="font-plant text-xs text-[#1C2E10] flex items-center gap-1.5">
+        <p className="font-plant text-xs text-grove-cream flex items-center gap-1.5">
           <Icon className="h-3 w-3" />
           {title}
         </p>
-        <p className="font-ui text-[11px] text-[#5F5E5A] mt-0.5">{detail}</p>
+        <p className="font-ui text-[11px] text-grove-sage mt-0.5">{detail}</p>
       </span>
       {cta && (
         <button
           type="button"
           onClick={cta.onClick}
-          className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-[#D3C9B8] bg-transparent text-[#1C2E10] hover:border-[#2D5016] transition-colors duration-150"
+          className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           {cta.label}
         </button>

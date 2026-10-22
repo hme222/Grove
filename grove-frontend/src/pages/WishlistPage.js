@@ -40,20 +40,20 @@ export default function WishlistPage() {
       <div className="max-w-[700px] mx-auto px-4 py-4">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#D4537E] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-bloom border-t-transparent rounded-full animate-spin" />
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-12" data-testid="wishlist-empty">
-            <div className="w-14 h-14 mx-auto rounded-full bg-[#FBEAF0] border-[0.5px] border-[#D4537E]/30 flex items-center justify-center mb-3">
-              <Scissors className="h-6 w-6 text-[#D4537E]" />
+            <div className="w-14 h-14 mx-auto rounded-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 flex items-center justify-center mb-3">
+              <Scissors className="h-6 w-6 text-grove-bloom" />
             </div>
-            <p className="font-plant text-[#1C2E10] text-lg mb-1">Your wishlist is quiet</p>
-            <p className="font-ui text-sm text-[#2B2B26]">
+            <p className="font-plant text-grove-cream text-lg mb-1">Your wishlist is quiet</p>
+            <p className="font-ui text-sm text-grove-cream">
               React with <span className="font-plant">Cutting</span> on any post in the Grove to add a plant here.
             </p>
             <button
               onClick={() => navigate('/feed')}
-              className="mt-3 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-[#D4537E] text-[#F5F0E8] hover:bg-[#B8406A] transition-colors duration-150"
+              className="mt-3 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-grove-bloom text-grove-root hover:bg-[#B8406A] transition-colors duration-150"
             >
               Browse the feed
             </button>
@@ -64,22 +64,22 @@ export default function WishlistPage() {
               <div
                 key={item.id}
                 data-testid="wishlist-item"
-                className="flex items-center gap-3 rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] px-3 py-3"
+                className="flex items-center gap-3 rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss px-3 py-3"
               >
-                <div className="w-10 h-10 rounded-full bg-[#FBEAF0] border-[0.5px] border-[#D4537E]/30 flex items-center justify-center flex-shrink-0">
-                  <Leaf className="h-5 w-5 text-[#D4537E]" />
+                <div className="w-10 h-10 rounded-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 flex items-center justify-center flex-shrink-0">
+                  <Leaf className="h-5 w-5 text-grove-bloom" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-plant text-[#1C2E10] text-sm truncate">{item.common_name || 'Unknown plant'}</p>
+                  <p className="font-plant text-grove-cream text-sm truncate">{item.common_name || 'Unknown plant'}</p>
                   {item.latin_name && (
-                    <p className="font-latin text-[10px] text-[#2B2B26] italic truncate">{item.latin_name}</p>
+                    <p className="font-latin text-[10px] text-grove-cream italic truncate">{item.latin_name}</p>
                   )}
                 </div>
                 <button
                   onClick={() => handleRemove(item.id)}
                   aria-label="Remove from wishlist"
                   data-testid="wishlist-remove"
-                  className="w-8 h-8 rounded-full border-[0.5px] border-[#D3C9B8] text-[#2B2B26] hover:border-[#D4537E] hover:text-[#D4537E] flex items-center justify-center"
+                  className="w-8 h-8 rounded-full border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-bloom hover:text-grove-bloom flex items-center justify-center"
                 >
                   <X className="h-4 w-4" />
                 </button>

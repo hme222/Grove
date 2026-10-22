@@ -162,7 +162,7 @@ export default function BadgesPage() {
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]" data-testid="badges-loading">
-        <div className="w-5 h-5 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -172,25 +172,25 @@ export default function BadgesPage() {
       <PageHeader title="Badges" count={`${data.earned_count}/${data.total}`} />
 
       <div className="max-w-[1100px] mx-auto px-4 pt-4 space-y-4">
-        <p className="font-ui text-[12px] text-[#5F5E5A]">
+        <p className="font-ui text-[12px] text-grove-sage">
           Pick up to 3 to display publicly. Locked badges show their unlock hint.
         </p>
 
         {/* Phase 14C.4 — pinned goals helper */}
         {pinnedSlugs.size > 0 && (
           <div
-            className="rounded-[10px] border-[0.5px] border-[#3B6D11] bg-white px-3 py-2 inline-flex items-center gap-2"
+            className="rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-canopy px-3 py-2 inline-flex items-center gap-2"
             data-testid="badges-goal-counter"
           >
-            <Target className="h-3.5 w-3.5 text-[#3B6D11]" />
-            <span className="font-plant text-[12px] text-[#1C2E10]">
+            <Target className="h-3.5 w-3.5 text-grove-sprout" />
+            <span className="font-plant text-[12px] text-grove-cream">
               {pinnedSlugs.size} of 5 goals pinned
             </span>
-            <span className="font-latin italic text-[11px] text-[#888780]">·</span>
+            <span className="font-latin italic text-[11px] text-grove-lichen">·</span>
             <button
               type="button"
               onClick={() => navigate('/care/today')}
-              className="font-plant uppercase tracking-[0.08em] text-[10px] text-[#3B6D11] hover:text-[#2D5016]"
+              className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sprout hover:text-grove-sprout"
               data-testid="badges-view-on-care"
             >
               View on Care tab
@@ -199,19 +199,19 @@ export default function BadgesPage() {
         )}
         {/* Displayed picker */}
         <div
-          className="rounded-[14px] border-[0.5px] border-[#3B6D11] bg-[#EAF3DE] p-4"
+          className="rounded-[14px] border-[0.5px] border-grove-fernLine bg-grove-moss p-4"
           data-testid="badges-displayed-section"
         >
           <div className="flex items-center justify-between gap-2 mb-3">
-            <h3 className="font-plant text-sm text-[#1C2E10] inline-flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-[#3B6D11]" />
+            <h3 className="font-plant text-sm text-grove-cream inline-flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-grove-sprout" />
               Displayed on your profile
             </h3>
             <button
               type="button"
               onClick={() => { setPickerSelection(data.displayed || []); setPickerOpen(true); }}
               data-testid="badges-edit-picker"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-[#3B6D11] bg-white text-[#1C2E10] hover:bg-[#3B6D11] hover:text-white transition-colors duration-150"
+              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-fernLine bg-grove-canopy text-grove-cream hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
             >
               {(data.displayed || []).length > 0 ? 'Change' : 'Pick badges'}
             </button>
@@ -224,23 +224,23 @@ export default function BadgesPage() {
                 <div
                   key={i}
                   className={`rounded-[10px] border-[0.5px] p-3 ${
-                    item ? 'bg-white border-[#3B6D11]' : 'bg-[#FDFAF6] border-dashed border-[#D3C9B8]'
+                    item ? 'bg-grove-canopy border-grove-fernLine' : 'bg-grove-canopy border-dashed border-grove-moss'
                   } flex flex-col items-center text-center`}
                   data-testid={`badges-displayed-slot-${i}`}
                 >
                   {item ? (
                     <>
                       <BadgeTile item={item} compact />
-                      <p className="font-plant text-[11px] text-[#1C2E10] mt-1.5 leading-tight">
+                      <p className="font-plant text-[11px] text-grove-cream mt-1.5 leading-tight">
                         {item.name}
                       </p>
                     </>
                   ) : (
                     <>
-                      <span className="w-10 h-10 rounded-full bg-[#EDE5D8] flex items-center justify-center mb-1">
-                        <Award className="h-4 w-4 text-[#888780]" />
+                      <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
+                        <Award className="h-4 w-4 text-grove-lichen" />
                       </span>
-                      <p className="font-latin italic text-[10px] text-[#888780]">Empty slot</p>
+                      <p className="font-latin italic text-[10px] text-grove-lichen">Empty slot</p>
                     </>
                   )}
                 </div>
@@ -251,7 +251,7 @@ export default function BadgesPage() {
 
         {/* Filters */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-plant uppercase tracking-[0.08em] text-[10px] text-[#5F5E5A] flex items-center gap-1">
+          <span className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sage flex items-center gap-1">
             <Filter className="h-3 w-3" /> Show
           </span>
           {FILTER_TABS.map((t) => (
@@ -262,22 +262,22 @@ export default function BadgesPage() {
               data-testid={`badges-filter-${t.id}`}
               className={`rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
                 filter === t.id
-                  ? 'bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10]'
-                  : 'bg-transparent text-[#1C2E10] border-[#D3C9B8] hover:border-[#1C2E10]'
+                  ? 'bg-grove-lime text-grove-root border-grove-fernLine'
+                  : 'bg-transparent text-grove-cream border-grove-moss hover:border-grove-fernLine'
               }`}
             >
               {t.label}
             </button>
           ))}
-          <span className="w-px h-4 bg-[#D3C9B8] mx-1" />
+          <span className="w-px h-4 bg-grove-moss mx-1" />
           <button
             type="button"
             onClick={() => setSelectedCategory('all')}
             data-testid="badges-cat-all"
             className={`rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
               selectedCategory === 'all'
-                ? 'bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10]'
-                : 'bg-transparent text-[#1C2E10] border-[#D3C9B8] hover:border-[#1C2E10]'
+                ? 'bg-grove-lime text-grove-root border-grove-fernLine'
+                : 'bg-transparent text-grove-cream border-grove-moss hover:border-grove-fernLine'
             }`}
           >
             All categories
@@ -290,8 +290,8 @@ export default function BadgesPage() {
               data-testid={`badges-cat-${c.toLowerCase().replace(/[^a-z]+/g, '-')}`}
               className={`rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
                 selectedCategory === c
-                  ? 'bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10]'
-                  : 'bg-transparent text-[#1C2E10] border-[#D3C9B8] hover:border-[#1C2E10]'
+                  ? 'bg-grove-lime text-grove-root border-grove-fernLine'
+                  : 'bg-transparent text-grove-cream border-grove-moss hover:border-grove-fernLine'
               }`}
             >
               {c}
@@ -301,9 +301,9 @@ export default function BadgesPage() {
 
         {/* Empty state */}
         {grouped.length === 0 && (
-          <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-8 text-center">
-            <p className="font-plant text-[#1C2E10] text-sm">No badges match this filter.</p>
-            <p className="font-latin italic text-[12px] text-[#888780] mt-1">
+          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-8 text-center">
+            <p className="font-plant text-grove-cream text-sm">No badges match this filter.</p>
+            <p className="font-latin italic text-[12px] text-grove-lichen mt-1">
               Try a different category or switch the Earned/Locked filter.
             </p>
           </div>
@@ -312,7 +312,7 @@ export default function BadgesPage() {
         {/* Grid grouped by subcategory */}
         {grouped.map(([title, items]) => (
           <section key={title} data-testid={`badges-group-${title.toLowerCase().replace(/[^a-z]+/g, '-')}`}>
-            <h3 className="font-plant uppercase tracking-[0.08em] text-[10px] text-[#5F5E5A] mb-2">{title}</h3>
+            <h3 className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sage mb-2">{title}</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
               {items.map((it) => (
                 <BadgeTile
@@ -351,15 +351,15 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
   return (
     <div
       className={`relative rounded-[10px] border-[0.5px] p-3 flex flex-col items-center text-center transition-colors duration-150 ${
-        earned ? 'bg-[#FDFAF6] border-[#D3C9B8]' : 'bg-[#EDE5D8]/60 border-dashed border-[#D3C9B8]'
-      } ${isPinned ? 'ring-1 ring-[#3B6D11] ring-offset-1 ring-offset-[#F5F0E8]' : ''} ${compact ? 'p-1' : ''}`}
+        earned ? 'bg-grove-canopy border-grove-moss' : 'bg-grove-moss/60 border-dashed border-grove-moss'
+      } ${isPinned ? 'ring-1 ring-grove-lime ring-offset-1 ring-offset-grove-forest' : ''} ${compact ? 'p-1' : ''}`}
       data-testid={`badge-tile-${item.slug}`}
       data-earned={earned ? 'true' : 'false'}
       data-pinned={isPinned ? 'true' : 'false'}
     >
       {isPinned && !compact && (
         <span
-          className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-[#3B6D11] text-white px-1.5 py-0.5"
+          className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime text-grove-root px-1.5 py-0.5"
           data-testid={`badge-tile-${item.slug}-pinned-flag`}
         >
           <Target className="h-2.5 w-2.5" />
@@ -377,12 +377,12 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
         {earned ? (
           <BadgeIcon name={item.icon} className="h-5 w-5" style={{ color: tierColor?.text || '#3B6D11' }} />
         ) : (
-          <Lock className="h-4 w-4 text-[#888780]" />
+          <Lock className="h-4 w-4 text-grove-lichen" />
         )}
       </span>
       {!compact && (
         <>
-          <p className={`font-plant text-[12px] leading-tight ${earned ? 'text-[#1C2E10]' : 'text-[#5F5E5A]'}`}>
+          <p className={`font-plant text-[12px] leading-tight ${earned ? 'text-grove-cream' : 'text-grove-sage'}`}>
             {item.name}
           </p>
           {item.tier && earned && (
@@ -397,11 +397,11 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
               {item.tier}
             </span>
           )}
-          <p className="font-latin italic text-[10px] text-[#888780] mt-1 leading-tight">
+          <p className="font-latin italic text-[10px] text-grove-lichen mt-1 leading-tight">
             {item.description}
           </p>
           {!earned && !item.earnable && (
-            <p className="font-latin italic text-[9px] text-[#BA7517] mt-1">
+            <p className="font-latin italic text-[9px] text-grove-sun mt-1">
               Granted by Grove
             </p>
           )}
@@ -413,8 +413,8 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
               data-testid={`badge-tile-${item.slug}-pin-btn`}
               className={`mt-2 inline-flex items-center gap-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[9px] px-2 py-1 border-[0.5px] transition-colors duration-150 ${
                 isPinned
-                  ? 'bg-[#3B6D11] text-white border-[#3B6D11] hover:bg-[#2D5016]'
-                  : 'bg-transparent text-[#3B6D11] border-[#3B6D11] hover:bg-[#3B6D11] hover:text-white'
+                  ? 'bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout'
+                  : 'bg-transparent text-grove-sprout border-grove-fernLine hover:bg-grove-sprout hover:text-grove-cream'
               } disabled:opacity-40 disabled:cursor-not-allowed`}
               title={isPinned ? 'Unpin goal' : (pinDisabled ? 'You\'ve pinned 5 goals — unpin one first.' : 'Pin as goal')}
             >
@@ -464,13 +464,13 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
       data-testid="badges-picker-modal"
     >
       <div
-        className="bg-[#FDFAF6] rounded-[14px] border-[0.5px] border-[#D3C9B8] shadow-xl w-full max-w-[640px] max-h-[85vh] overflow-hidden flex flex-col"
+        className="bg-grove-canopy rounded-[14px] border-[0.5px] border-grove-moss shadow-xl w-full max-w-[640px] max-h-[85vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-5 border-b-[0.5px] border-[#D3C9B8]">
+        <div className="flex items-start justify-between p-5 border-b-[0.5px] border-grove-moss">
           <div className="flex-1 min-w-0">
-            <h3 className="font-plant text-[#1C2E10] text-lg">Pick up to 3 badges to display</h3>
-            <p className="font-latin italic text-[11px] text-[#888780] mt-1">
+            <h3 className="font-plant text-grove-cream text-lg">Pick up to 3 badges to display</h3>
+            <p className="font-latin italic text-[11px] text-grove-lichen mt-1">
               {selection.length} of 3 selected · only the highest tier in each family is shown
             </p>
           </div>
@@ -478,7 +478,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
             type="button"
             onClick={onCancel}
             data-testid="badges-picker-close"
-            className="flex-shrink-0 p-1.5 rounded-[6px] hover:bg-[#EDE5D8] text-[#5F5E5A] transition-colors duration-150"
+            className="flex-shrink-0 p-1.5 rounded-[6px] hover:bg-grove-moss text-grove-sage transition-colors duration-150"
             aria-label="Close"
           >
             <XIcon className="h-4 w-4" />
@@ -487,13 +487,13 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
 
         <div className="overflow-y-auto p-5 space-y-4">
           {grouped.length === 0 ? (
-            <p className="font-ui text-sm text-[#5F5E5A] text-center py-8">
+            <p className="font-ui text-sm text-grove-sage text-center py-8">
               You haven't earned any displayable badges yet. Keep growing.
             </p>
           ) : (
             grouped.map(([cat, items]) => (
               <section key={cat}>
-                <h4 className="font-plant uppercase tracking-[0.08em] text-[10px] text-[#5F5E5A] mb-2">
+                <h4 className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sage mb-2">
                   {cat}
                 </h4>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -507,17 +507,17 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
                         data-testid={`picker-tile-${it.slug}`}
                         className={`relative rounded-[10px] border-[0.5px] p-3 flex flex-col items-center text-center transition-colors duration-150 ${
                           isSel
-                            ? 'bg-[#EAF3DE] border-[#3B6D11]'
-                            : 'bg-white border-[#D3C9B8] hover:border-[#3B6D11]'
+                            ? 'bg-grove-moss border-grove-fernLine'
+                            : 'bg-grove-canopy border-grove-moss hover:border-grove-fernLine'
                         }`}
                       >
                         {isSel && (
-                          <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#3B6D11] flex items-center justify-center">
-                            <Check className="h-3 w-3 text-white" />
+                          <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-grove-lime flex items-center justify-center">
+                            <Check className="h-3 w-3 text-grove-cream" />
                           </span>
                         )}
                         <BadgeTile item={it} compact />
-                        <p className="font-plant text-[12px] text-[#1C2E10] mt-1.5 leading-tight">
+                        <p className="font-plant text-[12px] text-grove-cream mt-1.5 leading-tight">
                           {it.name}
                         </p>
                       </button>
@@ -529,12 +529,12 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
           )}
         </div>
 
-        <div className="border-t-[0.5px] border-[#D3C9B8] p-4 flex items-center justify-end gap-2">
+        <div className="border-t-[0.5px] border-grove-moss p-4 flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={onCancel}
             data-testid="badges-picker-cancel"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] bg-transparent text-[#1C2E10] hover:border-[#2D5016] transition-colors duration-150"
+            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
           >
             Cancel
           </button>
@@ -543,7 +543,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
             onClick={onSave}
             disabled={saving}
             data-testid="badges-picker-save"
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-[#3B6D11] text-[#FDFAF6] hover:bg-[#2D5016] transition-colors duration-150 disabled:opacity-50"
+            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
           >
             {saving ? 'Saving…' : 'Save selection'}
           </button>

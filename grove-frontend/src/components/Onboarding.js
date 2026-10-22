@@ -85,7 +85,7 @@ export function Onboarding({ onComplete }) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${screen.dark ? 'bg-[#1C2E10]' : 'bg-[#F5F0E8]'}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center ${screen.dark ? 'bg-grove-lime' : 'bg-grove-forest'}`}
       data-testid="onboarding-flow"
     >
       <div className="w-full max-w-md px-4">
@@ -94,7 +94,7 @@ export function Onboarding({ onComplete }) {
           <button
             onClick={handleSkip}
             disabled={isCompleting}
-            className={`absolute top-4 right-4 transition-colors ${screen.dark ? 'text-[#9FE1CB] hover:text-[#EAF3DE]' : 'text-[#2B2B26] hover:text-[#1C2E10]'}`}
+            className={`absolute top-4 right-4 transition-colors ${screen.dark ? 'text-grove-sprout hover:text-grove-sprout' : 'text-grove-cream hover:text-grove-cream'}`}
             data-testid="onboarding-skip"
             aria-label="Skip onboarding"
           >
@@ -104,7 +104,7 @@ export function Onboarding({ onComplete }) {
 
         {/* Hero image (welcome or photos screen) */}
         {screen.image && (screen.id === 'welcome' || screen.id === 'photos') && (
-          <div className={`rounded-[14px] overflow-hidden mb-6 border-[0.5px] ${screen.dark ? 'border-[#2D5016]' : 'border-[#D3C9B8]'}`}>
+          <div className={`rounded-[14px] overflow-hidden mb-6 border-[0.5px] ${screen.dark ? 'border-grove-fernLine' : 'border-grove-moss'}`}>
             <img
               src={screen.image}
               alt={screen.id === 'photos' ? 'A plant in soft light' : 'Welcome to Grove'}
@@ -116,28 +116,28 @@ export function Onboarding({ onComplete }) {
         {/* Content */}
         <div className="space-y-6 text-center">
           <div className="space-y-3">
-            <h1 className={`font-plant text-4xl tracking-[-0.01em] ${screen.dark ? 'text-[#EAF3DE]' : 'text-[#1C2E10]'}`}>
+            <h1 className={`font-plant text-4xl tracking-[-0.01em] ${screen.dark ? 'text-grove-sprout' : 'text-grove-cream'}`}>
               {screen.title}
             </h1>
             {screen.tagline && (
-              <p className={`font-sans text-sm uppercase tracking-[0.12em] ${screen.dark ? 'text-[#9FE1CB]' : 'text-[#3B6D11]'}`}>
+              <p className={`font-sans text-sm uppercase tracking-[0.12em] ${screen.dark ? 'text-grove-sprout' : 'text-grove-sprout'}`}>
                 {screen.tagline}
               </p>
             )}
             {screen.subtitle && (
-              <p className={`text-base font-medium ${screen.dark ? 'text-[#9FE1CB]' : 'text-[#2B2B26]'}`}>{screen.subtitle}</p>
+              <p className={`text-base font-medium ${screen.dark ? 'text-grove-sprout' : 'text-grove-cream'}`}>{screen.subtitle}</p>
             )}
           </div>
 
-          <p className={`text-sm leading-relaxed max-w-sm mx-auto italic ${screen.dark ? 'text-[#9FE1CB]' : 'text-[#2B2B26]'}`}>
+          <p className={`text-sm leading-relaxed max-w-sm mx-auto italic ${screen.dark ? 'text-grove-sprout' : 'text-grove-cream'}`}>
             {screen.body}
           </p>
 
           {screen.tip && (
             <div className={`inline-flex items-center gap-2 rounded-[20px] border-[0.5px] px-3 py-1.5 ${
               screen.dark
-                ? 'border-[#5DCAA5] bg-[#2D5016] text-[#9FE1CB]'
-                : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1C2E10]'
+                ? 'border-grove-lime bg-grove-lime text-grove-sprout'
+                : 'border-grove-moss bg-grove-moss text-grove-cream'
             }`}>
               <span className="font-plant uppercase tracking-[0.1em] text-[10px]">Quick tip</span>
               <span className="font-ui text-xs">{screen.tip}</span>
@@ -151,8 +151,8 @@ export function Onboarding({ onComplete }) {
             data-testid="onboarding-continue"
             className={`w-full rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] transition-colors duration-150 ${
               screen.dark
-                ? 'bg-[#5DCAA5] text-[#1C2E10] border-[#5DCAA5] hover:bg-[#4ab08d] hover:border-[#4ab08d]'
-                : 'bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10] hover:bg-[#2D5016] hover:border-[#2D5016]'
+                ? 'bg-grove-lime text-grove-cream border-grove-lime hover:bg-grove-sprout hover:border-grove-moss'
+                : 'bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout hover:border-grove-fernLine'
             }`}
           >
             {isCompleting ? 'Loading...' : screen.cta}
@@ -165,8 +165,8 @@ export function Onboarding({ onComplete }) {
                 key={index}
                 className={`h-1.5 rounded-full transition-all duration-200 ${
                   index === currentScreen
-                    ? (screen.dark ? 'w-6 bg-[#9FE1CB]' : 'w-6 bg-[#3B6D11]')
-                    : (screen.dark ? 'w-1.5 bg-[#2D5016]' : 'w-1.5 bg-[#D3C9B8]')
+                    ? (screen.dark ? 'w-6 bg-grove-moss' : 'w-6 bg-grove-lime')
+                    : (screen.dark ? 'w-1.5 bg-grove-lime' : 'w-1.5 bg-grove-moss')
                 }`}
               />
             ))}

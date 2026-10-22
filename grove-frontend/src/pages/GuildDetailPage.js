@@ -34,8 +34,8 @@ export default function GuildDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F0E8]">
-        <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
+        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -44,18 +44,18 @@ export default function GuildDetailPage() {
   const paragraphs = (guild.description || '').split('\n\n').filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] pb-6" data-testid="guild-detail">
-      <div className="sticky top-0 z-40 bg-[#F5F0E8] border-b-[0.5px] border-[#D3C9B8] px-4 py-3">
+    <div className="min-h-screen bg-grove-forest pb-6" data-testid="guild-detail">
+      <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss px-4 py-3">
         <div className="flex items-center gap-3 max-w-[1100px] mx-auto">
           <button
             onClick={() => navigate('/greenhouse')}
-            className="text-[#1C2E10] hover:text-[#3B6D11] transition-colors"
+            className="text-grove-cream hover:text-grove-sprout transition-colors"
             data-testid="guild-back-button"
             aria-label="Back to Greenhouse"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-          <h1 className="font-plant text-xl text-[#1C2E10]">Guild</h1>
+          <h1 className="font-plant text-xl text-grove-cream">Guild</h1>
         </div>
       </div>
 
@@ -82,14 +82,14 @@ export default function GuildDetailPage() {
             {guild.name}
           </h2>
           {guild.subtitle && (
-            <p className="font-latin italic text-sm text-[#3B3A33]">{guild.subtitle}</p>
+            <p className="font-latin italic text-sm text-grove-cream">{guild.subtitle}</p>
           )}
           {guild.tags?.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {guild.tags.map((t) => (
                 <span
                   key={t}
-                  className="px-2 py-0.5 rounded-[20px] bg-[#FDFAF6] border-[0.5px] border-[#D3C9B8] text-[10px] font-ui uppercase tracking-[0.08em] text-[#5F5E5A]"
+                  className="px-2 py-0.5 rounded-[20px] bg-grove-canopy border-[0.5px] border-grove-moss text-[10px] font-ui uppercase tracking-[0.08em] text-grove-sage"
                 >
                   {t}
                 </span>
@@ -99,9 +99,9 @@ export default function GuildDetailPage() {
         </div>
 
         {/* Description */}
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-5" data-testid="guild-description">
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5" data-testid="guild-description">
           {paragraphs.map((p, i) => (
-            <p key={i} className={`font-ui text-sm leading-relaxed text-[#2B2B26] ${i > 0 ? 'mt-3' : ''}`}>
+            <p key={i} className={`font-ui text-sm leading-relaxed text-grove-cream ${i > 0 ? 'mt-3' : ''}`}>
               {p}
             </p>
           ))}
@@ -114,16 +114,16 @@ export default function GuildDetailPage() {
             style={{ borderColor: `${accent}40`, backgroundColor: `${accent}08` }}
             data-testid="guild-design-notes"
           >
-            <p className="font-plant text-[10px] uppercase tracking-[0.12em] text-[#1C2E10] mb-1.5">
+            <p className="font-plant text-[10px] uppercase tracking-[0.12em] text-grove-cream mb-1.5">
               Design notes
             </p>
-            <p className="font-ui text-xs leading-relaxed text-[#2B2B26]">{guild.design_notes}</p>
+            <p className="font-ui text-xs leading-relaxed text-grove-cream">{guild.design_notes}</p>
           </div>
         )}
 
         {/* Species */}
         <div data-testid="guild-species-list">
-          <h3 className="font-plant text-[#1C2E10] text-sm uppercase tracking-[0.08em] mb-2">
+          <h3 className="font-plant text-grove-cream text-sm uppercase tracking-[0.08em] mb-2">
             The {guild.species.length} species in this guild
           </h3>
           <ul className="space-y-2">
@@ -133,13 +133,13 @@ export default function GuildDetailPage() {
                   type="button"
                   onClick={() => navigate(`/greenhouse/${s.id}`)}
                   data-testid={`guild-species-${s.slug}`}
-                  className="w-full text-left rounded-[12px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-3 hover:border-[#3B6D11] transition-colors duration-150"
+                  className="w-full text-left rounded-[12px] border-[0.5px] border-grove-moss bg-grove-canopy p-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
                   <div className="flex items-baseline justify-between gap-2 mb-1">
-                    <span className="font-plant text-base text-[#1C2E10]">{s.common_name}</span>
-                    <span className="font-latin italic text-xs text-[#3B3A33]">{s.latin_name}</span>
+                    <span className="font-plant text-base text-grove-cream">{s.common_name}</span>
+                    <span className="font-latin italic text-xs text-grove-cream">{s.latin_name}</span>
                   </div>
-                  <div className="flex flex-wrap gap-3 mt-1.5 text-[11px] font-ui text-[#5F5E5A]">
+                  <div className="flex flex-wrap gap-3 mt-1.5 text-[11px] font-ui text-grove-sage">
                     <span className="inline-flex items-center gap-1">
                       <Sun className="h-3 w-3" /> {LIGHT_LABEL[s.default_light_level] || s.default_light_level || '—'}
                     </span>
@@ -147,7 +147,7 @@ export default function GuildDetailPage() {
                       <Droplets className="h-3 w-3" /> Every {s.default_watering_days || '—'} days
                     </span>
                     {s.flags?.native_to_na && (
-                      <span className="inline-flex items-center gap-1 text-[#3B6D11]">
+                      <span className="inline-flex items-center gap-1 text-grove-sprout">
                         <Leaf className="h-3 w-3" /> Native to NA
                       </span>
                     )}

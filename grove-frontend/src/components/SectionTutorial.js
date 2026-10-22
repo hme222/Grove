@@ -26,7 +26,7 @@ export const TUTORIAL_COPY = {
     title: 'Welcome to Care',
     icon: Droplets,
     body: "This is your daily rhythm. Today shows what's due now and the badges you're working toward. Growth tracks change over time. Each tap is a small act of attention.",
-    accent: '#5DCAA5',
+    accent: '#92B44B',
   },
   grove: {
     title: 'Welcome to Grove',
@@ -81,7 +81,7 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
 
   return (
     <div
-      className="fixed inset-0 z-[300] bg-[#1C2E10]/85 flex items-end sm:items-center justify-center p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-[300] bg-grove-lime/85 flex items-end sm:items-center justify-center p-4 animate-in fade-in duration-200"
       data-testid={`section-tutorial-${tutorialId}`}
       role="dialog"
       aria-modal="true"
@@ -89,14 +89,14 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[440px] rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] shadow-2xl overflow-hidden"
+        className="relative w-full max-w-[440px] rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy shadow-2xl overflow-hidden"
       >
         <button
           type="button"
           onClick={dismiss}
           aria-label="Close tutorial"
           data-testid={`section-tutorial-close-${tutorialId}`}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#F5F0E8] text-[#1C2E10] flex items-center justify-center hover:bg-[#EAF3DE] z-10"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-grove-forest text-grove-cream flex items-center justify-center hover:bg-grove-moss z-10"
         >
           <X className="h-4 w-4" />
         </button>
@@ -107,17 +107,17 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
           >
             <Icon className="h-6 w-6" style={{ color: copy.accent }} />
           </div>
-          <h2 className="font-plant text-[#1C2E10] text-xl mb-3 leading-tight">
+          <h2 className="font-plant text-grove-cream text-xl mb-3 leading-tight">
             {copy.title}
           </h2>
-          <p className="font-ui text-sm leading-relaxed text-[#2B2B26]">
+          <p className="font-ui text-sm leading-relaxed text-grove-cream">
             {copy.body}
           </p>
           <button
             type="button"
             onClick={dismiss}
             data-testid={`section-tutorial-cta-${tutorialId}`}
-            className="mt-5 w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#1C2E10] text-[#F5F0E8] border-[0.5px] border-[#1C2E10] hover:bg-[#2D5016] transition-colors duration-150"
+            className="mt-5 w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
           >
             Got it
           </button>
@@ -148,7 +148,7 @@ export function ReplayTutorialButton({ tutorialId, label, className }) {
       onClick={handle}
       disabled={busy}
       data-testid={`replay-tutorial-${tutorialId}`}
-      className={className || 'rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] bg-transparent text-[#1C2E10] hover:border-[#2D5016] disabled:opacity-50 transition-colors duration-150'}
+      className={className || 'rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
     >
       {busy ? 'Resetting…' : (label || 'Replay')}
     </button>

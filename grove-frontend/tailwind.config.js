@@ -13,6 +13,23 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+  			grove: {
+  				forest: '#202D14',
+  				canopy: '#2D3B1A',
+  				moss: '#3C4D26',
+  				cream: '#F4F1E6',
+  				lime: '#92B44B',
+  				root: '#1A2410',
+  				sage: '#B7C0A4',
+  				inputLine: '#4E6232',
+  				bloom: '#E57A9C',
+  				fernLine: '#64793F',
+  				sprout: '#C3D98A',
+  				understory: '#172010',
+  				lichen: '#A9B09A',
+  				night: '#0B0F08',
+  				sun: '#E8D77A'
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

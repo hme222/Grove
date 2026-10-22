@@ -71,28 +71,28 @@ export default function AdminDemoPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F0E8]">
-        <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
+        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] pb-6">
+    <div className="min-h-screen bg-grove-forest pb-6">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#F5F0E8] border-b-[0.5px] border-[#D3C9B8] px-4 py-3">
+      <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss px-4 py-3">
         <div className="flex items-center gap-3 max-w-[1100px] mx-auto">
           <button
             onClick={() => navigate('/profile')}
-            className="text-[#1C2E10] hover:text-[#3B6D11] transition-colors"
+            className="text-grove-cream hover:text-grove-sprout transition-colors"
             aria-label="Go back"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-          <h1 className="font-plant text-xl text-[#1C2E10]">Demo Admin Panel</h1>
+          <h1 className="font-plant text-xl text-grove-cream">Demo Admin Panel</h1>
           <button
             onClick={fetchStatus}
-            className="ml-auto text-[#3B6D11] hover:text-[#1C2E10] transition-colors"
+            className="ml-auto text-grove-sprout hover:text-grove-cream transition-colors"
             aria-label="Refresh status"
           >
             <RefreshCw className="h-5 w-5" />
@@ -102,8 +102,8 @@ export default function AdminDemoPage() {
 
       <div className="max-w-[1100px] mx-auto px-4 pt-6 space-y-6">
         {/* Warning */}
-        <div className="rounded-[14px] border-[0.5px] border-[#D4537E] bg-[#FEE4E2] p-4">
-          <p className="text-sm text-[#B42318]">
+        <div className="rounded-[14px] border-[0.5px] border-grove-bloom bg-grove-bloom/15 p-4">
+          <p className="text-sm text-grove-bloom">
             ⚠️ <strong>Admin Only:</strong> These controls modify test account data. Use for demos and testing only.
           </p>
         </div>
@@ -112,42 +112,42 @@ export default function AdminDemoPage() {
         {status?.accounts?.map((account) => (
           <div
             key={account.username}
-            className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-5"
+            className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5"
           >
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0">
-                <User className="h-6 w-6 text-[#3B6D11]" />
+              <div className="w-12 h-12 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
+                <User className="h-6 w-6 text-grove-sprout" />
               </div>
               <div className="flex-1">
-                <h2 className="font-plant text-lg text-[#1C2E10]">
-                  {account.display_name} <span className="text-sm text-[#3B3A33]">@{account.username}</span>
+                <h2 className="font-plant text-lg text-grove-cream">
+                  {account.display_name} <span className="text-sm text-grove-cream">@{account.username}</span>
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="px-2 py-1 rounded-[20px] bg-[#EAF3DE] text-[#1C2E10] text-xs font-sans uppercase tracking-[0.12em]">
+                  <span className="px-2 py-1 rounded-[20px] bg-grove-moss text-grove-cream text-xs font-sans uppercase tracking-[0.12em]">
                     {account.tier}
                   </span>
-                  <span className="text-xs text-[#2B2B26]">
+                  <span className="text-xs text-grove-cream">
                     Streak: {account.current_streak} days
                   </span>
-                  <span className="text-xs text-[#2B2B26]">
+                  <span className="text-xs text-grove-cream">
                     Plants: {account.plants_count}
                   </span>
-                  <span className="text-xs text-[#2B2B26]">
+                  <span className="text-xs text-grove-cream">
                     Active bouquets: {account.active_bouquets}
                   </span>
                 </div>
                 
                 {/* Unlocks */}
                 <div className="flex items-center gap-3 mt-3">
-                  <span className="text-xs font-sans uppercase tracking-[0.12em] text-[#3B3A33]">Unlocks:</span>
+                  <span className="text-xs font-sans uppercase tracking-[0.12em] text-grove-cream">Unlocks:</span>
                   {Object.entries(account.unlocks).map(([key, unlocked]) => (
                     <div key={key} className="flex items-center gap-1">
                       {unlocked ? (
-                        <Check className="h-3 w-3 text-[#3B6D11]" />
+                        <Check className="h-3 w-3 text-grove-sprout" />
                       ) : (
-                        <div className="h-3 w-3 rounded-full border border-[#D3C9B8]" />
+                        <div className="h-3 w-3 rounded-full border border-grove-moss" />
                       )}
-                      <span className="text-xs text-[#2B2B26] capitalize">{key.replace('_', ' ')}</span>
+                      <span className="text-xs text-grove-cream capitalize">{key.replace('_', ' ')}</span>
                     </div>
                   ))}
                 </div>
@@ -156,14 +156,14 @@ export default function AdminDemoPage() {
 
             {/* Quick State Buttons */}
             <div className="space-y-3">
-              <h3 className="font-sans text-xs uppercase tracking-[0.12em] text-[#1C2E10]">Quick State Actions</h3>
+              <h3 className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream">Quick State Actions</h3>
               <div className="grid grid-cols-2 gap-2">
                 {account.username === 'mayagreens' && (
                   <>
                     <Button
                       onClick={() => handleQuickState('mayagreens', 'set_streak_6', 'Streak set to 6 days')}
                       disabled={actionLoading === 'mayagreens-set_streak_6'}
-                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-[#5DCAA5] text-white hover:bg-[#4ab08d]"
+                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
                     >
                       <Zap className="h-3 w-3 mr-1" />
                       Set streak to 6 days
@@ -171,7 +171,7 @@ export default function AdminDemoPage() {
                     <Button
                       onClick={() => handleQuickState('mayagreens', 'set_streak_7', 'Feed unlocked!')}
                       disabled={actionLoading === 'mayagreens-set_streak_7'}
-                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-[#3B6D11] text-white hover:bg-[#2D5016]"
+                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
                     >
                       <Zap className="h-3 w-3 mr-1" />
                       Unlock feed (7 days)
@@ -184,7 +184,7 @@ export default function AdminDemoPage() {
                     <Button
                       onClick={() => handleQuickState('rootsandstems', 'set_streak_30', 'Swaps unlocked!')}
                       disabled={actionLoading === 'rootsandstems-set_streak_30'}
-                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-[#3B6D11] text-white hover:bg-[#2D5016]"
+                      className="rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout"
                     >
                       <Zap className="h-3 w-3 mr-1" />
                       Unlock swaps (30 days)
@@ -197,7 +197,7 @@ export default function AdminDemoPage() {
               <Button
                 onClick={() => handleReset(account.username)}
                 disabled={actionLoading === `reset-${account.username}`}
-                className="w-full rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-transparent text-[#B42318] border-[0.5px] border-[#D3C9B8] hover:border-[#B42318]"
+                className="w-full rounded-[2px] font-[Georgia] text-xs px-3 py-2 bg-transparent text-grove-bloom border-[0.5px] border-grove-moss hover:border-grove-moss"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
                 {actionLoading === `reset-${account.username}` ? 'Resetting...' : `Reset ${account.username}`}
@@ -207,14 +207,14 @@ export default function AdminDemoPage() {
         ))}
 
         {/* Instructions */}
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4">
-          <h3 className="font-sans text-xs uppercase tracking-[0.12em] text-[#1C2E10] mb-2">
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
+          <h3 className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2">
             Re-seed Instructions
           </h3>
-          <p className="text-sm text-[#2B2B26] mb-2">
+          <p className="text-sm text-grove-cream mb-2">
             To fully restore test accounts after reset, run:
           </p>
-          <pre className="text-xs font-mono bg-[#1C2E10] text-[#F5F0E8] p-3 rounded-[8px] overflow-x-auto">
+          <pre className="text-xs font-mono bg-grove-lime text-grove-root p-3 rounded-[8px] overflow-x-auto">
             cd /app/backend && python seed_testing.py
           </pre>
         </div>

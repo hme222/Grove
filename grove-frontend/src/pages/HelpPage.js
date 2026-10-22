@@ -63,29 +63,29 @@ export default function HelpPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] pb-6" data-testid="help-page">
+    <div className="min-h-screen bg-grove-forest pb-6" data-testid="help-page">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#F5F0E8] border-b-[0.5px] border-[#D3C9B8] px-4 py-3">
+      <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss px-4 py-3">
         <div className="flex items-center gap-3 max-w-[1100px] mx-auto">
           <button
             onClick={() => navigate(-1)}
-            className="text-[#1C2E10] hover:text-[#3B6D11] transition-colors"
+            className="text-grove-cream hover:text-grove-sprout transition-colors"
             data-testid="help-back-button"
             aria-label="Go back"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-          <h1 className="font-plant text-xl text-[#1C2E10]">Help & Tutorial</h1>
+          <h1 className="font-plant text-xl text-grove-cream">Help & Tutorial</h1>
         </div>
       </div>
 
       {/* Content */}
       <div className="max-w-[1100px] mx-auto px-4 pt-6 space-y-6">
         {/* Mission Statement */}
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-5">
-          <h2 className="font-[Georgia] text-lg text-[#1C2E10] mb-2">{GROVE_BRAND.name}</h2>
-          <p className="text-sm text-[#2B2B26] leading-relaxed mb-3">{GROVE_BRAND.mission}</p>
-          <p className="text-xs text-[#2B2B26] italic">{GROVE_BRAND.closingLine}</p>
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5">
+          <h2 className="font-[Georgia] text-lg text-grove-cream mb-2">{GROVE_BRAND.name}</h2>
+          <p className="text-sm text-grove-cream leading-relaxed mb-3">{GROVE_BRAND.mission}</p>
+          <p className="text-xs text-grove-cream italic">{GROVE_BRAND.closingLine}</p>
         </div>
 
         {/* Tutorial Accordion */}
@@ -94,16 +94,16 @@ export default function HelpPage() {
             <AccordionItem
               key={section.id}
               value={section.id}
-              className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] px-4"
+              className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss px-4"
               data-testid={`help-section-${section.id}`}
             >
-              <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.12em] text-[#1C2E10] py-4 hover:no-underline">
+              <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream py-4 hover:no-underline">
                 {section.title}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-[#2B2B26] pb-4 leading-relaxed">
+              <AccordionContent className="text-sm text-grove-cream pb-4 leading-relaxed">
                 {section.custom && section.id === 'photo-guide' ? (
                   <div className="pt-2">
-                    <p className="mb-3 text-xs text-[#2B2B26]">{section.content}</p>
+                    <p className="mb-3 text-xs text-grove-cream">{section.content}</p>
                     <PhotoGuideCards />
                   </div>
                 ) : (

@@ -23,7 +23,7 @@ function CelebrationOverlay({ onDone }) {
   return (
     <div
       data-testid="swap-celebration"
-      className="fixed inset-0 z-[240] bg-[#1C2E10]/85 flex items-center justify-center p-6"
+      className="fixed inset-0 z-[240] bg-grove-lime/85 flex items-center justify-center p-6"
       onClick={onDone}
     >
       <div className="relative text-center">
@@ -32,7 +32,7 @@ function CelebrationOverlay({ onDone }) {
           {[...Array(10)].map((_, i) => (
             <span
               key={i}
-              className="absolute block w-2 h-2 rounded-full bg-[#9FE1CB] opacity-0 animate-[petal_1.8s_ease-out_forwards]"
+              className="absolute block w-2 h-2 rounded-full bg-grove-moss opacity-0 animate-[petal_1.8s_ease-out_forwards]"
               style={{
                 left: `${(i * 13) % 100}%`,
                 top: `${(i * 17) % 100}%`,
@@ -41,11 +41,11 @@ function CelebrationOverlay({ onDone }) {
             />
           ))}
         </div>
-        <div className="w-20 h-20 mx-auto rounded-full bg-[#2D5016] border-[0.5px] border-[#5DCAA5] flex items-center justify-center mb-4 animate-[popin_350ms_ease-out]">
-          <Sparkles className="h-9 w-9 text-[#9FE1CB]" />
+        <div className="w-20 h-20 mx-auto rounded-full bg-grove-lime border-[0.5px] border-grove-lime flex items-center justify-center mb-4 animate-[popin_350ms_ease-out]">
+          <Sparkles className="h-9 w-9 text-grove-sprout" />
         </div>
-        <h2 className="font-plant text-[#F5F0E8] text-3xl mb-2">Swap unlocked</h2>
-        <p className="font-ui text-sm text-[#9FE1CB] max-w-sm">
+        <h2 className="font-plant text-grove-cream text-3xl mb-2">Swap unlocked</h2>
+        <p className="font-ui text-sm text-grove-sprout max-w-sm">
           Thirty days of care earned you a pass to the community swap deck. Your first matches are ready.
         </p>
       </div>
@@ -119,7 +119,7 @@ export default function SwapPage() {
       <div>
         <PageHeader title="Swap" />
         <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -136,7 +136,7 @@ export default function SwapPage() {
           rightContent={
             <button
               onClick={() => navigate('/profile')}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#3B6D11] flex items-center gap-1.5"
+              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               Back
@@ -144,11 +144,11 @@ export default function SwapPage() {
           }
         />
         <div className="max-w-[500px] mx-auto px-4 py-8 text-center">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#EAF3DE] border-[0.5px] border-[#D3C9B8] flex items-center justify-center mb-4">
-            <Leaf className="h-7 w-7 text-[#3B6D11]" />
+          <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-[0.5px] border-grove-moss flex items-center justify-center mb-4">
+            <Leaf className="h-7 w-7 text-grove-sprout" />
           </div>
-          <h2 className="font-plant text-[#1C2E10] text-2xl mb-2">Swap opens at a 30-day streak</h2>
-          <p className="font-ui text-sm text-[#2B2B26] leading-relaxed">
+          <h2 className="font-plant text-grove-cream text-2xl mb-2">Swap opens at a 30-day streak</h2>
+          <p className="font-ui text-sm text-grove-cream leading-relaxed">
             You're on day {currentStreak}. Keep tending daily and swapping opens up with {30 - currentStreak} more days of care.
           </p>
         </div>
@@ -170,7 +170,7 @@ export default function SwapPage() {
         rightContent={
           <button
             onClick={() => navigate('/swaps/matches')}
-            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#3B6D11] flex items-center gap-1.5"
+            className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <Users className="h-3.5 w-3.5" />
             Matches
@@ -183,28 +183,28 @@ export default function SwapPage() {
           <div
             key={current.plant_id + '-' + index}
             data-testid="swap-card"
-            className={`rounded-[16px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] overflow-hidden transform transition-all duration-[260ms] ease-out ${
+            className={`rounded-[16px] border-[0.5px] border-grove-moss bg-grove-moss overflow-hidden transform transition-all duration-[260ms] ease-out ${
               leaving === 'right' ? 'translate-x-[120%] rotate-6 opacity-0'
               : leaving === 'left' ? '-translate-x-[120%] -rotate-6 opacity-0'
               : 'translate-x-0 opacity-100'
             }`}
           >
-            <div className="aspect-[4/5] bg-[#EAF3DE] flex items-center justify-center">
+            <div className="aspect-[4/5] bg-grove-moss flex items-center justify-center">
               {current.photo_url ? (
-                <div className="w-full h-full bg-[#EAF3DE] flex items-center justify-center"><img src={getFileUrl(current.photo_url)} alt={current.common_name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(current.photo_url)} alt={current.common_name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
               ) : (
-                <Leaf className="h-16 w-16 text-[#3B6D11] opacity-30" />
+                <Leaf className="h-16 w-16 text-grove-sprout opacity-30" />
               )}
             </div>
             <div className="p-4">
-              <h3 className="font-plant text-[#1C2E10] text-xl">
+              <h3 className="font-plant text-grove-cream text-xl">
                 {current.nickname || current.common_name}
               </h3>
               {current.latin_name && (
-                <p className="font-latin text-[11px] text-[#2B2B26] italic">{current.latin_name}</p>
+                <p className="font-latin text-[11px] text-grove-cream italic">{current.latin_name}</p>
               )}
               <div className="flex items-center gap-1.5 mt-2">
-                <span className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] px-2 py-0.5 font-latin text-[10px] text-[#2B2B26]">
+                <span className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5 font-latin text-[10px] text-grove-cream">
                   <span>from @{current.owner_username}</span>
                   <VerifiedProBadge
                     verified_user={current.owner_verified_user}
@@ -213,21 +213,21 @@ export default function SwapPage() {
                   />
                 </span>
                 {current.owner_location && (
-                  <span className="font-latin text-[10px] text-[#D3C9B8]">· {current.owner_location}</span>
+                  <span className="font-latin text-[10px] text-grove-sage">· {current.owner_location}</span>
                 )}
               </div>
             </div>
           </div>
         ) : (
           <div className="text-center py-16" data-testid="swap-empty">
-            <div className="w-16 h-16 mx-auto rounded-full bg-[#EAF3DE] border-[0.5px] border-[#D3C9B8] flex items-center justify-center mb-4">
-              <Sparkles className="h-7 w-7 text-[#3B6D11]" />
+            <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-[0.5px] border-grove-moss flex items-center justify-center mb-4">
+              <Sparkles className="h-7 w-7 text-grove-sprout" />
             </div>
-            <p className="font-plant text-[#1C2E10] text-lg mb-1">You've seen the current deck</p>
-            <p className="font-ui text-sm text-[#2B2B26] mb-4">Check back soon — new cuttings are always being added.</p>
+            <p className="font-plant text-grove-cream text-lg mb-1">You've seen the current deck</p>
+            <p className="font-ui text-sm text-grove-cream mb-4">Check back soon — new cuttings are always being added.</p>
             <button
               onClick={() => navigate('/swaps/matches')}
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016] inline-flex items-center gap-1.5"
+              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1.5"
             >
               <Users className="h-3.5 w-3.5" />
               View matches
@@ -242,7 +242,7 @@ export default function SwapPage() {
               onClick={() => handleChoice('left')}
               aria-label="Pass"
               data-testid="swap-pass"
-              className="w-14 h-14 rounded-full border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] text-[#2B2B26] hover:border-[#D4537E] hover:text-[#D4537E] flex items-center justify-center transition-colors duration-150"
+              className="w-14 h-14 rounded-full border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-bloom hover:text-grove-bloom flex items-center justify-center transition-colors duration-150"
             >
               <X className="h-6 w-6" />
             </button>
@@ -250,7 +250,7 @@ export default function SwapPage() {
               onClick={() => handleChoice('right')}
               aria-label="Interested"
               data-testid="swap-like"
-              className="w-14 h-14 rounded-full border-[0.5px] border-[#3B6D11] bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016] flex items-center justify-center transition-colors duration-150"
+              className="w-14 h-14 rounded-full border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center transition-colors duration-150"
             >
               <Heart className="h-6 w-6" />
             </button>

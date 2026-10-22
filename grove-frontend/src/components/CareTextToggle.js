@@ -11,8 +11,8 @@ export default function CareTextToggle({ value = 'simple', onChange, disabled = 
   return (
     <fieldset data-testid="care-text-toggle" className="flex items-center gap-2" disabled={disabled}>
       <legend className="sr-only">Care tips</legend>
-      <span aria-hidden="true" className="font-ui text-[11px] text-[#5F5E5A]">Care tips</span>
-      <div className="inline-flex rounded-[10px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-0.5">
+      <span aria-hidden="true" className="font-ui text-[11px] text-grove-sage">Care tips</span>
+      <div className="inline-flex rounded-[10px] border-[0.5px] border-grove-moss bg-grove-moss p-0.5">
         {OPTIONS.map((opt) => {
           const active = value === opt.value;
           return (
@@ -27,8 +27,8 @@ export default function CareTextToggle({ value = 'simple', onChange, disabled = 
                 className="peer sr-only"
               />
               <span
-                className={`block rounded-[8px] px-3 py-1 font-ui text-xs cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-[#3B6D11] peer-focus-visible:ring-offset-1 peer-disabled:opacity-60 motion-safe:transition-colors motion-safe:duration-150 ${
-                  active ? 'bg-[#1C2E10] text-[#F5F0E8]' : 'text-[#1C2E10] hover:bg-[#F5F0E8]'
+                className={`block rounded-[8px] px-3 py-1 font-ui text-xs cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-grove-lime peer-focus-visible:ring-offset-1 peer-disabled:opacity-60 motion-safe:transition-colors motion-safe:duration-150 ${
+                  active ? 'bg-grove-lime text-grove-root' : 'text-grove-cream hover:bg-grove-forest'
                 }`}
               >
                 {opt.label}

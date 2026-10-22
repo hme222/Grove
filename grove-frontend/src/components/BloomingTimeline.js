@@ -7,17 +7,17 @@ import {
 
 // ---- Visual tokens per action type ----
 const ACTION_META = {
-  water:          { icon: Droplets,   color: '#5DCAA5', label: 'Watered',          node: 'teardrop' },
-  mist:           { icon: Wind,       color: '#9FE1CB', label: 'Misted',           node: 'teardrop' },
+  water:          { icon: Droplets,   color: '#92B44B', label: 'Watered',          node: 'teardrop' },
+  mist:           { icon: Wind,       color: '#C3D98A', label: 'Misted',           node: 'teardrop' },
   feed:           { icon: Zap,        color: '#3B6D11', label: 'Fed',              node: 'leaf' },
   repot:          { icon: HandPlatter,color: '#854F0B', label: 'Repotted',         node: 'root' },
   prune:          { icon: Scissors,   color: '#97C459', label: 'Pruned',           node: 'leaf' },
-  propagate:      { icon: Sprout,     color: '#5DCAA5', label: 'Propagated',       node: 'leaf' },
-  photo:          { icon: Camera,     color: '#9FE1CB', label: 'Photo logged',     node: 'camera' },
+  propagate:      { icon: Sprout,     color: '#92B44B', label: 'Propagated',       node: 'leaf' },
+  photo:          { icon: Camera,     color: '#C3D98A', label: 'Photo logged',     node: 'camera' },
   note:           { icon: FileText,   color: '#C0DD97', label: 'Note added',       node: 'leaf' },
-  top_up:         { icon: Droplets,   color: '#9FE1CB', label: 'Topped up',        node: 'teardrop' },
-  change_water:   { icon: Droplets,   color: '#5DCAA5', label: 'Water changed',    node: 'teardrop' },
-  flush:          { icon: Droplets,   color: '#5DCAA5', label: 'Flushed',          node: 'teardrop' },
+  top_up:         { icon: Droplets,   color: '#C3D98A', label: 'Topped up',        node: 'teardrop' },
+  change_water:   { icon: Droplets,   color: '#92B44B', label: 'Water changed',    node: 'teardrop' },
+  flush:          { icon: Droplets,   color: '#92B44B', label: 'Flushed',          node: 'teardrop' },
   add_nutrients:  { icon: Zap,        color: '#3B6D11', label: 'Nutrients added',  node: 'leaf' },
   first_add:      { icon: Sprout,     color: '#C0DD97', label: 'Added to collection', node: 'milestone' },
   first_bloom:    { icon: Flower2,    color: '#D4537E', label: 'First bloom',      node: 'bloom' },
@@ -88,7 +88,7 @@ function NodeCamera({ cx, cy, color, k }) {
     <g key={k} transform={`translate(${cx} ${cy})`}>
       <rect x="-5" y="-3.5" width="10" height="7" rx="1.4" fill={color} opacity="0.95" />
       <circle cx="0" cy="0.2" r="2.1" fill="#1C2E10" />
-      <circle cx="0" cy="0.2" r="1.0" fill="#9FE1CB" />
+      <circle cx="0" cy="0.2" r="1.0" fill="#C3D98A" />
       <rect x="2" y="-4.6" width="3" height="1.4" rx="0.4" fill={color} opacity="0.95" />
     </g>
   );
@@ -290,7 +290,7 @@ function EntryCard({ item, side, onClick }) {
       data-testid="timeline-entry-card"
       data-action={item.action}
       data-reveal
-      className={`absolute ${widthClass} text-left rounded-[12px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-2.5 transition-all duration-300 ease-out opacity-0 translate-y-2 data-[revealed=true]:opacity-100 data-[revealed=true]:translate-y-0 hover:border-[#3B6D11]`}
+      className={`absolute ${widthClass} text-left rounded-[12px] border-[0.5px] border-grove-moss bg-grove-canopy p-2.5 transition-all duration-300 ease-out opacity-0 translate-y-2 data-[revealed=true]:opacity-100 data-[revealed=true]:translate-y-0 hover:border-grove-fernLine`}
       style={{
         top: item._y - 14,
         [side]: `calc(50% + 28px)`,
@@ -303,22 +303,22 @@ function EntryCard({ item, side, onClick }) {
         >
           <Icon className="h-3 w-3" style={{ color: m.color }} />
         </span>
-        <span className="font-plant text-[12px] text-[#1C2E10] truncate">{m.label}</span>
+        <span className="font-plant text-[12px] text-grove-cream truncate">{m.label}</span>
       </div>
-      <p className="font-latin text-[10px] text-[#888780]">
+      <p className="font-latin text-[10px] text-grove-lichen">
         {new Date(item.logged_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-        <span className="px-1 text-[#D3C9B8]">·</span>
+        <span className="px-1 text-grove-sage">·</span>
         {new Date(item.logged_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
       </p>
       {item.notes && (
-        <p className="italic font-ui text-[11px] text-[#5F5E5A] mt-1 line-clamp-3">"{item.notes}"</p>
+        <p className="italic font-ui text-[11px] text-grove-sage mt-1 line-clamp-3">"{item.notes}"</p>
       )}
       {hasPhoto && (
         <div className="mt-1.5 rounded-[8px] overflow-hidden">
           <img
             src={getFileUrl(item.photo_url)}
             alt=""
-            className="w-[120px] h-[80px] bg-[#EAF3DE] object-contain"
+            className="w-[120px] h-[80px] bg-grove-moss object-contain"
           />
         </div>
       )}
@@ -333,12 +333,12 @@ function MilestoneCard({ item, onClick }) {
   const isRepot = item.milestone === 'repot';
   const isAdd = item.milestone === 'first_add';
   const bg = isBloom
-    ? 'bg-[#1C2E10] text-[#EAF3DE] border-[#2D5016]'
+    ? 'bg-grove-lime text-grove-root border-grove-fernLine'
     : isRepot
-    ? 'bg-[#F2E6CE] text-[#1C2E10] border-[#D3B683]'
+    ? 'bg-grove-sun/15 text-grove-sun border-grove-moss'
     : isAdd
-    ? 'bg-[#EAF3DE] text-[#1C2E10] border-[#C0DD97]'
-    : 'bg-[#FDFAF6] text-[#1C2E10] border-[#D3C9B8]';
+    ? 'bg-grove-moss text-grove-cream border-grove-moss'
+    : 'bg-grove-canopy text-grove-cream border-grove-moss';
   const M = meta(item.action);
   const Icon = M.icon;
   return (
@@ -366,7 +366,7 @@ function MilestoneCard({ item, onClick }) {
         </p>
       </div>
       {isPhoto && item.photo_url && (
-        <img src={getFileUrl(item.photo_url)} alt="" className="w-14 h-14 rounded-[8px] bg-[#EAF3DE] object-contain flex-shrink-0" />
+        <img src={getFileUrl(item.photo_url)} alt="" className="w-14 h-14 rounded-[8px] bg-grove-moss object-contain flex-shrink-0" />
       )}
     </button>
   );
@@ -402,7 +402,7 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
     return (
       <div
         data-testid="timeline-empty"
-        className="relative min-h-[500px] rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] overflow-hidden"
+        className="relative min-h-[500px] rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy overflow-hidden"
       >
         <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-2">
           <svg width="80" height="180" viewBox="0 0 80 180" aria-hidden="true">
@@ -422,11 +422,11 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
             <path d="M40 120 C 28 105, 18 105, 16 95 C 30 92, 38 104, 40 115 Z"
                   fill="#97C459" opacity="0.92" />
             <path d="M40 120 C 52 105, 62 105, 64 95 C 50 92, 42 104, 40 115 Z"
-                  fill="#5DCAA5" opacity="0.92" />
+                  fill="#92B44B" opacity="0.92" />
             <circle cx="40" cy="88" r="4" fill="#C0DD97" className="grove-tip-breathe" />
           </svg>
-          <p className="font-plant text-[#1C2E10] text-base">Your plant's story starts here.</p>
-          <p className="font-ui text-xs text-[#5F5E5A] max-w-[280px] text-center leading-snug">
+          <p className="font-plant text-grove-cream text-base">Your plant's story starts here.</p>
+          <p className="font-ui text-xs text-grove-sage max-w-[280px] text-center leading-snug">
             Log a first watering to begin. Every care action adds a new leaf, bud or bloom to your plant's living timeline.
           </p>
         </div>
@@ -441,7 +441,7 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
     <div
       ref={containerRef}
       data-testid="blooming-timeline"
-      className="relative rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] overflow-hidden"
+      className="relative rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy overflow-hidden"
       style={{ height }}
     >
       {/* SVG stem, centered */}
@@ -478,7 +478,7 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
             {/* Soft glow under-stem */}
             <path
               d={stemPath}
-              stroke="#5DCAA5"
+              stroke="#92B44B"
               strokeOpacity="0.32"
               strokeWidth="9"
               strokeLinecap="round"
@@ -547,11 +547,11 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
                 className="absolute left-0 right-0 flex items-center gap-2 px-6"
                 style={{ top: it._y - 8 }}
               >
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D3C9B8] to-transparent" />
-                <span className="font-latin text-[10px] uppercase tracking-[0.15em] text-[#888780] whitespace-nowrap">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-grove-canopy to-transparent" />
+                <span className="font-latin text-[10px] uppercase tracking-[0.15em] text-grove-lichen whitespace-nowrap">
                   {it.label}
                 </span>
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D3C9B8] to-transparent" />
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-grove-canopy to-transparent" />
               </div>
             );
           }

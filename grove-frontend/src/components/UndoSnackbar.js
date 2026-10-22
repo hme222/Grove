@@ -42,7 +42,7 @@ export default function UndoSnackbar({ message, onUndo, onDismiss, duration = 80
       onFocus={pause}
       onBlur={resume}
       onKeyDown={(e) => { if (e.key === 'Escape') onDismiss?.(); }}
-      className="rounded-[14px] border-[0.5px] border-[#5DCAA5]/40 bg-[#1C2E10] text-[#F5F0E8] px-4 py-3 flex items-center gap-3 motion-safe:animate-in motion-safe:slide-in-from-bottom-2 motion-safe:fade-in"
+      className="rounded-[14px] border-[0.5px] border-grove-lime/40 bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3 motion-safe:animate-in motion-safe:slide-in-from-bottom-2 motion-safe:fade-in"
     >
       <p className="flex-1 min-w-0 font-ui text-sm">{message}</p>
       <button
@@ -51,7 +51,7 @@ export default function UndoSnackbar({ message, onUndo, onDismiss, duration = 80
         onClick={onUndo}
         disabled={busy}
         data-testid="undo-snackbar-undo"
-        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#9FE1CB] text-[#9FE1CB] hover:bg-[#2D5016] disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9FE1CB] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C2E10] flex items-center gap-1.5"
+        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-fernLine text-grove-sprout hover:bg-grove-sprout disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-2 focus-visible:ring-offset-grove-forest flex items-center gap-1.5"
       >
         <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
         {busy ? 'Undoing…' : 'Undo'}
@@ -61,7 +61,7 @@ export default function UndoSnackbar({ message, onUndo, onDismiss, duration = 80
         onClick={onDismiss}
         aria-label="Dismiss"
         data-testid="undo-snackbar-dismiss"
-        className="w-8 h-8 rounded-full text-[#9FE1CB] hover:bg-[#2D5016] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9FE1CB] flex items-center justify-center"
+        className="w-8 h-8 rounded-full text-grove-sprout hover:bg-grove-sprout focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime flex items-center justify-center"
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>

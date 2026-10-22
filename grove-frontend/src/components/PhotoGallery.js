@@ -119,11 +119,11 @@ export default function PhotoGallery({ plantId, onChanged }) {
   };
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4" data-testid="photo-gallery">
+    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="photo-gallery">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="font-plant text-[#1C2E10] text-sm">Photos</h3>
-          <p className="font-latin text-[11px] text-[#5F5E5A] mt-0.5">
+          <h3 className="font-plant text-grove-cream text-sm">Photos</h3>
+          <p className="font-latin text-[11px] text-grove-sage mt-0.5">
             {count} of {cap} · each photo feeds the growth timeline.
           </p>
         </div>
@@ -132,7 +132,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
           onClick={handleAddClick}
           disabled={uploading || count >= cap}
           data-testid="photo-gallery-add"
-          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-[#3B6D11] text-[#F5F0E8] border-[#3B6D11] hover:bg-[#639922] disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+          className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
         >
           <Upload className="h-3 w-3" />
           {uploading ? 'Uploading…' : 'Add photo'}
@@ -149,15 +149,15 @@ export default function PhotoGallery({ plantId, onChanged }) {
 
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <div className="w-5 h-5 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
         </div>
       ) : photos.length === 0 ? (
         <div
-          className="rounded-[10px] border border-dashed border-[#D3C9B8] bg-[#F5F0E8] p-6 text-center"
+          className="rounded-[10px] border border-dashed border-grove-moss bg-grove-forest p-6 text-center"
           data-testid="photo-gallery-empty"
         >
-          <p className="font-plant text-[#1C2E10] text-sm">No photos yet</p>
-          <p className="font-ui text-[11px] text-[#5F5E5A] mt-1 leading-snug">
+          <p className="font-plant text-grove-cream text-sm">No photos yet</p>
+          <p className="font-ui text-[11px] text-grove-sage mt-1 leading-snug">
             Add a photo every few weeks — the timeline turns them into a visible story of growth.
           </p>
         </div>
@@ -165,19 +165,19 @@ export default function PhotoGallery({ plantId, onChanged }) {
         <div className="grid grid-cols-3 gap-2" data-testid="photo-gallery-grid">
           {photos.map((p) => (
             <div key={p.id} className="relative group" data-testid={`photo-tile-${p.id}`}>
-              <div className="aspect-square rounded-[10px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE]">
+              <div className="aspect-square rounded-[10px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-moss">
                 <PlantImage src={p.path} tone="plant" rounded="none" className="w-full h-full" />
               </div>
               {p.is_cover && (
                 <span
-                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-[#1C2E10] px-2 py-0.5 text-[9px] font-ui text-[#F5F0E8]"
+                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime px-2 py-0.5 text-[9px] font-ui text-grove-root"
                   data-testid="photo-cover-badge"
                 >
                   <Star className="h-2.5 w-2.5 fill-current" /> Cover
                 </span>
               )}
               <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#1C2E10]/70 px-2 py-0.5 text-[9px] font-ui text-[#F5F0E8]">
+                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/70 px-2 py-0.5 text-[9px] font-ui text-grove-cream">
                   <Calendar className="h-2.5 w-2.5" />
                   {formatWhen(p.taken_at)}
                 </span>
@@ -188,7 +188,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                   onClick={() => setEditing(p)}
                   data-testid={`photo-edit-${p.id}`}
                   aria-label="Edit photo"
-                  className="w-6 h-6 rounded-full bg-[#F5F0E8]/95 text-[#1C2E10] flex items-center justify-center hover:bg-[#EAF3DE]"
+                  className="w-6 h-6 rounded-full bg-grove-forest/95 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
                 >
                   <Pencil className="h-3 w-3" />
                 </button>
@@ -198,7 +198,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                     onClick={() => handleSetCover(p.id)}
                     data-testid={`photo-setcover-${p.id}`}
                     aria-label="Set as cover"
-                    className="w-6 h-6 rounded-full bg-[#F5F0E8]/95 text-[#1C2E10] flex items-center justify-center hover:bg-[#EAF3DE]"
+                    className="w-6 h-6 rounded-full bg-grove-forest/95 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
                   >
                     <Star className="h-3 w-3" />
                   </button>
@@ -208,7 +208,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                   onClick={() => handleDelete(p.id)}
                   data-testid={`photo-delete-${p.id}`}
                   aria-label="Delete photo"
-                  className="w-6 h-6 rounded-full bg-[#F5F0E8]/95 text-[#E24B4A] flex items-center justify-center hover:bg-[#E24B4A] hover:text-[#F5F0E8]"
+                  className="w-6 h-6 rounded-full bg-grove-forest/95 text-grove-bloom flex items-center justify-center hover:bg-grove-sprout hover:text-grove-cream"
                 >
                   <Trash2 className="h-3 w-3" />
                 </button>
@@ -221,7 +221,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
               onClick={handleAddClick}
               disabled={uploading}
               data-testid="photo-gallery-add-tile"
-              className="aspect-square rounded-[10px] border border-dashed border-[#D3C9B8] bg-[#F5F0E8] flex flex-col items-center justify-center text-[#5F5E5A] hover:border-[#3B6D11] hover:text-[#1C2E10] transition-colors duration-150"
+              className="aspect-square rounded-[10px] border border-dashed border-grove-moss bg-grove-forest flex flex-col items-center justify-center text-grove-sage hover:border-grove-fernLine hover:text-grove-cream transition-colors duration-150"
             >
               <Upload className="h-4 w-4 mb-1" />
               <span className="text-[10px] font-ui">Add</span>
@@ -232,9 +232,9 @@ export default function PhotoGallery({ plantId, onChanged }) {
 
       {/* Edit photo modal (caption + taken_at) */}
       <Dialog open={!!editing} onOpenChange={(o) => { if (!o) setEditing(null); }}>
-        <DialogContent className="bg-[#FDFAF6] border-[0.5px] border-[#D3C9B8] rounded-[14px] max-w-sm" data-testid="photo-edit-modal">
+        <DialogContent className="bg-grove-canopy border-[0.5px] border-grove-moss rounded-[14px] max-w-sm" data-testid="photo-edit-modal">
           <DialogHeader>
-            <DialogTitle className="font-plant text-[#1C2E10] text-lg">Edit photo</DialogTitle>
+            <DialogTitle className="font-plant text-grove-cream text-lg">Edit photo</DialogTitle>
           </DialogHeader>
           {editing && (
             <PhotoEditForm
@@ -255,15 +255,15 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
   const [takenAt, setTakenAt] = useState(isoToDateInput(photo.taken_at));
   return (
     <div className="space-y-3">
-      <div className="rounded-[10px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE]">
+      <div className="rounded-[10px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-moss">
         <img
           src={getFileUrl(photo.path)}
           alt=""
-          className="w-full aspect-[4/3] object-contain bg-[#EAF3DE]"
+          className="w-full aspect-[4/3] object-contain bg-grove-moss"
         />
       </div>
       <div>
-        <label className="block font-ui text-[11px] text-[#2B2B26] uppercase tracking-[0.08em] mb-1">
+        <label className="block font-ui text-[11px] text-grove-cream uppercase tracking-[0.08em] mb-1">
           Taken on
         </label>
         <input
@@ -271,13 +271,13 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
           value={takenAt}
           onChange={(e) => setTakenAt(e.target.value)}
           data-testid="photo-edit-takenat"
-          className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-3 py-2 text-sm font-ui text-[#1A1A17] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-sm font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
           max={new Date().toISOString().slice(0, 10)}
         />
-        <p className="font-latin text-[10px] text-[#888780] mt-1">Used to sort photos chronologically in the growth timeline.</p>
+        <p className="font-latin text-[10px] text-grove-lichen mt-1">Used to sort photos chronologically in the growth timeline.</p>
       </div>
       <div>
-        <label className="block font-ui text-[11px] text-[#2B2B26] uppercase tracking-[0.08em] mb-1">
+        <label className="block font-ui text-[11px] text-grove-cream uppercase tracking-[0.08em] mb-1">
           Caption
         </label>
         <textarea
@@ -285,7 +285,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
           onChange={(e) => setCaption(e.target.value)}
           placeholder="What&#39;s happening in this photo?"
           data-testid="photo-edit-caption"
-          className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] p-3 text-sm font-ui text-[#1A1A17] placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5] resize-none h-20"
+          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] p-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
           maxLength={280}
         />
       </div>
@@ -294,7 +294,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
           type="button"
           onClick={onCancel}
           data-testid="photo-edit-cancel"
-          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-[#D3C9B8] bg-transparent text-[#1C2E10] hover:border-[#2D5016] transition-colors duration-150 flex items-center justify-center gap-2"
+          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
         >
           <X className="h-3.5 w-3.5" />
           Cancel
@@ -310,7 +310,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
             onSave(patch);
           }}
           data-testid="photo-edit-save"
-          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10] hover:bg-[#2D5016] transition-colors duration-150 flex items-center justify-center gap-2"
+          className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center justify-center gap-2"
         >
           <Check className="h-3.5 w-3.5" />
           Save

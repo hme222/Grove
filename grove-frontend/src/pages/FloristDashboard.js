@@ -101,8 +101,8 @@ export default function FloristDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F0E8]">
-        <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
+        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -117,40 +117,40 @@ export default function FloristDashboard() {
             <DialogTrigger asChild>
               <button
                 data-testid="florist-add-button"
-                className="rounded-full w-9 h-9 bg-[#1C2E10] text-[#F5F0E8] flex items-center justify-center hover:bg-[#2D5016] transition-colors duration-150"
+                className="rounded-full w-9 h-9 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
               >
                 <Plus className="h-4 w-4" />
               </button>
             </DialogTrigger>
-            <DialogContent className="bg-[#FBFAF7] border-[0.5px] border-[#CBBFAE]">
+            <DialogContent className="bg-grove-canopy border-[0.5px] border-grove-moss">
               <DialogHeader>
-                <DialogTitle className="font-plant text-[#141410]">Add Portfolio Item</DialogTitle>
+                <DialogTitle className="font-plant text-grove-cream">Add Portfolio Item</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 mt-4">
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-[#141410] mb-2 block">
+                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
                     Title
                   </label>
                   <Input
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g., Spring Wedding Arrangement"
-                    className="bg-[#FBFAF7] border-[0.5px] border-[#CBBFAE]"
+                    className="bg-grove-canopy border-[0.5px] border-grove-moss"
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-[#141410] mb-2 block">
+                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
                     Description
                   </label>
                   <Textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Details about this arrangement"
-                    className="bg-[#FBFAF7] border-[0.5px] border-[#CBBFAE]"
+                    className="bg-grove-canopy border-[0.5px] border-grove-moss"
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-[#141410] mb-2 block">
+                  <label className="font-sans text-xs uppercase tracking-[0.12em] text-grove-cream mb-2 block">
                     Photo
                   </label>
                   {formData.photo_url ? (
@@ -158,19 +158,19 @@ export default function FloristDashboard() {
                       <img
                         src={getFileUrl(formData.photo_url)}
                         alt="Preview"
-                        className="w-full h-48 bg-[#FDF5F8] object-contain rounded-[8px] border-[0.5px] border-[#CBBFAE]"
+                        className="w-full h-48 bg-grove-bloom/15 object-contain rounded-[8px] border-[0.5px] border-grove-moss"
                       />
                       <button
                         onClick={() => setFormData({ ...formData, photo_url: '' })}
-                        className="absolute top-2 right-2 p-2 bg-white rounded-full border-[0.5px] border-[#CBBFAE]"
+                        className="absolute top-2 right-2 p-2 bg-grove-canopy rounded-full border-[0.5px] border-grove-moss"
                       >
-                        <Trash2 className="h-4 w-4 text-[#B42318]" />
+                        <Trash2 className="h-4 w-4 text-grove-bloom" />
                       </button>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center h-48 border-[0.5px] border-dashed border-[#CBBFAE] rounded-[8px] cursor-pointer hover:border-[#8A6A3D] transition-colors">
+                    <label className="flex flex-col items-center justify-center h-48 border-[0.5px] border-dashed border-grove-moss rounded-[8px] cursor-pointer hover:border-grove-moss transition-colors">
                       <ImageIcon className="h-8 w-8 text-[#8A6A3D] mb-2" />
-                      <span className="text-sm text-[#3B3A33]">
+                      <span className="text-sm text-grove-cream">
                         {uploading ? 'Uploading...' : 'Click to upload'}
                       </span>
                       <input
@@ -186,7 +186,7 @@ export default function FloristDashboard() {
                 <Button
                   onClick={handleCreate}
                   disabled={creating}
-                  className="w-full rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#1C2E10] text-[#F5F0E8]"
+                  className="w-full rounded-[2px] font-[Georgia] uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root"
                 >
                   {creating ? 'Adding...' : 'Add to Portfolio'}
                 </Button>
@@ -198,14 +198,14 @@ export default function FloristDashboard() {
 
       <div className="max-w-[1100px] mx-auto px-4 py-4">
         {/* Pro Badge */}
-        <div className="rounded-[14px] border-[0.5px] border-[#CBBFAE] bg-[#FBFAF7] p-4 mb-6">
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="px-3 py-1 rounded-[20px] bg-[#8A6A3D] text-white text-xs font-sans uppercase tracking-[0.12em]">
+            <div className="px-3 py-1 rounded-[20px] bg-[#8A6A3D] text-grove-cream text-xs font-sans uppercase tracking-[0.12em]">
               Pro
             </div>
             <div>
-              <h3 className="font-plant text-[#141410] text-base">Florist Pro Active</h3>
-              <p className="text-xs text-[#3B3A33] mt-0.5">
+              <h3 className="font-plant text-grove-cream text-base">Florist Pro Active</h3>
+              <p className="text-xs text-grove-cream mt-0.5">
                 Portfolio, care sheet generator, and sourcing insights
               </p>
             </div>
@@ -214,37 +214,37 @@ export default function FloristDashboard() {
 
         {/* Portfolio Grid */}
         {portfolio.length === 0 ? (
-          <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] p-6 text-center">
-            <p className="text-sm text-[#2B2B26] mb-3">Your portfolio is empty</p>
-            <p className="text-xs text-[#3B3A33]">Add arrangements to showcase your work</p>
+          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center">
+            <p className="text-sm text-grove-cream mb-3">Your portfolio is empty</p>
+            <p className="text-xs text-grove-cream">Add arrangements to showcase your work</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {portfolio.map((item) => (
               <div
                 key={item.id}
-                className="rounded-[14px] border-[0.5px] border-[#CBBFAE] bg-[#FBFAF7] overflow-hidden"
+                className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy overflow-hidden"
                 data-testid="portfolio-item"
               >
                 {item.photo_url ? (
                   <img
                     src={getFileUrl(item.photo_url)}
                     alt={item.title}
-                    className="w-full aspect-square bg-[#FDF5F8] object-contain"
+                    className="w-full aspect-square bg-grove-bloom/15 object-contain"
                   />
                 ) : (
-                  <div className="w-full aspect-square bg-[#EDE5D8] flex items-center justify-center">
-                    <ImageIcon className="h-8 w-8 text-[#D3C9B8]" />
+                  <div className="w-full aspect-square bg-grove-moss flex items-center justify-center">
+                    <ImageIcon className="h-8 w-8 text-grove-sage" />
                   </div>
                 )}
                 <div className="p-3">
-                  <h3 className="font-plant text-[#141410] text-sm truncate">{item.title}</h3>
+                  <h3 className="font-plant text-grove-cream text-sm truncate">{item.title}</h3>
                   {item.description && (
-                    <p className="text-xs text-[#3B3A33] mt-1 line-clamp-2">{item.description}</p>
+                    <p className="text-xs text-grove-cream mt-1 line-clamp-2">{item.description}</p>
                   )}
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="mt-2 text-xs text-[#B42318] hover:underline"
+                    className="mt-2 text-xs text-grove-bloom hover:underline"
                     data-testid="portfolio-delete-button"
                   >
                     Delete

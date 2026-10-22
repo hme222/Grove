@@ -33,7 +33,7 @@ export default function RoomPage() {
       <div className="max-w-[1100px] mx-auto px-4 py-4 space-y-4">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
           </div>
         ) : rooms.length === 0 ? (
           <EmptyState
@@ -42,7 +42,7 @@ export default function RoomPage() {
             action={
               <button
                 onClick={() => navigate('/add-plant')}
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-6 py-3 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10] hover:bg-[#2D5016] transition-colors duration-150"
+                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-6 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
               >
                 Add a Plant
               </button>
@@ -52,21 +52,21 @@ export default function RoomPage() {
           rooms.map(room => (
             <div
               key={room.room}
-              className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] overflow-hidden"
+              className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss overflow-hidden"
               data-testid="room-section"
             >
               {/* Room header */}
               <button
                 onClick={() => navigate(`/?room=${room.room}`)}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#EAF3DE] transition-colors duration-150"
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-grove-moss transition-colors duration-150"
               >
                 <div className="flex items-center gap-2">
-                  <h3 className="font-plant text-[#1C2E10] text-base">{room.room}</h3>
-                  <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] px-2 py-0.5 text-xs font-ui text-[#1A1A17]">
+                  <h3 className="font-plant text-grove-cream text-base">{room.room}</h3>
+                  <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5 text-xs font-ui text-grove-cream">
                     {room.count}
                   </span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#D3C9B8]" />
+                <ChevronRight className="h-4 w-4 text-grove-sage" />
               </button>
 
               {/* Plant preview grid */}
@@ -76,13 +76,13 @@ export default function RoomPage() {
                     <button
                       key={plant.id || i}
                       onClick={() => navigate(`/plants/${plant.id}`)}
-                      className="relative aspect-square rounded-[8px] overflow-hidden border-[0.5px] border-[#D3C9B8]"
+                      className="relative aspect-square rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss"
                     >
                       {plant.photo_url ? (
-                        <div className="w-full h-full bg-[#EAF3DE] flex items-center justify-center"><img src={getFileUrl(plant.photo_url)} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                        <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(plant.photo_url)} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
                       ) : (
-                        <div className="w-full h-full bg-[#EAF3DE] flex items-center justify-center">
-                          <Leaf className="h-4 w-4 text-[#3B6D11] opacity-40" />
+                        <div className="w-full h-full bg-grove-moss flex items-center justify-center">
+                          <Leaf className="h-4 w-4 text-grove-sprout opacity-40" />
                         </div>
                       )}
                       <div className="absolute top-1 left-1">
@@ -91,8 +91,8 @@ export default function RoomPage() {
                     </button>
                   ))}
                   {room.overflow > 0 && (
-                    <div className="aspect-square rounded-[8px] bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] flex items-center justify-center">
-                      <span className="text-xs font-ui text-[#2B2B26]">+{room.overflow}</span>
+                    <div className="aspect-square rounded-[8px] bg-grove-forest border-[0.5px] border-grove-moss flex items-center justify-center">
+                      <span className="text-xs font-ui text-grove-cream">+{room.overflow}</span>
                     </div>
                   )}
                 </div>

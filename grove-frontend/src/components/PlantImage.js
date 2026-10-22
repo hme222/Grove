@@ -22,7 +22,7 @@ export default function PlantImage({
   rounded = 'md',
   testId,
 }) {
-  const bg = tone === 'bouquet' ? 'bg-[#FDF5F8]' : tone === 'paper' ? 'bg-[#F5F0E8]' : 'bg-[#EAF3DE]';
+  const bg = tone === 'bouquet' ? 'bg-grove-bloom/15' : tone === 'paper' ? 'bg-grove-forest' : 'bg-grove-moss';
   const radius =
     rounded === 'none' ? 'rounded-none' :
     rounded === 'sm'   ? 'rounded-[6px]' :
@@ -42,7 +42,7 @@ export default function PlantImage({
           className="max-w-full max-h-full w-auto h-auto object-contain"
         />
       ) : (
-        <Leaf className="h-7 w-7 text-[#3B6D11] opacity-40" aria-hidden="true" />
+        <Leaf className="h-7 w-7 text-grove-sprout opacity-40" aria-hidden="true" />
       )}
     </div>
   );

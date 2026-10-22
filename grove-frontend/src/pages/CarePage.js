@@ -29,32 +29,32 @@ const FILTERS = [
 // Urgency visual tokens (kept on-brand, no raw reds/greens/blues).
 const URGENCY_STYLES = {
   urgent: {
-    border: 'border-[#D4537E]/60',
-    bg: 'bg-[#FBEAF0]',
-    dot: 'bg-[#D4537E]',
-    label: 'text-[#A33E63]', // 5.3:1 on the pink card; #D4537E was 3.4:1
-    accent: '#D4537E',
+    border: 'border-grove-bloom/60',
+    bg: 'bg-grove-bloom/15',
+    dot: 'bg-grove-bloom',
+    label: 'text-grove-bloom',
+    accent: '#E57A9C',
   },
   needs_water: {
-    border: 'border-[#C18A2A]/50',
-    bg: 'bg-[#F7EED9]',
-    dot: 'bg-[#C18A2A]',
-    label: 'text-[#6B4E1F]', // 6.7:1 on the amber card; #8A6A3D was 4.3:1
-    accent: '#C18A2A',
+    border: 'border-grove-sun/40',
+    bg: 'bg-grove-sun/10',
+    dot: 'bg-grove-sun',
+    label: 'text-grove-sun',
+    accent: '#E8D77A',
   },
   healthy: {
-    border: 'border-[#3B6D11]/30',
-    bg: 'bg-[#EAF3DE]',
-    dot: 'bg-[#3B6D11]',
-    label: 'text-[#3B6D11]',
-    accent: '#3B6D11',
+    border: 'border-grove-fernLine/30',
+    bg: 'bg-grove-moss',
+    dot: 'bg-grove-lime',
+    label: 'text-grove-sprout',
+    accent: '#92B44B',
   },
   propagating: {
-    border: 'border-[#5DCAA5]/40',
-    bg: 'bg-[#E7F6EF]',
-    dot: 'bg-[#5DCAA5]',
-    label: 'text-[#3B6D11]',
-    accent: '#5DCAA5',
+    border: 'border-grove-lime/40',
+    bg: 'bg-grove-lime/10',
+    dot: 'bg-grove-lime',
+    label: 'text-grove-sprout',
+    accent: '#C3D98A',
   },
 };
 
@@ -207,7 +207,7 @@ export default function CarePage() {
               onClick={handleWaterAll}
               disabled={wateringAll}
               data-testid="water-all-button"
-              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-[#3B6D11] text-[#F5F0E8] border-[#3B6D11] hover:bg-[#639922] disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+              className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
             >
               <Droplets className="h-3.5 w-3.5" />
               {wateringAll ? 'Watering...' : 'Water All'}
@@ -231,7 +231,7 @@ export default function CarePage() {
       <div className="max-w-[900px] mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
         {loading ? (
           <div className="col-span-full flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filteredPlants.length === 0 ? (
           <div className="col-span-full">
@@ -260,14 +260,14 @@ export default function CarePage() {
                 <div className="flex gap-3 p-3 pl-4">
                   <button
                     onClick={() => navigate(`/plants/${plant.id}`)}
-                    className="flex-shrink-0 w-20 h-20 rounded-[12px] overflow-hidden border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] flex items-center justify-center"
+                    className="flex-shrink-0 w-20 h-20 rounded-[12px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-moss flex items-center justify-center"
                     aria-label={`Open ${plant.nickname || plant.common_name}`}
                   >
                     {plant.photo_url ? (
                       <img src={getFileUrl(plant.photo_url)} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Leaf className="h-7 w-7 text-[#3B6D11] opacity-40" />
+                        <Leaf className="h-7 w-7 text-grove-sprout opacity-40" />
                       </div>
                     )}
                   </button>
@@ -276,7 +276,7 @@ export default function CarePage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className={`inline-block w-2 h-2 rounded-full ${style.dot}`} aria-hidden="true" />
-                        <h3 className="font-plant text-[#1C2E10] text-base truncate">
+                        <h3 className="font-plant text-grove-cream text-base truncate">
                           {plant.nickname || plant.common_name}
                         </h3>
                       </div>
@@ -284,21 +284,21 @@ export default function CarePage() {
                         {dueLabel(plant)}
                       </p>
                       {(status === 'urgent' || status === 'needs_water') && (
-                        <p data-testid="care-card-step" className="font-ui text-xs text-[#1C2E10] mt-0.5 leading-snug">
+                        <p data-testid="care-card-step" className="font-ui text-xs text-grove-cream mt-0.5 leading-snug">
                           {careStep(plant)}
                         </p>
                       )}
                       {textMode === 'detailed' && plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
                         <p
                           data-testid="care-card-status-reason"
-                          className="font-ui text-[11px] text-[#5F5E5A] mt-0.5 leading-snug"
+                          className="font-ui text-[11px] text-grove-sage mt-0.5 leading-snug"
                         >
                           <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
                       )}
-                      <p className="font-latin text-[10px] text-[#2B2B26] mt-0.5 truncate">
+                      <p className="font-latin text-[10px] text-grove-cream mt-0.5 truncate">
                         {plant.latin_name || plant.common_name}
-                        {plant.room && <span className="text-[#D3C9B8]"> · {plant.room}</span>}
+                        {plant.room && <span className="text-grove-sage"> · {plant.room}</span>}
                       </p>
                     </div>
 
@@ -306,7 +306,7 @@ export default function CarePage() {
                       <button
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
-                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-[#3B6D11] bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 flex items-center justify-center gap-1.5 transition-colors duration-150"
+                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 flex items-center justify-center gap-1.5 transition-colors duration-150"
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
@@ -324,7 +324,7 @@ export default function CarePage() {
                         }}
                         aria-label="Mark done"
                         data-testid="care-mark-done"
-                        className="relative overflow-hidden w-9 h-9 rounded-full border-[0.5px] border-[#3B6D11] bg-[#EAF3DE] text-[#3B6D11] hover:bg-[#3B6D11] hover:text-[#F5F0E8] flex items-center justify-center transition-colors duration-150"
+                        className="relative overflow-hidden w-9 h-9 rounded-full border-[0.5px] border-grove-fernLine bg-grove-moss text-grove-sprout hover:bg-grove-sprout hover:text-grove-cream flex items-center justify-center transition-colors duration-150"
                       >
                         <Check className="h-4 w-4" />
                       </button>
@@ -350,12 +350,12 @@ export default function CarePage() {
           data-testid="care-session-bar"
           className="fixed left-0 right-0 bottom-[84px] z-40 mx-auto max-w-[600px] px-3"
         >
-          <div className="rounded-[14px] border-[0.5px] border-[#3B6D11] bg-[#1C2E10] text-[#F5F0E8] px-4 py-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#2D5016] flex items-center justify-center flex-shrink-0">
-              <Sparkles className="h-4 w-4 text-[#9FE1CB]" />
+          <div className="rounded-[14px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
+              <Sparkles className="h-4 w-4 text-grove-sprout" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-[#9FE1CB]">Watering session in progress</p>
+              <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sprout">Watering session in progress</p>
               <p className="font-ui text-sm truncate">
                 {sessionCount} {sessionCount === 1 ? 'plant' : 'plants'} tended so far. Keep going.
               </p>
@@ -364,7 +364,7 @@ export default function CarePage() {
               onClick={() => setSessionCount(0)}
               aria-label="End session"
               data-testid="care-session-end"
-              className="w-8 h-8 rounded-full border-[0.5px] border-[#5DCAA5]/40 text-[#9FE1CB] hover:bg-[#2D5016] flex items-center justify-center"
+              className="w-8 h-8 rounded-full border-[0.5px] border-grove-lime/40 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
             >
               <X className="h-4 w-4" />
             </button>
@@ -429,14 +429,14 @@ function NamedPlantEmptyState({ plants }) {
   return (
     <div
       data-testid="care-empty-named"
-      className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] px-5 py-6 text-center max-w-md mx-auto"
+      className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-6 text-center max-w-md mx-auto"
     >
-      <div className="w-12 h-12 mx-auto rounded-full bg-[#EAF3DE] flex items-center justify-center mb-3">
-        <Sparkles className="h-5 w-5 text-[#3B6D11]" />
+      <div className="w-12 h-12 mx-auto rounded-full bg-grove-moss flex items-center justify-center mb-3">
+        <Sparkles className="h-5 w-5 text-grove-sprout" />
       </div>
-      <p className="font-plant text-[#1C2E10] text-base">All caught up.</p>
-      <p className="font-ui text-sm text-[#5F5E5A] mt-1.5 leading-snug">
-        {nextName} is the next one up — due to be watered <span className="text-[#1C2E10]">{dueLabel}</span>.
+      <p className="font-plant text-grove-cream text-base">All caught up.</p>
+      <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
+        {nextName} is the next one up — due to be watered <span className="text-grove-cream">{dueLabel}</span>.
         Take a slow scroll through your collection while you're here.
       </p>
     </div>
@@ -469,17 +469,17 @@ function ScheduleReviewBanner() {
 
   return (
     <div
-      className="mt-3 rounded-[12px] border-[0.5px] border-[#BA7517] bg-[#FBF1E1] p-3 flex items-start gap-3"
+      className="mt-3 rounded-[12px] border-[0.5px] border-grove-moss bg-grove-sun/15 p-3 flex items-start gap-3"
       data-testid="schedule-review-banner"
     >
       <span className="w-8 h-8 rounded-full bg-[#BA7517]/20 flex items-center justify-center flex-shrink-0">
-        <Sparkles className="h-4 w-4 text-[#7A4F0E]" />
+        <Sparkles className="h-4 w-4 text-grove-sun" />
       </span>
       <div className="flex-1 min-w-0">
-        <p className="font-plant text-sm text-[#1C2E10] leading-tight">
+        <p className="font-plant text-sm text-grove-cream leading-tight">
           Time to review your AI schedule
         </p>
-        <p className="font-ui text-[11px] text-[#5F5E5A] mt-0.5 leading-snug">
+        <p className="font-ui text-[11px] text-grove-sage mt-0.5 leading-snug">
           It&apos;s been 30 days since the AI suggested a watering cadence for {first.nickname || first.common_name}
           {more > 0 ? ` and ${more} other plant${more === 1 ? '' : 's'}` : ''}. Tap to review and adjust if your reality has changed.
         </p>
@@ -488,7 +488,7 @@ function ScheduleReviewBanner() {
         type="button"
         onClick={() => navigate(`/plants/${first.plant_id}`)}
         data-testid="schedule-review-cta"
-        className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-[#1C2E10] text-[#F5F0E8] border-[0.5px] border-[#1C2E10] hover:bg-[#2D5016] transition-colors duration-150"
+        className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
       >
         Review
       </button>

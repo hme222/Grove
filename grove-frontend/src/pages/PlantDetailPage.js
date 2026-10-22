@@ -160,7 +160,7 @@ export default function PlantDetailPage() {
   if (loading || !plant) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="w-6 h-6 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -183,56 +183,56 @@ export default function PlantDetailPage() {
     <div>
       {/* Header with photo */}
       <div className="relative">
-        <div className="aspect-[16/9] sm:aspect-[2/1] bg-[#EAF3DE] overflow-hidden relative">
+        <div className="w-full h-[40vh] min-h-[220px] max-h-[420px] bg-grove-moss overflow-hidden relative">
           {photoUrl ? (
-            <div className="w-full h-full bg-[#EAF3DE] flex items-center justify-center"><img src={photoUrl} alt={plant.common_name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+            <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={photoUrl} alt={plant.common_name} className="w-full h-full object-cover" /></div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Leaf className="h-16 w-16 text-[#3B6D11] opacity-20" />
+              <Leaf className="h-16 w-16 text-grove-sprout opacity-20" />
             </div>
           )}
           {/* Back button */}
           <button
             onClick={() => navigate(-1)}
             data-testid="plant-detail-back"
-            className="absolute top-4 left-4 w-9 h-9 rounded-full bg-[#1C2E10]/70 flex items-center justify-center text-[#F5F0E8] hover:bg-[#1C2E10] transition-colors duration-150"
+            className="absolute top-4 left-4 w-9 h-9 rounded-full bg-grove-lime/70 flex items-center justify-center text-grove-cream hover:bg-grove-sprout transition-colors duration-150"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           {/* Upload photo */}
           <label className="absolute top-4 right-4 cursor-pointer">
             <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-            <div className="w-9 h-9 rounded-full bg-[#1C2E10]/70 flex items-center justify-center text-[#F5F0E8] hover:bg-[#1C2E10] transition-colors duration-150">
+            <div className="w-9 h-9 rounded-full bg-grove-lime/70 flex items-center justify-center text-grove-cream hover:bg-grove-sprout transition-colors duration-150">
               <Edit2 className="h-4 w-4" />
             </div>
           </label>
         </div>
 
         {/* Plant info bar */}
-        <div className="bg-[#EDE5D8] border-b-[0.5px] border-[#D3C9B8] px-4 py-3">
+        <div className="bg-grove-moss border-b-[0.5px] border-grove-moss px-4 py-3">
           <div className="max-w-[1100px] mx-auto flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <StatusDot status={plant.status || 'healthy'} size="lg" showLabel />
               </div>
-              <h1 className="font-plant text-[#1C2E10] text-2xl mt-1">
+              <h1 className="font-plant text-grove-cream text-2xl mt-1">
                 <InlineText
                   value={plant.nickname || plant.common_name}
                   placeholder={plant.common_name || 'Add nickname'}
                   onSave={(v) => patchPlant({ nickname: v })}
                   testid="plant-nickname"
                   className="text-2xl"
-                  inputClassName="text-2xl font-plant text-[#1C2E10]"
+                  inputClassName="text-2xl font-plant text-grove-cream"
                   maxLength={60}
                 />
               </h1>
               {plant.latin_name && (
-                <p className="font-latin text-[#2B2B26] text-xs mt-0.5">
+                <p className="font-latin text-grove-cream text-xs mt-0.5">
                   {plant.latin_name}
                   {plant.ai_identified && !plant.ai_species_confirmed && (
                     <span
                       data-testid="plant-ai-identified-badge"
-                      className="ml-2 font-mono text-[9px] tracking-[0.05em] text-[#888780] uppercase"
+                      className="ml-2 font-mono text-[9px] tracking-[0.05em] text-grove-lichen uppercase"
                     >
                       AI identified
                     </span>
@@ -242,7 +242,7 @@ export default function PlantDetailPage() {
                       type="button"
                       onClick={() => navigate(`/greenhouse/${plant.species_id}`)}
                       data-testid="plant-view-in-greenhouse"
-                      className="ml-2 inline-flex items-center text-[10px] font-ui text-[#2D5016] underline underline-offset-2 hover:text-[#1C2E10]"
+                      className="ml-2 inline-flex items-center text-[10px] font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
                     >
                       View in Greenhouse
                     </button>
@@ -256,7 +256,7 @@ export default function PlantDetailPage() {
                   onSave={(v) => patchPlant({ room: v })}
                   testid="plant-room"
                 />
-                <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] px-2.5 py-0.5 text-[10px] font-ui text-[#2B2B26]">
+                <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2.5 py-0.5 text-[10px] font-ui text-grove-cream">
                   {plant.grow_medium}
                 </span>
               </div>
@@ -266,7 +266,7 @@ export default function PlantDetailPage() {
               <button
                 onClick={() => setCareModalOpen(true)}
                 data-testid="plant-log-care-button"
-                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-[#3B6D11] text-[#F5F0E8] border-[#3B6D11] hover:bg-[#639922] transition-colors duration-150 flex items-center gap-1.5"
+                className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
               >
                 <Droplets className="h-3.5 w-3.5" />
                 Log Care
@@ -274,7 +274,7 @@ export default function PlantDetailPage() {
               <button
                 onClick={handleDelete}
                 data-testid="plant-delete-button"
-                className="w-8 h-8 rounded-[2px] border-[0.5px] border-[#D3C9B8] flex items-center justify-center text-[#E24B4A] hover:bg-[#E24B4A] hover:text-[#F5F0E8] transition-colors duration-150"
+                className="w-8 h-8 rounded-[2px] border-[0.5px] border-grove-moss flex items-center justify-center text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -286,12 +286,12 @@ export default function PlantDetailPage() {
       {/* Tabs */}
       <div className="max-w-[1100px] mx-auto px-4 py-4" data-testid="plant-detail-tabs">
         <Tabs defaultValue="timeline">
-          <TabsList className="bg-transparent border-b-[0.5px] border-[#D3C9B8] rounded-none w-full justify-start gap-1 h-auto p-0">
-            <TabsTrigger value="timeline" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-[#EAF3DE] data-[state=active]:text-[#1C2E10] text-xs font-ui px-4 py-2">Timeline</TabsTrigger>
-            <TabsTrigger value="photos" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-[#EAF3DE] data-[state=active]:text-[#1C2E10] text-xs font-ui px-4 py-2" data-testid="plant-tab-photos">Photos</TabsTrigger>
-            <TabsTrigger value="care" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-[#EAF3DE] data-[state=active]:text-[#1C2E10] text-xs font-ui px-4 py-2">Care</TabsTrigger>
-            <TabsTrigger value="notes" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-[#EAF3DE] data-[state=active]:text-[#1C2E10] text-xs font-ui px-4 py-2">Notes</TabsTrigger>
-            <TabsTrigger value="stats" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-[#EAF3DE] data-[state=active]:text-[#1C2E10] text-xs font-ui px-4 py-2">Stats</TabsTrigger>
+          <TabsList className="bg-transparent border-b-[0.5px] border-grove-moss rounded-none w-full justify-start gap-1 h-auto p-0">
+            <TabsTrigger value="timeline" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Timeline</TabsTrigger>
+            <TabsTrigger value="photos" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2" data-testid="plant-tab-photos">Photos</TabsTrigger>
+            <TabsTrigger value="care" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Care</TabsTrigger>
+            <TabsTrigger value="notes" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Notes</TabsTrigger>
+            <TabsTrigger value="stats" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Stats</TabsTrigger>
           </TabsList>
 
           {/* Timeline Tab */}
@@ -311,8 +311,8 @@ export default function PlantDetailPage() {
           {/* Care Tab */}
           <TabsContent value="care" className="pt-4 space-y-4">
             {/* Watering schedule */}
-            <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4">
-              <h3 className="font-plant text-[#1C2E10] text-sm mb-2">Watering schedule</h3>
+            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
+              <h3 className="font-plant text-grove-cream text-sm mb-2">Watering schedule</h3>
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
                   <InlineStepper
@@ -324,7 +324,7 @@ export default function PlantDetailPage() {
                   />
                   <p
                     data-testid="watering-schedule-label"
-                    className="font-plant italic text-[11px] text-[#5F5E5A] mt-1 leading-snug"
+                    className="font-plant italic text-[11px] text-grove-sage mt-1 leading-snug"
                   >
                     {plant.watering_frequency_source === 'ai' ? 'AI-suggested' : 'Your schedule'}
                   </p>
@@ -333,22 +333,22 @@ export default function PlantDetailPage() {
                   onClick={handleAISchedule}
                   disabled={generatingSchedule}
                   data-testid="ai-schedule-button"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] bg-transparent text-[#1C2E10] hover:border-[#2D5016] disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
                 >
                   <Sparkles className="h-3 w-3" />
                   {generatingSchedule ? 'Analyzing...' : 'AI Suggest'}
                 </button>
               </div>
               {aiSchedule && (
-                <div className="mt-3 rounded-[8px] bg-[#EAF3DE] p-3 border-[0.5px] border-[#D3C9B8]">
-                  <p className="font-ui text-sm text-[#1C2E10]">AI suggests every {aiSchedule.days} days</p>
+                <div className="mt-3 rounded-[8px] bg-grove-moss p-3 border-[0.5px] border-grove-moss">
+                  <p className="font-ui text-sm text-grove-cream">AI suggests every {aiSchedule.days} days</p>
                   {aiSchedule.reason && (
-                    <p className="font-ui text-xs text-[#2B2B26] mt-1">
+                    <p className="font-ui text-xs text-grove-cream mt-1">
                       <span className="font-semibold">Why: </span>{aiSchedule.reason}
                     </p>
                   )}
                   {confidenceText(aiSchedule.confidence) && (
-                    <p data-testid="ai-schedule-confidence" className="font-ui text-xs text-[#2B2B26] mt-1">
+                    <p data-testid="ai-schedule-confidence" className="font-ui text-xs text-grove-cream mt-1">
                       {confidenceText(aiSchedule.confidence)}
                     </p>
                   )}
@@ -357,58 +357,58 @@ export default function PlantDetailPage() {
             </div>
 
             {/* Last watered */}
-            <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4">
-              <h3 className="font-plant text-[#1C2E10] text-sm mb-1">Last Watered</h3>
-              <p className="font-ui text-sm text-[#1A1A17]">{formatDate(plant.last_watered_at)}</p>
-              <p className="font-latin text-[10px] text-[#2B2B26] mt-0.5">Next due: {formatDate(plant.next_water_due)}</p>
+            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
+              <h3 className="font-plant text-grove-cream text-sm mb-1">Last Watered</h3>
+              <p className="font-ui text-sm text-grove-cream">{formatDate(plant.last_watered_at)}</p>
+              <p className="font-latin text-[10px] text-grove-cream mt-0.5">Next due: {formatDate(plant.next_water_due)}</p>
             </div>
 
             {/* Biography */}
-            <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#1C2E10] p-4">
+            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-lime p-4">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-plant text-[#9FE1CB] text-sm">Plant Biography</h3>
+                <h3 className="font-plant text-grove-sprout text-sm">Plant Biography</h3>
                 <button
                   onClick={handleGenerateBiography}
                   disabled={generatingBio}
                   data-testid="generate-biography-button"
-                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-[#5DCAA5] text-[#9FE1CB] hover:bg-[#2D5016] disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+                  className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
                 >
                   <Sparkles className="h-3 w-3" />
                   {generatingBio ? 'Writing...' : biography ? 'Regenerate' : 'Generate'}
                 </button>
               </div>
               {biography ? (
-                <p className="font-ui text-sm text-[#9FE1CB] leading-relaxed">{biography}</p>
+                <p className="font-ui text-sm text-grove-sprout leading-relaxed">{biography}</p>
               ) : (
-                <p className="font-ui text-xs text-[#D3C9B8]">Generate an AI biography that tells this plant's story.</p>
+                <p className="font-ui text-xs text-grove-sage">Generate an AI biography that tells this plant's story.</p>
               )}
             </div>
           </TabsContent>
 
           {/* Notes Tab */}
           <TabsContent value="notes" className="pt-4">
-            <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4">
-              <h3 className="font-plant text-[#1C2E10] text-sm mb-2">Notes</h3>
-              <p className="font-ui text-sm text-[#1A1A17] whitespace-pre-wrap">
+            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
+              <h3 className="font-plant text-grove-cream text-sm mb-2">Notes</h3>
+              <p className="font-ui text-sm text-grove-cream whitespace-pre-wrap">
                 {plant.notes || 'No notes yet. Add notes from the edit view.'}
               </p>
             </div>
-            <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4 mt-3">
-              <h3 className="font-plant text-[#1C2E10] text-sm mb-2">Details</h3>
+            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 mt-3">
+              <h3 className="font-plant text-grove-cream text-sm mb-2">Details</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-[#2B2B26] uppercase tracking-[0.12em]">Acquired</span>
-                  <span className="font-latin text-xs text-[#1A1A17]">{formatDate(plant.acquired_date)}</span>
+                  <span className="font-ui text-xs text-grove-cream uppercase tracking-[0.12em]">Acquired</span>
+                  <span className="font-latin text-xs text-grove-cream">{formatDate(plant.acquired_date)}</span>
                 </div>
                 {plant.acquired_from && (
                   <div className="flex justify-between">
-                    <span className="font-ui text-xs text-[#2B2B26] uppercase tracking-[0.12em]">From</span>
-                    <span className="font-ui text-xs text-[#1A1A17]">{plant.acquired_from}</span>
+                    <span className="font-ui text-xs text-grove-cream uppercase tracking-[0.12em]">From</span>
+                    <span className="font-ui text-xs text-grove-cream">{plant.acquired_from}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-[#2B2B26] uppercase tracking-[0.12em]">Medium</span>
-                  <span className="font-ui text-xs text-[#1A1A17]">{plant.grow_medium}</span>
+                  <span className="font-ui text-xs text-grove-cream uppercase tracking-[0.12em]">Medium</span>
+                  <span className="font-ui text-xs text-grove-cream">{plant.grow_medium}</span>
                 </div>
               </div>
             </div>
@@ -422,20 +422,20 @@ export default function PlantDetailPage() {
                 score={plant.health_score}
                 careLogCount={timeline?.length || 0}
               />
-              <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4">
-              <h3 className="font-plant text-[#1C2E10] text-sm mb-3">Care Summary</h3>
+              <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
+              <h3 className="font-plant text-grove-cream text-sm mb-3">Care Summary</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-[#2B2B26]">Care actions logged</span>
-                  <span className="font-latin text-xs text-[#1A1A17]">{timeline.length}</span>
+                  <span className="font-ui text-xs text-grove-cream">Care actions logged</span>
+                  <span className="font-latin text-xs text-grove-cream">{timeline.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-[#2B2B26]">Watering frequency</span>
-                  <span className="font-latin text-xs text-[#1A1A17]">Every {plant.watering_frequency_days} days</span>
+                  <span className="font-ui text-xs text-grove-cream">Watering frequency</span>
+                  <span className="font-latin text-xs text-grove-cream">Every {plant.watering_frequency_days} days</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-ui text-xs text-[#2B2B26]">Added to collection</span>
-                  <span className="font-latin text-xs text-[#1A1A17]">{formatDate(plant.created_at)}</span>
+                  <span className="font-ui text-xs text-grove-cream">Added to collection</span>
+                  <span className="font-latin text-xs text-grove-cream">{formatDate(plant.created_at)}</span>
                 </div>
               </div>
             </div>
@@ -459,17 +459,17 @@ export default function PlantDetailPage() {
           aria-modal="true"
           data-testid="timeline-entry-modal"
           onClick={() => setOpenEntry(null)}
-          className="fixed inset-0 z-[220] bg-[#1C2E10]/85 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[220] bg-grove-lime/85 flex items-center justify-center p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-[480px] rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] overflow-hidden"
+            className="relative w-full max-w-[480px] rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy overflow-hidden"
           >
             <button
               onClick={() => setOpenEntry(null)}
               aria-label="Close"
               data-testid="timeline-entry-modal-close"
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#F5F0E8]/90 text-[#1C2E10] flex items-center justify-center z-10 hover:bg-[#EAF3DE]"
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-grove-forest/90 text-grove-cream flex items-center justify-center z-10 hover:bg-grove-moss"
             >
               <X className="h-4 w-4" />
             </button>
@@ -477,21 +477,21 @@ export default function PlantDetailPage() {
               <img
                 src={getFileUrl(openEntry.photo_url)}
                 alt=""
-                className="w-full aspect-[4/3] bg-[#EAF3DE] object-contain"
+                className="w-full aspect-[4/3] bg-grove-moss object-contain"
               />
             )}
             <div className="p-4">
-              <p className="font-plant text-[#1C2E10] text-lg">
+              <p className="font-plant text-grove-cream text-lg">
                 {openEntry.title || (openEntry.action ? (openEntry.action[0].toUpperCase() + openEntry.action.slice(1)) : 'Entry')}
               </p>
-              <p className="font-latin text-[10px] text-[#888780] mt-0.5">
+              <p className="font-latin text-[10px] text-grove-lichen mt-0.5">
                 {new Date(openEntry.logged_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
               </p>
               {openEntry.notes && (
-                <p className="italic font-ui text-sm text-[#2B2B26] mt-3">"{openEntry.notes}"</p>
+                <p className="italic font-ui text-sm text-grove-cream mt-3">"{openEntry.notes}"</p>
               )}
               {openEntry.subtitle && !openEntry.notes && (
-                <p className="font-ui text-sm text-[#2B2B26] mt-3">{openEntry.subtitle}</p>
+                <p className="font-ui text-sm text-grove-cream mt-3">{openEntry.subtitle}</p>
               )}
             </div>
           </div>

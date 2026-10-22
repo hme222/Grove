@@ -71,30 +71,30 @@ export default function DailyMissionCard({ onCompleted }) {
       data-mission-completed={completed ? 'true' : 'false'}
       className={`relative overflow-hidden rounded-[16px] border-[0.5px] px-4 py-3 mb-3 ${
         completed
-          ? 'border-[#3B6D11]/40 bg-[#EAF3DE]'
-          : 'border-[#D3C9B8] bg-[#FDFAF6]'
+          ? 'border-grove-fernLine/40 bg-grove-moss'
+          : 'border-grove-moss bg-grove-canopy'
       }`}
     >
       <div className="flex items-center gap-3">
         <div
           className={`relative w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${
-            completed ? 'bg-[#3B6D11] text-[#EAF3DE]' : 'bg-[#1C2E10] text-[#9FE1CB]'
+            completed ? 'bg-grove-lime text-grove-root' : 'bg-grove-lime text-grove-sprout'
           }`}
           aria-hidden="true"
         >
           {completed ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-[#5F5E5A]">
+          <p className="font-plant uppercase tracking-[0.1em] text-[10px] text-grove-sage">
             Today's mission
           </p>
           <h3
             data-testid="daily-mission-title"
-            className="font-plant text-[#1C2E10] text-base leading-snug truncate"
+            className="font-plant text-grove-cream text-base leading-snug truncate"
           >
             {completed ? 'Mission complete' : mission.title}
           </h3>
-          <p className="font-ui text-xs text-[#5F5E5A] mt-0.5 line-clamp-2">
+          <p className="font-ui text-xs text-grove-sage mt-0.5 line-clamp-2">
             {completed
               ? 'Nice work — see you tomorrow.'
               : mission.subtitle}
@@ -106,7 +106,7 @@ export default function DailyMissionCard({ onCompleted }) {
               type="button"
               onClick={handleCta}
               data-testid="daily-mission-cta"
-              className="relative overflow-hidden rounded-[8px] bg-[#1C2E10] text-[#F5F0E8] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 hover:bg-[#2D5016] transition-colors duration-150 flex items-center gap-1"
+              className="relative overflow-hidden rounded-[8px] bg-grove-lime text-grove-root font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1"
             >
               {mission.cta || 'Begin'}
               <ArrowRight className="h-3 w-3" />
@@ -116,7 +116,7 @@ export default function DailyMissionCard({ onCompleted }) {
                 type="button"
                 onClick={handleManualComplete}
                 data-testid="daily-mission-manual-complete"
-                className="text-[10px] font-ui text-[#5F5E5A] underline-offset-2 hover:underline"
+                className="text-[10px] font-ui text-grove-sage underline-offset-2 hover:underline"
               >
                 {completing ? 'Logging...' : 'Mark as done'}
               </button>

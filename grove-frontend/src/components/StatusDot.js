@@ -1,11 +1,11 @@
 import React from 'react';
 
 const statusColors = {
-  healthy: 'bg-[#3B6D11]',
+  healthy: 'bg-grove-lime',
   needs_water: 'bg-[#BA7517]',
-  urgent: 'bg-[#E24B4A]',
+  urgent: 'bg-grove-bloom',
   propagating: 'bg-[#185FA5]',
-  dormant: 'bg-[#D3C9B8]',
+  dormant: 'bg-grove-moss',
 };
 
 const statusLabels = {
@@ -24,11 +24,11 @@ export function StatusDot({ status, size = 'sm', showLabel = false, className = 
   return (
     <span className={`inline-flex items-center gap-1.5 ${className}`}>
       <span
-        className={`${sizeClass} rounded-full ${colorClass} ring-2 ring-[#F5F0E8] ${isPulsing ? 'status-pulse' : ''}`}
+        className={`${sizeClass} rounded-full ${colorClass} ring-2 ring-grove-lime ${isPulsing ? 'status-pulse' : ''}`}
         data-testid={`status-dot-${status}`}
       />
       {showLabel && (
-        <span className="text-xs font-ui text-[#2B2B26]">{statusLabels[status] || status}</span>
+        <span className="text-xs font-ui text-grove-cream">{statusLabels[status] || status}</span>
       )}
     </span>
   );

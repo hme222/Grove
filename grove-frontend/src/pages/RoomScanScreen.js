@@ -172,20 +172,20 @@ export default function RoomScanScreen() {
   if (step === 'capture') {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="room-scan-capture">
-        <button onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-[#1C2E10] hover:text-[#3B6D11]">
+        <button onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-cream hover:text-grove-sprout">
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
-        <h1 className="font-plant text-[#1C2E10] text-[17px]">Scan a room</h1>
-        <p className="font-plant italic text-[#5F5E5A] text-xs mt-1 mb-4">Photograph a shelf or whole room. Grove finds every plant.</p>
+        <h1 className="font-plant text-grove-cream text-[17px]">Scan a room</h1>
+        <p className="font-plant italic text-grove-sage text-xs mt-1 mb-4">Photograph a shelf or whole room. Grove finds every plant.</p>
         <PlantImage tone="plant" rounded="lg" className="w-full aspect-[4/3] mb-3" testId="room-viewfinder" />
-        <p className="font-ui text-xs text-[#5F5E5A] text-center mb-3">Frame the whole space — windowsill, shelf, or corner. Steady the camera.</p>
+        <p className="font-ui text-xs text-grove-sage text-center mb-3">Frame the whole space — windowsill, shelf, or corner. Steady the camera.</p>
         <div className="grid grid-cols-2 gap-2">
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => handleFile(e.target.files?.[0])} />
           <input ref={galleryRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files?.[0])} />
-          <button onClick={(e) => { impactLight(e.currentTarget); cameraRef.current?.click(); }} data-testid="room-take-photo" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016] flex items-center justify-center gap-1.5">
+          <button onClick={(e) => { impactLight(e.currentTarget); cameraRef.current?.click(); }} data-testid="room-take-photo" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center gap-1.5">
             <Camera className="h-4 w-4" /> Take photo
           </button>
-          <button onClick={(e) => { impactLight(e.currentTarget); galleryRef.current?.click(); }} data-testid="room-choose-existing" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-[#1C2E10] border-[0.5px] border-[#D3C9B8] hover:border-[#3B6D11] flex items-center justify-center gap-1.5">
+          <button onClick={(e) => { impactLight(e.currentTarget); galleryRef.current?.click(); }} data-testid="room-choose-existing" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5">
             <ImageIcon className="h-4 w-4" /> Choose existing
           </button>
         </div>
@@ -203,13 +203,13 @@ export default function RoomScanScreen() {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="room-scan-scanning">
         <PlantImage src={roomDataUrl} tone="plant" rounded="lg" className="w-full h-[200px] mb-3" />
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] px-4 py-4">
-          <p className="font-plant text-[#1C2E10] text-sm mb-3">Scanning your room…</p>
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy px-4 py-4">
+          <p className="font-plant text-grove-cream text-sm mb-3">Scanning your room…</p>
           <ul className="space-y-1.5">
             {items.map(({ key, label }) => (
               <li key={key} className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${progress[key] ? 'bg-[#3B6D11]' : 'bg-[#D3C9B8]'}`} />
-                <span className={`font-ui text-sm ${progress[key] ? 'text-[#1C2E10]' : 'text-[#888780]'}`}>{label}</span>
+                <span className={`w-2.5 h-2.5 rounded-full ${progress[key] ? 'bg-grove-lime' : 'bg-grove-moss'}`} />
+                <span className={`font-ui text-sm ${progress[key] ? 'text-grove-cream' : 'text-grove-lichen'}`}>{label}</span>
               </li>
             ))}
           </ul>
@@ -222,16 +222,16 @@ export default function RoomScanScreen() {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="room-scan-failed">
         <PlantImage src={roomDataUrl} tone="plant" rounded="lg" className="w-full h-[180px] mb-3" />
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-4">
-          <p className="font-plant text-[#1C2E10] text-sm mb-1">Scan unavailable</p>
-          <p className="font-ui text-xs text-[#5F5E5A] leading-snug">
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4">
+          <p className="font-plant text-grove-cream text-sm mb-1">Scan unavailable</p>
+          <p className="font-ui text-xs text-grove-sage leading-snug">
             We couldn't analyze that room photo. Try another shot, or photograph plants individually.
           </p>
           <div className="grid grid-cols-2 gap-2 mt-4">
-            <button onClick={() => setStep('capture')} className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#3B6D11] text-[#F5F0E8] hover:bg-[#2D5016] flex items-center justify-center gap-1.5">
+            <button onClick={() => setStep('capture')} className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center gap-1.5">
               <RotateCcw className="h-3.5 w-3.5" /> Try again
             </button>
-            <button onClick={() => navigate('/add-plant')} className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-[#1C2E10] border-[0.5px] border-[#D3C9B8] hover:border-[#3B6D11]">
+            <button onClick={() => navigate('/add-plant')} className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine">
               Try one plant
             </button>
           </div>
@@ -243,8 +243,8 @@ export default function RoomScanScreen() {
   if (step === 'creating') {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-12 text-center" data-testid="room-scan-creating">
-        <div className="w-8 h-8 border-2 border-[#3B6D11] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="font-plant text-[#1C2E10] text-sm">Adding {selectedCount} plants to your grove…</p>
+        <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="font-plant text-grove-cream text-sm">Adding {selectedCount} plants to your grove…</p>
       </div>
     );
   }
@@ -253,20 +253,20 @@ export default function RoomScanScreen() {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-8 text-center" data-testid="room-scan-success">
         <div className="relative inline-block mb-4">
-          <div className="w-16 h-16 rounded-full bg-[#1C2E10] text-[#9FE1CB] flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-sprout flex items-center justify-center mx-auto">
             <Sparkles className="h-7 w-7" />
           </div>
         </div>
-        <h1 className="font-plant text-[#1C2E10] text-xl mb-1">{created.length} plants joined your grove.</h1>
+        <h1 className="font-plant text-grove-cream text-xl mb-1">{created.length} plants joined your grove.</h1>
         <div className="flex flex-wrap gap-2 justify-center my-4">
           {created.map(p => (
-            <span key={p.id} className="rounded-[16px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] px-3 py-1 text-xs font-ui text-[#1C2E10]">
+            <span key={p.id} className="rounded-[16px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-1 text-xs font-ui text-grove-cream">
               {p.nickname ? `${p.nickname} · ${p.common_name}` : p.common_name}
             </span>
           ))}
         </div>
-        <p className="italic font-plant text-xs text-[#5F5E5A] mb-5">Their stories are just beginning.</p>
-        <button onClick={() => navigate('/')} data-testid="room-scan-success-cta" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-5 py-3 bg-[#1C2E10] text-[#F5F0E8] hover:bg-[#2D5016]">
+        <p className="italic font-plant text-xs text-grove-sage mb-5">Their stories are just beginning.</p>
+        <button onClick={() => navigate('/')} data-testid="room-scan-success-cta" className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout">
           See your collection →
         </button>
       </div>
@@ -276,28 +276,28 @@ export default function RoomScanScreen() {
   // Review step
   return (
     <div className="max-w-[520px] mx-auto px-4 py-4 pb-32" data-testid="room-scan-review">
-      <button onClick={() => setStep('capture')} className="mb-3 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-[#1C2E10] hover:text-[#3B6D11]">
+      <button onClick={() => setStep('capture')} className="mb-3 inline-flex items-center gap-1 font-plant uppercase tracking-[0.08em] text-[10px] text-grove-cream hover:text-grove-sprout">
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
       <div className="flex items-start justify-between gap-2 mb-3">
         <div>
-          <h1 className="font-plant text-[#1C2E10] text-[17px]">Grove found {scanResult?.plantsFound || 0} plants.</h1>
-          <p className="font-plant italic text-[#5F5E5A] text-xs">Select which ones to add.</p>
+          <h1 className="font-plant text-grove-cream text-[17px]">Grove found {scanResult?.plantsFound || 0} plants.</h1>
+          <p className="font-plant italic text-grove-sage text-xs">Select which ones to add.</p>
         </div>
         {Object.keys(selected).length > 0 && (
           <button
             type="button"
             onClick={toggleAll}
             data-testid="room-scan-toggle-all"
-            className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-[#D3C9B8] text-[#1C2E10] hover:border-[#3B6D11]"
+            className="flex-shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
           >{allSelected ? 'Deselect all' : 'Select all'}</button>
         )}
       </div>
 
       {scanResult?.plants?.length === 0 && (
-        <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-4 text-center">
-          <p className="font-plant text-[#1C2E10] text-sm">No plants detected.</p>
-          <p className="font-ui text-xs text-[#5F5E5A] mt-1">Try a closer photo or photograph plants individually.</p>
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4 text-center">
+          <p className="font-plant text-grove-cream text-sm">No plants detected.</p>
+          <p className="font-ui text-xs text-grove-sage mt-1">Try a closer photo or photograph plants individually.</p>
         </div>
       )}
 
@@ -314,8 +314,8 @@ export default function RoomScanScreen() {
               data-low-conf={lowConf ? 'true' : 'false'}
               className={`relative rounded-[14px] p-3 transition-all duration-200 ${
                 isSelected
-                  ? (lowConf ? 'border-[1.5px] border-[#BA7517] bg-[#F7EED9]' : 'border-2 border-[#3B6D11] bg-[#FDFAF6]')
-                  : 'border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] opacity-50'
+                  ? (lowConf ? 'border-[1.5px] border-grove-moss bg-grove-sun/10' : 'border-2 border-grove-fernLine bg-grove-canopy')
+                  : 'border-[0.5px] border-grove-moss bg-grove-canopy opacity-50'
               }`}
             >
               <button
@@ -324,7 +324,7 @@ export default function RoomScanScreen() {
                 aria-label={isSelected ? 'Deselect' : 'Select'}
                 data-testid="room-scan-card-toggle"
                 className={`absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center ${
-                  isSelected ? 'bg-[#3B6D11] text-[#EAF3DE]' : 'bg-[#EDE5D8] text-[#888780]'
+                  isSelected ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-lichen'
                 }`}
               >
                 {isSelected ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -337,43 +337,43 @@ export default function RoomScanScreen() {
                   className="w-20 h-20 flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0 pr-8">
-                  <p className="font-plant text-sm text-[#1C2E10] truncate">{p.commonName}</p>
+                  <p className="font-plant text-sm text-grove-cream truncate">{p.commonName}</p>
                   <p className="font-latin text-[10px] text-[#639922] truncate">{p.latinName}</p>
-                  <p className="font-latin text-[10px] text-[#888780] mt-0.5">
+                  <p className="font-latin text-[10px] text-grove-lichen mt-0.5">
                     {e.nickname ? `${e.nickname} · ` : ''}
-                    <span className={lowConf ? 'text-[#BA7517]' : ''}>{Math.round((p.confidence || 0) * 100)}% confident</span>
+                    <span className={lowConf ? 'text-grove-sun' : ''}>{Math.round((p.confidence || 0) * 100)}% confident</span>
                   </p>
                   {lowConf && p.notes && (
-                    <p className="italic font-plant text-[11px] text-[#5F5E5A] mt-1 line-clamp-2">"{p.notes}"</p>
+                    <p className="italic font-plant text-[11px] text-grove-sage mt-1 line-clamp-2">"{p.notes}"</p>
                   )}
                   <div className="flex items-center gap-2 mt-1.5">
-                    <div className="flex-1 h-1.5 bg-[#EDE5D8] rounded-full overflow-hidden">
-                      <div className="h-full bg-[#3B6D11]" style={{ width: `${p.healthScore || 80}%` }} />
+                    <div className="flex-1 h-1.5 bg-grove-moss rounded-full overflow-hidden">
+                      <div className="h-full bg-grove-lime" style={{ width: `${p.healthScore || 80}%` }} />
                     </div>
-                    <span className="font-plant text-xs text-[#1C2E10]">{p.healthScore || 80}</span>
+                    <span className="font-plant text-xs text-grove-cream">{p.healthScore || 80}</span>
                   </div>
                   <details className="mt-2">
-                    <summary className="font-plant uppercase tracking-[0.08em] text-[10px] text-[#3B6D11] cursor-pointer hover:text-[#2D5016] inline-flex items-center gap-1">
+                    <summary className="font-plant uppercase tracking-[0.08em] text-[10px] text-grove-sprout cursor-pointer hover:text-grove-sprout inline-flex items-center gap-1">
                       <Edit3 className="h-3 w-3" /> Edit details
                     </summary>
-                    <div className="mt-2 space-y-2 pt-2 border-t-[0.5px] border-[#D3C9B8]">
+                    <div className="mt-2 space-y-2 pt-2 border-t-[0.5px] border-grove-moss">
                       <div>
-                        <label className="font-ui text-[10px] uppercase tracking-[0.1em] text-[#888780] block mb-1">Nickname</label>
+                        <label className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen block mb-1">Nickname</label>
                         <input
                           value={e.nickname || ''}
                           onChange={(ev) => setEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], nickname: ev.target.value } }))}
-                          className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[6px] px-2 py-1.5 text-xs font-ui"
+                          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[6px] px-2 py-1.5 text-xs font-ui"
                         />
                       </div>
                       <div>
-                        <label className="font-ui text-[10px] uppercase tracking-[0.1em] text-[#888780] block mb-1">Watering</label>
+                        <label className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen block mb-1">Watering</label>
                         <div className="flex flex-wrap gap-1">
                           {FREQ_CHIPS.map(d => (
                             <button
                               key={d}
                               type="button"
                               onClick={() => setEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], watering_frequency_days: d } }))}
-                              className={`rounded-[16px] border-[0.5px] px-2 py-1 text-[11px] font-ui ${e.watering_frequency_days === d ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1A1A17]'}`}
+                              className={`rounded-[16px] border-[0.5px] px-2 py-1 text-[11px] font-ui ${e.watering_frequency_days === d ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
                             >{d}d</button>
                           ))}
                         </div>
@@ -390,14 +390,14 @@ export default function RoomScanScreen() {
       {/* Single room selector for the batch */}
       {scanResult?.plants?.length > 0 && (
         <div className="mt-4">
-          <label className="font-ui text-[10px] uppercase tracking-[0.1em] text-[#888780] block mb-1.5">Room (applies to all selected)</label>
+          <label className="font-ui text-[10px] uppercase tracking-[0.1em] text-grove-lichen block mb-1.5">Room (applies to all selected)</label>
           <div className="flex flex-wrap gap-1.5">
             {ROOMS.map(r => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRoom(prev => prev === r ? '' : r)}
-                className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui ${room === r ? 'border-[#1C2E10] bg-[#1C2E10] text-[#F5F0E8]' : 'border-[#D3C9B8] bg-[#EDE5D8] text-[#1A1A17]'}`}
+                className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui ${room === r ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
               >{r}</button>
             ))}
           </div>
@@ -406,13 +406,13 @@ export default function RoomScanScreen() {
 
       {/* Sticky CTA */}
       {scanResult?.plants?.length > 0 && (
-        <div className="fixed left-0 right-0 bottom-[68px] px-4 py-3 bg-gradient-to-t from-[#F5F0E8] to-transparent">
+        <div className="fixed left-0 right-0 bottom-[68px] px-4 py-3 bg-gradient-to-t from-grove-forest to-transparent">
           <div className="max-w-[520px] mx-auto">
             <button
               onClick={handleAddBatch}
               disabled={selectedCount === 0}
               data-testid="room-scan-add-batch"
-              className="relative overflow-hidden w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 bg-[#1C2E10] text-[#F5F0E8] border-[0.5px] border-[#1C2E10] hover:bg-[#2D5016] disabled:opacity-50 flex items-center justify-center gap-2"
+              className="relative overflow-hidden w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <Sparkles className="h-3.5 w-3.5" />
               {selectedCount === 0 ? 'Select at least one plant' : `Add ${selectedCount} plant${selectedCount === 1 ? '' : 's'} to grove`}

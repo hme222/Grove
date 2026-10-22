@@ -67,7 +67,7 @@ export default function GrovesPage() {
           <button
             onClick={() => setShowCreate(true)}
             data-testid="create-grove-button"
-            className="rounded-full w-9 h-9 bg-[#5DCAA5] text-white flex items-center justify-center hover:bg-[#4ab08d] transition-colors duration-150"
+            className="rounded-full w-9 h-9 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -77,13 +77,13 @@ export default function GrovesPage() {
       <div className="max-w-[600px] mx-auto px-4 py-4 space-y-6">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#5DCAA5] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-grove-lime border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <>
             {/* My Groves */}
             <div>
-              <h2 className="font-plant text-[#1C2E10] text-base mb-3">My Groves</h2>
+              <h2 className="font-plant text-grove-cream text-base mb-3">My Groves</h2>
               {myGroves.length === 0 ? (
                 <EmptyState
                   title="No groves yet"
@@ -96,22 +96,22 @@ export default function GrovesPage() {
                       key={grove.id}
                       onClick={() => navigate(`/groves/${grove.id}`)}
                       data-testid="grove-card"
-                      className="w-full flex items-center gap-3 rounded-[14px] border-[0.5px] border-[#5DCAA5]/30 bg-[#EDE5D8] px-4 py-3 text-left hover:border-[#5DCAA5] transition-colors duration-150"
+                      className="w-full flex items-center gap-3 rounded-[14px] border-[0.5px] border-grove-lime/30 bg-grove-moss px-4 py-3 text-left hover:border-grove-lime transition-colors duration-150"
                     >
-                      <div className="w-10 h-10 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0 border-[0.5px] border-[#5DCAA5]/30">
-                        <Users className="h-5 w-5 text-[#5DCAA5]" />
+                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 border-[0.5px] border-grove-lime/30">
+                        <Users className="h-5 w-5 text-grove-sprout" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <p className="font-plant text-[#1C2E10] text-sm truncate">{grove.name}</p>
-                          {grove.is_private && <Lock className="h-3 w-3 text-[#D3C9B8]" />}
+                          <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
+                          {grove.is_private && <Lock className="h-3 w-3 text-grove-sage" />}
                         </div>
-                        <p className="font-ui text-[10px] text-[#2B2B26]">
+                        <p className="font-ui text-[10px] text-grove-cream">
                           {grove.member_count} member{grove.member_count !== 1 ? 's' : ''}
                           {grove.user_role === 'admin' && ' · Admin'}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-[#D3C9B8] flex-shrink-0" />
+                      <ChevronRight className="h-4 w-4 text-grove-sage flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -121,27 +121,27 @@ export default function GrovesPage() {
             {/* Discover */}
             {discoverGroves.length > 0 && (
               <div>
-                <h2 className="font-plant text-[#1C2E10] text-base mb-3">Discover Groves</h2>
+                <h2 className="font-plant text-grove-cream text-base mb-3">Discover Groves</h2>
                 <div className="space-y-2">
                   {discoverGroves.map(grove => (
                     <div
                       key={grove.id}
-                      className="flex items-center gap-3 rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] px-4 py-3"
+                      className="flex items-center gap-3 rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss px-4 py-3"
                     >
-                      <div className="w-10 h-10 rounded-full bg-[#EAF3DE] flex items-center justify-center flex-shrink-0">
-                        <Globe className="h-5 w-5 text-[#5DCAA5]" />
+                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
+                        <Globe className="h-5 w-5 text-grove-sprout" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-plant text-[#1C2E10] text-sm truncate">{grove.name}</p>
-                        <p className="font-ui text-[10px] text-[#2B2B26]">{grove.member_count} members</p>
+                        <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
+                        <p className="font-ui text-[10px] text-grove-cream">{grove.member_count} members</p>
                         {grove.description && (
-                          <p className="font-ui text-[10px] text-[#D3C9B8] truncate mt-0.5">{grove.description}</p>
+                          <p className="font-ui text-[10px] text-grove-sage truncate mt-0.5">{grove.description}</p>
                         )}
                       </div>
                       <button
                         onClick={() => handleJoin(grove.id)}
                         data-testid="grove-join-button"
-                        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-[#5DCAA5] text-white border-[#5DCAA5] hover:bg-[#4ab08d] flex-shrink-0"
+                        className="rounded-[2px] font-plant uppercase tracking-[0.08em] text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout flex-shrink-0"
                       >
                         Join
                       </button>
@@ -156,28 +156,28 @@ export default function GrovesPage() {
 
       {/* Create Grove Dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="bg-[#EDE5D8] border-[0.5px] border-[#D3C9B8] rounded-[14px] max-w-md">
+        <DialogContent className="bg-grove-moss border-[0.5px] border-grove-moss rounded-[14px] max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-plant text-[#1C2E10] text-lg">Create a Grove</DialogTitle>
+            <DialogTitle className="font-plant text-grove-cream text-lg">Create a Grove</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Name</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Name</label>
               <input
                 type="text"
                 value={newGrove.name}
                 onChange={(e) => setNewGrove(prev => ({...prev, name: e.target.value}))}
                 data-testid="grove-name-input"
-                className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                 placeholder="e.g., Portland Plant People"
               />
             </div>
             <div>
-              <label className="font-ui text-xs uppercase tracking-[0.12em] text-[#1A1A17] block mb-1.5">Description</label>
+              <label className="font-ui text-xs uppercase tracking-[0.12em] text-grove-cream block mb-1.5">Description</label>
               <textarea
                 value={newGrove.description}
                 onChange={(e) => setNewGrove(prev => ({...prev, description: e.target.value}))}
-                className="w-full bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-[#D3C9B8] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5] resize-none h-20"
+                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
                 placeholder="What's your grove about?"
               />
             </div>
@@ -186,15 +186,15 @@ export default function GrovesPage() {
                 type="checkbox"
                 checked={newGrove.is_private}
                 onChange={(e) => setNewGrove(prev => ({...prev, is_private: e.target.checked}))}
-                className="rounded border-[#D3C9B8]"
+                className="rounded border-grove-moss"
               />
-              <span className="font-ui text-xs text-[#1A1A17]">Private grove (invite only)</span>
+              <span className="font-ui text-xs text-grove-cream">Private grove (invite only)</span>
             </label>
             <button
               onClick={handleCreate}
               disabled={creating || !newGrove.name.trim()}
               data-testid="grove-create-submit"
-              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-[#5DCAA5] text-white border-[0.5px] border-[#5DCAA5] hover:bg-[#4ab08d] disabled:opacity-50"
+              className="w-full rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50"
             >
               {creating ? 'Creating...' : 'Create Grove'}
             </button>

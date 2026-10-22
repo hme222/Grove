@@ -54,10 +54,10 @@ export function InlineText({
         type="button"
         onClick={() => setEditing(true)}
         data-testid={`${testid}-display`}
-        className={`group inline-flex items-center gap-1.5 hover:bg-[#EAF3DE] rounded-[6px] px-1 -mx-1 transition-colors duration-150 ${className}`}
+        className={`group inline-flex items-center gap-1.5 hover:bg-grove-moss rounded-[6px] px-1 -mx-1 transition-colors duration-150 ${className}`}
       >
-        <span>{value || <span className="text-[#888780]">{placeholder}</span>}</span>
-        <Pencil className="h-3 w-3 text-[#5F5E5A] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+        <span>{value || <span className="text-grove-lichen">{placeholder}</span>}</span>
+        <Pencil className="h-3 w-3 text-grove-sage opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
       </button>
     );
   }
@@ -76,7 +76,7 @@ export function InlineText({
           if (e.key === 'Escape') { e.preventDefault(); cancel(); }
         }}
         data-testid={`${testid}-input`}
-        className={`bg-[#FDFAF6] border-[0.5px] border-[#3B6D11] rounded-[6px] px-2 py-0.5 outline-none focus:ring-2 focus:ring-[#5DCAA5] ${inputClassName}`}
+        className={`bg-grove-canopy border-[0.5px] border-grove-fernLine rounded-[6px] px-2 py-0.5 outline-none focus:ring-2 focus:ring-grove-lime ${inputClassName}`}
       />
     </div>
   );
@@ -117,7 +117,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
         type="button"
         onClick={() => setOpen((v) => !v)}
         data-testid={`${testid}-trigger`}
-        className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] px-2.5 py-0.5 text-[10px] font-ui text-[#1C2E10] hover:border-[#3B6D11] transition-colors duration-150"
+        className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-moss px-2.5 py-0.5 text-[10px] font-ui text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
       >
         <span>{value || 'Add room'}</span>
         <ChevronDown className="h-2.5 w-2.5" />
@@ -125,11 +125,11 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
       {open && (
         <div
           data-testid={`${testid}-menu`}
-          className="absolute top-full left-0 mt-1 z-50 min-w-[180px] rounded-[10px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] shadow-lg overflow-hidden"
+          className="absolute top-full left-0 mt-1 z-50 min-w-[180px] rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy shadow-lg overflow-hidden"
         >
           <ul className="py-1 max-h-60 overflow-auto">
             {options.length === 0 && !creating && (
-              <li className="px-3 py-2 text-[11px] font-ui text-[#5F5E5A]">No rooms yet.</li>
+              <li className="px-3 py-2 text-[11px] font-ui text-grove-sage">No rooms yet.</li>
             )}
             {options.map((r) => (
               <li key={r}>
@@ -139,15 +139,15 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                   data-testid={`${testid}-option`}
                   className={`w-full text-left px-3 py-1.5 text-xs font-ui ${
                     r === value
-                      ? 'bg-[#EAF3DE] text-[#1C2E10] font-semibold'
-                      : 'text-[#1A1A17] hover:bg-[#F5F0E8]'
+                      ? 'bg-grove-moss text-grove-cream font-semibold'
+                      : 'text-grove-cream hover:bg-grove-forest'
                   }`}
                 >
                   {r}
                 </button>
               </li>
             ))}
-            <li className="border-t-[0.5px] border-[#D3C9B8] mt-1 pt-1">
+            <li className="border-t-[0.5px] border-grove-moss mt-1 pt-1">
               {creating ? (
                 <div className="flex items-center gap-1 px-2 py-1">
                   <input
@@ -160,14 +160,14 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                     }}
                     placeholder="Room name"
                     data-testid={`${testid}-create-input`}
-                    className="flex-1 min-w-0 bg-[#F5F0E8] border-[0.5px] border-[#D3C9B8] rounded-[6px] px-2 py-1 text-xs font-ui text-[#1A1A17] focus:outline-none focus:ring-2 focus:ring-[#5DCAA5]"
+                    className="flex-1 min-w-0 bg-grove-forest border-[0.5px] border-grove-moss rounded-[6px] px-2 py-1 text-xs font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   />
                   <button
                     type="button"
                     onClick={commitNew}
                     aria-label="Create room"
                     data-testid={`${testid}-create-confirm`}
-                    className="w-6 h-6 rounded-[4px] bg-[#1C2E10] text-[#F5F0E8] flex items-center justify-center hover:bg-[#2D5016]"
+                    className="w-6 h-6 rounded-[4px] bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout"
                   >
                     <Check className="h-3 w-3" />
                   </button>
@@ -177,7 +177,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                   type="button"
                   onClick={() => setCreating(true)}
                   data-testid={`${testid}-create`}
-                  className="w-full text-left px-3 py-1.5 text-xs font-ui text-[#3B6D11] hover:bg-[#F5F0E8] inline-flex items-center gap-1.5"
+                  className="w-full text-left px-3 py-1.5 text-xs font-ui text-grove-sprout hover:bg-grove-forest inline-flex items-center gap-1.5"
                 >
                   <Plus className="h-3 w-3" /> Add new room…
                 </button>
@@ -220,11 +220,11 @@ export function InlineStepper({
         disabled={busy || draft <= min}
         aria-label="Decrease"
         data-testid={`${testid}-decrement`}
-        className="w-7 h-7 rounded-full border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] text-[#1C2E10] flex items-center justify-center hover:border-[#3B6D11] disabled:opacity-40 transition-colors duration-150"
+        className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
       >
         <Minus className="h-3 w-3" />
       </button>
-      <span className="font-ui text-sm text-[#1A1A17] min-w-[64px] text-center" data-testid={`${testid}-value`}>
+      <span className="font-ui text-sm text-grove-cream min-w-[64px] text-center" data-testid={`${testid}-value`}>
         Every {draft} {unit}
       </span>
       <button
@@ -233,7 +233,7 @@ export function InlineStepper({
         disabled={busy || draft >= max}
         aria-label="Increase"
         data-testid={`${testid}-increment`}
-        className="w-7 h-7 rounded-full border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] text-[#1C2E10] flex items-center justify-center hover:border-[#3B6D11] disabled:opacity-40 transition-colors duration-150"
+        className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
       >
         <Plus className="h-3 w-3" />
       </button>

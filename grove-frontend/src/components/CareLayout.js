@@ -27,9 +27,9 @@ export default function CareLayout({ children }) {
   }, [location.pathname, showTooltip]);
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
+    <div className="min-h-screen bg-grove-forest">
       {/* Sub-tab bar */}
-      <div className="sticky top-0 z-30 bg-[#F5F0E8] border-b-[0.5px] border-[#D3C9B8]">
+      <div className="sticky top-0 z-30 bg-grove-forest border-b-[0.5px] border-grove-moss">
         <div className="max-w-[1100px] mx-auto px-4">
           <div className="flex items-center gap-1 overflow-x-auto" data-testid="care-subtabs">
             {SUBTABS.map(tab => {
@@ -41,8 +41,8 @@ export default function CareLayout({ children }) {
                   data-testid={tab.testid}
                   className={`flex-shrink-0 px-3 py-3 text-xs font-plant uppercase tracking-[0.1em] border-b-2 transition-colors duration-150 ${
                     active
-                      ? 'border-[#3B6D11] text-[#1C2E10]'
-                      : 'border-transparent text-[#2B2B26] hover:text-[#1C2E10]'
+                      ? 'border-grove-fernLine text-grove-cream'
+                      : 'border-transparent text-grove-cream hover:text-grove-cream'
                   }`}
                 >
                   {tab.label}

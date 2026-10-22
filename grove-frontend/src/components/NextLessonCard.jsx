@@ -40,7 +40,7 @@ export default function NextLessonCard() {
         <button
           type="button"
           onClick={() => navigate('/lessons')}
-          className="text-xs font-ui text-[#2D5016] underline underline-offset-2"
+          className="text-xs font-ui text-grove-sprout underline underline-offset-2"
           data-testid="lessons-link"
         >
           Browse lessons
@@ -51,17 +51,17 @@ export default function NextLessonCard() {
 
   return (
     <section
-      className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EAF3DE] p-4 flex items-center justify-between gap-3"
+      className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 flex items-center justify-between gap-3"
       data-testid="next-lesson-card"
     >
       <div>
-        <p className="text-[11px] font-ui uppercase tracking-[0.1em] text-[#2B2B26]">Your next lesson</p>
-        <p className="font-plant text-[#1C2E10] text-lg">{lesson.title}</p>
-        <p className="text-xs font-ui text-[#2B2B26]">{lesson.blurb}</p>
+        <p className="text-[11px] font-ui uppercase tracking-[0.1em] text-grove-cream">Your next lesson</p>
+        <p className="font-plant text-grove-cream text-lg">{lesson.title}</p>
+        <p className="text-xs font-ui text-grove-cream">{lesson.blurb}</p>
         <button
           type="button"
           onClick={() => navigate('/lessons')}
-          className="mt-1 text-xs font-ui text-[#2D5016] underline underline-offset-2"
+          className="mt-1 text-xs font-ui text-grove-sprout underline underline-offset-2"
           data-testid="next-lesson-all"
         >
           All lessons
@@ -70,7 +70,7 @@ export default function NextLessonCard() {
       <button
         type="button"
         onClick={() => navigate(lessonPath(state.lessonId))}
-        className="shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10]"
+        className="shrink-0 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
         data-testid="next-lesson-start"
       >
         Start
