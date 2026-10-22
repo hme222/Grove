@@ -13,13 +13,13 @@ const SCREENS = [
     title: GROVE_BRAND.name,
     tagline: GROVE_BRAND.tagline,
     subtitle: GROVE_BRAND.subTagline,
-    body: 'Plants have a social history. They were given to you, traded at markets, found on roadsides. Grove helps you remember why each plant matters — not just how to keep it alive.',
+    body: 'Plants have a social history. They were given to you, traded at markets, found on roadsides. FloraGrove helps you remember why each plant matters — not just how to keep it alive.',
     cta: 'Continue',
   },
   {
     id: 'care',
     title: 'Track care, not metrics',
-    body: 'Grove does not gamify your plants. It helps you pay attention to what they actually need. Log water, see what is due, and build a simple daily rhythm.',
+    body: 'FloraGrove does not gamify your plants. It helps you pay attention to what they actually need. Log water, see what is due, and build a simple daily rhythm.',
     cta: 'Got it',
   },
   {
@@ -41,7 +41,7 @@ const SCREENS = [
     id: 'promise',
     title: GROVE_BRAND.promise,
     body: GROVE_BRAND.grovePromiseFull,
-    cta: 'Start using Grove',
+    cta: 'Start using FloraGrove',
   },
 ];
 
@@ -78,7 +78,7 @@ export function Onboarding({ onComplete }) {
     }
   };
 
-  // The first screen is the designed Grove welcome (Studio 12): dark, hand-drawn lines, built in order.
+  // The first screen is the designed FloraGrove welcome (Studio 12): dark, hand-drawn lines, built in order.
   if (screen.id === 'welcome') {
     return <WelcomeScreen onContinue={handleNext} onSkip={handleSkip} disabled={isCompleting} />;
   }
@@ -107,7 +107,7 @@ export function Onboarding({ onComplete }) {
           <div className={`rounded-[14px] overflow-hidden mb-6 border-[0.5px] ${screen.dark ? 'border-grove-fernLine' : 'border-grove-moss'}`}>
             <img
               src={screen.image}
-              alt={screen.id === 'photos' ? 'A plant in soft light' : 'Welcome to Grove'}
+              alt={screen.id === 'photos' ? 'A plant in soft light' : 'Welcome to FloraGrove'}
               className="w-full h-48 object-cover"
             />
           </div>

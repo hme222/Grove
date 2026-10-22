@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
-import { Leaf } from 'lucide-react';
+import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -22,7 +22,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(username, email, password, displayName || username);
-      toast.success('Welcome to Grove!');
+      toast.success('Welcome to FloraGrove!');
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Registration failed');
@@ -36,8 +36,7 @@ export default function RegisterPage() {
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-grove-lime items-center justify-center">
         <div className="text-center px-12">
-          <Leaf className="h-16 w-16 text-grove-sprout mx-auto mb-6" />
-          <h1 className="font-plant text-grove-cream text-5xl tracking-[0.12em] mb-4">Grove</h1>
+          <h1 className="mb-4"><FloraGroveWordmark size={48} color="#0B0F08" leafColor="#202D14" /></h1>
           <p className="font-ui text-grove-sprout text-lg">Grow together</p>
           <p className="font-ui text-grove-sage text-sm mt-2">Know your plants. Really know them.</p>
         </div>
@@ -47,12 +46,11 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
           <div className="lg:hidden text-center mb-8">
-            <Leaf className="h-10 w-10 text-grove-sprout mx-auto mb-3" />
-            <h1 className="font-plant text-grove-cream text-3xl tracking-[0.12em]">Grove</h1>
+            <h1><FloraGroveWordmark size={30} /></h1>
           </div>
 
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6">
-            <h2 className="font-plant text-grove-cream text-2xl mb-1">Join Grove</h2>
+            <h2 className="font-plant text-grove-cream text-2xl mb-1">Join FloraGrove</h2>
             <p className="font-ui text-grove-cream text-sm mb-6">Start growing your collection</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">

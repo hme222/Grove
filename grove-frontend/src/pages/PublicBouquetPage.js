@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { bouquetAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
-import { Flower2, Leaf, ExternalLink } from 'lucide-react';
+import { Flower2, ExternalLink } from 'lucide-react';
 import { GROVE_BRAND } from '@/constants/brand';
+import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 export default function PublicBouquetPage() {
   const { slug } = useParams();
@@ -49,8 +50,7 @@ export default function PublicBouquetPage() {
       {/* Header */}
       <div className="bg-grove-canopy border-b-[0.5px] border-grove-bloom/20 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Leaf className="h-5 w-5 text-grove-sprout" />
-          <span className="font-plant text-grove-cream text-sm tracking-[0.12em]">Grove</span>
+          <FloraGroveWordmark size={16} />
         </div>
         {bouquet.studio_name && (
           <span className="font-ui text-xs text-grove-bloom">{bouquet.studio_name}</span>
@@ -129,7 +129,7 @@ export default function PublicBouquetPage() {
         {/* CTA */}
         <div className="text-center mt-8 mb-4">
           <a href="/register" className="inline-flex items-center gap-1.5 rounded-[12px] font-ui text-xs px-6 py-3 bg-grove-bloom text-grove-root hover:bg-grove-sprout transition-colors">
-            Track this bouquet in Grove <ExternalLink className="h-3.5 w-3.5" />
+            Track this bouquet in FloraGrove <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
 
@@ -139,7 +139,7 @@ export default function PublicBouquetPage() {
           <p className="font-ui text-xs text-grove-cream leading-relaxed max-w-md mx-auto">
             {GROVE_BRAND.publicFooterDescription}
           </p>
-          <p className="font-ui text-xs text-grove-sage mt-3">Powered by Grove</p>
+          <p className="font-ui text-xs text-grove-sage mt-3">Powered by FloraGrove</p>
         </div>
       </div>
     </div>

@@ -70,7 +70,7 @@ function ProtectedRoute({ children }) {
       <div className="flex items-center justify-center min-h-screen bg-grove-forest">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="font-plant text-grove-cream text-lg">Loading Grove...</p>
+          <p className="font-plant text-grove-cream text-lg">Loading FloraGrove...</p>
         </div>
       </div>
     );
@@ -142,7 +142,7 @@ function AppRoutes() {
       <div className="flex items-center justify-center min-h-screen bg-grove-forest">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="font-plant text-grove-cream text-lg">Loading Grove...</p>
+          <p className="font-plant text-grove-cream text-lg">Loading FloraGrove...</p>
         </div>
       </div>
     );

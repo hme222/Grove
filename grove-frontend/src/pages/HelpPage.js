@@ -14,7 +14,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'getting-started',
     title: 'Getting Started',
-    content: "Add your first plant. You will be asked for a photo — it becomes the first entry in your plant's story. Set a watering schedule based on your grow medium (soil, leca, water). Grove tracks due dates automatically.",
+    content: "Add your first plant. You will be asked for a photo — it becomes the first entry in your plant's story. Set a watering schedule based on your grow medium (soil, leca, water). FloraGrove tracks due dates automatically.",
   },
   {
     id: 'photo-guide',
@@ -45,7 +45,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'bouquets',
     title: 'Track Bouquets',
-    content: 'Photograph any arrangement. Grove identifies every flower using AI and builds a personalized care plan to extend its vase life. Track water changes and watch the timeline.',
+    content: 'Photograph any arrangement. FloraGrove identifies every flower using AI and builds a personalized care plan to extend its vase life. Track water changes and watch the timeline.',
   },
   {
     id: 'groves',

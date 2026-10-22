@@ -326,9 +326,9 @@ export default function ProfilePage() {
           <TutorialsAndTipsControls />
         </div>
 
-        {/* About Grove */}
+        {/* About FloraGrove */}
         <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
-          <h3 className="font-plant text-grove-cream text-sm mb-2">About Grove</h3>
+          <h3 className="font-plant text-grove-cream text-sm mb-2">About FloraGrove</h3>
           <p className="font-ui text-sm text-grove-cream leading-relaxed mb-3">{GROVE_BRAND.mission}</p>
           <div className="flex flex-col gap-2">
             <button
@@ -776,7 +776,7 @@ function VerificationStatusCard() {
                     ? `Pact signed ${new Date(v.verified_at).toLocaleDateString()}.`
                     : v.pact_signed_at
                       ? `Pact signed ${new Date(v.pact_signed_at).toLocaleDateString()}.`
-                      : 'Verified by Grove.'}
+                      : 'Verified by FloraGrove.'}
                   {' '}Pact v{v.verification_pact_version || PACT_VERSION}.
                 </p>
               </>
@@ -795,7 +795,7 @@ function VerificationStatusCard() {
                   Not yet verified
                 </p>
                 <p className="font-ui text-[11px] text-grove-sage mt-0.5">
-                  Sign the 8-section community pact to unlock swaps once you've been on Grove for 3 months and have an active Pro subscription.
+                  Sign the 8-section community pact to unlock swaps once you've been on FloraGrove for 3 months and have an active Pro subscription.
                 </p>
               </>
             )}

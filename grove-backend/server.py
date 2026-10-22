@@ -2082,7 +2082,7 @@ class ValidatePhotoInput(BaseModel):
 
 
 PHOTO_VALIDATION_SYSTEM = (
-    "You are a careful visual reviewer for Grove, a plant care app. "
+    "You are a careful visual reviewer for FloraGrove, a plant care app. "
     "Evaluate a user-submitted plant photo for basic quality so they get gentle, "
     "encouraging guidance before it becomes their plant's profile photo. "
     "Return ONLY a JSON object — no prose, no code fences."
@@ -2227,7 +2227,7 @@ async def _resolve_image_b64(payload: IdentifyPlantInput) -> str:
 
 IDENTIFY_SYSTEM = (
     "You are a botanist and plant health expert analyzing a plant photograph "
-    "for the Grove app. Always answer in warm American English, never punitive. "
+    "for the FloraGrove app. Always answer in warm American English, never punitive. "
     "Return ONLY a single valid JSON object — no prose, no markdown, no code fences."
 )
 
@@ -2326,7 +2326,7 @@ async def identify_plant(input: IdentifyPlantInput, current_user: dict = Depends
 
 
 ROOM_SCAN_SYSTEM = (
-    "You are a botanist analyzing a room photo for the Grove app. "
+    "You are a botanist analyzing a room photo for the FloraGrove app. "
     "Identify EVERY plant visible. Always answer in warm American English. "
     "Return ONLY a single valid JSON object — no prose, no markdown."
 )
@@ -4411,7 +4411,7 @@ async def get_species_narrative(species_id: str, current_user: dict = Depends(ge
     # Skip narrative when sample size is too small to be meaningful
     if perf['sample']['total_plants'] == 0:
         return {
-            "narrative": "Not enough growers in Grove yet to summarize how this species fares in the community. As more people add it to their collections, this section will update.",
+            "narrative": "Not enough growers on FloraGrove yet to summarize how this species fares in the community. As more people add it to their collections, this section will update.",
             "generated_at": now.isoformat(),
             "from_cache": False,
             "skipped_reason": "no_data",
@@ -4427,7 +4427,7 @@ async def get_species_narrative(species_id: str, current_user: dict = Depends(ge
         bits = []
         if perf['success_rate_1y_pct'] is not None:
             bits.append(
-                f"{perf['success_rate_1y_pct']}% of growers in Grove keep this plant alive past one year"
+                f"{perf['success_rate_1y_pct']}% of growers on FloraGrove keep this plant alive past one year"
                 f" (across {perf['sample']['cohort_one_year']} plants with at least a year of history)."
             )
         if perf['median_watering_days_healthy'] is not None:
@@ -4634,7 +4634,7 @@ async def _ensure_verified_badge() -> dict:
         "id": str(uuid.uuid4()),
         "slug": "verified_user",
         "name": "Verified",
-        "description": "Signed the Grove community pact and joined the verified swappers.",
+        "description": "Signed the FloraGrove community pact and joined the verified swappers.",
         "category": "Community",
         "icon": "shield-check",
         "tier": None,

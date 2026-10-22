@@ -1,4 +1,4 @@
-# Grove design (v0.2)
+# FloraGrove design (v0.2)
 
 Made Oct 19, 2026 from the dark-forest onboarding mock.
 
@@ -20,3 +20,11 @@ Waitlist placeholders still to fill: email provider (form is design-only), priva
 - Welcome sequence: Grove + Welcome to Grove, stars, line 1, definition, line 2, photo with the rest. App plays once (tap to skip); landing page loops slowly.
 - Phone frame: real iPhone proportions (364 x 763), peeks from the bottom of the page.
 - In the app: grove-frontend/src/components/WelcomeScreen.js (+ .css) is the first onboarding screen.
+
+
+## v0.4 (FloraGrove rebrand)
+- Name: FloraGrove (one word, capital F and G). Community groups keep the lowercase name "grove"; the community tab stays "Grove".
+- Wordmark: light Alegreya Sans "Flora" + bold Cormorant Garamond "Grove", with two leaves as the "v" (outlined = Flora, solid = Grove). Outlined SVGs in design/brand/.
+- Mark and app icon: the v on Root #202D14 (design/brand/icon-1024.png, favicon.svg).
+- Welcome screen: "Welcome to FloraGrove"; the first hand-drawn line and the stars were re-fitted to the new word position.
+- In the app: src/components/brand/FloraGroveWordmark.js and FloraGroveMark.js.

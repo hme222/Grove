@@ -1,4 +1,4 @@
-# Grove landing page
+# FloraGrove landing page
 
 Static page (`index.html`) plus one serverless function (`api/waitlist.js`) that saves
 waitlist emails to Atlas (`grove_db.waitlist`).

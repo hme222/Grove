@@ -13,7 +13,7 @@ import { Repeat, Lock, CheckCircle2, Circle, Calendar, Crown, Shield } from 'luc
  * progress card explaining exactly what's still required.
  *
  * Gating message verbatim from Phase 14 v2 § 7.6:
- *   "Swaps unlock at 3 months on Grove with a Pro subscription, after a
+ *   "Swaps unlock at 3 months on FloraGrove with a Pro subscription, after a
  *    one-time verification."
  */
 export default function SwapsPage() {
@@ -64,7 +64,7 @@ export default function SwapsPage() {
               </span>
               <div className="flex-1">
                 <h2 className="font-plant text-grove-cream text-lg leading-tight">
-                  Swaps unlock at 3 months on Grove with a Pro subscription, after a one-time verification.
+                  Swaps unlock at 3 months on FloraGrove with a Pro subscription, after a one-time verification.
                 </h2>
                 <p className="font-ui text-xs text-grove-sage leading-relaxed mt-2">
                   The friction is intentional. We want growers who are committed before they trade plants — too many free communities have learned this the hard way.
@@ -76,10 +76,10 @@ export default function SwapsPage() {
               <ProgressItem
                 done={ageDaysCompleted}
                 icon={Calendar}
-                title="Use Grove for at least 3 months"
+                title="Use FloraGrove for at least 3 months"
                 detail={
                   ageDaysCompleted
-                    ? `You've been on Grove for ${ageDays} days.`
+                    ? `You've been on FloraGrove for ${ageDays} days.`
                     : `${ageDays} of 90 days. ${90 - ageDays} more to go.`
                 }
                 testid="swap-condition-account-age"
@@ -99,7 +99,7 @@ export default function SwapsPage() {
                 detail={
                   verifiedCompleted
                     ? "You're verified."
-                    : 'Sign the 8-section Grove community pact.'
+                    : 'Sign the 8-section FloraGrove community pact.'
                 }
                 cta={!verifiedCompleted ? { label: 'Start verification', onClick: () => navigate('/verify') } : null}
                 testid="swap-condition-verified"
@@ -133,7 +133,7 @@ export default function SwapsPage() {
             <li>• Bulbs and corms in season — Anemone, Dahlia tubers in autumn.</li>
           </ul>
           <p className="font-latin italic text-xs text-grove-lichen mt-3 leading-snug">
-            All trades are between verified growers. Grove never handles money or shipping.
+            All trades are between verified growers. FloraGrove never handles money or shipping.
           </p>
         </div>
       </div>

@@ -120,7 +120,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         </button>
         <header className="mb-4">
           <h1 className="font-plant text-grove-cream text-[17px]">Photograph your plant</h1>
-          <p className="font-plant italic text-grove-sage text-xs mt-1">Grove will identify it for you.</p>
+          <p className="font-plant italic text-grove-sage text-xs mt-1">FloraGrove will identify it for you.</p>
         </header>
         <PlantImage
           src={null}
@@ -203,7 +203,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4">
           <p className="font-plant text-grove-cream text-sm mb-1">Identification unavailable</p>
           <p className="font-ui text-xs text-grove-sage leading-snug">
-            Grove couldn't identify this plant right now. You can try again or enter the details yourself.
+            FloraGrove couldn't identify this plant right now. You can try again or enter the details yourself.
           </p>
           <div className="grid grid-cols-2 gap-2 mt-4">
             <button onClick={reset} data-testid="identify-retry" className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center gap-1.5">
@@ -243,7 +243,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         {lowConf && identified?.message && (
           <p className="italic font-plant text-xs text-grove-sage mt-2">"{identified.message}"</p>
         )}
-        {/* Pet safety is from Grove's species library. If the user renames the
+        {/* Pet safety is from FloraGrove's species library. If the user renames the
             species, the library match no longer applies, so it reads as unknown. */}
         <ToxicityBadge
           toxicity={speciesEdited ? null : identified?.toxicity}
@@ -311,7 +311,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           <p className="italic font-plant text-xs text-grove-sage mt-1.5 leading-snug">"{identified.healthSummary}"</p>
         )}
         <p className="font-plant italic text-[11px] text-grove-lichen mt-1">
-          Based on your photo today. This score improves as Grove learns your plant's real patterns over time.
+          Based on your photo today. This score improves as FloraGrove learns your plant's real patterns over time.
         </p>
       </div>
 

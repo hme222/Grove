@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
-import { Leaf, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
+import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -17,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      toast.success('Welcome back to Grove');
+      toast.success('Welcome back to FloraGrove');
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Login failed');
@@ -31,8 +32,7 @@ export default function LoginPage() {
       {/* Left panel - decorative (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 bg-grove-lime items-center justify-center relative overflow-hidden">
         <div className="text-center px-12">
-          <Leaf className="h-16 w-16 text-grove-sprout mx-auto mb-6" />
-          <h1 className="font-plant text-grove-cream text-5xl tracking-[0.12em] mb-4">Grove</h1>
+          <h1 className="mb-4"><FloraGroveWordmark size={48} color="#0B0F08" leafColor="#202D14" /></h1>
           <p className="font-ui text-grove-sprout text-lg">Grow together</p>
           <p className="font-ui text-grove-sage text-sm mt-2">Know your plants. Really know them.</p>
         </div>
@@ -43,8 +43,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
-            <Leaf className="h-10 w-10 text-grove-sprout mx-auto mb-3" />
-            <h1 className="font-plant text-grove-cream text-3xl tracking-[0.12em]">Grove</h1>
+            <h1><FloraGroveWordmark size={30} /></h1>
             <p className="font-ui text-grove-cream text-sm mt-1">Grow together</p>
           </div>
 
@@ -103,7 +102,7 @@ export default function LoginPage() {
                 className="font-ui text-sm text-grove-sprout hover:text-grove-sprout transition-colors duration-150"
                 data-testid="auth-switch-register"
               >
-                New to Grove? Create an account
+                New to FloraGrove? Create an account
               </Link>
             </div>
           </div>

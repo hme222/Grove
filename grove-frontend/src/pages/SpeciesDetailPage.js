@@ -461,7 +461,7 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
 
       {empty && (
         <p className="font-ui text-xs text-grove-sage leading-snug">
-          No one in Grove has added this plant yet. Stats will appear here as growers add it to their collections.
+          No one on FloraGrove has added this plant yet. Stats will appear here as growers add it to their collections.
         </p>
       )}
 

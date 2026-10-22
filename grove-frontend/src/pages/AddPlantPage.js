@@ -53,7 +53,7 @@ export default function AddPlantPage() {
       key: 'identify',
       icon: Camera,
       title: 'Identify with a photo',
-      desc: 'Take one photo and Grove suggests the species and care defaults. Always optional.',
+      desc: 'Take one photo and FloraGrove suggests the species and care defaults. Always optional.',
       testId: 'add-option-identify',
       onClick: () => setMode('identify'),
     },

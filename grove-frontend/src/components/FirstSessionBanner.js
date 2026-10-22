@@ -48,7 +48,7 @@ export default function FirstSessionBanner() {
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-plant text-xs text-grove-sprout">
-            Welcome to Grove, {displayName}
+            Welcome to FloraGrove, {displayName}
           </p>
           <p className="font-ui text-sm leading-snug">
             Your first 90 seconds: add a plant, log one care action, take one photo. That's the loop. Everything else grows from there.

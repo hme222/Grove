@@ -23,7 +23,7 @@ export const EMPTY_STATES = {
   bouquet_none: {
     illustration: 'bloom',
     heading: 'No bouquets tracked yet',
-    body: 'Next time you receive flowers, photograph them. Grove identifies every stem and tells you exactly how to keep them alive.',
+    body: 'Next time you receive flowers, photograph them. FloraGrove identifies every stem and tells you exactly how to keep them alive.',
     cta: 'Track a bouquet',
     ctaPath: '/bouquets/new',
   },

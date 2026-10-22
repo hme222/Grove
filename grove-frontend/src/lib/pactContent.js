@@ -1,4 +1,4 @@
-// Phase 14C.3.a — Grove community pact content (Supplement v2 Part C, v1.0)
+// Phase 14C.3.a — FloraGrove community pact content (Supplement v2 Part C, v1.0)
 //
 // IMPORTANT: This text is rendered VERBATIM in the verification flow and the
 // read-only "Read community guidelines" view. Do not paraphrase, condense, or
@@ -9,9 +9,9 @@
 export const PACT_VERSION = '1.0';
 
 export const WELCOME_COPY = {
-  heading: 'Welcome to Grove swaps',
+  heading: 'Welcome to FloraGrove swaps',
   body: [
-    "Swaps are the heart of Grove's community. They're how plants travel between people who'll care for them — how a cutting from someone's living room becomes a thriving plant in yours, with a story attached.",
+    "Swaps are the heart of FloraGrove's community. They're how plants travel between people who'll care for them — how a cutting from someone's living room becomes a thriving plant in yours, with a story attached.",
     'For swaps to work, the people doing them have to be real, honest, and committed to the plants and to each other. That\'s what verification is for.',
     "This will take about 3 minutes. Once you're verified, you can swap anytime.",
   ],
@@ -30,7 +30,7 @@ export const IDENTITY_COPY = {
 };
 
 export const PACT_INTRO = {
-  heading: 'The Grove community pact',
+  heading: 'The FloraGrove community pact',
   body: "Before your first swap, please read and agree to how we do things here. This isn't legal — it's how we keep the community good.",
 };
 
@@ -88,7 +88,7 @@ export const PACT_SECTIONS = [
     number: 6,
     title: 'Knowledge is shared, not hoarded',
     body: [
-      "If you've grown a tricky plant successfully, share what worked. If you've struggled, share what didn't. Grove gets better when growers help each other. The community benefits from your honesty more than from your perfection.",
+      "If you've grown a tricky plant successfully, share what worked. If you've struggled, share what didn't. FloraGrove gets better when growers help each other. The community benefits from your honesty more than from your perfection.",
     ],
     acknowledgement: "I'll share what I've learned to help others succeed.",
   },
@@ -96,19 +96,19 @@ export const PACT_SECTIONS = [
     number: 7,
     title: 'If something goes wrong',
     body: [
-      "Plants die in transit sometimes. People miss messages. Misunderstandings happen. When they do, talk it through directly first. If you can't resolve it, contact Grove support — we'll help mediate. Don't take disagreements public unless something serious happened.",
+      "Plants die in transit sometimes. People miss messages. Misunderstandings happen. When they do, talk it through directly first. If you can't resolve it, contact FloraGrove support — we'll help mediate. Don't take disagreements public unless something serious happened.",
     ],
     acknowledgement:
-      "I'll handle disputes directly and constructively, with Grove's help if needed.",
+      "I'll handle disputes directly and constructively, with FloraGrove's help if needed.",
   },
   {
     number: 8,
-    title: "Grove's role",
+    title: "FloraGrove's role",
     body: [
-      "Grove facilitates connections; we don't broker the swap itself. We don't take a cut. We don't ship plants. We give you tools to find each other and a record of the swap. The trust between you and your swap partner is yours to build and protect.",
+      "FloraGrove facilitates connections; we don't broker the swap itself. We don't take a cut. We don't ship plants. We give you tools to find each other and a record of the swap. The trust between you and your swap partner is yours to build and protect.",
     ],
     acknowledgement:
-      'I understand Grove provides the platform, not the plant or the shipping.',
+      'I understand FloraGrove provides the platform, not the plant or the shipping.',
   },
 ];
 
@@ -118,7 +118,7 @@ export const FINAL_COPY = {
   oath:
     "I'll be honest, treat plants and people with care, ship responsibly, share what I know, and help keep this community a place worth being part of.",
   outro:
-    "Grove's mission is to honour the science and the soul of growing things. Swaps are how that mission travels between us.",
+    "FloraGrove's mission is to honour the science and the soul of growing things. Swaps are how that mission travels between us.",
   ctaAgree: 'I agree — verify me',
   ctaDecline: 'Not yet',
 };

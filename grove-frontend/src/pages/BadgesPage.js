@@ -131,7 +131,7 @@ export default function BadgesPage() {
   const togglePin = async (item) => {
     if (item.earned) return; // earned badges aren't goals
     if (!item.earnable) {
-      toast.error("This badge is granted by Grove — it can't be pinned as a goal.");
+      toast.error("This badge is granted by FloraGrove — it can't be pinned as a goal.");
       return;
     }
     setPinning(item.slug);
@@ -402,7 +402,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
           </p>
           {!earned && !item.earnable && (
             <p className="font-latin italic text-[11px] text-grove-sun mt-1">
-              Granted by Grove
+              Granted by FloraGrove
             </p>
           )}
           {canPin && (

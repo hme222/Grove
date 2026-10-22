@@ -37,7 +37,7 @@ export function identifyWhy(identified) {
   if (match?.latinName) {
     const family = match.family ? ` in the ${match.family} family` : '';
     const source = match.source ? ` (${match.source})` : '';
-    return `Top photo match. Grove's library lists ${match.latinName}${family}${source}. Check the leaf shape against it.`;
+    return `Top photo match. FloraGrove's library lists ${match.latinName}${family}${source}. Check the leaf shape against it.`;
   }
-  return "Top photo match. It isn't in Grove's library yet, so check the leaf shape against a trusted guide.";
+  return "Top photo match. It isn't in FloraGrove's library yet, so check the leaf shape against a trusted guide.";
 }

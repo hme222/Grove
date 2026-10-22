@@ -1,4 +1,4 @@
-/* Grove welcome screen. Timings match the approved Studio 12 design, played once. */
+/* FloraGrove welcome screen. Timings match the approved Studio 12 design, played once. */
 .gw {
   position: fixed;
   inset: 0;
@@ -24,7 +24,6 @@
 .gw-skip:hover { color: #F4F1E6; }
 .gw-skip:focus-visible, .gw-cta:focus-visible { outline: 2px solid #C3D98A; outline-offset: 3px; }
 
-.gw-wordmark { margin-top: 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 21px; line-height: 1; letter-spacing: 0.12em; }
 .gw-welcome { white-space: nowrap; line-height: 1; font-weight: normal; }
 .gw-welcome-to { font-weight: 300; font-size: 26px; }
 .gw-welcome-grove { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 29px; }

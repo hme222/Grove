@@ -4,9 +4,14 @@
   background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif;
 }
 .wl-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px); }
-.wl-brand { display: flex; align-items: center; gap: 8px; }
-.wl-wordmark { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 0.1em; }
-.wl-meta { font-size: 14px; color: #A9B09A; }
+.wl-brand { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
+.wl-brand:focus-visible { outline: 2px solid #C3D98A; outline-offset: 4px; border-radius: 4px; }
+.wl-meta {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
+  border: 1px solid #64793F; border-radius: 999px; font-size: 14px; color: #E6E7D6; white-space: nowrap;
+}
+.wl-meta svg { flex: 0 0 auto; }
+@media (max-width: 380px) { .wl-meta { padding: 6px 10px; font-size: 13px; } }
 
 .wl-hero { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 24px 40px; text-align: center; }
 .wl-headline { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.22; max-width: 24ch; text-wrap: balance; }

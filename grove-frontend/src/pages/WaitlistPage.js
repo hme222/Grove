@@ -2,24 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import api from '@/lib/api';
 import { WelcomeStage } from '@/components/WelcomeStage';
+import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 import '@/components/WelcomeScreen.css';
 import './WaitlistPage.css';
 
-// Studio 12 waitlist landing page (design/studio/Studio12-Rise.dc.html), headline #2b.
+// FloraGrove waitlist landing page (Studio 12) (design/studio/Studio12-Rise.dc.html), headline #2b.
 // The phone shows the real welcome screen, looping slowly. Signups go to POST /api/waitlist.
 // The reply is the same for new and existing emails; only a new signup gets a token,
 // which is what lets the visitor turn the beta opt-in on or off.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function LeafMark({ size = 22 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#92B44B" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M4.5 19.5C4.5 11 9.5 5 20 4c-.8 10.5-6.8 15.5-15.5 15.5z" />
-      <path d="M4.5 19.5 13 11" />
-    </svg>
-  );
-}
 
 // Pointer tilt on the phone (GSAP). Desktop pointers only, and never with reduced motion.
 function usePhoneTilt(ref) {
@@ -90,16 +82,21 @@ export default function WaitlistPage() {
   return (
     <main className="wl" data-testid="waitlist-page">
       <header className="wl-header wl-in wl-in-1">
-        <div className="wl-brand">
-          <LeafMark />
-          <span className="wl-wordmark">Grove</span>
+        <a className="wl-brand" href="/waitlist" aria-label="FloraGrove home">
+          <FloraGroveWordmark size={26} />
+        </a>
+        <div className="wl-meta">
+          <svg width="12" height="16" viewBox="0 0 12 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+            <rect x="1" y="0.7" width="10" height="14.6" rx="2.4" />
+            <path d="M4.6 2.8h2.8" strokeLinecap="round" />
+          </svg>
+          Coming to iPhone · Dec 2026
         </div>
-        <div className="wl-meta">iPhone · December</div>
       </header>
 
       <section className="wl-hero">
         <h1 className="wl-headline wl-in wl-in-2">Stop guessing when to water.</h1>
-        <p className="wl-sub wl-in wl-in-3">Grove tells you what each plant needs today, from water and light to soil, and why.</p>
+        <p className="wl-sub wl-in wl-in-3">FloraGrove tells you what each plant needs today, from water and light to soil, and why.</p>
 
         <div className="wl-form-wrap wl-in wl-in-4">
           {status !== 'done' ? (
@@ -128,14 +125,14 @@ export default function WaitlistPage() {
               <div>You're on the list. We'll write to <strong>{email.trim()}</strong> in December.</div>
               {token && (
                 <button type="button" className="wl-beta" onClick={toggleBeta} aria-pressed={beta} disabled={betaSaving}>
-                  {beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test Grove before launch?'}
+                  {beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test FloraGrove before launch?'}
                 </button>
               )}
               {error && <div role="alert" className="wl-error">{error}</div>}
             </div>
           )}
         </div>
-        <div className="wl-proof wl-in wl-in-5">Free to join.</div>
+        <div className="wl-proof wl-in wl-in-5">Free to join. Coming to iPhone in December.</div>
       </section>
 
       <div className="wl-stage">
@@ -144,7 +141,7 @@ export default function WaitlistPage() {
         <div
           className="wl-phone"
           role="img"
-          aria-label="The Grove app's welcome screen: Welcome to Grove. A grove is a small group of trees growing closely together. Grove is a safe space to learn about plants. Providing tools to help you feel confident in caring for your plants."
+          aria-label="The FloraGrove app's welcome screen: Welcome to FloraGrove. A grove is a small group of trees growing closely together. FloraGrove is a safe space to learn about plants. Providing tools to help you feel confident in caring for your plants."
         >
           <span className="wl-btn wl-btn-action" aria-hidden="true" />
           <span className="wl-btn wl-btn-up" aria-hidden="true" />

@@ -160,7 +160,7 @@ export default function NotificationPreferencesPage() {
                 <h3 className="font-plant text-grove-cream text-sm">Daily limit</h3>
               </div>
               <p id="care-cap-desc" className="font-ui text-xs text-grove-cream mb-3">
-                The most care messages Grove sends in a day. Extra plants wait for the next check.
+                The most care messages FloraGrove sends in a day. Extra plants wait for the next check.
               </p>
               <div className="grid grid-cols-3 gap-2">
                 {CARE_CAP_CHOICES.map((n) => {

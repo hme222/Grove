@@ -3,10 +3,10 @@ import { X } from 'lucide-react';
 import { WelcomeStage, STAGE_W, STAGE_H } from '@/components/WelcomeStage';
 import './WelcomeScreen.css';
 
-// The Grove welcome screen, matched to the Studio 12 design (design/studio/Studio12-Rise.dc.html).
+// The FloraGrove welcome screen, matched to the Studio 12 design (design/studio/Studio12-Rise.dc.html).
 // The composition sits on a 430 x 932 stage (iPhone Pro Max points) and is scaled to fit,
 // so the hand-drawn lines stay attached to the words they connect.
-// Motion plays once, in order: Grove + "Welcome to Grove", the stars (then they twinkle),
+// Motion plays once, in order: the wordmark + "Welcome to FloraGrove", the stars (then they twinkle),
 // the first line wiping down, the definition, the second line, then the photo with the rest.
 // Tapping the screen while it builds skips to the finished screen.
 // With reduced motion, everything is shown at once and nothing moves.

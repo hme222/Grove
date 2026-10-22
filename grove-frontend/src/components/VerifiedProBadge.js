@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/t
 /**
  * Verified Pro checkmark — renders next to a username when the user has
  * BOTH `verified_user` and `verified_by_admin` set to true. This is
- * Grove's manually-verified Pro signal (Phase 14C identity layer) and is
+ * FloraGrove's manually-verified Pro signal (Phase 14C identity layer) and is
  * deliberately distinct from the regular swap-eligible verification
  * (which uses `verified_user` alone and has its own treatment).
  *
@@ -55,7 +55,7 @@ export default function VerifiedProBadge({
           align="center"
           className="bg-grove-lime text-grove-root text-[11px] font-ui px-2 py-1 rounded-[4px] border-0"
         >
-          Verified Pro — manually verified by Grove
+          Verified Pro — manually verified by FloraGrove
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

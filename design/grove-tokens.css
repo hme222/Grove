@@ -1,7 +1,13 @@
-/* Grove design tokens v0.3 — from the onboarding mock (Oct 2026).
+/* Grove design tokens v0.4 — from the onboarding mock (Oct 2026).
    Replaces the light "paper" palette in grove-frontend/src/index.css as the primary look.
    Fonts: Google Fonts "Alegreya Sans" (300,400,500,700 + italics) and "Cormorant Garamond" (600,700). */
 :root {
+  /* v0.4 brand: FloraGrove */
+  --fg-leaf-on-dark: #92B44B;
+  --fg-leaf-on-cream: #3F5A1A;
+  --fg-wordmark-flora-weight: 300; /* Alegreya Sans, 90% size */
+  --fg-wordmark-grove-weight: 700; /* Cormorant Garamond */
+
   /* Ground & surfaces */
   --grove-understory: #172010; /* inputs, footer */
   --grove-forest:     #202D14; /* the ground */

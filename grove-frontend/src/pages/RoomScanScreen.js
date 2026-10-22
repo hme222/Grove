@@ -176,7 +176,7 @@ export default function RoomScanScreen() {
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
         <h1 className="font-plant text-grove-cream text-[17px]">Scan a room</h1>
-        <p className="font-plant italic text-grove-sage text-xs mt-1 mb-4">Photograph a shelf or whole room. Grove finds every plant.</p>
+        <p className="font-plant italic text-grove-sage text-xs mt-1 mb-4">Photograph a shelf or whole room. FloraGrove finds every plant.</p>
         <PlantImage tone="plant" rounded="lg" className="w-full aspect-[4/3] mb-3" testId="room-viewfinder" />
         <p className="font-ui text-xs text-grove-sage text-center mb-3">Frame the whole space — windowsill, shelf, or corner. Steady the camera.</p>
         <div className="grid grid-cols-2 gap-2">
@@ -281,7 +281,7 @@ export default function RoomScanScreen() {
       </button>
       <div className="flex items-start justify-between gap-2 mb-3">
         <div>
-          <h1 className="font-plant text-grove-cream text-[17px]">Grove found {scanResult?.plantsFound || 0} plants.</h1>
+          <h1 className="font-plant text-grove-cream text-[17px]">FloraGrove found {scanResult?.plantsFound || 0} plants.</h1>
           <p className="font-plant italic text-grove-sage text-xs">Select which ones to add.</p>
         </div>
         {Object.keys(selected).length > 0 && (

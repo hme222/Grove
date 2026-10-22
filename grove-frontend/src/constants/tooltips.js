@@ -55,7 +55,7 @@ export const TOOLTIPS = [
     id: 'bouquet_first_visit',
     target: 'bottom-tab-bouquets',
     title: 'Track bouquets',
-    body: 'Photograph any arrangement. Grove identifies every flower and builds a personalized care plan to extend its life.',
+    body: 'Photograph any arrangement. FloraGrove identifies every flower and builds a personalized care plan to extend its life.',
     position: 'top',
   },
   {

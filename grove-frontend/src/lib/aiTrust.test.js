@@ -29,18 +29,18 @@ describe('identifyWhy', () => {
       libraryMatch: { latinName: 'Monstera deliciosa', family: 'Araceae', source: 'Royal Horticultural Society' },
     });
     expect(why).toBe(
-      "Top photo match. Grove's library lists Monstera deliciosa in the Araceae family (Royal Horticultural Society). Check the leaf shape against it."
+      "Top photo match. FloraGrove's library lists Monstera deliciosa in the Araceae family (Royal Horticultural Society). Check the leaf shape against it."
     );
   });
 
   test('leaves out facts the library does not have', () => {
     expect(identifyWhy({ libraryMatch: { latinName: 'Ficus lyrata' } })).toBe(
-      "Top photo match. Grove's library lists Ficus lyrata. Check the leaf shape against it."
+      "Top photo match. FloraGrove's library lists Ficus lyrata. Check the leaf shape against it."
     );
   });
 
   test('without a match it says so and points to a check', () => {
-    expect(identifyWhy({ libraryMatch: null })).toMatch(/isn't in Grove's library yet/);
+    expect(identifyWhy({ libraryMatch: null })).toMatch(/isn't in FloraGrove's library yet/);
     expect(identifyWhy(undefined)).toMatch(/check the leaf shape/);
   });
 });
