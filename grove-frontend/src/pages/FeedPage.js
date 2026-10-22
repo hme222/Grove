@@ -206,7 +206,7 @@ export default function FeedPage() {
             <button
               onClick={() => navigate('/groves')}
               data-testid="feed-open-groves-button"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
             >
               <Users className="h-3.5 w-3.5" />
               Groves
@@ -214,7 +214,7 @@ export default function FeedPage() {
             <button
               onClick={() => setShowCompose(!showCompose)}
               data-testid="feed-compose-button"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
+              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
             >
               Post Update
             </button>
@@ -304,12 +304,12 @@ export default function FeedPage() {
                       <span className="truncate">{post.display_name || post.username}</span>
                       <VerifiedProBadge user={post} size={14} />
                     </p>
-                    <p className="font-latin text-[9px] text-grove-cream">{formatTime(post.created_at)} ago</p>
+                    <p className="font-latin text-[11px] text-grove-cream">{formatTime(post.created_at)} ago</p>
                   </div>
                   {post.plant_name && (
                     <div className="flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5">
                       <Leaf className="h-3 w-3 text-grove-sprout" />
-                      <span className="font-plant text-[10px] text-grove-cream truncate max-w-[100px]">{post.plant_name}</span>
+                      <span className="font-plant text-xs text-grove-cream truncate max-w-[100px]">{post.plant_name}</span>
                     </div>
                   )}
                 </div>
@@ -319,7 +319,7 @@ export default function FeedPage() {
                     <p className="font-ui text-sm text-grove-cream mt-1.5">{post.caption}</p>
                   )}
                   {post.plant_latin_name && (
-                    <p className="font-latin text-[10px] text-grove-cream mt-0.5">{post.plant_latin_name}</p>
+                    <p className="font-latin text-xs text-grove-cream mt-0.5">{post.plant_latin_name}</p>
                   )}
 
                   {/* Actions: 3 reactions (leaf / light / cutting) + comments */}
@@ -345,8 +345,8 @@ export default function FeedPage() {
                           style={active ? { backgroundColor: activeColor } : undefined}
                         >
                           <Icon className="h-3.5 w-3.5" fill={active ? 'currentColor' : 'none'} />
-                          <span className="font-plant text-[10px]">{label}</span>
-                          {count > 0 && <span className="font-latin text-[10px]">{count}</span>}
+                          <span className="font-plant text-xs">{label}</span>
+                          {count > 0 && <span className="font-latin text-xs">{count}</span>}
                         </button>
                       );
                     })}
@@ -365,10 +365,10 @@ export default function FeedPage() {
                     <div className="mt-3" data-testid="feed-comments-panel">
                       {/* Sticky conversation header */}
                       <div className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-grove-forest/95 backdrop-blur border-y-[0.5px] border-grove-moss/60 flex items-center justify-between">
-                        <p className="font-plant text-[10px] text-grove-cream">
+                        <p className="font-plant text-xs text-grove-cream">
                           Conversation · {post.comment_count || 0}
                         </p>
-                        <p className="font-latin text-[9px] text-grove-cream truncate max-w-[60%]">
+                        <p className="font-latin text-[11px] text-grove-cream truncate max-w-[60%]">
                           on {post.display_name || post.username}'s post
                         </p>
                       </div>
@@ -377,7 +377,7 @@ export default function FeedPage() {
                         {(commentsData[post.id] || []).map(c => (
                           <div key={c.id} className="flex items-start gap-2">
                             <div className="w-6 h-6 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
-                              <span className="text-[9px] font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
+                              <span className="text-[11px] font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs"><span className="font-medium text-grove-cream">{c.username}</span> <span className="text-grove-cream">{c.body}</span></p>

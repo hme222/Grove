@@ -136,7 +136,7 @@ export default function SwapPage() {
           rightContent={
             <button
               onClick={() => navigate('/profile')}
-              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               Back
@@ -170,7 +170,7 @@ export default function SwapPage() {
         rightContent={
           <button
             onClick={() => navigate('/swaps/matches')}
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <Users className="h-3.5 w-3.5" />
             Matches
@@ -191,7 +191,7 @@ export default function SwapPage() {
           >
             <div className="aspect-[4/5] bg-grove-moss flex items-center justify-center">
               {current.photo_url ? (
-                <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(current.photo_url)} alt={current.common_name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(current.photo_url)} alt={current.common_name} className="w-full h-full object-cover" /></div>
               ) : (
                 <Leaf className="h-16 w-16 text-grove-sprout opacity-30" />
               )}
@@ -204,7 +204,7 @@ export default function SwapPage() {
                 <p className="font-latin text-[11px] text-grove-cream italic">{current.latin_name}</p>
               )}
               <div className="flex items-center gap-1.5 mt-2">
-                <span className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5 font-latin text-[10px] text-grove-cream">
+                <span className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5 font-latin text-xs text-grove-cream">
                   <span>from @{current.owner_username}</span>
                   <VerifiedProBadge
                     verified_user={current.owner_verified_user}
@@ -213,7 +213,7 @@ export default function SwapPage() {
                   />
                 </span>
                 {current.owner_location && (
-                  <span className="font-latin text-[10px] text-grove-sage">· {current.owner_location}</span>
+                  <span className="font-latin text-xs text-grove-sage">· {current.owner_location}</span>
                 )}
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function SwapPage() {
             <p className="font-ui text-sm text-grove-cream mb-4">Check back soon — new cuttings are always being added.</p>
             <button
               onClick={() => navigate('/swaps/matches')}
-              className="rounded-[12px] font-ui text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1.5"
             >
               <Users className="h-3.5 w-3.5" />
               View matches

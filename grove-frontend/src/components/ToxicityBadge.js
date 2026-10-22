@@ -5,7 +5,7 @@ import { getToxicityInfo } from '../lib/toxicity';
 const ICONS = { safe: Heart, caution: AlertTriangle, danger: OctagonAlert, unknown: CircleHelp };
 
 const SIZES = {
-  sm: { box: 'px-2 py-0.5 text-[10px] gap-1', icon: 'h-3 w-3' },
+  sm: { box: 'px-2 py-0.5 text-xs gap-1', icon: 'h-3 w-3' },
   md: { box: 'px-2.5 py-1 text-xs gap-1.5', icon: 'h-3.5 w-3.5' },
 };
 

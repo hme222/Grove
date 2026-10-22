@@ -106,7 +106,7 @@ export default function GrovesPage() {
                           <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
                           {grove.is_private && <Lock className="h-3 w-3 text-grove-sage" />}
                         </div>
-                        <p className="font-ui text-[10px] text-grove-cream">
+                        <p className="font-ui text-xs text-grove-cream">
                           {grove.member_count} member{grove.member_count !== 1 ? 's' : ''}
                           {grove.user_role === 'admin' && ' · Admin'}
                         </p>
@@ -133,15 +133,15 @@ export default function GrovesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
-                        <p className="font-ui text-[10px] text-grove-cream">{grove.member_count} members</p>
+                        <p className="font-ui text-xs text-grove-cream">{grove.member_count} members</p>
                         {grove.description && (
-                          <p className="font-ui text-[10px] text-grove-sage truncate mt-0.5">{grove.description}</p>
+                          <p className="font-ui text-xs text-grove-sage truncate mt-0.5">{grove.description}</p>
                         )}
                       </div>
                       <button
                         onClick={() => handleJoin(grove.id)}
                         data-testid="grove-join-button"
-                        className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout flex-shrink-0"
+                        className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout flex-shrink-0"
                       >
                         Join
                       </button>

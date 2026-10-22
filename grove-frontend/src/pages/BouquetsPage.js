@@ -136,15 +136,15 @@ export default function BouquetsPage() {
                   <p className="font-plant text-grove-cream text-sm truncate">{b.name || 'Bouquet'}</p>
                   <div className="flex items-center gap-1.5 mt-1">
                     <Calendar className="h-3 w-3 text-grove-bloom" />
-                    <span className="font-latin text-[10px] text-grove-bloom">{formatDate(b.received_date)}</span>
+                    <span className="font-latin text-xs text-grove-bloom">{formatDate(b.received_date)}</span>
                     {b.vase_life_expected && (
-                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-1.5 py-0.5 text-[9px] font-ui text-grove-bloom">
+                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-1.5 py-0.5 text-[11px] font-ui text-grove-bloom">
                         {b.vase_life_expected}d life
                       </span>
                     )}
                   </div>
                   {b.occasion && (
-                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy px-2 py-0.5 text-[9px] font-ui text-grove-bloom mt-1.5 capitalize">
+                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy px-2 py-0.5 text-[11px] font-ui text-grove-bloom mt-1.5 capitalize">
                       {b.occasion}
                     </span>
                   )}

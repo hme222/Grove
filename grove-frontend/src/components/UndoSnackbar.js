@@ -51,7 +51,7 @@ export default function UndoSnackbar({ message, onUndo, onDismiss, duration = 80
         onClick={onUndo}
         disabled={busy}
         data-testid="undo-snackbar-undo"
-        className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-fernLine text-grove-sprout hover:bg-grove-sprout disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-2 focus-visible:ring-offset-grove-forest flex items-center gap-1.5"
+        className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-fernLine text-grove-sprout hover:bg-grove-sprout disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-2 focus-visible:ring-offset-grove-forest flex items-center gap-1.5"
       >
         <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
         {busy ? 'Undoing…' : 'Undo'}

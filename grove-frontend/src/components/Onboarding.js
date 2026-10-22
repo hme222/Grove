@@ -139,7 +139,7 @@ export function Onboarding({ onComplete }) {
                 ? 'border-grove-lime bg-grove-lime text-grove-sprout'
                 : 'border-grove-moss bg-grove-moss text-grove-cream'
             }`}>
-              <span className="font-plant text-[10px]">Quick tip</span>
+              <span className="font-plant text-xs">Quick tip</span>
               <span className="font-ui text-xs">{screen.tip}</span>
             </div>
           )}

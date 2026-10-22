@@ -72,7 +72,7 @@ export default function EncyclopediaPage() {
               <h2 className="font-plant text-grove-cream text-base">
                 Themed guilds
               </h2>
-              <span className="font-ui text-[10px] text-grove-sage">{guilds.length} curated</span>
+              <span className="font-ui text-xs text-grove-sage">{guilds.length} curated</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {guilds.map((g) => {
@@ -98,7 +98,7 @@ export default function EncyclopediaPage() {
                     <p className="font-plant text-xs text-grove-cream leading-tight">
                       {g.name}
                     </p>
-                    <p className="font-latin text-[10px] text-grove-sage mt-1">
+                    <p className="font-latin text-xs text-grove-sage mt-1">
                       {g.species_count} species
                     </p>
                   </button>

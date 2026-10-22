@@ -232,7 +232,7 @@ export default function PlantDetailPage() {
                   {plant.ai_identified && !plant.ai_species_confirmed && (
                     <span
                       data-testid="plant-ai-identified-badge"
-                      className="ml-2 font-mono text-[9px] tracking-[0.05em] text-grove-lichen uppercase"
+                      className="ml-2 font-mono text-[11px] tracking-[0.05em] text-grove-lichen uppercase"
                     >
                       AI identified
                     </span>
@@ -242,7 +242,7 @@ export default function PlantDetailPage() {
                       type="button"
                       onClick={() => navigate(`/greenhouse/${plant.species_id}`)}
                       data-testid="plant-view-in-greenhouse"
-                      className="ml-2 inline-flex items-center text-[10px] font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
+                      className="ml-2 inline-flex items-center text-xs font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
                     >
                       View in Greenhouse
                     </button>
@@ -256,7 +256,7 @@ export default function PlantDetailPage() {
                   onSave={(v) => patchPlant({ room: v })}
                   testid="plant-room"
                 />
-                <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2.5 py-0.5 text-[10px] font-ui text-grove-cream">
+                <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2.5 py-0.5 text-xs font-ui text-grove-cream">
                   {plant.grow_medium}
                 </span>
               </div>
@@ -266,7 +266,7 @@ export default function PlantDetailPage() {
               <button
                 onClick={() => setCareModalOpen(true)}
                 data-testid="plant-log-care-button"
-                className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
+                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
               >
                 <Droplets className="h-3.5 w-3.5" />
                 Log Care
@@ -333,7 +333,7 @@ export default function PlantDetailPage() {
                   onClick={handleAISchedule}
                   disabled={generatingSchedule}
                   data-testid="ai-schedule-button"
-                  className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
                 >
                   <Sparkles className="h-3 w-3" />
                   {generatingSchedule ? 'Analyzing...' : 'AI Suggest'}
@@ -360,7 +360,7 @@ export default function PlantDetailPage() {
             <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
               <h3 className="font-plant text-grove-cream text-sm mb-1">Last Watered</h3>
               <p className="font-ui text-sm text-grove-cream">{formatDate(plant.last_watered_at)}</p>
-              <p className="font-latin text-[10px] text-grove-cream mt-0.5">Next due: {formatDate(plant.next_water_due)}</p>
+              <p className="font-latin text-xs text-grove-cream mt-0.5">Next due: {formatDate(plant.next_water_due)}</p>
             </div>
 
             {/* Biography */}
@@ -371,7 +371,7 @@ export default function PlantDetailPage() {
                   onClick={handleGenerateBiography}
                   disabled={generatingBio}
                   data-testid="generate-biography-button"
-                  className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
                 >
                   <Sparkles className="h-3 w-3" />
                   {generatingBio ? 'Writing...' : biography ? 'Regenerate' : 'Generate'}
@@ -484,7 +484,7 @@ export default function PlantDetailPage() {
               <p className="font-plant text-grove-cream text-lg">
                 {openEntry.title || (openEntry.action ? (openEntry.action[0].toUpperCase() + openEntry.action.slice(1)) : 'Entry')}
               </p>
-              <p className="font-latin text-[10px] text-grove-lichen mt-0.5">
+              <p className="font-latin text-xs text-grove-lichen mt-0.5">
                 {new Date(openEntry.logged_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
               </p>
               {openEntry.notes && (

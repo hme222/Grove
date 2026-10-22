@@ -82,7 +82,7 @@ export default function FirstCareCelebration({ open, onClose }) {
           <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-sprout flex items-center justify-center mb-4">
             <Sparkles className="h-7 w-7" />
           </div>
-          <p className="font-plant text-[10px] text-grove-sprout">
+          <p className="font-plant text-xs text-grove-sprout">
             First care logged
           </p>
           <h2 className="font-plant text-grove-cream text-2xl mt-1">

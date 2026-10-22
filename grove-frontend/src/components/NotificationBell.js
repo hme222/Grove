@@ -147,7 +147,7 @@ export default function NotificationBell() {
         {unread > 0 && (
           <span
             data-testid="notification-badge"
-            className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-grove-bloom text-grove-root text-[10px] font-plant flex items-center justify-center px-1"
+            className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-grove-bloom text-grove-root text-xs font-plant flex items-center justify-center px-1"
           >
             {unread > 99 ? '99+' : unread}
           </span>
@@ -163,7 +163,7 @@ export default function NotificationBell() {
             <div className="flex items-center gap-2">
               <h3 className="font-plant text-grove-cream text-sm">Notifications</h3>
               {unread > 0 && (
-                <span className="font-latin text-[10px] text-grove-bloom">{unread} new</span>
+                <span className="font-latin text-xs text-grove-bloom">{unread} new</span>
               )}
             </div>
             <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function NotificationBell() {
                 <button
                   onClick={handleMarkAll}
                   data-testid="notification-mark-all-read"
-                  className="font-plant text-[10px] text-grove-sprout hover:text-grove-sprout"
+                  className="font-plant text-xs text-grove-sprout hover:text-grove-sprout"
                 >
                   Mark all read
                 </button>
@@ -197,7 +197,7 @@ export default function NotificationBell() {
                   <Bell className="h-4 w-4 text-grove-sprout" />
                 </div>
                 <p className="font-ui text-sm text-grove-cream">Nothing new right now.</p>
-                <p className="font-latin text-[10px] text-grove-cream mt-0.5">We'll ping you when your grove needs attention.</p>
+                <p className="font-latin text-xs text-grove-cream mt-0.5">We'll ping you when your grove needs attention.</p>
               </div>
             ) : (
               items.map((n) => {
@@ -224,7 +224,7 @@ export default function NotificationBell() {
                       {n.body && (
                         <p className="font-ui text-xs text-grove-cream line-clamp-2 mt-0.5">{n.body}</p>
                       )}
-                      <p className="font-latin text-[10px] text-grove-lichen mt-1">{relativeTime(n.created_at)}</p>
+                      <p className="font-latin text-xs text-grove-lichen mt-1">{relativeTime(n.created_at)}</p>
                     </div>
                     <span
                       onClick={handleDelete(n.id)}

@@ -87,7 +87,7 @@ export default function DailyTriviaCard() {
           <Sparkles className="h-4 w-4 text-grove-sprout" />
         </span>
         <div className="flex-1 min-w-0 pr-6">
-          <p className="font-plant text-[10px] text-grove-sprout mb-1">
+          <p className="font-plant text-xs text-grove-sprout mb-1">
             Daily {CATEGORY_LABELS[card.category] || 'plant fact'}
           </p>
           <h4
@@ -106,7 +106,7 @@ export default function DailyTriviaCard() {
             type="button"
             onClick={handleReadMore}
             data-testid="daily-trivia-read-more"
-            className="mt-2 inline-flex items-center gap-1 font-plant text-[10px] text-grove-sprout hover:text-grove-sprout"
+            className="mt-2 inline-flex items-center gap-1 font-plant text-xs text-grove-sprout hover:text-grove-sprout"
           >
             <BookOpen className="h-3 w-3" />
             {linked

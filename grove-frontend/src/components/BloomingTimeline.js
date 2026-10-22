@@ -305,7 +305,7 @@ function EntryCard({ item, side, onClick }) {
         </span>
         <span className="font-plant text-[12px] text-grove-cream truncate">{m.label}</span>
       </div>
-      <p className="font-latin text-[10px] text-grove-lichen">
+      <p className="font-latin text-xs text-grove-lichen">
         {new Date(item.logged_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         <span className="px-1 text-grove-sage">·</span>
         {new Date(item.logged_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
@@ -359,7 +359,7 @@ function MilestoneCard({ item, onClick }) {
       </div>
       <div className="text-left flex-1 min-w-0">
         <p className="font-plant text-sm truncate">{item.title}</p>
-        <p className="font-latin text-[10px] opacity-70">
+        <p className="font-latin text-xs opacity-70">
           {new Date(item.logged_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           <span className="px-1.5">·</span>
           {item.subtitle}
@@ -548,7 +548,7 @@ export default function BloomingTimeline({ logs, plant, onOpenEntry }) {
                 style={{ top: it._y - 8 }}
               >
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-grove-canopy to-transparent" />
-                <span className="font-latin text-[10px] text-grove-lichen whitespace-nowrap">
+                <span className="font-latin text-xs text-grove-lichen whitespace-nowrap">
                   {it.label}
                 </span>
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-grove-canopy to-transparent" />

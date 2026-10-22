@@ -148,7 +148,7 @@ export function ReplayTutorialButton({ tutorialId, label, className }) {
       onClick={handle}
       disabled={busy}
       data-testid={`replay-tutorial-${tutorialId}`}
-      className={className || 'rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
+      className={className || 'rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
     >
       {busy ? 'Resetting…' : (label || 'Replay')}
     </button>

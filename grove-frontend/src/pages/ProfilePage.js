@@ -90,7 +90,7 @@ export default function ProfilePage() {
           <button
             onClick={logout}
             data-testid="profile-logout-button"
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
           >
             <LogOut className="h-3.5 w-3.5" />
             Sign Out
@@ -109,7 +109,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h2 className="font-plant text-grove-cream text-xl">{user?.display_name || user?.username}</h2>
-              <p className="font-latin text-[10px] text-grove-cream">@{user?.username}</p>
+              <p className="font-latin text-xs text-grove-cream">@{user?.username}</p>
               <p className="font-ui text-xs text-grove-cream mt-0.5">
                 {user?.tier === 'free' ? 'Free' : user?.tier?.replace('_', ' ')} tier
                 {user?.location && ` · ${user.location}`}
@@ -127,7 +127,7 @@ export default function ProfilePage() {
             <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
-              <p className="font-ui text-[9px] text-grove-cream">{label}</p>
+              <p className="font-ui text-[11px] text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
@@ -140,7 +140,7 @@ export default function ProfilePage() {
               onClick={handleGeneratePersonality}
               disabled={generatingPersonality}
               data-testid="generate-personality-button"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
             >
               <Sparkles className="h-3 w-3" />
               {generatingPersonality ? 'Analyzing...' : user?.personality_title ? 'Refresh' : 'Generate'}
@@ -167,7 +167,7 @@ export default function ProfilePage() {
               type="button"
               onClick={() => navigate('/badges')}
               data-testid="profile-badges-view-all"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               View all{badges.length > 0 ? ` (${badges.length})` : ''}
             </button>
@@ -277,7 +277,7 @@ export default function ProfilePage() {
             className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
           >
             <p className="font-plant text-sm text-grove-cream">Want list</p>
-            <p className="font-ui text-[10px] text-grove-sage mt-0.5">Plants you'd like next</p>
+            <p className="font-ui text-xs text-grove-sage mt-0.5">Plants you'd like next</p>
           </button>
           <button
             type="button"
@@ -286,7 +286,7 @@ export default function ProfilePage() {
             className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
           >
             <p className="font-plant text-sm text-grove-cream">Swaps</p>
-            <p className="font-ui text-[10px] text-grove-sage mt-0.5">Trade with verified growers</p>
+            <p className="font-ui text-xs text-grove-sage mt-0.5">Trade with verified growers</p>
           </button>
           <button
             type="button"
@@ -295,7 +295,7 @@ export default function ProfilePage() {
             className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
           >
             <p className="font-plant text-sm text-grove-cream">Rooms</p>
-            <p className="font-ui text-[10px] text-grove-sage mt-0.5">Plants by location</p>
+            <p className="font-ui text-xs text-grove-sage mt-0.5">Plants by location</p>
           </button>
           <button
             type="button"
@@ -304,7 +304,7 @@ export default function ProfilePage() {
             className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
           >
             <p className="font-plant text-sm text-grove-cream">Swap matches</p>
-            <p className="font-ui text-[10px] text-grove-sage mt-0.5">Messages and active swaps</p>
+            <p className="font-ui text-xs text-grove-sage mt-0.5">Messages and active swaps</p>
           </button>
         </div>
 
@@ -486,7 +486,7 @@ function TutorialsAndTipsControls() {
                 </span>
                 <span className="flex-1 min-w-0 text-left">
                   <span className="font-plant text-xs text-grove-cream block">{meta.title}</span>
-                  <span className="font-ui text-[10px] text-grove-sage block">
+                  <span className="font-ui text-xs text-grove-sage block">
                     {wasSeen ? 'Tap to replay' : 'Not seen yet'}
                   </span>
                 </span>
@@ -593,7 +593,7 @@ function HardinessZoneControls() {
             )}
           </p>
           {sourceLabel && (
-            <p className="font-ui text-[10px] text-grove-sage mt-0.5" data-testid="zone-source-label">
+            <p className="font-ui text-xs text-grove-sage mt-0.5" data-testid="zone-source-label">
               {sourceLabel}
             </p>
           )}
@@ -606,7 +606,7 @@ function HardinessZoneControls() {
             type="button"
             onClick={() => setEditing(true)}
             data-testid="zone-edit-location"
-            className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-1"
+            className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-1"
           >
             <Pencil className="h-3 w-3" />
             {zone ? 'Update location' : 'Add location'}
@@ -616,7 +616,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => setOverriding(true)}
               data-testid="zone-override"
-              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Override zone
             </button>
@@ -645,26 +645,26 @@ function HardinessZoneControls() {
               className="flex-1 bg-grove-canopy border-[0.5px] border-grove-moss rounded-[6px] px-3 py-2 text-xs font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
             />
           </div>
-          {previewing && <p className="font-ui text-[10px] text-grove-sage">Looking up\u2026</p>}
+          {previewing && <p className="font-ui text-xs text-grove-sage">Looking up\u2026</p>}
           {preview?.zone && (
             <div className="rounded-[8px] bg-grove-moss border-[0.5px] border-grove-fernLine p-2">
               <p className="font-plant text-xs text-grove-cream">
                 {preview.system === 'USDA' ? `USDA Zone ${preview.zone}` : `RHS ${preview.zone}`}
               </p>
               {preview.description && (
-                <p className="font-latin italic text-[10px] text-grove-sage mt-0.5">{preview.description}</p>
+                <p className="font-latin italic text-xs text-grove-sage mt-0.5">{preview.description}</p>
               )}
             </div>
           )}
           {preview && !preview.zone && postcode && (
-            <p className="font-ui text-[10px] text-grove-sun">Couldn&apos;t find a match. You can still save and override below.</p>
+            <p className="font-ui text-xs text-grove-sun">Couldn&apos;t find a match. You can still save and override below.</p>
           )}
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => { setEditing(false); setPreview(null); }}
               data-testid="zone-edit-cancel"
-              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Cancel
             </button>
@@ -673,7 +673,7 @@ function HardinessZoneControls() {
               onClick={saveLocation}
               disabled={saving}
               data-testid="zone-edit-save"
-              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-1"
+              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-1"
             >
               <Check className="h-3 w-3" />
               {saving ? 'Saving\u2026' : 'Save'}
@@ -684,7 +684,7 @@ function HardinessZoneControls() {
 
       {overriding && (
         <div className="space-y-2" data-testid="zone-override-form">
-          <p className="font-ui text-[10px] text-grove-sage leading-snug">
+          <p className="font-ui text-xs text-grove-sage leading-snug">
             If your microclimate doesn&apos;t match the auto-derived zone (mountain valley, urban heat island, sheltered coast), you can set it manually here.
           </p>
           <input
@@ -699,7 +699,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => setOverriding(false)}
               data-testid="zone-override-cancel"
-              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
             >
               Cancel
             </button>
@@ -708,7 +708,7 @@ function HardinessZoneControls() {
               onClick={saveOverride}
               disabled={saving || !manualZone.trim()}
               data-testid="zone-override-save"
-              className="flex-1 rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
             >
               {saving ? 'Saving\u2026' : 'Set manually'}
             </button>
@@ -808,7 +808,7 @@ function VerificationStatusCard() {
               type="button"
               onClick={() => navigate('/verify')}
               data-testid="verification-start-btn"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+              className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
             >
               {needsRe ? 'Re-verify' : 'Start verification'}
             </button>
@@ -817,7 +817,7 @@ function VerificationStatusCard() {
             type="button"
             onClick={() => setReaderOpen(true)}
             data-testid="verification-read-pact-btn"
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 inline-flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 inline-flex items-center gap-1.5"
           >
             <BookOpen className="h-3.5 w-3.5" />
             Read community guidelines

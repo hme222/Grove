@@ -35,7 +35,7 @@ export default function AddBouquetPage() {
       <PageHeader
         title="Add a bouquet"
         rightContent={
-          <button onClick={() => navigate(-1)} className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream">
+          <button onClick={() => navigate(-1)} className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream">
             Cancel
           </button>
         }

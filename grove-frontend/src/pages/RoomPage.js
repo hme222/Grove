@@ -79,7 +79,7 @@ export default function RoomPage() {
                       className="relative aspect-square rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss"
                     >
                       {plant.photo_url ? (
-                        <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(plant.photo_url)} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                        <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(plant.photo_url)} alt="" className="w-full h-full object-cover" /></div>
                       ) : (
                         <div className="w-full h-full bg-grove-moss flex items-center justify-center">
                           <Leaf className="h-4 w-4 text-grove-sprout opacity-40" />

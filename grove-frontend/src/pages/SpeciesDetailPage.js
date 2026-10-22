@@ -176,7 +176,7 @@ export default function SpeciesDetailPage() {
                 className="w-full max-h-72 object-contain bg-grove-canopy"
                 loading="lazy"
               />
-              <p className="px-3 py-1.5 font-latin italic text-[9px] text-grove-lichen bg-grove-canopy">
+              <p className="px-3 py-1.5 font-latin italic text-[11px] text-grove-lichen bg-grove-canopy">
                 {species.botanical_illustration_title || 'Botanical illustration'} — {species.botanical_illustration_license || 'Public Domain'}
               </p>
             </div>
@@ -276,7 +276,7 @@ export default function SpeciesDetailPage() {
               <h3 className="font-ui text-xs text-grove-cream">Light</h3>
             </div>
             <p className="font-ui text-sm text-grove-cream">{lightCopy}</p>
-            <p className="font-latin text-[10px] text-grove-cream mt-1 underline">Tap for a primer on light</p>
+            <p className="font-latin text-xs text-grove-cream mt-1 underline">Tap for a primer on light</p>
           </button>
 
           {(species.native_range || species.native_habitat) && (
@@ -317,7 +317,7 @@ export default function SpeciesDetailPage() {
                 </div>
               )}
             </div>
-            <p className="font-latin italic text-[9px] text-grove-lichen mt-2">
+            <p className="font-latin italic text-[11px] text-grove-lichen mt-2">
               Photos from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="underline">Wikimedia Commons</a> — CC / Public Domain
             </p>
           </div>
@@ -364,7 +364,7 @@ export default function SpeciesDetailPage() {
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="h-4 w-4 text-grove-sage" />
               <h3 className="font-ui text-xs text-grove-cream">Historical illustrations</h3>
-              <span className="font-latin italic text-[10px] text-grove-lichen">{species.bhl_illustrations.length} from BHL</span>
+              <span className="font-latin italic text-xs text-grove-lichen">{species.bhl_illustrations.length} from BHL</span>
             </div>
             <div className="grid grid-cols-3 gap-2">
               {species.bhl_illustrations.map((ill) => (
@@ -389,7 +389,7 @@ export default function SpeciesDetailPage() {
                 </a>
               ))}
             </div>
-            <p className="font-latin italic text-[9px] text-grove-lichen mt-2">
+            <p className="font-latin italic text-[11px] text-grove-lichen mt-2">
               From the <a href="https://www.biodiversitylibrary.org" target="_blank" rel="noopener noreferrer" className="underline">Biodiversity Heritage Library</a> — public domain botanical archives.
             </p>
           </div>
@@ -417,7 +417,7 @@ export default function SpeciesDetailPage() {
                 </li>
               ))}
             </ul>
-            <p className="font-latin italic text-[10px] text-grove-lichen mt-3 leading-snug">
+            <p className="font-latin italic text-xs text-grove-lichen mt-3 leading-snug">
               Care defaults curated against published sources. Local conditions vary — adjust to what your space tells you.
             </p>
           </div>
@@ -455,7 +455,7 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
         {sample && (
           <span
             data-testid="species-performance-confidence"
-            className="ml-auto text-[10px] font-ui text-grove-sage"
+            className="ml-auto text-xs font-ui text-grove-sage"
           >
             {confidenceLabel} · {sample.total_plants} plant{sample.total_plants === 1 ? '' : 's'} from {sample.unique_growers} grower{sample.unique_growers === 1 ? '' : 's'}
           </span>
@@ -528,7 +528,7 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
         >
           <div className="flex items-center gap-1.5 mb-2">
             <Sparkles className="h-3 w-3 text-grove-sun" />
-            <span className="font-plant text-[10px] text-grove-sage">
+            <span className="font-plant text-xs text-grove-sage">
               Editorial summary
             </span>
           </div>
@@ -537,7 +537,7 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
       )}
 
       {sample && sample.confidence === 'low' && !empty && (
-        <p className="font-latin italic text-[10px] text-grove-lichen mt-2 leading-snug">
+        <p className="font-latin italic text-xs text-grove-lichen mt-2 leading-snug">
           Sample size is small — treat these numbers as a starting point, not a verdict.
         </p>
       )}
@@ -551,9 +551,9 @@ function PerfStat({ label, value, sub, testid }) {
       className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-2.5"
       data-testid={testid}
     >
-      <p className="font-ui text-[9px] text-grove-sage">{label}</p>
+      <p className="font-ui text-[11px] text-grove-sage">{label}</p>
       <p className="font-plant text-sm text-grove-cream mt-0.5 leading-tight">{value}</p>
-      {sub && <p className="font-latin text-[10px] text-grove-lichen mt-0.5">{sub}</p>}
+      {sub && <p className="font-latin text-xs text-grove-lichen mt-0.5">{sub}</p>}
     </div>
   );
 }

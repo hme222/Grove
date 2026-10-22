@@ -53,7 +53,7 @@ export default function WishlistPage() {
             </p>
             <button
               onClick={() => navigate('/feed')}
-              className="mt-3 rounded-[12px] font-ui text-[10px] px-4 py-2.5 bg-grove-bloom text-grove-root hover:bg-[#B8406A] transition-colors duration-150"
+              className="mt-3 rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-bloom text-grove-root hover:bg-[#B8406A] transition-colors duration-150"
             >
               Browse the feed
             </button>
@@ -72,7 +72,7 @@ export default function WishlistPage() {
                 <div className="flex-1 min-w-0">
                   <p className="font-plant text-grove-cream text-sm truncate">{item.common_name || 'Unknown plant'}</p>
                   {item.latin_name && (
-                    <p className="font-latin text-[10px] text-grove-cream italic truncate">{item.latin_name}</p>
+                    <p className="font-latin text-xs text-grove-cream italic truncate">{item.latin_name}</p>
                   )}
                 </div>
                 <button

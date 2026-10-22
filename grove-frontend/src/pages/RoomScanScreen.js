@@ -172,7 +172,7 @@ export default function RoomScanScreen() {
   if (step === 'capture') {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="room-scan-capture">
-        <button onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-1 font-plant text-[10px] text-grove-cream hover:text-grove-sprout">
+        <button onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-1 font-plant text-xs text-grove-cream hover:text-grove-sprout">
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
         <h1 className="font-plant text-grove-cream text-[17px]">Scan a room</h1>
@@ -276,7 +276,7 @@ export default function RoomScanScreen() {
   // Review step
   return (
     <div className="max-w-[520px] mx-auto px-4 py-4 pb-32" data-testid="room-scan-review">
-      <button onClick={() => setStep('capture')} className="mb-3 inline-flex items-center gap-1 font-plant text-[10px] text-grove-cream hover:text-grove-sprout">
+      <button onClick={() => setStep('capture')} className="mb-3 inline-flex items-center gap-1 font-plant text-xs text-grove-cream hover:text-grove-sprout">
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
       <div className="flex items-start justify-between gap-2 mb-3">
@@ -289,7 +289,7 @@ export default function RoomScanScreen() {
             type="button"
             onClick={toggleAll}
             data-testid="room-scan-toggle-all"
-            className="flex-shrink-0 rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
+            className="flex-shrink-0 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
           >{allSelected ? 'Deselect all' : 'Select all'}</button>
         )}
       </div>
@@ -338,8 +338,8 @@ export default function RoomScanScreen() {
                 />
                 <div className="flex-1 min-w-0 pr-8">
                   <p className="font-plant text-sm text-grove-cream truncate">{p.commonName}</p>
-                  <p className="font-latin text-[10px] text-[#639922] truncate">{p.latinName}</p>
-                  <p className="font-latin text-[10px] text-grove-lichen mt-0.5">
+                  <p className="font-latin text-xs text-[#639922] truncate">{p.latinName}</p>
+                  <p className="font-latin text-xs text-grove-lichen mt-0.5">
                     {e.nickname ? `${e.nickname} · ` : ''}
                     <span className={lowConf ? 'text-grove-sun' : ''}>{Math.round((p.confidence || 0) * 100)}% confident</span>
                   </p>
@@ -353,12 +353,12 @@ export default function RoomScanScreen() {
                     <span className="font-plant text-xs text-grove-cream">{p.healthScore || 80}</span>
                   </div>
                   <details className="mt-2">
-                    <summary className="font-plant text-[10px] text-grove-sprout cursor-pointer hover:text-grove-sprout inline-flex items-center gap-1">
+                    <summary className="font-plant text-xs text-grove-sprout cursor-pointer hover:text-grove-sprout inline-flex items-center gap-1">
                       <Edit3 className="h-3 w-3" /> Edit details
                     </summary>
                     <div className="mt-2 space-y-2 pt-2 border-t-[0.5px] border-grove-moss">
                       <div>
-                        <label className="font-ui text-[10px] text-grove-lichen block mb-1">Nickname</label>
+                        <label className="font-ui text-xs text-grove-lichen block mb-1">Nickname</label>
                         <input
                           value={e.nickname || ''}
                           onChange={(ev) => setEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], nickname: ev.target.value } }))}
@@ -366,7 +366,7 @@ export default function RoomScanScreen() {
                         />
                       </div>
                       <div>
-                        <label className="font-ui text-[10px] text-grove-lichen block mb-1">Watering</label>
+                        <label className="font-ui text-xs text-grove-lichen block mb-1">Watering</label>
                         <div className="flex flex-wrap gap-1">
                           {FREQ_CHIPS.map(d => (
                             <button
@@ -390,7 +390,7 @@ export default function RoomScanScreen() {
       {/* Single room selector for the batch */}
       {scanResult?.plants?.length > 0 && (
         <div className="mt-4">
-          <label className="font-ui text-[10px] text-grove-lichen block mb-1.5">Room (applies to all selected)</label>
+          <label className="font-ui text-xs text-grove-lichen block mb-1.5">Room (applies to all selected)</label>
           <div className="flex flex-wrap gap-1.5">
             {ROOMS.map(r => (
               <button

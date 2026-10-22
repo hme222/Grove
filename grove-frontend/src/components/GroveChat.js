@@ -348,10 +348,10 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
           </button>
         </div>
         <div className="flex items-center justify-between mt-1">
-          <p className="font-latin italic text-[10px] text-grove-lichen">
+          <p className="font-latin italic text-xs text-grove-lichen">
             Enter to send · Shift+Enter for newline · polls every 5 s
           </p>
-          <p className="font-ui text-[10px] text-grove-lichen">
+          <p className="font-ui text-xs text-grove-lichen">
             {body.length > MAX_BODY_LEN * 0.8 && `${body.length}/${MAX_BODY_LEN}`}
           </p>
         </div>
@@ -451,7 +451,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditCancel}
                   data-testid={`chat-msg-${msg.id}-edit-cancel`}
-                  className="rounded-[12px] font-ui text-[9px] px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
+                  className="rounded-[12px] font-ui text-[11px] px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
                 >
                   Cancel
                 </button>
@@ -459,7 +459,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditSave}
                   data-testid={`chat-msg-${msg.id}-edit-save`}
-                  className="rounded-[12px] font-ui text-[9px] px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-[11px] px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
                 >
                   <Check className="h-3 w-3" /> Save
                 </button>
@@ -474,7 +474,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
           )}
         </div>
         <div className={`flex items-center gap-1.5 mt-0.5 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="font-latin italic text-[9px] text-grove-lichen">
+          <span className="font-latin italic text-[11px] text-grove-lichen">
             {formatChatTime(msg.created_at)}
             {msg.edited && ' · edited'}
           </span>

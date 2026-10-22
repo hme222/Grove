@@ -89,7 +89,7 @@ export default function GuildDetailPage() {
               {guild.tags.map((t) => (
                 <span
                   key={t}
-                  className="px-2 py-0.5 rounded-[20px] bg-grove-canopy border-[0.5px] border-grove-moss text-[10px] font-ui text-grove-sage"
+                  className="px-2 py-0.5 rounded-[20px] bg-grove-canopy border-[0.5px] border-grove-moss text-xs font-ui text-grove-sage"
                 >
                   {t}
                 </span>
@@ -114,7 +114,7 @@ export default function GuildDetailPage() {
             style={{ borderColor: `${accent}40`, backgroundColor: `${accent}08` }}
             data-testid="guild-design-notes"
           >
-            <p className="font-plant text-[10px] text-grove-cream mb-1.5">
+            <p className="font-plant text-xs text-grove-cream mb-1.5">
               Design notes
             </p>
             <p className="font-ui text-xs leading-relaxed text-grove-cream">{guild.design_notes}</p>

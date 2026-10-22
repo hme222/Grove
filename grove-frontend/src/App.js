@@ -47,6 +47,7 @@ import SwapChatPage from "./pages/SwapChatPage";
 import WishlistPage from "./pages/WishlistPage";
 import NotificationPreferencesPage from "./pages/NotificationPreferencesPage";
 import LandingVariations from "./pages/LandingVariations";
+import WaitlistPage from "./pages/WaitlistPage";
 import PostOnboarding from "./pages/PostOnboarding";
 import QuickWinVariations from "./pages/QuickWinVariations";
 import ResetCourseVariation from "./pages/ResetCourseVariation";
@@ -157,6 +158,7 @@ function AppRoutes() {
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
         <Route path="/first-run" element={user ? null : <Navigate to="/login" replace />} />
         <Route path="/landing" element={<LandingVariations />} />
+        <Route path="/waitlist" element={<WaitlistPage />} />
         <Route path="/post-onboarding" element={<PostOnboarding />} />
         <Route path="/quick-wins" element={<QuickWinVariations />} />
         <Route path="/reset-course" element={<ResetCourseVariation />} />

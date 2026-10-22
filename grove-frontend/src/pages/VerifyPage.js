@@ -325,7 +325,7 @@ function IdentityStep({
               )}
             </div>
             {emailConfirmed ? (
-              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-[10px]">
+              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-xs">
                 <CheckCircle2 className="h-4 w-4" /> Confirmed
               </span>
             ) : (
@@ -334,7 +334,7 @@ function IdentityStep({
                 onClick={onConfirmEmail}
                 disabled={submitting}
                 data-testid="verify-confirm-email-btn"
-                className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+                className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
               >
                 Verify email
               </button>
@@ -359,7 +359,7 @@ function IdentityStep({
               </p>
             </div>
             {phoneSavedOrSkipped && (
-              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-[10px]">
+              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-xs">
                 <CheckCircle2 className="h-4 w-4" /> Done
               </span>
             )}
@@ -380,7 +380,7 @@ function IdentityStep({
                 onClick={onAddPhone}
                 disabled={submitting}
                 data-testid="verify-add-phone-btn"
-                className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+                className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
               >
                 Add phone
               </button>
@@ -389,7 +389,7 @@ function IdentityStep({
                 onClick={onSkipPhone}
                 disabled={submitting}
                 data-testid="verify-skip-phone-btn"
-                className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 disabled:opacity-50"
+                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 disabled:opacity-50"
               >
                 Skip phone
               </button>
@@ -437,7 +437,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
       <p className="font-ui text-[13px] text-grove-sage mb-5">{PACT_INTRO.body}</p>
 
       <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-moss p-3 mb-4 flex items-center gap-2">
-        <span className="font-plant text-[10px] text-grove-cream">
+        <span className="font-plant text-xs text-grove-cream">
           Acknowledged
         </span>
         <span
@@ -643,7 +643,7 @@ function SuccessStep({ onBrowseSwaps }) {
           <Sparkles className="h-5 w-5" />
         </span>
         <div className="min-w-0">
-          <p className="font-plant text-[10px] text-grove-sage">
+          <p className="font-plant text-xs text-grove-sage">
             {SUCCESS_COPY.badgeLabel}
           </p>
           <p className="font-plant text-[15px] text-grove-cream">{SUCCESS_COPY.badgeName}</p>

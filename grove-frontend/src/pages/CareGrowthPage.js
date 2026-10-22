@@ -55,7 +55,7 @@ export default function CareGrowthPage() {
             <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
-              <p className="font-ui text-[9px] text-grove-cream">{label}</p>
+              <p className="font-ui text-[11px] text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
@@ -74,7 +74,7 @@ export default function CareGrowthPage() {
               Plants currently thriving in your collection.
             </p>
             {stats.past_plants_count > 0 && (
-              <p className="font-latin text-[10px] text-grove-sage mt-1.5">
+              <p className="font-latin text-xs text-grove-sage mt-1.5">
                 {stats.past_plants_count} past plant{stats.past_plants_count === 1 ? '' : 's'} honored in your history.
               </p>
             )}
@@ -86,7 +86,7 @@ export default function CareGrowthPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="growth-hours-breakdown">
             <h3 className="font-plant text-grove-cream text-sm mb-3">
               Estimated Care Time
-              <span className="font-latin text-[10px] text-grove-cream ml-2">{careHours.total_hours}h total</span>
+              <span className="font-latin text-xs text-grove-cream ml-2">{careHours.total_hours}h total</span>
             </h3>
             <div className="space-y-2">
               {Object.entries(careHours)
@@ -96,9 +96,9 @@ export default function CareGrowthPage() {
                   <div key={action} className="flex items-center justify-between">
                     <span className="font-ui text-xs text-grove-cream capitalize">{action.replace('_', ' ')}</span>
                     <div className="flex items-center gap-2">
-                      <span className="font-latin text-[10px] text-grove-cream">{data.count}x</span>
-                      <span className="font-latin text-[10px] text-grove-sage">·</span>
-                      <span className="font-latin text-[10px] text-grove-cream">{data.estimated_minutes}min</span>
+                      <span className="font-latin text-xs text-grove-cream">{data.count}x</span>
+                      <span className="font-latin text-xs text-grove-sage">·</span>
+                      <span className="font-latin text-xs text-grove-cream">{data.estimated_minutes}min</span>
                     </div>
                   </div>
                 ))}
@@ -115,11 +115,11 @@ export default function CareGrowthPage() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest p-3">
-                <p className="font-latin text-[9px] text-grove-cream">Propagations</p>
+                <p className="font-latin text-[11px] text-grove-cream">Propagations</p>
                 <p className="font-plant text-grove-cream text-xl">{stats?.propagation_count || 0}</p>
               </div>
               <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest p-3">
-                <p className="font-latin text-[9px] text-grove-cream">Longest Streak</p>
+                <p className="font-latin text-[11px] text-grove-cream">Longest Streak</p>
                 <p className="font-plant text-grove-cream text-xl">{stats?.longest_streak || 0}d</p>
               </div>
             </div>

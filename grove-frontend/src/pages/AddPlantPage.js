@@ -63,7 +63,7 @@ export default function AddPlantPage() {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-3 inline-flex items-center gap-1 font-plant text-[10px] text-grove-cream hover:text-grove-sprout"
+        className="mb-3 inline-flex items-center gap-1 font-plant text-xs text-grove-cream hover:text-grove-sprout"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
@@ -162,7 +162,7 @@ function ManualEntryFlow({ onBack }) {
         rightContent={
           <button
             onClick={() => step === 'photo' ? setStep('details') : onBack()}
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
           >
             {step === 'photo' ? 'Back' : 'Cancel'}
           </button>
@@ -211,10 +211,10 @@ function ManualEntryFlow({ onBack }) {
                   className="w-full text-left rounded-[8px] border-[0.5px] border-grove-moss bg-grove-moss px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
                   <p className="font-plant text-grove-cream text-sm">{sp.common_name}</p>
-                  <p className="font-latin text-[10px] text-grove-cream">{sp.latin_name}</p>
+                  <p className="font-latin text-xs text-grove-cream">{sp.latin_name}</p>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
                     <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" />
-                    <span className="text-[10px] font-ui text-grove-cream">Water every {sp.default_watering_days}d</span>
+                    <span className="text-xs font-ui text-grove-cream">Water every {sp.default_watering_days}d</span>
                   </div>
                 </button>
               ))}
@@ -232,7 +232,7 @@ function ManualEntryFlow({ onBack }) {
               <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 flex items-center justify-between">
                 <div>
                   <p className="font-plant text-grove-cream text-sm">{selectedSpecies.common_name}</p>
-                  <p className="font-latin text-[10px] text-grove-cream">{selectedSpecies.latin_name}</p>
+                  <p className="font-latin text-xs text-grove-cream">{selectedSpecies.latin_name}</p>
                 </div>
                 <button
                   type="button"

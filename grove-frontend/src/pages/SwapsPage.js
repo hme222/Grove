@@ -132,7 +132,7 @@ export default function SwapsPage() {
             <li>• Seeds you saved — Black-eyed Susan and Coneflower for native pollinator beds.</li>
             <li>• Bulbs and corms in season — Anemone, Dahlia tubers in autumn.</li>
           </ul>
-          <p className="font-latin italic text-[10px] text-grove-lichen mt-3 leading-snug">
+          <p className="font-latin italic text-xs text-grove-lichen mt-3 leading-snug">
             All trades are between verified growers. Grove never handles money or shipping.
           </p>
         </div>
@@ -167,7 +167,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
         <button
           type="button"
           onClick={cta.onClick}
-          className="flex-shrink-0 rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className="flex-shrink-0 rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
         >
           {cta.label}
         </button>

@@ -159,7 +159,7 @@ export default function SwapChatPage() {
                 />
               )}
             </div>
-            <p className="font-latin italic text-[10px] text-grove-lichen">
+            <p className="font-latin italic text-xs text-grove-lichen">
               {isCompleted ? 'Swap completed' : isCancelled ? 'Swap cancelled' : `Swap · ${swap.status}`}
             </p>
           </div>
@@ -173,7 +173,7 @@ export default function SwapChatPage() {
       >
         {/* Match announcement */}
         <div className="flex justify-center my-2">
-          <span className="inline-flex items-center gap-1.5 rounded-[20px] bg-grove-moss border-[0.5px] border-grove-fernLine px-3 py-1.5 font-plant text-[10px] text-grove-sprout">
+          <span className="inline-flex items-center gap-1.5 rounded-[20px] bg-grove-moss border-[0.5px] border-grove-fernLine px-3 py-1.5 font-plant text-xs text-grove-sprout">
             <Leaf className="h-3 w-3" /> You matched — introduce yourself
           </span>
         </div>
@@ -208,7 +208,7 @@ export default function SwapChatPage() {
                     {msg.body}
                   </p>
                 </div>
-                <span className="font-latin italic text-[9px] text-grove-lichen mt-0.5 mx-1">
+                <span className="font-latin italic text-[11px] text-grove-lichen mt-0.5 mx-1">
                   {formatTime(msg.created_at)}
                 </span>
               </div>
@@ -240,13 +240,13 @@ export default function SwapChatPage() {
           {/* Confirm/Cancel buttons */}
           <div className="flex items-center gap-2 px-4 py-2 border-b-[0.5px] border-grove-moss">
             {myConfirmed ? (
-              <span className="flex items-center gap-1 font-plant text-[10px] text-grove-sprout">
+              <span className="flex items-center gap-1 font-plant text-xs text-grove-sprout">
                 <CheckCircle2 className="h-3.5 w-3.5" /> You confirmed — waiting on them
               </span>
             ) : (
               <button
                 onClick={handleConfirm}
-                className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+                className="rounded-[12px] font-ui text-xs px-3 py-1.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
               >
                 Confirm swap
               </button>
@@ -254,7 +254,7 @@ export default function SwapChatPage() {
             <div className="flex-1" />
             <button
               onClick={handleCancel}
-              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-moss text-grove-sage hover:border-grove-moss hover:text-[#BA1818]"
+              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-moss text-grove-sage hover:border-grove-moss hover:text-[#BA1818]"
             >
               Cancel
             </button>

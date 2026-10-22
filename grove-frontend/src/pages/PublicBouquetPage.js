@@ -53,7 +53,7 @@ export default function PublicBouquetPage() {
           <span className="font-plant text-grove-cream text-sm tracking-[0.12em]">Grove</span>
         </div>
         {bouquet.studio_name && (
-          <span className="font-ui text-[10px] text-grove-bloom">{bouquet.studio_name}</span>
+          <span className="font-ui text-xs text-grove-bloom">{bouquet.studio_name}</span>
         )}
       </div>
 
@@ -62,7 +62,7 @@ export default function PublicBouquetPage() {
         <div className="text-center mb-6">
           {bouquet.photo_url && (
             <div className="rounded-[14px] overflow-hidden border-[0.5px] border-grove-bloom/20 mb-4">
-              <div className="w-full aspect-[4/3] bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+              <div className="w-full aspect-[4/3] bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="w-full h-full object-cover" /></div>
             </div>
           )}
           <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name}</h1>
@@ -84,9 +84,9 @@ export default function PublicBouquetPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-plant text-grove-cream text-sm">{f.common_name}</p>
-                      <p className="font-latin text-[10px] text-grove-bloom">{f.latin_name}</p>
+                      <p className="font-latin text-xs text-grove-bloom">{f.latin_name}</p>
                     </div>
-                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-[9px] font-ui text-grove-bloom">
+                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-[11px] font-ui text-grove-bloom">
                       {f.vase_life_days}d life
                     </span>
                   </div>
@@ -139,7 +139,7 @@ export default function PublicBouquetPage() {
           <p className="font-ui text-xs text-grove-cream leading-relaxed max-w-md mx-auto">
             {GROVE_BRAND.publicFooterDescription}
           </p>
-          <p className="font-ui text-[10px] text-grove-sage mt-3">Powered by Grove</p>
+          <p className="font-ui text-xs text-grove-sage mt-3">Powered by Grove</p>
         </div>
       </div>
     </div>

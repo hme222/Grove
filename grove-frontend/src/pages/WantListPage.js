@@ -73,7 +73,7 @@ export default function WantListPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-plant text-sm text-grove-cream">{s.common_name}</p>
                         <p className="font-latin italic text-[11px] text-grove-cream mt-0.5">{s.latin_name}</p>
-                        <div className="flex flex-wrap gap-2 mt-1.5 text-[10px] font-ui text-grove-sage">
+                        <div className="flex flex-wrap gap-2 mt-1.5 text-xs font-ui text-grove-sage">
                           {s.default_light_level && (
                             <span className="inline-flex items-center gap-1">
                               <Sun className="h-2.5 w-2.5" /> {LIGHT_LABEL[s.default_light_level] || s.default_light_level}

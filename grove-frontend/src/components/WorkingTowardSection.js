@@ -49,7 +49,7 @@ export default function WorkingTowardSection() {
         <Link
           to="/badges"
           data-testid="care-working-toward-manage"
-          className="font-plant text-[10px] text-grove-sage hover:text-grove-sprout inline-flex items-center gap-1"
+          className="font-plant text-xs text-grove-sage hover:text-grove-sprout inline-flex items-center gap-1"
         >
           Manage <ArrowRight className="h-3 w-3" />
         </Link>
@@ -82,7 +82,7 @@ export default function WorkingTowardSection() {
                     data-testid={`goal-${g.slug}-progress`}
                   >
                     {p.current} / {p.target}{' '}
-                    <span className="font-latin italic text-[10px]">
+                    <span className="font-latin italic text-xs">
                       {p.label}
                     </span>
                   </p>

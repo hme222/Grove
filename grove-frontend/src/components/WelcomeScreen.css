@@ -73,6 +73,73 @@
 /* Tap to skip the build: show the finished screen; stars keep twinkling. */
 .gw-done .gw-a, .gw-done .gw-wipe { animation: none; }
 
+
+/* ---------- Landing-page loop (/waitlist phone): slow build, 4s hold, fade, repeat. ---------- */
+/* Same order and pace as the approved Studio 12 loop; cycle 15.5s. */
+@keyframes gwl-brand {
+  0%, 0.00% { opacity: 0; transform: translateY(10px); filter: blur(4px); animation-timing-function: cubic-bezier(.22,.61,.36,1); }
+  10.32%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
+  94.84%, 100% { opacity: 0; }
+}
+@keyframes gwl-welcome {
+  0%, 1.61% { opacity: 0; transform: translateY(10px); filter: blur(4px); animation-timing-function: cubic-bezier(.22,.61,.36,1); }
+  11.94%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
+  94.84%, 100% { opacity: 0; }
+}
+@keyframes gwl-stars {
+  0%, 12.26% { opacity: 0; transform: scale(0) rotate(-45deg); animation-timing-function: cubic-bezier(.34,1.56,.64,1); }
+  18.71%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
+  94.84%, 100% { opacity: 0; }
+}
+@keyframes gwl-def {
+  0%, 31.61% { opacity: 0; transform: translateY(8px); animation-timing-function: cubic-bezier(.22,.61,.36,1); }
+  40.00%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
+  94.84%, 100% { opacity: 0; }
+}
+@keyframes gwl-forest {
+  0%, 46.45% { opacity: 0; transform: scale(1.04); animation-timing-function: cubic-bezier(.22,.61,.36,1); }
+  58.06%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
+  94.84%, 100% { opacity: 0; }
+}
+@keyframes gwl-lower {
+  0%, 49.03% { opacity: 0; animation-timing-function: cubic-bezier(.22,.61,.36,1); }
+  58.06%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
+  94.84%, 100% { opacity: 0; }
+}
+@keyframes gwl-wipe-1 {
+  0%, 19.35% { transform: translateY(var(--gw-from)); animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
+  33.55%, 100% { transform: none; }
+}
+@keyframes gwl-wipe-2 {
+  0%, 40.00% { transform: translateY(var(--gw-from)); animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
+  49.68%, 100% { transform: none; }
+}
+@keyframes gwl-line-out {
+  0%, 87.10% { opacity: 1; }
+  94.84%, 100% { opacity: 0; }
+}
+
+.gw-screen {
+  position: relative; width: 100%; height: 100%; overflow: hidden; background: #202D14; color: #F4F1E6;
+  font-family: 'Alegreya Sans', Optima, Candara, sans-serif; -webkit-font-smoothing: antialiased;
+  --gw-pen: cubic-bezier(0.42, 0.08, 0.5, 0.96); --gw-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.gw-loop .gw-brand   { animation: gwl-brand 15.5s infinite; }
+.gw-loop .gw-welcome { animation: gwl-welcome 15.5s infinite; }
+.gw-loop .gw-stars   { animation: gwl-stars 15.5s infinite; }
+.gw-loop .gw-def     { animation: gwl-def 15.5s infinite; }
+.gw-loop .gw-forest  { animation: gwl-forest 15.5s infinite; }
+.gw-loop .gw-lower   { animation: gwl-lower 15.5s infinite; }
+.gw-loop .gw-wipe-1  { animation: gwl-wipe-1 15.5s infinite; }
+.gw-loop .gw-wipe-2  { animation: gwl-wipe-2 15.5s infinite; }
+.gw-loop .gw-line    { animation: gwl-line-out 15.5s infinite; }
+.gw-loop { animation-delay: 0s; }
+.gw-loop .gw-a, .gw-loop .gw-wipe, .gw-loop .gw-line { animation-delay: 1.1s; animation-fill-mode: both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gw-loop .gw-a, .gw-loop .gw-wipe, .gw-loop .gw-line { animation: none !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .gw-a, .gw-wipe, .gw-twinkle { animation: none !important; }
 }

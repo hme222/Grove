@@ -41,7 +41,7 @@ export default function SwapMatchesPage() {
         rightContent={
           <button
             onClick={() => navigate('/swap')}
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
           >
             <Repeat className="h-3.5 w-3.5" />
             Deck
@@ -61,7 +61,7 @@ export default function SwapMatchesPage() {
             </p>
             <button
               onClick={() => navigate('/swap')}
-              className="rounded-[12px] font-ui text-[10px] px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+              className="rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
             >
               Browse deck
             </button>
@@ -107,7 +107,7 @@ export default function SwapMatchesPage() {
                   )}
                 </div>
                 {their_plant?.latin_name && (
-                  <p className="font-latin italic text-[10px] text-grove-lichen mt-0.5 truncate">
+                  <p className="font-latin italic text-xs text-grove-lichen mt-0.5 truncate">
                     {their_plant.latin_name}
                   </p>
                 )}
@@ -116,7 +116,7 @@ export default function SwapMatchesPage() {
               {/* Right side: unread badge + chevron */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 {unread_messages > 0 && (
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-grove-lime text-grove-root font-ui text-[10px]">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-grove-lime text-grove-root font-ui text-xs">
                     {unread_messages > 9 ? '9+' : unread_messages}
                   </span>
                 )}
@@ -138,7 +138,7 @@ function StatusPill({ status }) {
   };
   const c = config[status] || config.matched;
   return (
-    <span className={`inline-flex items-center rounded-[20px] border-[0.5px] ${c.border} ${c.bg} px-1.5 py-0.5 font-latin text-[9px] ${c.text}`}>
+    <span className={`inline-flex items-center rounded-[20px] border-[0.5px] ${c.border} ${c.bg} px-1.5 py-0.5 font-latin text-[11px] ${c.text}`}>
       {c.label}
     </span>
   );

@@ -207,7 +207,7 @@ export default function CarePage() {
               onClick={handleWaterAll}
               disabled={wateringAll}
               data-testid="water-all-button"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
             >
               <Droplets className="h-3.5 w-3.5" />
               {wateringAll ? 'Watering...' : 'Water All'}
@@ -296,7 +296,7 @@ export default function CarePage() {
                           <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
                       )}
-                      <p className="font-latin text-[10px] text-grove-cream mt-0.5 truncate">
+                      <p className="font-latin text-xs text-grove-cream mt-0.5 truncate">
                         {plant.latin_name || plant.common_name}
                         {plant.room && <span className="text-grove-sage"> · {plant.room}</span>}
                       </p>
@@ -306,7 +306,7 @@ export default function CarePage() {
                       <button
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
-                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout font-plant text-[10px] px-3 py-2 flex items-center justify-center gap-1.5 transition-colors duration-150"
+                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout font-plant text-xs px-3 py-2 flex items-center justify-center gap-1.5 transition-colors duration-150"
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
@@ -355,7 +355,7 @@ export default function CarePage() {
               <Sparkles className="h-4 w-4 text-grove-sprout" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-plant text-[10px] text-grove-sprout">Watering session in progress</p>
+              <p className="font-plant text-xs text-grove-sprout">Watering session in progress</p>
               <p className="font-ui text-sm truncate">
                 {sessionCount} {sessionCount === 1 ? 'plant' : 'plants'} tended so far. Keep going.
               </p>
@@ -488,7 +488,7 @@ function ScheduleReviewBanner() {
         type="button"
         onClick={() => navigate(`/plants/${first.plant_id}`)}
         data-testid="schedule-review-cta"
-        className="flex-shrink-0 rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
+        className="flex-shrink-0 rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
       >
         Review
       </button>

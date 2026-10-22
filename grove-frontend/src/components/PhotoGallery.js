@@ -132,7 +132,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
           onClick={handleAddClick}
           disabled={uploading || count >= cap}
           data-testid="photo-gallery-add"
-          className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+          className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
         >
           <Upload className="h-3 w-3" />
           {uploading ? 'Uploading…' : 'Add photo'}
@@ -170,14 +170,14 @@ export default function PhotoGallery({ plantId, onChanged }) {
               </div>
               {p.is_cover && (
                 <span
-                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime px-2 py-0.5 text-[9px] font-ui text-grove-root"
+                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime px-2 py-0.5 text-[11px] font-ui text-grove-root"
                   data-testid="photo-cover-badge"
                 >
                   <Star className="h-2.5 w-2.5 fill-current" /> Cover
                 </span>
               )}
               <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/70 px-2 py-0.5 text-[9px] font-ui text-grove-cream">
+                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/70 px-2 py-0.5 text-[11px] font-ui text-grove-cream">
                   <Calendar className="h-2.5 w-2.5" />
                   {formatWhen(p.taken_at)}
                 </span>
@@ -224,7 +224,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
               className="aspect-square rounded-[10px] border border-dashed border-grove-moss bg-grove-forest flex flex-col items-center justify-center text-grove-sage hover:border-grove-fernLine hover:text-grove-cream transition-colors duration-150"
             >
               <Upload className="h-4 w-4 mb-1" />
-              <span className="text-[10px] font-ui">Add</span>
+              <span className="text-xs font-ui">Add</span>
             </button>
           )}
         </div>
@@ -274,7 +274,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
           className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-sm font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
           max={new Date().toISOString().slice(0, 10)}
         />
-        <p className="font-latin text-[10px] text-grove-lichen mt-1">Used to sort photos chronologically in the growth timeline.</p>
+        <p className="font-latin text-xs text-grove-lichen mt-1">Used to sort photos chronologically in the growth timeline.</p>
       </div>
       <div>
         <label className="block font-ui text-[11px] text-grove-cream mb-1">

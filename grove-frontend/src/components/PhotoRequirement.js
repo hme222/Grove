@@ -85,7 +85,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
         type="button"
         onClick={onBack}
         data-testid="photo-back"
-        className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
+        className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
       >
         ← Back
       </button>

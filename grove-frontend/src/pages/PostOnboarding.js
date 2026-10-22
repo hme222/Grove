@@ -84,7 +84,7 @@ const VariationLabel = ({ number, title, subtitle, persona }) => (
       {persona && (
         <Badge
           variant="outline"
-          className="rounded-full border-emerald-300 bg-grove-canopy px-3 py-1 text-xs text-emerald-800"
+          className="rounded-full border-emerald-300 bg-white px-3 py-1 text-xs text-emerald-800"
         >
           {persona}
         </Badge>
@@ -103,7 +103,7 @@ const VariationLabel = ({ number, title, subtitle, persona }) => (
 /* ================================================================
    Shared — bottom tab bar mock
    ================================================================ */
-const BottomTabBar = ({ active = "home", tone = "bg-grove-canopy/95" }) => {
+const BottomTabBar = ({ active = "home", tone = "bg-white/95" }) => {
   const tabs = [
     { id: "home", icon: Home, label: "Home" },
     { id: "explore", icon: Compass, label: "Explore" },
@@ -161,7 +161,7 @@ const VariationOne = () => (
             .
           </h1>
         </div>
-        <button className="rounded-full bg-grove-canopy p-2 shadow-sm">
+        <button className="rounded-full bg-white p-2 shadow-sm">
           <Bell className="h-4 w-4 text-emerald-800" />
         </button>
       </div>
@@ -174,7 +174,7 @@ const VariationOne = () => (
       {/* Persona badge card */}
       <Card className="mt-5 overflow-hidden rounded-2xl border-none bg-gradient-to-br from-rose-100 via-amber-50 to-emerald-100">
         <CardContent className="flex items-center gap-4 p-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-grove-canopy/70">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/70">
             <Heart className="h-5 w-5 text-rose-600" />
           </div>
           <div>
@@ -198,7 +198,7 @@ const VariationOne = () => (
         </span>
       </div>
 
-      <Card className="mt-3 rounded-2xl border-emerald-100 bg-grove-canopy shadow-sm">
+      <Card className="mt-3 rounded-2xl border-emerald-100 bg-white shadow-sm">
         <CardContent className="p-5">
           <div className="flex items-start gap-3">
             <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100">
@@ -263,7 +263,7 @@ const VariationOne = () => (
       </Card>
 
       {/* Confidence check-in */}
-      <div className="mt-5 flex items-center justify-between rounded-2xl bg-grove-canopy/70 p-4">
+      <div className="mt-5 flex items-center justify-between rounded-2xl bg-white/70 p-4">
         <div>
           <p className="text-xs font-medium text-emerald-700">
             Confidence check-in
@@ -326,7 +326,7 @@ const VariationTwo = () => (
             GROVE
           </span>
         </div>
-        <button className="rounded-full bg-grove-canopy/10 px-3 py-1 text-[11px] font-medium text-emerald-50 backdrop-blur">
+        <button className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium text-emerald-50 backdrop-blur">
           Skip tour
         </button>
       </div>
@@ -334,7 +334,7 @@ const VariationTwo = () => (
       <p className="mt-8 text-xs font-medium uppercase tracking-widest text-lime-200">
         Welcome, James
       </p>
-      <h1 className="mt-2 font-serif text-[32px] leading-[1.05] text-grove-cream">
+      <h1 className="mt-2 font-serif text-[32px] leading-[1.05] text-white">
         You&rsquo;re a
         <br />
         <span className="italic text-lime-200">Green Dreamer</span>.
@@ -348,7 +348,7 @@ const VariationTwo = () => (
       {/* Dream jungle carousel */}
       <div className="mt-8">
         <div className="mb-3 flex items-center justify-between">
-          <p className="text-sm font-semibold text-grove-cream">
+          <p className="text-sm font-semibold text-white">
             Your dream jungle, starter kit
           </p>
           <span className="text-[11px] text-emerald-100/60">6 plants</span>
@@ -373,15 +373,15 @@ const VariationTwo = () => (
           ].map((p) => (
             <div
               key={p.name}
-              className="w-40 shrink-0 overflow-hidden rounded-2xl bg-grove-canopy/10 backdrop-blur"
+              className="w-40 shrink-0 overflow-hidden rounded-2xl bg-white/10 backdrop-blur"
             >
               <div
                 className={`h-24 bg-gradient-to-br ${p.color} flex items-end justify-end p-2`}
               >
-                <Leaf className="h-5 w-5 text-grove-cream/70" />
+                <Leaf className="h-5 w-5 text-white/70" />
               </div>
               <div className="p-3">
-                <p className="text-[13px] font-semibold text-grove-cream">{p.name}</p>
+                <p className="text-[13px] font-semibold text-white">{p.name}</p>
                 <p className="mt-0.5 text-[10px] text-emerald-100/70">{p.tag}</p>
               </div>
             </div>
@@ -390,7 +390,7 @@ const VariationTwo = () => (
       </div>
 
       {/* Aesthetic goal card */}
-      <Card className="mt-6 rounded-2xl border-none bg-grove-canopy/10 backdrop-blur">
+      <Card className="mt-6 rounded-2xl border-none bg-white/10 backdrop-blur">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-lime-200">
@@ -398,7 +398,7 @@ const VariationTwo = () => (
             </p>
             <Star className="h-4 w-4 text-lime-200" />
           </div>
-          <p className="mt-2 font-serif text-lg text-grove-cream">
+          <p className="mt-2 font-serif text-lg text-white">
             &ldquo;A canopy over my reading chair&rdquo;
           </p>
           <div className="mt-3 flex items-center gap-2 text-[11px] text-emerald-100/70">
@@ -439,7 +439,7 @@ const VariationTwo = () => (
             />
             <span
               className={`text-[10px] font-medium ${
-                t.active ? "text-grove-cream" : "text-emerald-100/40"
+                t.active ? "text-white" : "text-emerald-100/40"
               }`}
             >
               {t.label}
@@ -464,7 +464,7 @@ const VariationThree = () => (
             Let&rsquo;s build your streak, Clare.
           </h1>
         </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-900 text-grove-cream">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-900 text-white">
           <span className="text-sm font-semibold">C</span>
         </div>
       </div>
@@ -477,12 +477,12 @@ const VariationThree = () => (
               <Flame className="h-4 w-4 text-amber-300" />
               Daily care streak
             </div>
-            <span className="rounded-full bg-grove-canopy/10 px-2 py-0.5 text-[10px] font-medium">
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium">
               Day 1 of 30
             </span>
           </div>
           <div className="mt-4 flex items-end gap-2">
-            <span className="font-serif text-6xl leading-none text-grove-cream">1</span>
+            <span className="font-serif text-6xl leading-none text-white">1</span>
             <span className="mb-2 text-sm text-emerald-100/80">day strong</span>
           </div>
           <p className="mt-2 text-[13px] leading-relaxed text-emerald-100/80">
@@ -497,7 +497,7 @@ const VariationThree = () => (
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
                     i === 0
                       ? "bg-amber-300 text-emerald-950"
-                      : "bg-grove-canopy/10 text-emerald-100/50"
+                      : "bg-white/10 text-emerald-100/50"
                   }`}
                 >
                   {i === 0 ? <Check className="h-4 w-4" /> : d}
@@ -519,7 +519,7 @@ const VariationThree = () => (
           </span>
         </div>
 
-        <Card className="rounded-2xl border-emerald-100 bg-grove-canopy">
+        <Card className="rounded-2xl border-emerald-100 bg-white">
           <CardContent className="p-5">
             <div className="flex items-baseline justify-between">
               <span className="font-serif text-3xl text-emerald-950">62</span>
@@ -572,13 +572,13 @@ const VariationThree = () => (
           ].map((h, i) => (
             <div
               key={i}
-              className="flex items-center gap-3 rounded-2xl bg-grove-canopy p-4 shadow-sm"
+              className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm"
             >
               <span
                 className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
                   h.done
-                    ? "border-emerald-700 bg-emerald-700 text-grove-cream"
-                    : "border-emerald-200 bg-grove-canopy"
+                    ? "border-emerald-700 bg-emerald-700 text-white"
+                    : "border-emerald-200 bg-white"
                 }`}
               >
                 {h.done && <Check className="h-3 w-3" />}
@@ -612,7 +612,7 @@ const VariationFour = () => (
   <PhoneFrame tone="bg-[#F4F1E8]" testId="v4-quick-action">
     <div className="flex h-full flex-col px-6 pt-6">
       <div className="flex items-center justify-between">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-900 text-grove-cream">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-900 text-white">
           <Leaf className="h-4 w-4" />
         </span>
         <button className="text-xs font-medium text-emerald-800/70">
@@ -621,7 +621,7 @@ const VariationFour = () => (
       </div>
 
       <div className="mt-14">
-        <p className="text-xs font-medium text-emerald-700">
+        <p className="text-xs font-medium uppercase tracking-[0.25em] text-emerald-700">
           Hello, Maya
         </p>
         <h1 className="mt-3 font-serif text-[36px] leading-[1.05] text-emerald-950">
@@ -660,7 +660,7 @@ const VariationFour = () => (
           ].map((s, i) => {
             const Icon = s.icon;
             return (
-              <div key={i} className="rounded-xl bg-grove-canopy/80 py-3">
+              <div key={i} className="rounded-xl bg-white/80 py-3">
                 <Icon className="mx-auto h-4 w-4 text-emerald-800" />
                 <p className="mt-1 text-[11px] font-medium text-emerald-900">
                   {s.label}
@@ -682,7 +682,7 @@ const VariationFour = () => (
    VARIATION 5 — Curated Greenhouse / Explore
    ================================================================ */
 const VariationFive = () => (
-  <PhoneFrame tone="bg-grove-canopy" testId="v5-curated-greenhouse">
+  <PhoneFrame tone="bg-white" testId="v5-curated-greenhouse">
     <div className="px-5 pb-28 pt-3">
       <div className="flex items-center justify-between">
         <div>
@@ -700,7 +700,7 @@ const VariationFive = () => (
 
       {/* Persona pill */}
       <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 p-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-grove-canopy">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
           <Sparkles className="h-4 w-4 text-emerald-800" />
         </div>
         <div className="flex-1">
@@ -721,7 +721,7 @@ const VariationFive = () => (
               key={c}
               className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-medium ${
                 i === 0
-                  ? "bg-emerald-900 text-grove-cream"
+                  ? "bg-emerald-900 text-white"
                   : "bg-emerald-50 text-emerald-900"
               }`}
             >
@@ -770,11 +770,11 @@ const VariationFive = () => (
             <div
               className={`relative h-24 bg-gradient-to-br ${p.grad} flex items-end justify-between p-2`}
             >
-              <span className="rounded-full bg-grove-canopy/90 px-2 py-0.5 text-[10px] font-semibold text-emerald-900">
+              <span className="rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-emerald-900">
                 {p.match}% match
               </span>
               {p.pet && (
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-grove-canopy/90">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/90">
                   <ShieldCheck className="h-3 w-3 text-emerald-700" />
                 </span>
               )}
@@ -817,7 +817,7 @@ const VariationFive = () => (
           return (
             <div
               key={i}
-              className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-grove-canopy p-3"
+              className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-white p-3"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50">
                 <Icon className="h-5 w-5 text-emerald-800" />
@@ -846,14 +846,14 @@ const VariationFive = () => (
 const PostOnboardingVariations = () => {
   return (
     <div
-      className="min-h-screen bg-grove-forest font-sans"
+      className="min-h-screen bg-[#EEF1E7] font-sans"
       data-testid="post-onboarding-variations-page"
     >
       {/* Header */}
-      <header className="border-b border-emerald-100 bg-grove-canopy">
+      <header className="border-b border-emerald-100 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-800 text-grove-cream">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-800 text-white">
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-serif text-lg text-emerald-950">
@@ -906,7 +906,7 @@ const PostOnboardingVariations = () => {
       />
       <VariationFive />
 
-      <footer className="mt-24 border-t border-emerald-100 bg-grove-canopy">
+      <footer className="mt-24 border-t border-emerald-100 bg-white">
         <div className="mx-auto max-w-5xl px-6 py-8 text-xs text-emerald-800/60">
           Static concepts only &middot; no backend, no analytics wired.
         </div>

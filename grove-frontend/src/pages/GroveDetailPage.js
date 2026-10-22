@@ -101,12 +101,12 @@ export default function GroveDetailPage() {
             </button>
             <div className="flex-1">
               <h1 className="font-plant text-grove-cream text-xl">{grove?.name}</h1>
-              <p className="font-ui text-[10px] text-grove-cream">{grove?.member_count} members</p>
+              <p className="font-ui text-xs text-grove-cream">{grove?.member_count} members</p>
             </div>
             {grove?.is_member && (
               <button
                 onClick={handleLeave}
-                className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
+                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
               >
                 <LogOut className="h-3 w-3" />
                 Leave
@@ -159,13 +159,13 @@ export default function GroveDetailPage() {
                 <div key={post.id} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-7 h-7 rounded-full bg-grove-moss flex items-center justify-center">
-                      <span className="font-plant text-grove-sprout text-[10px]">{(post.display_name || 'G')[0].toUpperCase()}</span>
+                      <span className="font-plant text-grove-sprout text-xs">{(post.display_name || 'G')[0].toUpperCase()}</span>
                     </div>
                     <span className="font-ui text-xs font-medium text-grove-cream inline-flex items-center gap-1">
                       <span>{post.display_name || post.username}</span>
                       <VerifiedProBadge user={post} size={12} />
                     </span>
-                    <span className="font-latin text-[9px] text-grove-sage">{formatTime(post.created_at)}</span>
+                    <span className="font-latin text-[11px] text-grove-sage">{formatTime(post.created_at)}</span>
                   </div>
                   {post.caption && <p className="font-ui text-sm text-grove-cream mb-2">{post.caption}</p>}
                   <div className="flex items-center gap-3 pt-2 border-t-[0.5px] border-grove-moss/30">
@@ -208,10 +208,10 @@ export default function GroveDetailPage() {
                     <span className="truncate">{m.display_name || m.username}</span>
                     <VerifiedProBadge user={m} size={14} />
                   </p>
-                  <p className="font-latin text-[9px] text-grove-cream">@{m.username}</p>
+                  <p className="font-latin text-[11px] text-grove-cream">@{m.username}</p>
                 </div>
                 {m.role === 'admin' && (
-                  <span className="rounded-[20px] border-[0.5px] border-grove-lime bg-grove-moss px-2 py-0.5 text-[9px] font-ui text-grove-sprout">Admin</span>
+                  <span className="rounded-[20px] border-[0.5px] border-grove-lime bg-grove-moss px-2 py-0.5 text-[11px] font-ui text-grove-sprout">Admin</span>
                 )}
               </div>
             ))}

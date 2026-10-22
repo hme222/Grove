@@ -149,7 +149,7 @@ export default function CollectionPage() {
             <button
               onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
               data-testid="collection-select-button"
-              className={`rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] transition-colors duration-150 ${
+              className={`rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] transition-colors duration-150 ${
                 selectionMode
                   ? 'border-grove-fernLine bg-grove-lime text-grove-root'
                   : 'border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine'
@@ -209,7 +209,7 @@ export default function CollectionPage() {
             </span>
             <button
               onClick={() => setSearchParams({})}
-              className="font-plant text-[10px] text-grove-sprout hover:text-grove-cream"
+              className="font-plant text-xs text-grove-sprout hover:text-grove-cream"
             >
               Show all
             </button>
@@ -224,7 +224,7 @@ export default function CollectionPage() {
             <p className="text-sm text-grove-cream">No plants in "{roomFilter}"</p>
             <button
               onClick={() => setSearchParams({})}
-              className="mt-2 font-plant text-[10px] text-grove-sprout hover:text-grove-cream"
+              className="mt-2 font-plant text-xs text-grove-sprout hover:text-grove-cream"
             >
               Show all plants
             </button>
@@ -236,7 +236,7 @@ export default function CollectionPage() {
               <button
                 type="button"
                 onClick={() => navigate('/bouquets/new')}
-                className="mt-2 font-plant text-[10px] text-grove-sprout hover:text-grove-cream"
+                className="mt-2 font-plant text-xs text-grove-sprout hover:text-grove-cream"
               >
                 Add a bouquet
               </button>
@@ -333,7 +333,7 @@ export default function CollectionPage() {
                         style={{ color: isOn ? '#C3D98A' : color }}
                         strokeWidth={isOn ? 2.2 : 1.75}
                       />
-                      <span className={`text-[9px] font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/70'}`}>
+                      <span className={`text-[11px] font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/70'}`}>
                         {label}
                       </span>
                     </button>
@@ -450,7 +450,7 @@ function BouquetTile({ bouquet, onClick }) {
       </span>
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(28,46,16,0.85)] to-transparent p-1.5">
         <p className="font-plant text-[11px] leading-tight text-grove-cream truncate">{bouquet.name || 'Bouquet'}</p>
-        <p className="font-latin text-[9px] text-grove-sprout">{vaseLabel}</p>
+        <p className="font-latin text-[11px] text-grove-sprout">{vaseLabel}</p>
       </div>
     </button>
   );

@@ -251,7 +251,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                     <c.Bad />
                     <span className="absolute inset-0 rounded-[10px] bg-grove-bloom/12 pointer-events-none" />
                   </div>
-                  <figcaption className="mt-1 font-latin text-[9px] text-[#A32D2D]">
+                  <figcaption className="mt-1 font-latin text-[11px] text-[#A32D2D]">
                     ✗ {c.BadLabel}
                   </figcaption>
                 </figure>
@@ -260,7 +260,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                     <c.Good />
                     <span className="absolute inset-0 rounded-[10px] bg-grove-lime/8 pointer-events-none" />
                   </div>
-                  <figcaption className="mt-1 font-latin text-[9px] text-[#27500A]">
+                  <figcaption className="mt-1 font-latin text-[11px] text-[#27500A]">
                     ✓ {c.GoodLabel}
                   </figcaption>
                 </figure>
@@ -268,7 +268,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
             )}
 
             <p className="font-ui text-[11px] text-grove-sage leading-[1.55]">{c.body}</p>
-            <p className="font-latin text-[10px] text-grove-lichen mt-2">{i + 1} of {CARDS.length}</p>
+            <p className="font-latin text-xs text-grove-lichen mt-2">{i + 1} of {CARDS.length}</p>
           </article>
         ))}
       </div>

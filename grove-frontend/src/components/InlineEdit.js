@@ -117,7 +117,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
         type="button"
         onClick={() => setOpen((v) => !v)}
         data-testid={`${testid}-trigger`}
-        className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-moss px-2.5 py-0.5 text-[10px] font-ui text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+        className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-moss px-2.5 py-0.5 text-xs font-ui text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
       >
         <span>{value || 'Add room'}</span>
         <ChevronDown className="h-2.5 w-2.5" />

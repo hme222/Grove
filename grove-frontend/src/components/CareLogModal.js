@@ -133,7 +133,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
                 }`}
               >
                 <Icon className="h-5 w-5" style={{ color }} strokeWidth={isOn ? 2.2 : 1.75} />
-                <span className={`text-[10px] font-ui text-grove-cream ${isOn ? 'font-semibold' : ''}`}>{label}</span>
+                <span className={`text-xs font-ui text-grove-cream ${isOn ? 'font-semibold' : ''}`}>{label}</span>
               </button>
             );
           })}

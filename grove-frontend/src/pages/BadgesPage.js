@@ -190,7 +190,7 @@ export default function BadgesPage() {
             <button
               type="button"
               onClick={() => navigate('/care/today')}
-              className="font-plant text-[10px] text-grove-sprout hover:text-grove-sprout"
+              className="font-plant text-xs text-grove-sprout hover:text-grove-sprout"
               data-testid="badges-view-on-care"
             >
               View on Care tab
@@ -211,7 +211,7 @@ export default function BadgesPage() {
               type="button"
               onClick={() => { setPickerSelection(data.displayed || []); setPickerOpen(true); }}
               data-testid="badges-edit-picker"
-              className="rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] border-grove-fernLine bg-grove-canopy text-grove-cream hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
+              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-fernLine bg-grove-canopy text-grove-cream hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
             >
               {(data.displayed || []).length > 0 ? 'Change' : 'Pick badges'}
             </button>
@@ -240,7 +240,7 @@ export default function BadgesPage() {
                       <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
                         <Award className="h-4 w-4 text-grove-lichen" />
                       </span>
-                      <p className="font-latin italic text-[10px] text-grove-lichen">Empty slot</p>
+                      <p className="font-latin italic text-xs text-grove-lichen">Empty slot</p>
                     </>
                   )}
                 </div>
@@ -251,7 +251,7 @@ export default function BadgesPage() {
 
         {/* Filters */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-plant text-[10px] text-grove-sage flex items-center gap-1">
+          <span className="font-plant text-xs text-grove-sage flex items-center gap-1">
             <Filter className="h-3 w-3" /> Show
           </span>
           {FILTER_TABS.map((t) => (
@@ -260,7 +260,7 @@ export default function BadgesPage() {
               type="button"
               onClick={() => setFilter(t.id)}
               data-testid={`badges-filter-${t.id}`}
-              className={`rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
+              className={`rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
                 filter === t.id
                   ? 'bg-grove-lime text-grove-root border-grove-fernLine'
                   : 'bg-transparent text-grove-cream border-grove-moss hover:border-grove-fernLine'
@@ -274,7 +274,7 @@ export default function BadgesPage() {
             type="button"
             onClick={() => setSelectedCategory('all')}
             data-testid="badges-cat-all"
-            className={`rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
+            className={`rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
               selectedCategory === 'all'
                 ? 'bg-grove-lime text-grove-root border-grove-fernLine'
                 : 'bg-transparent text-grove-cream border-grove-moss hover:border-grove-fernLine'
@@ -288,7 +288,7 @@ export default function BadgesPage() {
               type="button"
               onClick={() => setSelectedCategory(c)}
               data-testid={`badges-cat-${c.toLowerCase().replace(/[^a-z]+/g, '-')}`}
-              className={`rounded-[12px] font-ui text-[10px] px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
+              className={`rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] transition-colors duration-150 ${
                 selectedCategory === c
                   ? 'bg-grove-lime text-grove-root border-grove-fernLine'
                   : 'bg-transparent text-grove-cream border-grove-moss hover:border-grove-fernLine'
@@ -312,7 +312,7 @@ export default function BadgesPage() {
         {/* Grid grouped by subcategory */}
         {grouped.map(([title, items]) => (
           <section key={title} data-testid={`badges-group-${title.toLowerCase().replace(/[^a-z]+/g, '-')}`}>
-            <h3 className="font-plant text-[10px] text-grove-sage mb-2">{title}</h3>
+            <h3 className="font-plant text-xs text-grove-sage mb-2">{title}</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
               {items.map((it) => (
                 <BadgeTile
@@ -397,11 +397,11 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
               {item.tier}
             </span>
           )}
-          <p className="font-latin italic text-[10px] text-grove-lichen mt-1 leading-tight">
+          <p className="font-latin italic text-xs text-grove-lichen mt-1 leading-tight">
             {item.description}
           </p>
           {!earned && !item.earnable && (
-            <p className="font-latin italic text-[9px] text-grove-sun mt-1">
+            <p className="font-latin italic text-[11px] text-grove-sun mt-1">
               Granted by Grove
             </p>
           )}
@@ -411,7 +411,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
               onClick={onTogglePin}
               disabled={pinning || (pinDisabled && !isPinned)}
               data-testid={`badge-tile-${item.slug}-pin-btn`}
-              className={`mt-2 inline-flex items-center gap-1 rounded-[12px] font-ui text-[9px] px-2 py-1 border-[0.5px] transition-colors duration-150 ${
+              className={`mt-2 inline-flex items-center gap-1 rounded-[12px] font-ui text-[11px] px-2 py-1 border-[0.5px] transition-colors duration-150 ${
                 isPinned
                   ? 'bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout'
                   : 'bg-transparent text-grove-sprout border-grove-fernLine hover:bg-grove-sprout hover:text-grove-cream'
@@ -493,7 +493,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
           ) : (
             grouped.map(([cat, items]) => (
               <section key={cat}>
-                <h4 className="font-plant text-[10px] text-grove-sage mb-2">
+                <h4 className="font-plant text-xs text-grove-sage mb-2">
                   {cat}
                 </h4>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -534,7 +534,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
             type="button"
             onClick={onCancel}
             data-testid="badges-picker-cancel"
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
           >
             Cancel
           </button>
@@ -543,7 +543,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
             onClick={onSave}
             disabled={saving}
             data-testid="badges-picker-save"
-            className="rounded-[12px] font-ui text-[10px] px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
           >
             {saving ? 'Saving…' : 'Save selection'}
           </button>
