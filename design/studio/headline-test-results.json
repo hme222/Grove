@@ -1,0 +1,173 @@
+{
+ "round1": {
+  "note": "8 simulated personas, 15 headlines",
+  "rows": [
+   [
+    2,
+    "Stop guessing when to water.",
+    4.125,
+    8,
+    7,
+    0,
+    4
+   ],
+   [
+    1,
+    "Know what each plant needs today, and why.",
+    3.875,
+    6,
+    3,
+    0,
+    3
+   ],
+   [
+    11,
+    "Know what your plants need. Skip the guessing.",
+    3.875,
+    7,
+    2,
+    0,
+    3
+   ],
+   [
+    4,
+    "For the plant you're scared of killing.",
+    3.75,
+    4,
+    3,
+    0,
+    2
+   ],
+   [
+    12,
+    "New to plants? Start here.",
+    3.625,
+    5,
+    2,
+    0,
+    3
+   ],
+   [
+    13,
+    "Keep your first plant alive. Then the next one.",
+    3.5,
+    4,
+    3,
+    0,
+    2
+   ],
+   [
+    8,
+    "Start with one plant. Grove does the remembering.",
+    3.25,
+    3,
+    2,
+    0,
+    2
+   ],
+   [
+    14,
+    "Less guessing. More green.",
+    3.25,
+    2,
+    0,
+    0,
+    3
+   ],
+   [
+    3,
+    "Plant care that doesn't nag.",
+    3.0,
+    1,
+    1,
+    1,
+    2
+   ],
+   [
+    15,
+    "Your plants, explained, one day at a time.",
+    3.0,
+    0,
+    0,
+    0,
+    3
+   ],
+   [
+    6,
+    "Your plants, explained.",
+    2.875,
+    1,
+    1,
+    1,
+    2
+   ],
+   [
+    9,
+    "Less worry. More green.",
+    2.5,
+    0,
+    0,
+    2,
+    2
+   ],
+   [
+    7,
+    "Plant care should feel calm, not stressful.",
+    2.5,
+    0,
+    0,
+    4,
+    2
+   ],
+   [
+    5,
+    "A safe space to learn about plants.",
+    1.5,
+    0,
+    0,
+    8,
+    1
+   ],
+   [
+    10,
+    "Opening this December: a quieter way to care for plants.",
+    1.375,
+    0,
+    0,
+    8,
+    1
+   ]
+  ]
+ },
+ "round2": {
+  "note": "Round 2: 10 simulated personas (AI role-play, not real people). Codes N8=#2, J3=#2b, H6=#1, Q2=#11.",
+  "variants": {
+   "#2": "Stop guessing when to water. / Grove tells you which plants need water today, and how to check the soil first.",
+   "#2b": "Stop guessing when to water. / Grove tells you what each plant needs today, from water and light to soil, and why.",
+   "#1": "Know what each plant needs today, and why. / A calm plant care app for people new to plants. On iPhone this December.",
+   "#11": "Know what your plants need. Skip the guessing. / Simple care steps for people new to plants, with the reason behind each one."
+  },
+  "avg_signup": {
+   "#2b": 3.5,
+   "#11": 3.3,
+   "#1": 3.1,
+   "#2": 2.3
+  },
+  "favourite": {
+   "#2b": 6,
+   "#11": 2,
+   "#1": 2,
+   "#2": 0
+  },
+  "trust_least": {
+   "#2": 6,
+   "#1": 4
+  },
+  "thinks_more_than_watering": {
+   "#2b": "10/10",
+   "#11": "4/10",
+   "#1": "3/10",
+   "#2": "0/10"
+  }
+ }
+}
