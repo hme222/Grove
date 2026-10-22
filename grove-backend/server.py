@@ -9,7 +9,7 @@ import re
 import uuid
 from datetime import datetime, timezone, timedelta, date
 from typing import List, Optional, Dict, Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent
@@ -5338,6 +5338,54 @@ async def set_quick_state(
     
     else:
         return {"success": False, "message": "Unknown action"}
+
+# ---------------------------------------------------------------------------
+# Waitlist (public, no auth). Used by the /waitlist landing page (Studio 12).
+# The reply is the same whether or not the email was already on the list, so the
+# endpoint can't be used to find out who has signed up. Only a brand-new signup gets
+# a token, and the token is what lets that visitor change their beta opt-in.
+# ---------------------------------------------------------------------------
+class WaitlistJoinInput(BaseModel):
+    email: EmailStr
+    source: Optional[str] = Field(default=None, max_length=40)
+
+
+class WaitlistBetaInput(BaseModel):
+    token: str = Field(min_length=10, max_length=64)
+    beta: bool
+
+
+@api_router.post("/waitlist")
+async def join_waitlist(input: WaitlistJoinInput):
+    email = str(input.email).strip().lower()
+    existing = await db.waitlist.find_one({"email": email}, {"_id": 0})
+    if existing:
+        return {"status": "ok", "token": None}
+    token = secrets.token_urlsafe(16)
+    now = datetime.now(timezone.utc).isoformat()
+    await db.waitlist.insert_one({
+        "id": str(uuid.uuid4()),
+        "email": email,
+        "beta": False,
+        "source": input.source or "waitlist",
+        "token": token,
+        "created_at": now,
+        "updated_at": now,
+    })
+    return {"status": "ok", "token": token}
+
+
+@api_router.patch("/waitlist/beta")
+async def set_waitlist_beta(input: WaitlistBetaInput):
+    entry = await db.waitlist.find_one({"token": input.token}, {"_id": 0})
+    if not entry:
+        raise HTTPException(status_code=404, detail="Not found")
+    await db.waitlist.update_one(
+        {"token": input.token},
+        {"$set": {"beta": input.beta, "updated_at": datetime.now(timezone.utc).isoformat()}},
+    )
+    return {"beta": input.beta}
+
 
 app.include_router(api_router)
 
