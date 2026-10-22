@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
 import api from '@/lib/api';
 import { WelcomeStage } from '@/components/WelcomeStage';
 import '@/components/WelcomeScreen.css';
@@ -20,7 +21,30 @@ function LeafMark({ size = 22 }) {
   );
 }
 
+// Pointer tilt on the phone (GSAP). Desktop pointers only, and never with reduced motion.
+function usePhoneTilt(ref) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference) and (pointer: fine)', () => {
+      gsap.set(el, { transformPerspective: 1400, transformOrigin: '50% 30%' });
+      const rx = gsap.quickTo(el, 'rotationX', { duration: 0.9, ease: 'power3.out' });
+      const ry = gsap.quickTo(el, 'rotationY', { duration: 0.9, ease: 'power3.out' });
+      const onMove = (e) => {
+        ry((e.clientX / window.innerWidth - 0.5) * 8);
+        rx(-(e.clientY / window.innerHeight - 0.5) * 5);
+      };
+      window.addEventListener('pointermove', onMove);
+      return () => window.removeEventListener('pointermove', onMove);
+    });
+    return () => mm.revert();
+  }, [ref]);
+}
+
 export default function WaitlistPage() {
+  const tiltRef = useRef(null);
+  usePhoneTilt(tiltRef);
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // idle | sending | done
   const [error, setError] = useState('');
@@ -116,6 +140,7 @@ export default function WaitlistPage() {
 
       <div className="wl-stage">
         <div className="wl-glow" aria-hidden="true" />
+        <div className="wl-tilt" ref={tiltRef}>
         <div
           className="wl-phone"
           role="img"
@@ -134,6 +159,7 @@ export default function WaitlistPage() {
             </div>
             <div className="wl-sheen" />
           </div>
+        </div>
         </div>
       </div>
     </main>

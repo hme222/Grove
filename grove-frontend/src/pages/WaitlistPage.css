@@ -44,8 +44,9 @@
   background: radial-gradient(ellipse at center, rgba(146,180,75,0.20) 0%, rgba(146,180,75,0.06) 40%, rgba(11,15,8,0) 70%);
   pointer-events: none; animation: wl-glow-in 2.2s ease-out 0.4s both, wl-breathe 8s ease-in-out 2.6s infinite;
 }
+.wl-tilt { position: absolute; top: 0; width: 364px; height: 763px; will-change: transform; }
 .wl-phone {
-  position: absolute; top: 0; width: 364px; height: 763px; box-sizing: border-box; padding: 11px; border-radius: 56px;
+  position: relative; width: 364px; height: 763px; box-sizing: border-box; padding: 11px; border-radius: 56px;
   background: #050604; box-shadow: 0 0 0 1px #3A4A26, inset 0 0 0 1px #1A2112, 0 -20px 80px rgba(146,180,75,0.12);
   animation: wl-rise 1.9s cubic-bezier(.16,1,.3,1) 0.45s both, wl-float 7.2s ease-in-out 3.6s infinite;
 }

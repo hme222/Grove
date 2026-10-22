@@ -295,30 +295,20 @@ export default function SpeciesDetailPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-photo-gallery">
             <div className="flex items-center gap-2 mb-3">
               <Camera className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs text-grove-cream">Photos</h3>
+              <h3 className="font-ui text-xs text-grove-cream">Photo</h3>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <div className="rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-canopy">
                 <img
                   src={species.wiki_image}
                   alt={`Photo of ${species.common_name}`}
-                  className="w-full aspect-[4/3] object-cover"
+                  className="w-full aspect-[16/9] object-cover"
                   loading="lazy"
                 />
               </div>
-              {species.wiki_thumbnail && species.wiki_thumbnail !== species.wiki_image && (
-                <div className="rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-canopy">
-                  <img
-                    src={species.wiki_thumbnail}
-                    alt={`${species.common_name} thumbnail`}
-                    className="w-full aspect-[4/3] object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              )}
             </div>
             <p className="font-latin italic text-[11px] text-grove-lichen mt-2">
-              Photos from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="underline">Wikimedia Commons</a> — CC / Public Domain
+              Photo from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="underline">Wikimedia Commons</a> — CC / Public Domain
             </p>
           </div>
         )}
