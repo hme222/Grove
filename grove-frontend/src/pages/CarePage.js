@@ -276,9 +276,9 @@ export default function CarePage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className={`inline-block w-2 h-2 rounded-full ${style.dot}`} aria-hidden="true" />
-                        <h3 className="font-plant text-grove-cream text-base truncate">
+                        <h2 className="font-plant text-grove-cream text-base truncate">
                           {plant.nickname || plant.common_name}
-                        </h3>
+                        </h2>
                       </div>
                       <p className={`font-ui text-xs mt-1 ${style.label}`}>
                         {dueLabel(plant)}
