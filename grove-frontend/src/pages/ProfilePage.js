@@ -6,7 +6,7 @@ import { useTooltips } from '../contexts/TooltipContext';
 import { PageHeader } from '../components/PageHeader';
 import { TUTORIAL_COPY } from '../components/SectionTutorial';
 import { toast } from 'sonner';
-import { LogOut, Sparkles, Leaf, Flame, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, Scissors, Repeat, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X } from 'lucide-react';
+import { LogOut, Sparkles, Leaf, Flame, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X } from 'lucide-react';
 import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
@@ -187,23 +187,7 @@ export default function ProfilePage() {
               <Flower2 className="h-4 w-4 text-grove-blush" />
               Bouquets
             </button>
-            <button
-              onClick={() => navigate('/swap')}
-              data-testid="profile-swap-link"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
-            >
-              <Repeat className="h-4 w-4 text-grove-sprout" />
-              Swap
-            </button>
-            <button
-              onClick={() => navigate('/wishlist')}
-              data-testid="profile-wishlist-link"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
-            >
-              <Scissors className="h-4 w-4 text-grove-blush" />
-              Wishlist
-            </button>
-            <button
+                                    <button
               onClick={() => navigate('/challenges')}
               data-testid="profile-challenges-link"
               className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
@@ -266,46 +250,6 @@ export default function ProfilePage() {
           <p className="italic font-plant text-xs text-grove-sage mt-3 leading-snug">
             For experienced growers who know their plants and prefer to enter details directly.
           </p>
-        </div>
-
-        {/* Quick links — Phase 14C */}
-        <div className="grid grid-cols-2 gap-2" data-testid="profile-quick-links">
-          <button
-            type="button"
-            onClick={() => navigate('/wants')}
-            data-testid="profile-link-wants"
-            className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
-          >
-            <p className="font-plant text-sm text-grove-cream">Want list</p>
-            <p className="font-ui text-xs text-grove-sage mt-0.5">Plants you'd like next</p>
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/swaps')}
-            data-testid="profile-link-swaps"
-            className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
-          >
-            <p className="font-plant text-sm text-grove-cream">Swaps</p>
-            <p className="font-ui text-xs text-grove-sage mt-0.5">Trade with verified growers</p>
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/rooms')}
-            data-testid="profile-link-rooms"
-            className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
-          >
-            <p className="font-plant text-sm text-grove-cream">Rooms</p>
-            <p className="font-ui text-xs text-grove-sage mt-0.5">Plants by location</p>
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/swaps/matches')}
-            data-testid="profile-link-swap-matches"
-            className="rounded-[12px] border-[0.5px] border-grove-moss bg-grove-moss p-3 hover:border-grove-fernLine transition-colors duration-150 text-left"
-          >
-            <p className="font-plant text-sm text-grove-cream">Swap matches</p>
-            <p className="font-ui text-xs text-grove-sage mt-0.5">Messages and active swaps</p>
-          </button>
         </div>
 
         {/* Hardiness zone — Phase 14C */}

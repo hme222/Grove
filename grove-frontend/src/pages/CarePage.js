@@ -199,7 +199,7 @@ export default function CarePage() {
     <div className="pb-24">
       <SectionTutorial tutorialId="care" />
       <PageHeader
-        title="Care"
+        title="Today"
         count={plants.length}
         rightContent={
           plants.length > 0 ? (

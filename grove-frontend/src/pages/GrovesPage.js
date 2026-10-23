@@ -67,7 +67,8 @@ export default function GrovesPage() {
           <button
             onClick={() => setShowCreate(true)}
             data-testid="create-grove-button"
-            className="rounded-full w-9 h-9 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
+            aria-label="Create a grove"
+            className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
           >
             <Plus className="h-4 w-4" />
           </button>

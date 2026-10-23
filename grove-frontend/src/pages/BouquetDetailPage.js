@@ -134,7 +134,7 @@ export default function BouquetDetailPage() {
               <Flower2 className="h-16 w-16 text-grove-blush opacity-20" />
             </div>
           )}
-          <button onClick={() => navigate(-1)} className="absolute top-4 left-4 w-9 h-9 rounded-full bg-grove-lime/70 flex items-center justify-center text-grove-cream">
+          <button onClick={() => navigate(-1)} aria-label="Back" className="absolute top-3 left-3 w-11 h-11 rounded-full bg-grove-night/65 backdrop-blur-sm flex items-center justify-center text-grove-cream">
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div className="absolute top-4 right-4 flex gap-2">

@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { ArrowLeft, Droplets, Sparkles, Edit2, Trash2, Leaf, X } from 'lucide-react';
 import HealthScorePanel from '../components/HealthScorePanel';
-import BloomingTimeline from '../components/BloomingTimeline';
+import MemoryJournal from '../components/MemoryJournal';
 import PhotoGallery from '../components/PhotoGallery';
 import { InlineText, InlineRoom, InlineStepper } from '../components/InlineEdit';
 
@@ -69,7 +69,7 @@ export default function PlantDetailPage() {
       } catch (e) { /* ignore */ }
     } catch (e) {
       toast.error('Failed to load plant');
-      navigate('/');
+      navigate('/plants');
     } finally {
       setLoading(false);
     }
@@ -136,7 +136,7 @@ export default function PlantDetailPage() {
       try {
         await plantAPI.delete(plantId);
         toast.success('Plant archived');
-        navigate('/');
+        navigate('/plants');
       } catch (e) {
         toast.error('Failed to archive plant');
       }
@@ -195,14 +195,16 @@ export default function PlantDetailPage() {
           <button
             onClick={() => navigate(-1)}
             data-testid="plant-detail-back"
-            className="absolute top-4 left-4 w-9 h-9 rounded-full bg-grove-lime/70 flex items-center justify-center text-grove-cream hover:bg-grove-sprout transition-colors duration-150"
+            aria-label="Back"
+            className="absolute top-3 left-3 w-11 h-11 rounded-full bg-grove-night/65 backdrop-blur-sm flex items-center justify-center text-grove-cream hover:bg-grove-night/85 transition-colors duration-150"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           {/* Upload photo */}
-          <label className="absolute top-4 right-4 cursor-pointer">
+          <label className="absolute top-3 right-3 cursor-pointer">
             <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-            <div className="w-9 h-9 rounded-full bg-grove-lime/70 flex items-center justify-center text-grove-cream hover:bg-grove-sprout transition-colors duration-150">
+            <span className="sr-only">Change plant photo</span>
+            <div className="w-11 h-11 rounded-full bg-grove-night/65 backdrop-blur-sm flex items-center justify-center text-grove-cream hover:bg-grove-night/85 transition-colors duration-150" aria-hidden="true">
               <Edit2 className="h-4 w-4" />
             </div>
           </label>
@@ -266,7 +268,7 @@ export default function PlantDetailPage() {
               <button
                 onClick={() => setCareModalOpen(true)}
                 data-testid="plant-log-care-button"
-                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
+                className="whitespace-nowrap rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1.5"
               >
                 <Droplets className="h-3.5 w-3.5" />
                 Log Care
@@ -287,7 +289,7 @@ export default function PlantDetailPage() {
       <div className="max-w-[1100px] mx-auto px-4 py-4" data-testid="plant-detail-tabs">
         <Tabs defaultValue="timeline">
           <TabsList className="bg-transparent border-b-[0.5px] border-grove-moss rounded-none w-full justify-start gap-1 h-auto p-0">
-            <TabsTrigger value="timeline" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Timeline</TabsTrigger>
+            <TabsTrigger value="timeline" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Journal</TabsTrigger>
             <TabsTrigger value="photos" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2" data-testid="plant-tab-photos">Photos</TabsTrigger>
             <TabsTrigger value="care" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Care</TabsTrigger>
             <TabsTrigger value="notes" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Notes</TabsTrigger>
@@ -296,7 +298,7 @@ export default function PlantDetailPage() {
 
           {/* Timeline Tab */}
           <TabsContent value="timeline" className="pt-4">
-            <BloomingTimeline
+            <MemoryJournal
               logs={mergedTimeline}
               plant={plant}
               onOpenEntry={(entry) => setOpenEntry(entry)}

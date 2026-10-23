@@ -162,7 +162,8 @@ export default function FloristDashboard() {
                       />
                       <button
                         onClick={() => setFormData({ ...formData, photo_url: '' })}
-                        className="absolute top-2 right-2 p-2 bg-grove-canopy rounded-full border-[0.5px] border-grove-moss"
+                        aria-label="Remove photo"
+                        className="absolute top-2 right-2 p-2.5 bg-grove-canopy rounded-full border-[0.5px] border-grove-moss"
                       >
                         <Trash2 className="h-4 w-4 text-grove-blush" />
                       </button>

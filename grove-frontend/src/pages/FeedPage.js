@@ -7,7 +7,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import SectionTutorial from '../components/SectionTutorial';
 import { toast } from 'sonner';
-import { Heart, MessageCircle, Send, Leaf, Users, X, Sun, Scissors } from 'lucide-react';
+import { Heart, MessageCircle, Send, Leaf, X, Sun, Scissors } from 'lucide-react';
 import VerifiedProBadge from '../components/VerifiedProBadge';
 
 // Decorative SVG used as a fallback when a post has no photo.
@@ -200,17 +200,9 @@ export default function FeedPage() {
     <div>
       <SectionTutorial tutorialId="grove" />
       <PageHeader
-        title="Grove"
+        title="Community"
         rightContent={
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate('/groves')}
-              data-testid="feed-open-groves-button"
-              className="min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
-            >
-              <Users className="h-3.5 w-3.5" />
-              Groves
-            </button>
             <button
               onClick={() => setShowCompose(!showCompose)}
               data-testid="feed-compose-button"
@@ -223,6 +215,14 @@ export default function FeedPage() {
       />
 
       <div className="max-w-[600px] mx-auto px-4 py-4 space-y-4">
+        <nav aria-label="Community areas" className="flex flex-wrap gap-2" data-testid="community-shortcuts">
+          {[['Groves', '/groves'], ['Swaps', '/swaps'], ['Offer a swap', '/swap']].map(([label, path]) => (
+            <button key={path} type="button" onClick={() => navigate(path)} data-testid={`community-shortcut-${label.toLowerCase().replace(/ /g, '-')}`}
+              className="min-h-[44px] inline-flex items-center rounded-full border-[0.5px] border-grove-moss px-4 font-ui text-xs text-grove-cream hover:border-grove-fernLine transition-colors duration-150">
+              {label}
+            </button>
+          ))}
+        </nav>
         {/* Compose */}
         {showCompose && (
           <div className="rounded-[14px] border-[0.5px] border-grove-lime bg-grove-moss p-4" data-testid="feed-compose-form">
@@ -407,7 +407,8 @@ export default function FeedPage() {
                           <button
                             onClick={() => handleComment(post.id)}
                             data-testid="feed-comment-submit"
-                            className="rounded-full w-7 h-7 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout"
+                            aria-label="Post comment"
+                            className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout"
                           >
                             <Send className="h-3 w-3" />
                           </button>

@@ -147,7 +147,7 @@ function ManualEntryFlow({ onBack }) {
         photo_url: photoPath,
       });
       toast.success(`${formData.nickname || formData.common_name} added to your collection`);
-      navigate('/');
+      navigate('/plants');
     } catch (e) {
       toast.error(e.response?.data?.detail || 'Failed to add plant');
     } finally {

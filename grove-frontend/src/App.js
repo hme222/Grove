@@ -186,7 +186,8 @@ function AppRoutes() {
             <HelpPage />
           </ProtectedRoute>
         } />
-        <Route path="/" element={
+        <Route path="/" element={<Navigate to="/care/today" replace />} />
+        <Route path="/plants" element={
           <ProtectedRoute>
             <AppLayout><CollectionPage /></AppLayout>
           </ProtectedRoute>

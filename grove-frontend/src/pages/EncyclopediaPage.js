@@ -62,9 +62,14 @@ export default function EncyclopediaPage() {
   return (
     <div>
       <SectionTutorial tutorialId="greenhouse" />
-      <PageHeader title="Greenhouse" count={total} />
+      <PageHeader title="Learn" count={total} />
 
       <div className="max-w-[1100px] mx-auto px-4 py-4 space-y-4">
+        <button type="button" onClick={() => navigate('/lessons')} data-testid="learn-lessons-card"
+          className="block w-full rounded-[22px] border-[0.5px] border-grove-sun/30 bg-gradient-to-br from-grove-canopy to-grove-moss px-5 py-4 text-left transition-colors duration-200 hover:border-grove-sun/60">
+          <p className="font-plant text-xl text-grove-cream">Short lessons</p>
+          <p className="mt-1 font-ui text-sm leading-snug text-grove-sage">Watering, light and soil, explained in a few minutes each.</p>
+        </button>
         {/* Guilds row — Phase 14B.2 */}
         {guilds.length > 0 && !searchQuery && (
           <div className="space-y-2" data-testid="greenhouse-guilds-row">

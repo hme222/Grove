@@ -97,7 +97,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         ai_health_flags: identified?.healthFlags || [],
       });
       toast.success(`${form.nickname || form.common_name} joined your grove`);
-      navigate('/');
+      navigate('/plants');
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Failed to add plant');
     } finally {

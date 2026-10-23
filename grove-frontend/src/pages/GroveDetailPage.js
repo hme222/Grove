@@ -96,7 +96,7 @@ export default function GroveDetailPage() {
       <div className="bg-grove-moss border-b-[0.5px] border-grove-moss px-4 py-4">
         <div className="max-w-[600px] mx-auto">
           <div className="flex items-center gap-3 mb-3">
-            <button onClick={() => navigate('/groves')} className="w-8 h-8 rounded-full bg-grove-forest flex items-center justify-center">
+            <button onClick={() => navigate('/groves')} aria-label="Back to groves" className="w-11 h-11 rounded-full bg-grove-forest flex items-center justify-center">
               <ArrowLeft className="h-4 w-4 text-grove-cream" />
             </button>
             <div className="flex-1">

@@ -266,7 +266,7 @@ export default function RoomScanScreen() {
           ))}
         </div>
         <p className="italic font-plant text-xs text-grove-sage mb-5">Their stories are just beginning.</p>
-        <button onClick={() => navigate('/')} data-testid="room-scan-success-cta" className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout">
+        <button onClick={() => navigate('/plants')} data-testid="room-scan-success-cta" className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout">
           See your collection →
         </button>
       </div>

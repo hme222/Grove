@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Leaf, Droplets, Users, BookOpen } from 'lucide-react';
+import { Leaf, Sun, Users, BookOpen } from 'lucide-react';
 
 const tabs = [
-  { path: '/', match: (p) => p === '/' || p.startsWith('/plants') || p.startsWith('/bouquets') || p === '/add-plant' || p.startsWith('/wishlist') || p === '/rooms', icon: Leaf, label: 'Collection', testid: 'bottom-tab-collection' },
-  { path: '/care/today', match: (p) => p.startsWith('/care'), icon: Droplets, label: 'Care', testid: 'bottom-tab-care' },
-  { path: '/feed', match: (p) => p === '/feed' || p.startsWith('/groves') || p.startsWith('/swap'), icon: Users, label: 'Grove', testid: 'bottom-tab-grove' },
-  { path: '/greenhouse', match: (p) => p.startsWith('/greenhouse') || p.startsWith('/encyclopedia') || p.startsWith('/species'), icon: BookOpen, label: 'Greenhouse', testid: 'bottom-tab-greenhouse' },
+  { path: '/care/today', match: (p) => p === '/' || p.startsWith('/care'), icon: Sun, label: 'Today', testid: 'bottom-tab-care' },
+  { path: '/plants', match: (p) => p === '/plants' || p.startsWith('/plants/') || p.startsWith('/bouquets') || p === '/add-plant' || p.startsWith('/wishlist') || p.startsWith('/wants') || p === '/rooms', icon: Leaf, label: 'Plants', testid: 'bottom-tab-collection' },
+  { path: '/greenhouse', match: (p) => p.startsWith('/greenhouse') || p.startsWith('/encyclopedia') || p.startsWith('/species') || p.startsWith('/guilds') || p.startsWith('/lessons'), icon: BookOpen, label: 'Learn', testid: 'bottom-tab-greenhouse' },
+  { path: '/feed', match: (p) => p === '/feed' || p.startsWith('/groves') || p.startsWith('/swap') || p.startsWith('/verify'), icon: Users, label: 'Community', testid: 'bottom-tab-grove' },
 ];
 
 export default function BottomNav() {
