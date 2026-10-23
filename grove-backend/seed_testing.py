@@ -311,21 +311,32 @@ async def seed_maya(db):
     
     # Posts
     posts_data = [
-        {"content": "She's growing so fast! Third new leaf this week", "kudos": 4, "days_ago": 14},
-        {"content": "Percy is thriving in his corner. Never expected to love a plant this much", "kudos": 7, "days_ago": 7},
-        {"content": "Birthday flowers from mum - hoping to keep them alive longer than usual!", "kudos": 11, "days_ago": 21},
+        {"caption": "She's growing so fast! Third new leaf this week", "plant": "Rudy", "kudos": 4, "days_ago": 14},
+        {"caption": "Percy is thriving in his corner. Never expected to love a plant this much", "plant": "Percy", "kudos": 7, "days_ago": 7},
+        {"caption": "Birthday flowers from mum - hoping to keep them alive longer than usual!", "bouquet": True, "kudos": 11, "days_ago": 21},
     ]
-    
+
     for pdata in posts_data:
-        post_id = str(uuid.uuid4())
+        # Use the same fields the feed reads (caption, photo_url, plant_id) and reuse her own photos.
+        photo_url, plant_id = "", None
+        if pdata.get("plant"):
+            plant = await db.plants.find_one({"user_id": user_id, "nickname": pdata["plant"]})
+            if plant:
+                photo_url, plant_id = plant.get("photo_url") or "", plant["id"]
+        elif pdata.get("bouquet"):
+            bouquet = await db.bouquets.find_one({"user_id": user_id})
+            if bouquet:
+                photo_url = bouquet.get("photo_url") or ""
         post = {
-            "id": post_id,
+            "id": str(uuid.uuid4()),
             "user_id": user_id,
-            "content": pdata["content"],
-            "photo_urls": [],
+            "caption": pdata["caption"],
+            "photo_url": photo_url,
+            "plant_id": plant_id,
             "kudos_count": pdata["kudos"],
             "comment_count": 2 if pdata["kudos"] > 10 else 0,
-            "created_at": days_ago(pdata["days_ago"])
+            "created_at": days_ago(pdata["days_ago"]),
+            "updated_at": days_ago(pdata["days_ago"]),
         }
         await db.posts.insert_one(post)
     print(f"  ✓ Created 3 social posts")

@@ -57,7 +57,7 @@ export default function RoomPage() {
             >
               {/* Room header */}
               <button
-                onClick={() => navigate(`/?room=${room.room}`)}
+                onClick={() => navigate(`/plants?room=${encodeURIComponent(room.room)}`)}
                 className="w-full flex items-center justify-between px-4 py-3 hover:bg-grove-moss transition-colors duration-150"
               >
                 <div className="flex items-center gap-2">
