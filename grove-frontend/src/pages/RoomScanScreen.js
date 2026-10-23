@@ -406,7 +406,7 @@ export default function RoomScanScreen() {
 
       {/* Sticky CTA */}
       {scanResult?.plants?.length > 0 && (
-        <div className="fixed left-0 right-0 bottom-[68px] px-4 py-3 bg-gradient-to-t from-grove-forest to-transparent">
+        <div className="fixed left-0 right-0 bottom-[calc(68px+env(safe-area-inset-bottom))] px-4 py-3 bg-gradient-to-t from-grove-forest to-transparent">
           <div className="max-w-[520px] mx-auto">
             <button
               onClick={handleAddBatch}

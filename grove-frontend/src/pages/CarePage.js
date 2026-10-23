@@ -348,7 +348,7 @@ export default function CarePage() {
       {sessionActive && (
         <div
           data-testid="care-session-bar"
-          className="fixed left-0 right-0 bottom-[84px] z-40 mx-auto max-w-[600px] px-3"
+          className="fixed left-0 right-0 bottom-[calc(84px+env(safe-area-inset-bottom))] z-40 mx-auto max-w-[600px] px-3"
         >
           <div className="rounded-[14px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
@@ -373,7 +373,7 @@ export default function CarePage() {
       )}
 
       {lastRound && (
-        <div className={`fixed left-0 right-0 z-50 mx-auto max-w-[600px] px-3 ${sessionActive ? 'bottom-[156px]' : 'bottom-[84px]'}`}>
+        <div className={`fixed left-0 right-0 z-50 mx-auto max-w-[600px] px-3 ${sessionActive ? 'bottom-[calc(156px+env(safe-area-inset-bottom))]' : 'bottom-[calc(84px+env(safe-area-inset-bottom))]'}`}>
           <UndoSnackbar
             message={`Watered ${lastRound.count} ${lastRound.count === 1 ? 'plant' : 'plants'}`}
             onUndo={handleUndoRound}

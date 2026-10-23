@@ -298,7 +298,7 @@ export default function CollectionPage() {
 
       {/* Bulk action bar — Phase 14A.2 multi-action (water · mist · fertilize · rotate · prune · check) */}
       {selectionMode && selectedCount > 0 && (
-        <div className="fixed bottom-[68px] left-0 right-0 z-40 bg-grove-lime border-t-[0.5px] border-grove-moss" data-testid="bulk-action-bar">
+        <div className="fixed bottom-[calc(68px+env(safe-area-inset-bottom))] left-0 right-0 z-40 bg-grove-lime border-t-[0.5px] border-grove-moss" data-testid="bulk-action-bar">
           <div className="max-w-[1100px] mx-auto px-4 pt-2 pb-3">
             {showSoftWarning && (
               <div

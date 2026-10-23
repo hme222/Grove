@@ -53,6 +53,21 @@
     font-family: 'Alegreya Sans', Optima, Candara, system-ui, sans-serif;
     font-size: 17px; /* Alegreya Sans runs small; 17px matches the 16px system face's x-height */
     -webkit-font-smoothing: antialiased;
+    /* Behave like an installed app on a phone: no rubber-band bounce, no grey tap flash, clear the notch in landscape. */
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  button, a, [role="button"] {
+    touch-action: manipulation; /* removes the double-tap-to-zoom delay without blocking pinch zoom */
+  }
+  /* iOS Safari zooms the page when a field under 16px is focused. */
+  @media (max-width: 768px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea {
+      font-size: 16px;
+    }
   }
   ::selection {
     background: #92B44B;

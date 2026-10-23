@@ -81,8 +81,8 @@ function ProtectedRoute({ children }) {
 
 function AppLayout({ children }) {
   return (
-    <div className="min-h-screen bg-grove-forest pb-[84px]">
-      {children}
+    <div className="min-h-screen min-h-[100dvh] bg-grove-forest pb-[calc(84px+env(safe-area-inset-bottom))]">
+      <main id="main-content">{children}</main>
       <BottomNav />
     </div>
   );
