@@ -5387,6 +5387,12 @@ async def set_waitlist_beta(input: WaitlistBetaInput):
     return {"beta": input.beta}
 
 
+@app.get("/healthz")
+async def healthz():
+    # Used by the hosting platform to tell the server is up; no database call so it stays fast.
+    return {"ok": True}
+
+
 app.include_router(api_router)
 
 app.add_middleware(
