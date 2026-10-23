@@ -192,7 +192,7 @@ function ManualEntryFlow({ onBack }) {
               <label className="font-ui text-xs text-grove-cream block mb-1.5">Search Species</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-sage" />
-                <input
+                <input aria-label="Search by common or Latin name"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -245,7 +245,7 @@ function ManualEntryFlow({ onBack }) {
               <>
                 <div>
                   <label className="font-ui text-xs text-grove-cream block mb-1.5">Plant Name *</label>
-                  <input
+                  <input aria-label="Plant name"
                     type="text"
                     value={formData.common_name}
                     onChange={(e) => setFormData(prev => ({...prev, common_name: e.target.value}))}
@@ -257,7 +257,7 @@ function ManualEntryFlow({ onBack }) {
                 </div>
                 <div>
                   <label className="font-ui text-xs text-grove-cream block mb-1.5">Latin Name</label>
-                  <input
+                  <input aria-label="Latin name"
                     type="text"
                     value={formData.latin_name}
                     onChange={(e) => setFormData(prev => ({...prev, latin_name: e.target.value}))}
@@ -269,7 +269,7 @@ function ManualEntryFlow({ onBack }) {
             )}
             <div>
               <label className="font-ui text-xs text-grove-cream block mb-1.5">Nickname</label>
-              <input
+              <input aria-label="Nickname"
                 type="text"
                 value={formData.nickname}
                 onChange={(e) => setFormData(prev => ({...prev, nickname: e.target.value}))}
@@ -337,7 +337,7 @@ function ManualEntryFlow({ onBack }) {
             </div>
             <div>
               <label className="font-ui text-xs text-grove-cream block mb-1.5">Notes</label>
-              <textarea
+              <textarea aria-label="Notes"
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
                 className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-24"

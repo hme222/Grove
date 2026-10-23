@@ -106,7 +106,7 @@ export default function GroveDetailPage() {
             {grove?.is_member && (
               <button
                 onClick={handleLeave}
-                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
+                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-blush hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
               >
                 <LogOut className="h-3 w-3" />
                 Leave
@@ -131,7 +131,7 @@ export default function GroveDetailPage() {
             {/* Compose in grove */}
             {grove?.is_member && (
               <div className="flex gap-2">
-                <input
+                <input aria-label="Share with your grove"
                   type="text"
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
@@ -139,10 +139,10 @@ export default function GroveDetailPage() {
                   placeholder="Share with your grove..."
                   className="flex-1 bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2.5 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                 />
-                <button
+                <button aria-label="Post to grove"
                   onClick={handlePost}
                   disabled={posting || !caption.trim()}
-                  className="rounded-full w-10 h-10 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout disabled:opacity-50"
+                  className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout disabled:opacity-50"
                 >
                   <Send className="h-4 w-4" />
                 </button>
@@ -165,11 +165,11 @@ export default function GroveDetailPage() {
                       <span>{post.display_name || post.username}</span>
                       <VerifiedProBadge user={post} size={12} />
                     </span>
-                    <span className="font-latin text-[11px] text-grove-sage">{formatTime(post.created_at)}</span>
+                    <span className="font-latin text-[12px] text-grove-sage">{formatTime(post.created_at)}</span>
                   </div>
                   {post.caption && <p className="font-ui text-sm text-grove-cream mb-2">{post.caption}</p>}
                   <div className="flex items-center gap-3 pt-2 border-t-[0.5px] border-grove-moss/30">
-                    <button onClick={() => handleKudos(post.id, post.user_gave_kudos)} className={`flex items-center gap-1 text-xs ${post.user_gave_kudos ? 'text-grove-bloom' : 'text-grove-cream'}`}>
+                    <button onClick={() => handleKudos(post.id, post.user_gave_kudos)} className={`flex items-center gap-1 text-xs ${post.user_gave_kudos ? 'text-grove-blush' : 'text-grove-cream'}`}>
                       <Heart className="h-3.5 w-3.5" fill={post.user_gave_kudos ? '#E57A9C' : 'none'} />{post.kudos_count || 0}
                     </button>
                     <span className="flex items-center gap-1 text-xs text-grove-cream"><MessageCircle className="h-3.5 w-3.5" />{post.comment_count || 0}</span>
@@ -208,10 +208,10 @@ export default function GroveDetailPage() {
                     <span className="truncate">{m.display_name || m.username}</span>
                     <VerifiedProBadge user={m} size={14} />
                   </p>
-                  <p className="font-latin text-[11px] text-grove-cream">@{m.username}</p>
+                  <p className="font-latin text-[12px] text-grove-cream">@{m.username}</p>
                 </div>
                 {m.role === 'admin' && (
-                  <span className="rounded-[20px] border-[0.5px] border-grove-lime bg-grove-moss px-2 py-0.5 text-[11px] font-ui text-grove-sprout">Admin</span>
+                  <span className="rounded-[20px] border-[0.5px] border-grove-lime bg-grove-moss px-2 py-0.5 text-[12px] font-ui text-grove-sprout">Admin</span>
                 )}
               </div>
             ))}

@@ -22,7 +22,7 @@ export const TOXICITY_LEVELS = {
     level: 'toxic',
     label: 'Toxic if ingested',
     icon: 'danger',
-    className: 'text-grove-bloom bg-grove-bloom/15 border-grove-bloom/40',
+    className: 'text-grove-blush bg-grove-bloom/15 border-grove-bloom/40',
   },
   unknown: {
     level: 'unknown',

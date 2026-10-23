@@ -163,7 +163,7 @@ export default function GrovesPage() {
           <div className="space-y-4 mt-2">
             <div>
               <label className="font-ui text-xs text-grove-cream block mb-1.5">Name</label>
-              <input
+              <input aria-label="Name"
                 type="text"
                 value={newGrove.name}
                 onChange={(e) => setNewGrove(prev => ({...prev, name: e.target.value}))}
@@ -174,7 +174,7 @@ export default function GrovesPage() {
             </div>
             <div>
               <label className="font-ui text-xs text-grove-cream block mb-1.5">Description</label>
-              <textarea
+              <textarea aria-label="Description"
                 value={newGrove.description}
                 onChange={(e) => setNewGrove(prev => ({...prev, description: e.target.value}))}
                 className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"

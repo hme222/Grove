@@ -23,6 +23,7 @@ module.exports = {
   				sage: '#B7C0A4',
   				inputLine: '#4E6232',
   				bloom: '#E57A9C',
+  				blush: '#F7B4C8', // pink for text: 4.5:1 or better on every dark surface (bloom is for fills and borders)
   				fernLine: '#64793F',
   				sprout: '#C3D98A',
   				understory: '#172010',

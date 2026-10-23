@@ -79,7 +79,7 @@ export default function FirstCareCelebration({ open, onClose }) {
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-sprout flex items-center justify-center mb-4">
+          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-root flex items-center justify-center mb-4">
             <Sparkles className="h-7 w-7" />
           </div>
           <p className="font-plant text-xs text-grove-sprout">

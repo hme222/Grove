@@ -54,7 +54,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
-                <input
+                <input aria-label="Email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -67,7 +67,7 @@ export default function LoginPage() {
               <div>
                 <label className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
                 <div className="relative">
-                  <input
+                  <input aria-label="Password"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

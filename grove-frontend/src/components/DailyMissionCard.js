@@ -78,7 +78,7 @@ export default function DailyMissionCard({ onCompleted }) {
       <div className="flex items-center gap-3">
         <div
           className={`relative w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${
-            completed ? 'bg-grove-lime text-grove-root' : 'bg-grove-lime text-grove-sprout'
+            completed ? 'bg-grove-lime text-grove-root' : 'bg-grove-lime text-grove-root'
           }`}
           aria-hidden="true"
         >

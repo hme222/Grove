@@ -83,7 +83,7 @@ export default function NotificationPreferencesPage() {
       >
         <div className="min-w-0 flex-1">
           <p className="font-ui text-sm text-grove-cream">{label}</p>
-          <p className="font-ui text-[11px] text-grove-cream leading-snug mt-0.5">{help}</p>
+          <p className="font-ui text-[12px] text-grove-cream leading-snug mt-0.5">{help}</p>
         </div>
         <button
           type="button"

@@ -56,7 +56,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="font-ui text-xs text-grove-cream block mb-1.5">Username</label>
-                <input
+                <input aria-label="Username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -68,7 +68,7 @@ export default function RegisterPage() {
               </div>
               <div>
                 <label className="font-ui text-xs text-grove-cream block mb-1.5">Display Name</label>
-                <input
+                <input aria-label="Display name"
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
@@ -79,7 +79,7 @@ export default function RegisterPage() {
               </div>
               <div>
                 <label className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
-                <input
+                <input aria-label="Email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -91,7 +91,7 @@ export default function RegisterPage() {
               </div>
               <div>
                 <label className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
-                <input
+                <input aria-label="Password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

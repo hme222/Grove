@@ -186,7 +186,7 @@ export default function BadgesPage() {
             <span className="font-plant text-[12px] text-grove-cream">
               {pinnedSlugs.size} of 5 goals pinned
             </span>
-            <span className="font-latin italic text-[11px] text-grove-lichen">·</span>
+            <span className="font-latin italic text-[12px] text-grove-lichen">·</span>
             <button
               type="button"
               onClick={() => navigate('/care/today')}
@@ -231,7 +231,7 @@ export default function BadgesPage() {
                   {item ? (
                     <>
                       <BadgeTile item={item} compact />
-                      <p className="font-plant text-[11px] text-grove-cream mt-1.5 leading-tight">
+                      <p className="font-plant text-[12px] text-grove-cream mt-1.5 leading-tight">
                         {item.name}
                       </p>
                     </>
@@ -363,7 +363,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
           data-testid={`badge-tile-${item.slug}-pinned-flag`}
         >
           <Target className="h-2.5 w-2.5" />
-          <span className="font-plant text-[8px]">Goal</span>
+          <span className="font-plant text-[12px]">Goal</span>
         </span>
       )}
       <span
@@ -387,7 +387,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
           </p>
           {item.tier && earned && (
             <span
-              className="font-plant text-[8px] mt-0.5 px-1.5 py-0.5 rounded-[12px]"
+              className="font-plant text-[12px] mt-0.5 px-1.5 py-0.5 rounded-[12px]"
               style={{
                 backgroundColor: tierColor.bg,
                 color: tierColor.text,
@@ -401,7 +401,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
             {item.description}
           </p>
           {!earned && !item.earnable && (
-            <p className="font-latin italic text-[11px] text-grove-sun mt-1">
+            <p className="font-latin italic text-[12px] text-grove-sun mt-1">
               Granted by FloraGrove
             </p>
           )}
@@ -411,7 +411,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
               onClick={onTogglePin}
               disabled={pinning || (pinDisabled && !isPinned)}
               data-testid={`badge-tile-${item.slug}-pin-btn`}
-              className={`mt-2 inline-flex items-center gap-1 rounded-[12px] font-ui text-[11px] px-2 py-1 border-[0.5px] transition-colors duration-150 ${
+              className={`mt-2 inline-flex items-center gap-1 rounded-[12px] font-ui text-[12px] px-2 py-1 border-[0.5px] transition-colors duration-150 ${
                 isPinned
                   ? 'bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout'
                   : 'bg-transparent text-grove-sprout border-grove-fernLine hover:bg-grove-sprout hover:text-grove-cream'
@@ -470,7 +470,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
         <div className="flex items-start justify-between p-5 border-b-[0.5px] border-grove-moss">
           <div className="flex-1 min-w-0">
             <h3 className="font-plant text-grove-cream text-lg">Pick up to 3 badges to display</h3>
-            <p className="font-latin italic text-[11px] text-grove-lichen mt-1">
+            <p className="font-latin italic text-[12px] text-grove-lichen mt-1">
               {selection.length} of 3 selected · only the highest tier in each family is shown
             </p>
           </div>

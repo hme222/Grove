@@ -72,7 +72,7 @@ export default function WantListPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <p className="font-plant text-sm text-grove-cream">{s.common_name}</p>
-                        <p className="font-latin italic text-[11px] text-grove-cream mt-0.5">{s.latin_name}</p>
+                        <p className="font-latin italic text-[12px] text-grove-cream mt-0.5">{s.latin_name}</p>
                         <div className="flex flex-wrap gap-2 mt-1.5 text-xs font-ui text-grove-sage">
                           {s.default_light_level && (
                             <span className="inline-flex items-center gap-1">
@@ -97,7 +97,7 @@ export default function WantListPage() {
                           onClick={(e) => handleRemove(e, s.id, s.common_name)}
                           aria-label="Remove from want list"
                           data-testid={`want-list-remove-${s.slug}`}
-                          className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-transparent text-grove-sage hover:text-grove-bloom hover:border-grove-moss flex items-center justify-center transition-colors duration-150"
+                          className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-transparent text-grove-sage hover:text-grove-blush hover:border-grove-moss flex items-center justify-center transition-colors duration-150"
                         >
                           <Trash2 className="h-3 w-3" />
                         </button>

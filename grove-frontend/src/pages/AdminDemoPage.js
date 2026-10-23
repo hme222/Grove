@@ -103,7 +103,7 @@ export default function AdminDemoPage() {
       <div className="max-w-[1100px] mx-auto px-4 pt-6 space-y-6">
         {/* Warning */}
         <div className="rounded-[14px] border-[0.5px] border-grove-bloom bg-grove-bloom/15 p-4">
-          <p className="text-sm text-grove-bloom">
+          <p className="text-sm text-grove-blush">
             ⚠️ <strong>Admin Only:</strong> These controls modify test account data. Use for demos and testing only.
           </p>
         </div>
@@ -197,7 +197,7 @@ export default function AdminDemoPage() {
               <Button
                 onClick={() => handleReset(account.username)}
                 disabled={actionLoading === `reset-${account.username}`}
-                className="w-full rounded-[12px] font-[Georgia] text-xs px-3 py-2 bg-transparent text-grove-bloom border-[0.5px] border-grove-moss hover:border-grove-moss"
+                className="w-full rounded-[12px] font-[Georgia] text-xs px-3 py-2 bg-transparent text-grove-blush border-[0.5px] border-grove-moss hover:border-grove-moss"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
                 {actionLoading === `reset-${account.username}` ? 'Resetting...' : `Reset ${account.username}`}

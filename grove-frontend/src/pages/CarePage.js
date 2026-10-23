@@ -32,7 +32,7 @@ const URGENCY_STYLES = {
     border: 'border-grove-bloom/60',
     bg: 'bg-grove-bloom/15',
     dot: 'bg-grove-bloom',
-    label: 'text-grove-bloom',
+    label: 'text-grove-blush',
     accent: '#E57A9C',
   },
   needs_water: {
@@ -291,7 +291,7 @@ export default function CarePage() {
                       {textMode === 'detailed' && plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
                         <p
                           data-testid="care-card-status-reason"
-                          className="font-ui text-[11px] text-grove-sage mt-0.5 leading-snug"
+                          className="font-ui text-[12px] text-grove-sage mt-0.5 leading-snug"
                         >
                           <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
@@ -479,7 +479,7 @@ function ScheduleReviewBanner() {
         <p className="font-plant text-sm text-grove-cream leading-tight">
           Time to review your AI schedule
         </p>
-        <p className="font-ui text-[11px] text-grove-sage mt-0.5 leading-snug">
+        <p className="font-ui text-[12px] text-grove-sage mt-0.5 leading-snug">
           It&apos;s been 30 days since the AI suggested a watering cadence for {first.nickname || first.common_name}
           {more > 0 ? ` and ${more} other plant${more === 1 ? '' : 's'}` : ''}. Tap to review and adjust if your reality has changed.
         </p>

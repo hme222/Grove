@@ -131,7 +131,7 @@ export default function BouquetDetailPage() {
             <div className="w-full h-full bg-grove-bloom/15 flex items-center justify-center"><img src={photoUrl} alt={bouquet.name} className="w-full h-full object-cover" /></div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Flower2 className="h-16 w-16 text-grove-bloom opacity-20" />
+              <Flower2 className="h-16 w-16 text-grove-blush opacity-20" />
             </div>
           )}
           <button onClick={() => navigate(-1)} className="absolute top-4 left-4 w-9 h-9 rounded-full bg-grove-lime/70 flex items-center justify-center text-grove-cream">
@@ -144,7 +144,7 @@ export default function BouquetDetailPage() {
                 <Edit2 className="h-4 w-4" />
               </div>
             </label>
-            <button onClick={handleShare} className="w-9 h-9 rounded-full bg-grove-bloom/80 flex items-center justify-center text-grove-cream hover:bg-grove-sprout">
+            <button aria-label="Share bouquet" onClick={handleShare} className="w-11 h-11 rounded-full bg-grove-bloom/80 flex items-center justify-center text-grove-cream hover:bg-grove-sprout">
               <Share2 className="h-4 w-4" />
             </button>
           </div>
@@ -156,9 +156,9 @@ export default function BouquetDetailPage() {
               <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name || 'Bouquet'}</h1>
               <div className="flex items-center gap-2 mt-1">
                 {bouquet.occasion && (
-                  <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-2.5 py-0.5 text-xs font-ui text-grove-bloom capitalize">{bouquet.occasion}</span>
+                  <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-2.5 py-0.5 text-xs font-ui text-grove-blush capitalize">{bouquet.occasion}</span>
                 )}
-                <span className="font-latin text-xs text-grove-bloom">{formatDate(bouquet.received_date)}</span>
+                <span className="font-latin text-xs text-grove-blush">{formatDate(bouquet.received_date)}</span>
               </div>
             </div>
             <div className="text-right">
@@ -176,18 +176,18 @@ export default function BouquetDetailPage() {
       <div className="max-w-[1100px] mx-auto px-4 py-4">
         <Tabs defaultValue="flowers">
           <TabsList className="bg-transparent border-b-[0.5px] border-grove-bloom/20 rounded-none w-full justify-start gap-1 h-auto p-0">
-            <TabsTrigger value="flowers" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-bloom/15 data-[state=active]:text-grove-bloom text-xs font-ui px-4 py-2">Flowers</TabsTrigger>
-            <TabsTrigger value="care" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-bloom/15 data-[state=active]:text-grove-bloom text-xs font-ui px-4 py-2">Care Plan</TabsTrigger>
-            <TabsTrigger value="log" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-bloom/15 data-[state=active]:text-grove-bloom text-xs font-ui px-4 py-2">Log Care</TabsTrigger>
+            <TabsTrigger value="flowers" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-bloom/15 data-[state=active]:text-grove-blush text-xs font-ui px-4 py-2">Flowers</TabsTrigger>
+            <TabsTrigger value="care" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-bloom/15 data-[state=active]:text-grove-blush text-xs font-ui px-4 py-2">Care Plan</TabsTrigger>
+            <TabsTrigger value="log" className="rounded-t-[8px] rounded-b-none data-[state=active]:bg-grove-bloom/15 data-[state=active]:text-grove-blush text-xs font-ui px-4 py-2">Log Care</TabsTrigger>
           </TabsList>
 
           {/* Flowers Tab */}
           <TabsContent value="flowers" className="pt-4">
             {(!bouquet.flowers || bouquet.flowers.length === 0) ? (
               <div className="rounded-[14px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 p-5 text-center">
-                <Flower2 className="h-8 w-8 text-grove-bloom opacity-30 mx-auto mb-2" />
+                <Flower2 className="h-8 w-8 text-grove-blush opacity-30 mx-auto mb-2" />
                 <p className="font-plant text-grove-cream text-sm">No flowers identified yet</p>
-                <p className="font-ui text-xs text-grove-bloom mt-1 mb-3">
+                <p className="font-ui text-xs text-grove-blush mt-1 mb-3">
                   {bouquet.photo_url ? 'AI will analyze your bouquet photo' : 'Upload a photo or use text-based identification'}
                 </p>
                 <button
@@ -204,7 +204,7 @@ export default function BouquetDetailPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-plant text-grove-cream text-sm">{bouquet.flowers.length} flowers identified</h3>
-                  <button onClick={handleIdentify} disabled={identifying} className="text-xs font-ui text-grove-bloom hover:text-[#b8446a] disabled:opacity-50">
+                  <button onClick={handleIdentify} disabled={identifying} className="text-xs font-ui text-grove-blush hover:text-[#b8446a] disabled:opacity-50">
                     {identifying ? 'Re-identifying...' : 'Re-identify'}
                   </button>
                 </div>
@@ -213,14 +213,14 @@ export default function BouquetDetailPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-plant text-grove-cream text-sm">{f.common_name}</p>
-                        <p className="font-latin text-xs text-grove-bloom">{f.latin_name}</p>
+                        <p className="font-latin text-xs text-grove-blush">{f.latin_name}</p>
                       </div>
                       <div className="text-right">
-                        <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-2 py-0.5 text-[11px] font-ui text-grove-bloom">
+                        <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-2 py-0.5 text-[12px] font-ui text-grove-blush">
                           {f.vase_life_days}d life
                         </span>
                         {confidenceText(f.ai_confidence) && (
-                          <p data-testid="bouquet-flower-confidence" className="font-ui text-[11px] text-grove-sage mt-1">
+                          <p data-testid="bouquet-flower-confidence" className="font-ui text-[12px] text-grove-sage mt-1">
                             {confidenceText(f.ai_confidence)}
                           </p>
                         )}
@@ -243,7 +243,7 @@ export default function BouquetDetailPage() {
             {!carePlan ? (
               <div className="rounded-[14px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 p-5 text-center">
                 <p className="font-plant text-grove-cream text-sm">No care plan yet</p>
-                <p className="font-ui text-xs text-grove-bloom mt-1 mb-3">Generate a personalized care plan based on identified flowers.</p>
+                <p className="font-ui text-xs text-grove-blush mt-1 mb-3">Generate a personalized care plan based on identified flowers.</p>
                 <button
                   onClick={handleCarePlan}
                   disabled={generatingPlan || (!bouquet.flowers || bouquet.flowers.length === 0)}
@@ -267,7 +267,7 @@ export default function BouquetDetailPage() {
                     <ul className="space-y-1.5">
                       {carePlan.immediate_steps.map((s, i) => (
                         <li key={i} className="flex items-start gap-2 text-xs font-ui text-grove-cream">
-                          <span className="text-grove-bloom mt-0.5">•</span>{s}
+                          <span className="text-grove-blush mt-0.5">•</span>{s}
                         </li>
                       ))}
                     </ul>
@@ -279,7 +279,7 @@ export default function BouquetDetailPage() {
                     <ul className="space-y-1.5">
                       {carePlan.daily_steps.map((s, i) => (
                         <li key={i} className="flex items-start gap-2 text-xs font-ui text-grove-cream">
-                          <span className="text-grove-bloom mt-0.5">•</span>{s}
+                          <span className="text-grove-blush mt-0.5">•</span>{s}
                         </li>
                       ))}
                     </ul>
@@ -291,7 +291,7 @@ export default function BouquetDetailPage() {
                     <div className="space-y-1.5">
                       {carePlan.day_specific.map((d, i) => (
                         <div key={i} className="flex items-start gap-3">
-                          <span className="font-latin text-xs text-grove-bloom font-bold w-8 flex-shrink-0">Day {d.day}</span>
+                          <span className="font-latin text-xs text-grove-blush font-bold w-8 flex-shrink-0">Day {d.day}</span>
                           <span className="text-xs font-ui text-grove-cream">{d.action}</span>
                         </div>
                       ))}
@@ -323,17 +323,17 @@ export default function BouquetDetailPage() {
                         : 'border-grove-moss bg-grove-moss hover:border-grove-bloom'
                     }`}
                   >
-                    <Icon className="h-5 w-5 text-grove-bloom" />
-                    <span className="text-[11px] font-ui text-grove-cream text-center">{label}</span>
+                    <Icon className="h-5 w-5 text-grove-blush" />
+                    <span className="text-[12px] font-ui text-grove-cream text-center">{label}</span>
                   </button>
                 ))}
               </div>
 
-              <textarea
+              <textarea aria-label="Notes (optional)"
                 value={careNotes}
                 onChange={(e) => setCareNotes(e.target.value)}
                 placeholder="Notes (optional)"
-                className="w-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 rounded-[8px] p-3 text-sm font-ui placeholder:text-grove-bloom/40 focus:outline-none focus:ring-2 focus:ring-grove-bloom resize-none h-20"
+                className="w-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 rounded-[8px] p-3 text-sm font-ui placeholder:text-grove-blush/40 focus:outline-none focus:ring-2 focus:ring-grove-bloom resize-none h-20"
               />
 
               <button
@@ -353,9 +353,9 @@ export default function BouquetDetailPage() {
                     <div key={log.id} className="rounded-[8px] border-[0.5px] border-grove-bloom/20 bg-grove-bloom/15 px-3 py-2 flex items-center justify-between">
                       <div>
                         <p className="font-ui text-xs text-grove-cream capitalize">{log.action?.replace('_', ' ')}</p>
-                        {log.notes && <p className="font-ui text-xs text-grove-bloom">{log.notes}</p>}
+                        {log.notes && <p className="font-ui text-xs text-grove-blush">{log.notes}</p>}
                       </div>
-                      <span className="font-latin text-[11px] text-grove-sage">{formatDate(log.logged_at)}</span>
+                      <span className="font-latin text-[12px] text-grove-sage">{formatDate(log.logged_at)}</span>
                     </div>
                   ))}
                 </div>

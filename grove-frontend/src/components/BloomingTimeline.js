@@ -311,7 +311,7 @@ function EntryCard({ item, side, onClick }) {
         {new Date(item.logged_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
       </p>
       {item.notes && (
-        <p className="italic font-ui text-[11px] text-grove-sage mt-1 line-clamp-3">"{item.notes}"</p>
+        <p className="italic font-ui text-[12px] text-grove-sage mt-1 line-clamp-3">"{item.notes}"</p>
       )}
       {hasPhoto && (
         <div className="mt-1.5 rounded-[8px] overflow-hidden">

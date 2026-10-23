@@ -44,12 +44,12 @@ export default function AddBouquetPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="font-ui text-xs text-grove-cream block mb-1.5">Bouquet Name</label>
-            <input
+            <input aria-label="Bouquet name"
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
               data-testid="bouquet-name-input"
-              className="w-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-bloom/40 focus:outline-none focus:ring-2 focus:ring-grove-bloom"
+              className="w-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-blush/40 focus:outline-none focus:ring-2 focus:ring-grove-bloom"
               placeholder="e.g., Birthday roses"
             />
           </div>
@@ -65,7 +65,7 @@ export default function AddBouquetPage() {
                   className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui capitalize transition-colors duration-150 ${
                     formData.occasion === o
                       ? 'border-grove-bloom bg-grove-bloom text-grove-root'
-                      : 'border-grove-bloom/30 bg-grove-bloom/15 text-grove-bloom hover:border-grove-bloom'
+                      : 'border-grove-bloom/30 bg-grove-bloom/15 text-grove-blush hover:border-grove-bloom'
                   }`}
                 >
                   {o}
@@ -76,11 +76,11 @@ export default function AddBouquetPage() {
 
           <div>
             <label className="font-ui text-xs text-grove-cream block mb-1.5">Description</label>
-            <textarea
+            <textarea aria-label="Description"
               value={formData.notes}
               onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
               data-testid="bouquet-notes-input"
-              className="w-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-bloom/40 focus:outline-none focus:ring-2 focus:ring-grove-bloom resize-none h-24"
+              className="w-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-blush/40 focus:outline-none focus:ring-2 focus:ring-grove-bloom resize-none h-24"
               placeholder="Describe the flowers in your bouquet (helps with AI identification)..."
             />
           </div>

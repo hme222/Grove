@@ -287,7 +287,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
               alt="attachment preview"
               className="w-10 h-10 rounded-[6px] object-cover"
             />
-            <span className="font-ui text-[11px] text-grove-sage flex-1 truncate">Photo attached</span>
+            <span className="font-ui text-[12px] text-grove-sage flex-1 truncate">Photo attached</span>
             <button
               type="button"
               onClick={() => setPhotoPath(null)}
@@ -322,7 +322,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
               <ImageIcon className="h-4 w-4" />
             )}
           </button>
-          <textarea
+          <textarea aria-label="Message your Grove"
             value={body}
             onChange={(e) => setBody(e.target.value)}
             onKeyDown={(e) => {
@@ -387,7 +387,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
   if (msg.is_deleted) {
     return (
       <div className="flex justify-center my-1" data-testid={`chat-msg-${msg.id}`} data-deleted="true">
-        <span className="font-latin italic text-[11px] text-grove-lichen px-3 py-1 rounded-[12px] bg-grove-moss">
+        <span className="font-latin italic text-[12px] text-grove-sage px-3 py-1 rounded-[12px] bg-grove-moss">
           Message deleted
         </span>
       </div>
@@ -406,11 +406,11 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
         }`}
         title={msg.author_display_name || msg.author_username || ''}
       >
-        <span className="font-plant text-[11px]">{initial}</span>
+        <span className="font-plant text-[12px]">{initial}</span>
       </div>
       <div className={`max-w-[78%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
         {!isOwn && (
-          <p className="font-plant text-[11px] text-grove-sage mb-0.5 ml-1">
+          <p className="font-plant text-[12px] text-grove-sage mb-0.5 ml-1">
             {msg.author_display_name || msg.author_username || ''}
           </p>
         )}
@@ -439,7 +439,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
           )}
           {editing ? (
             <div className="space-y-1.5">
-              <textarea
+              <textarea aria-label="Edit message"
                 value={editBody}
                 onChange={(e) => setEditBody(e.target.value)}
                 rows={2}
@@ -451,7 +451,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditCancel}
                   data-testid={`chat-msg-${msg.id}-edit-cancel`}
-                  className="rounded-[12px] font-ui text-[11px] px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
+                  className="rounded-[12px] font-ui text-[12px] px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
                 >
                   Cancel
                 </button>
@@ -459,7 +459,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditSave}
                   data-testid={`chat-msg-${msg.id}-edit-save`}
-                  className="rounded-[12px] font-ui text-[11px] px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-[12px] px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
                 >
                   <Check className="h-3 w-3" /> Save
                 </button>
@@ -474,7 +474,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
           )}
         </div>
         <div className={`flex items-center gap-1.5 mt-0.5 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="font-latin italic text-[11px] text-grove-lichen">
+          <span className="font-latin italic text-[12px] text-grove-lichen">
             {formatChatTime(msg.created_at)}
             {msg.edited && ' · edited'}
           </span>

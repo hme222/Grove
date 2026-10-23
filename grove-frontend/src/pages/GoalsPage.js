@@ -85,9 +85,9 @@ export default function GoalsPage() {
         rightContent={
           <Dialog open={showCreate} onOpenChange={setShowCreate}>
             <DialogTrigger asChild>
-              <button
+              <button aria-label="Create a goal"
                 data-testid="goals-create-button"
-                className="rounded-full w-9 h-9 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
+                className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
               >
                 <Plus className="h-4 w-4" />
               </button>

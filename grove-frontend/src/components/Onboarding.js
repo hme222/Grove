@@ -136,7 +136,7 @@ export function Onboarding({ onComplete }) {
           {screen.tip && (
             <div className={`inline-flex items-center gap-2 rounded-[20px] border-[0.5px] px-3 py-1.5 ${
               screen.dark
-                ? 'border-grove-lime bg-grove-lime text-grove-sprout'
+                ? 'border-grove-lime bg-grove-lime text-grove-root'
                 : 'border-grove-moss bg-grove-moss text-grove-cream'
             }`}>
               <span className="font-plant text-xs">Quick tip</span>

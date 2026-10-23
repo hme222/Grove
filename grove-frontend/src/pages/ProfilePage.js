@@ -90,7 +90,7 @@ export default function ProfilePage() {
           <button
             onClick={logout}
             data-testid="profile-logout-button"
-            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
+            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-blush hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
           >
             <LogOut className="h-3.5 w-3.5" />
             Sign Out
@@ -127,7 +127,7 @@ export default function ProfilePage() {
             <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
-              <p className="font-ui text-[11px] text-grove-cream">{label}</p>
+              <p className="font-ui text-[12px] text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
@@ -184,7 +184,7 @@ export default function ProfilePage() {
               data-testid="profile-bouquets-link"
               className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
             >
-              <Flower2 className="h-4 w-4 text-grove-bloom" />
+              <Flower2 className="h-4 w-4 text-grove-blush" />
               Bouquets
             </button>
             <button
@@ -200,7 +200,7 @@ export default function ProfilePage() {
               data-testid="profile-wishlist-link"
               className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
             >
-              <Scissors className="h-4 w-4 text-grove-bloom" />
+              <Scissors className="h-4 w-4 text-grove-blush" />
               Wishlist
             </button>
             <button
@@ -367,7 +367,7 @@ export default function ProfilePage() {
         {/* Admin Panel (conditional) */}
         {user?.is_admin && (
           <div className="rounded-[14px] border-[0.5px] border-grove-bloom bg-grove-bloom/15 p-4">
-            <h3 className="font-plant text-grove-bloom text-sm mb-3">Admin</h3>
+            <h3 className="font-plant text-grove-blush text-sm mb-3">Admin</h3>
             <button
               onClick={() => navigate('/admin/demo')}
               data-testid="profile-admin-button"
@@ -584,7 +584,7 @@ function HardinessZoneControls() {
               <>
                 {system === 'USDA' ? `USDA Zone ${zone}` : `RHS ${zone}`}
                 {' '}
-                <span className="font-latin italic text-[11px] text-grove-sage">
+                <span className="font-latin italic text-[12px] text-grove-sage">
                   {user.location_postcode ? `\u00b7 ${user.location_postcode}` : ''}
                 </span>
               </>
@@ -627,7 +627,7 @@ function HardinessZoneControls() {
       {editing && (
         <div className="space-y-2" data-testid="zone-edit-form">
           <div className="flex gap-2">
-            <select
+            <select aria-label="Country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               data-testid="zone-country-select"
@@ -636,7 +636,7 @@ function HardinessZoneControls() {
               <option value="US">United States</option>
               <option value="UK">United Kingdom</option>
             </select>
-            <input
+            <input aria-label="Postcode"
               value={postcode}
               onChange={(e) => setPostcode(e.target.value)}
               onBlur={previewZone}
@@ -687,7 +687,7 @@ function HardinessZoneControls() {
           <p className="font-ui text-xs text-grove-sage leading-snug">
             If your microclimate doesn&apos;t match the auto-derived zone (mountain valley, urban heat island, sheltered coast), you can set it manually here.
           </p>
-          <input
+          <input aria-label="Hardiness zone"
             value={manualZone}
             onChange={(e) => setManualZone(e.target.value)}
             placeholder="e.g. 7b or H4"
@@ -771,7 +771,7 @@ function VerificationStatusCard() {
                 <p className="font-plant text-sm text-grove-cream" data-testid="verification-state-verified">
                   You're verified
                 </p>
-                <p className="font-ui text-[11px] text-grove-sage mt-0.5">
+                <p className="font-ui text-[12px] text-grove-sage mt-0.5">
                   {v.verified_at
                     ? `Pact signed ${new Date(v.verified_at).toLocaleDateString()}.`
                     : v.pact_signed_at
@@ -785,7 +785,7 @@ function VerificationStatusCard() {
                 <p className="font-plant text-sm text-grove-sun" data-testid="verification-state-needs-reverify">
                   Re-verification needed
                 </p>
-                <p className="font-ui text-[11px] text-grove-sage mt-0.5">
+                <p className="font-ui text-[12px] text-grove-sage mt-0.5">
                   The community pact has been updated. Re-sign before your next swap.
                 </p>
               </>
@@ -794,7 +794,7 @@ function VerificationStatusCard() {
                 <p className="font-plant text-sm text-grove-cream" data-testid="verification-state-unverified">
                   Not yet verified
                 </p>
-                <p className="font-ui text-[11px] text-grove-sage mt-0.5">
+                <p className="font-ui text-[12px] text-grove-sage mt-0.5">
                   Sign the 8-section community pact to unlock swaps once you've been on FloraGrove for 3 months and have an active Pro subscription.
                 </p>
               </>
@@ -851,7 +851,7 @@ function PactReaderModal({ onClose }) {
         <div className="flex items-start justify-between p-5 border-b-[0.5px] border-grove-moss">
           <div className="flex-1 min-w-0">
             <h3 className="font-plant text-grove-cream text-lg">{PACT_INTRO.heading}</h3>
-            <p className="font-latin italic text-[11px] text-grove-lichen mt-1">
+            <p className="font-latin italic text-[12px] text-grove-lichen mt-1">
               Pact v{PACT_VERSION} — read-only view
             </p>
           </div>
@@ -943,7 +943,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
             <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
               <BadgeIcon name={badge?.icon} className="h-5 w-5 text-grove-sprout" />
             </span>
-            <p className="font-plant text-[11px] text-grove-cream leading-tight">
+            <p className="font-plant text-[12px] text-grove-cream leading-tight">
               {badge?.name}
             </p>
           </div>
@@ -972,7 +972,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
         className="w-full rounded-[10px] border-[0.5px] border-dashed border-grove-fernLine bg-grove-moss p-4 text-center hover:bg-grove-canopy transition-colors duration-150"
       >
         <p className="font-plant text-grove-cream text-sm">Pick up to 3 to display</p>
-        <p className="font-latin italic text-[11px] text-grove-sage mt-0.5">
+        <p className="font-latin italic text-[12px] text-grove-sage mt-0.5">
           You've earned {catalog.earned_count} of {catalog.total} badges. Choose your favourites.
         </p>
       </button>
@@ -990,11 +990,11 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
           <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
             <BadgeIcon name={it.icon} className="h-5 w-5 text-grove-sprout" />
           </span>
-          <p className="font-plant text-[11px] text-grove-cream leading-tight">
+          <p className="font-plant text-[12px] text-grove-cream leading-tight">
             {it.name}
           </p>
           {it.tier && (
-            <span className="font-plant text-[8px] text-grove-sage mt-0.5">
+            <span className="font-plant text-[12px] text-grove-sage mt-0.5">
               {it.tier}
             </span>
           )}

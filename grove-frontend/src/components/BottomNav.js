@@ -25,7 +25,7 @@ export default function BottomNav() {
                 onClick={() => navigate(path)}
                 data-testid={testid}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex flex-col items-center justify-center gap-1 py-3 px-4 text-[11px] font-ui min-w-[64px] min-h-[56px] transition-colors duration-150 ${
+                className={`flex flex-col items-center justify-center gap-1 py-3 px-4 text-[12px] font-ui min-w-[64px] min-h-[56px] transition-colors duration-150 ${
                   isActive ? 'text-grove-cream' : 'text-grove-cream opacity-60'
                 }`}
               >

@@ -190,7 +190,7 @@ export default function SwapChatPage() {
                   isOwn ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout'
                 }`}
               >
-                <span className="font-plant text-[11px]">
+                <span className="font-plant text-[12px]">
                   {isOwn
                     ? (user?.display_name?.[0] || 'Y').toUpperCase()
                     : (otherUser?.display_name?.[0] || 'G').toUpperCase()}
@@ -208,7 +208,7 @@ export default function SwapChatPage() {
                     {msg.body}
                   </p>
                 </div>
-                <span className="font-latin italic text-[11px] text-grove-lichen mt-0.5 mx-1">
+                <span className="font-latin italic text-[12px] text-grove-lichen mt-0.5 mx-1">
                   {formatTime(msg.created_at)}
                 </span>
               </div>
@@ -262,7 +262,7 @@ export default function SwapChatPage() {
 
           {/* Composer */}
           <div className="flex items-end gap-2 p-3">
-            <textarea
+            <textarea aria-label="Message about the swap"
               value={body}
               onChange={(e) => setBody(e.target.value)}
               onKeyDown={(e) => {

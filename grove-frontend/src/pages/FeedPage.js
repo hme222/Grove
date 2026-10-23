@@ -206,7 +206,7 @@ export default function FeedPage() {
             <button
               onClick={() => navigate('/groves')}
               data-testid="feed-open-groves-button"
-              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
+              className="min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center gap-1.5"
             >
               <Users className="h-3.5 w-3.5" />
               Groves
@@ -214,7 +214,7 @@ export default function FeedPage() {
             <button
               onClick={() => setShowCompose(!showCompose)}
               data-testid="feed-compose-button"
-              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
+              className="min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
             >
               Post Update
             </button>
@@ -226,7 +226,7 @@ export default function FeedPage() {
         {/* Compose */}
         {showCompose && (
           <div className="rounded-[14px] border-[0.5px] border-grove-lime bg-grove-moss p-4" data-testid="feed-compose-form">
-            <textarea
+            <textarea aria-label="Share a plant update"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Share a plant update..."
@@ -234,7 +234,7 @@ export default function FeedPage() {
               className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] p-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
             />
             <div className="flex items-center justify-between mt-3">
-              <select
+              <select aria-label="Tag a plant (optional)"
                 value={selectedPlantId}
                 onChange={(e) => setSelectedPlantId(e.target.value)}
                 className="bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-xs font-ui text-grove-cream"
@@ -304,7 +304,7 @@ export default function FeedPage() {
                       <span className="truncate">{post.display_name || post.username}</span>
                       <VerifiedProBadge user={post} size={14} />
                     </p>
-                    <p className="font-latin text-[11px] text-grove-cream">{formatTime(post.created_at)} ago</p>
+                    <p className="font-latin text-[12px] text-grove-cream">{formatTime(post.created_at)} ago</p>
                   </div>
                   {post.plant_name && (
                     <div className="flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5">
@@ -337,7 +337,7 @@ export default function FeedPage() {
                           onClick={() => handleReaction(post, type)}
                           data-testid={`feed-reaction-${type}`}
                           aria-pressed={active}
-                          className={`flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-[20px] border-[0.5px] transition-colors duration-150 ${
+                          className={`min-h-[44px] flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-[20px] border-[0.5px] transition-colors duration-150 ${
                             active
                               ? 'border-transparent text-grove-cream'
                               : 'border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine'
@@ -353,7 +353,7 @@ export default function FeedPage() {
                     <button
                       onClick={() => toggleComments(post.id)}
                       data-testid="feed-comments-button"
-                      className="flex items-center gap-1.5 text-xs font-ui text-grove-cream hover:text-grove-sprout transition-colors duration-150 ml-auto"
+                      className="min-h-[44px] flex items-center gap-1.5 text-xs font-ui text-grove-cream hover:text-grove-sprout transition-colors duration-150 ml-auto px-2"
                     >
                       <MessageCircle className="h-4 w-4" />
                       {post.comment_count || 0}
@@ -368,7 +368,7 @@ export default function FeedPage() {
                         <p className="font-plant text-xs text-grove-cream">
                           Conversation · {post.comment_count || 0}
                         </p>
-                        <p className="font-latin text-[11px] text-grove-cream truncate max-w-[60%]">
+                        <p className="font-latin text-[12px] text-grove-cream truncate max-w-[60%]">
                           on {post.display_name || post.username}'s post
                         </p>
                       </div>
@@ -377,7 +377,7 @@ export default function FeedPage() {
                         {(commentsData[post.id] || []).map(c => (
                           <div key={c.id} className="flex items-start gap-2">
                             <div className="w-6 h-6 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
-                              <span className="text-[11px] font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
+                              <span className="text-[12px] font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs"><span className="font-medium text-grove-cream">{c.username}</span> <span className="text-grove-cream">{c.body}</span></p>
@@ -395,7 +395,7 @@ export default function FeedPage() {
                           </div>
                         ))}
                         <div className="flex gap-2 mt-2">
-                          <input
+                          <input aria-label="Write a comment"
                             type="text"
                             value={commentTexts[post.id] || ''}
                             onChange={(e) => setCommentTexts(prev => ({ ...prev, [post.id]: e.target.value }))}

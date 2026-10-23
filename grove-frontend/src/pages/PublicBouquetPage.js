@@ -38,7 +38,7 @@ export default function PublicBouquetPage() {
     return (
       <div className="min-h-screen bg-grove-bloom/15 flex items-center justify-center">
         <div className="text-center">
-          <Flower2 className="h-12 w-12 text-grove-bloom opacity-30 mx-auto mb-3" />
+          <Flower2 className="h-12 w-12 text-grove-blush opacity-30 mx-auto mb-3" />
           <p className="font-plant text-grove-cream text-xl">{error || 'Not found'}</p>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function PublicBouquetPage() {
           <FloraGroveWordmark size={16} />
         </div>
         {bouquet.studio_name && (
-          <span className="font-ui text-xs text-grove-bloom">{bouquet.studio_name}</span>
+          <span className="font-ui text-xs text-grove-blush">{bouquet.studio_name}</span>
         )}
       </div>
 
@@ -67,7 +67,7 @@ export default function PublicBouquetPage() {
           )}
           <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name}</h1>
           {bouquet.occasion && (
-            <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-3 py-1 text-xs font-ui text-grove-bloom capitalize mt-2">{bouquet.occasion}</span>
+            <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-3 py-1 text-xs font-ui text-grove-blush capitalize mt-2">{bouquet.occasion}</span>
           )}
           {bouquet.personal_note && (
             <p className="font-ui text-sm text-grove-cream mt-3 italic">"{bouquet.personal_note}"</p>
@@ -84,9 +84,9 @@ export default function PublicBouquetPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-plant text-grove-cream text-sm">{f.common_name}</p>
-                      <p className="font-latin text-xs text-grove-bloom">{f.latin_name}</p>
+                      <p className="font-latin text-xs text-grove-blush">{f.latin_name}</p>
                     </div>
-                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-[11px] font-ui text-grove-bloom">
+                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-[12px] font-ui text-grove-blush">
                       {f.vase_life_days}d life
                     </span>
                   </div>
@@ -105,20 +105,20 @@ export default function PublicBouquetPage() {
             <h2 className="font-plant text-grove-cream text-base mb-3">Care Instructions</h2>
             {bouquet.care_plan.immediate_steps?.length > 0 && (
               <div className="rounded-[14px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy p-4 mb-2">
-                <h3 className="font-plant text-grove-bloom text-xs mb-2">Immediate</h3>
+                <h3 className="font-plant text-grove-blush text-xs mb-2">Immediate</h3>
                 <ul className="space-y-1">
                   {bouquet.care_plan.immediate_steps.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-grove-bloom">•</span>{s}</li>
+                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-grove-blush">•</span>{s}</li>
                   ))}
                 </ul>
               </div>
             )}
             {bouquet.care_plan.daily_steps?.length > 0 && (
               <div className="rounded-[14px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy p-4">
-                <h3 className="font-plant text-grove-bloom text-xs mb-2">Daily</h3>
+                <h3 className="font-plant text-grove-blush text-xs mb-2">Daily</h3>
                 <ul className="space-y-1">
                   {bouquet.care_plan.daily_steps.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-grove-bloom">•</span>{s}</li>
+                    <li key={i} className="flex items-start gap-2 text-xs font-ui"><span className="text-grove-blush">•</span>{s}</li>
                   ))}
                 </ul>
               </div>

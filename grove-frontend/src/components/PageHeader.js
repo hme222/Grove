@@ -26,7 +26,7 @@ export function PageHeader({ title, count, rightContent, children, hideBell, hid
                 onClick={() => navigate('/profile')}
                 aria-label="Open profile"
                 data-testid="header-profile-button"
-                className="w-9 h-9 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center"
+                className="w-11 h-11 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center"
               >
                 <User className="h-4 w-4" />
               </button>

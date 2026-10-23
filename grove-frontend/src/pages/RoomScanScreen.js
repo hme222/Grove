@@ -253,7 +253,7 @@ export default function RoomScanScreen() {
     return (
       <div className="max-w-[520px] mx-auto px-4 py-8 text-center" data-testid="room-scan-success">
         <div className="relative inline-block mb-4">
-          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-sprout flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-root flex items-center justify-center mx-auto">
             <Sparkles className="h-7 w-7" />
           </div>
         </div>
@@ -324,7 +324,7 @@ export default function RoomScanScreen() {
                 aria-label={isSelected ? 'Deselect' : 'Select'}
                 data-testid="room-scan-card-toggle"
                 className={`absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center ${
-                  isSelected ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-lichen'
+                  isSelected ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sage'
                 }`}
               >
                 {isSelected ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -344,7 +344,7 @@ export default function RoomScanScreen() {
                     <span className={lowConf ? 'text-grove-sun' : ''}>{Math.round((p.confidence || 0) * 100)}% confident</span>
                   </p>
                   {lowConf && p.notes && (
-                    <p className="italic font-plant text-[11px] text-grove-sage mt-1 line-clamp-2">"{p.notes}"</p>
+                    <p className="italic font-plant text-[12px] text-grove-sage mt-1 line-clamp-2">"{p.notes}"</p>
                   )}
                   <div className="flex items-center gap-2 mt-1.5">
                     <div className="flex-1 h-1.5 bg-grove-moss rounded-full overflow-hidden">
@@ -359,7 +359,7 @@ export default function RoomScanScreen() {
                     <div className="mt-2 space-y-2 pt-2 border-t-[0.5px] border-grove-moss">
                       <div>
                         <label className="font-ui text-xs text-grove-lichen block mb-1">Nickname</label>
-                        <input
+                        <input aria-label="Nickname"
                           value={e.nickname || ''}
                           onChange={(ev) => setEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], nickname: ev.target.value } }))}
                           className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[6px] px-2 py-1.5 text-xs font-ui"
@@ -373,7 +373,7 @@ export default function RoomScanScreen() {
                               key={d}
                               type="button"
                               onClick={() => setEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], watering_frequency_days: d } }))}
-                              className={`rounded-[16px] border-[0.5px] px-2 py-1 text-[11px] font-ui ${e.watering_frequency_days === d ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
+                              className={`rounded-[16px] border-[0.5px] px-2 py-1 text-[12px] font-ui ${e.watering_frequency_days === d ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
                             >{d}d</button>
                           ))}
                         </div>

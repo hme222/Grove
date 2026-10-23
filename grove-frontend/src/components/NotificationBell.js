@@ -141,7 +141,7 @@ export default function NotificationBell() {
         onClick={() => setOpen(o => !o)}
         data-testid="notification-bell"
         aria-label={`Notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
-        className="relative w-9 h-9 rounded-full border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
+        className="relative w-11 h-11 rounded-full border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
       >
         <Bell className="h-4 w-4" />
         {unread > 0 && (
@@ -163,7 +163,7 @@ export default function NotificationBell() {
             <div className="flex items-center gap-2">
               <h3 className="font-plant text-grove-cream text-sm">Notifications</h3>
               {unread > 0 && (
-                <span className="font-latin text-xs text-grove-bloom">{unread} new</span>
+                <span className="font-latin text-xs text-grove-blush">{unread} new</span>
               )}
             </div>
             <div className="flex items-center gap-2">
@@ -231,7 +231,7 @@ export default function NotificationBell() {
                       role="button"
                       aria-label="Delete"
                       data-testid="notification-delete"
-                      className="text-grove-sage hover:text-grove-bloom flex-shrink-0 p-1 cursor-pointer"
+                      className="text-grove-sage hover:text-grove-blush flex-shrink-0 p-1 cursor-pointer"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </span>

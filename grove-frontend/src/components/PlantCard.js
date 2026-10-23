@@ -28,7 +28,8 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
         <div className="w-full h-full bg-grove-moss flex items-center justify-center">
           <img
             src={photoUrl}
-            alt={plant.common_name}
+            // The card already prints the name. Only describe the photo when the printed name is a nickname.
+            alt={plant.nickname && plant.nickname !== plant.common_name ? plant.common_name : ''}
             className="w-full h-full object-cover"
             onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.nextSibling.style.display = 'flex'; }}
           />
@@ -58,7 +59,7 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
           {plant.nickname || plant.common_name}
         </p>
         {plant.latin_name && (
-          <p className="font-latin text-grove-sage text-[11px] truncate">
+          <p className="font-latin text-grove-sage text-[12px] truncate">
             {plant.latin_name}
           </p>
         )}

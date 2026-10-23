@@ -149,7 +149,7 @@ export default function CollectionPage() {
             <button
               onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
               data-testid="collection-select-button"
-              className={`rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] transition-colors duration-150 ${
+              className={`min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] transition-colors duration-150 ${
                 selectionMode
                   ? 'border-grove-fernLine bg-grove-lime text-grove-root'
                   : 'border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine'
@@ -161,7 +161,7 @@ export default function CollectionPage() {
             <button
               onClick={() => setShowTypePicker(true)}
               data-testid="collection-add-button"
-              className="rounded-full w-9 h-9 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
+              className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
               aria-label="Add to collection"
             >
               <Plus className="h-4 w-4" />
@@ -190,13 +190,13 @@ export default function CollectionPage() {
                   aria-pressed={active}
                   onClick={() => setView(value)}
                   data-testid={`collection-view-${value}`}
-                  className={`inline-flex items-center gap-1.5 rounded-[8px] px-3 py-1.5 font-ui text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-1 motion-safe:transition-colors motion-safe:duration-150 ${
+                  className={`min-h-[44px] inline-flex items-center gap-1.5 rounded-[8px] px-3 py-1.5 font-ui text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-1 motion-safe:transition-colors motion-safe:duration-150 ${
                     active ? 'bg-grove-lime text-grove-root' : 'text-grove-cream hover:bg-grove-forest'
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   {label}
-                  <span className={active ? 'text-grove-sprout' : 'text-grove-sage'}>{count}</span>
+                  <span className={active ? 'text-grove-root' : 'text-grove-sage'}>{count}</span>
                 </button>
               );
             })}
@@ -268,7 +268,7 @@ export default function CollectionPage() {
       {/* Select-all helper row — appears in selection mode before any selection */}
       {selectionMode && filteredPlants.length > 0 && (
         <div className="max-w-[1100px] mx-auto px-4 -mt-2 mb-1 flex items-center justify-between" data-testid="bulk-helper-row">
-          <span className="text-[11px] font-ui text-grove-cream opacity-70">
+          <span className="text-[12px] font-ui text-grove-cream opacity-70">
             {selectedCount === 0
               ? 'Tap plants to select them.'
               : `${selectedCount} of ${filteredPlants.length} selected`}
@@ -278,7 +278,7 @@ export default function CollectionPage() {
               type="button"
               onClick={selectAllPlants}
               data-testid="bulk-select-all"
-              className="text-[11px] font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
+              className="text-[12px] font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
             >
               Select all ({filteredPlants.length})
             </button>
@@ -287,7 +287,7 @@ export default function CollectionPage() {
                 type="button"
                 onClick={() => setSelected(new Set())}
                 data-testid="bulk-clear-selection"
-                className="text-[11px] font-ui text-grove-sage underline underline-offset-2 hover:text-grove-cream"
+                className="text-[12px] font-ui text-grove-sage underline underline-offset-2 hover:text-grove-cream"
               >
                 Clear
               </button>
@@ -306,7 +306,7 @@ export default function CollectionPage() {
                 data-testid="bulk-warning-banner"
               >
                 <AlertTriangle className="h-3.5 w-3.5 text-grove-sun flex-shrink-0 mt-0.5" />
-                <span className="text-[11px] font-ui text-grove-cream/90 leading-snug">
+                <span className="text-[12px] font-ui text-grove-cream/90 leading-snug">
                   {selectedCount} plants selected — large sweeps can feel rushed. Double-check you&apos;ve actually cared for each one.
                 </span>
               </div>
@@ -333,7 +333,7 @@ export default function CollectionPage() {
                         style={{ color: isOn ? '#C3D98A' : color }}
                         strokeWidth={isOn ? 2.2 : 1.75}
                       />
-                      <span className={`text-[11px] font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/70'}`}>
+                      <span className={`text-[12px] font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/70'}`}>
                         {label}
                       </span>
                     </button>
@@ -352,7 +352,7 @@ export default function CollectionPage() {
                   )}
                 </p>
                 {bulkActions.size === 0 && (
-                  <p className="text-grove-cream/60 text-[11px] font-ui mt-0.5">Pick the actions you did.</p>
+                  <p className="text-grove-cream/60 text-[12px] font-ui mt-0.5">Pick the actions you did.</p>
                 )}
               </div>
               {!bulkActionsOpen ? (
@@ -410,7 +410,7 @@ export default function CollectionPage() {
               className="w-full text-left rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-3.5 hover:border-grove-fernLine hover:bg-grove-forest flex items-center gap-3"
             >
               <div className="w-10 h-10 rounded-[10px] bg-grove-bloom/15 flex items-center justify-center flex-shrink-0">
-                <Flower2 className="h-5 w-5 text-grove-bloom" />
+                <Flower2 className="h-5 w-5 text-grove-blush" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-plant text-grove-cream text-sm">A bouquet</p>
@@ -446,11 +446,11 @@ function BouquetTile({ bouquet, onClick }) {
         className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-grove-canopy border-[0.5px] border-grove-moss flex items-center justify-center"
         title="Bouquet"
       >
-        <Flower2 className="h-3 w-3 text-grove-bloom" />
+        <Flower2 className="h-3 w-3 text-grove-blush" />
       </span>
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(28,46,16,0.85)] to-transparent p-1.5">
-        <p className="font-plant text-[11px] leading-tight text-grove-cream truncate">{bouquet.name || 'Bouquet'}</p>
-        <p className="font-latin text-[11px] text-grove-sprout">{vaseLabel}</p>
+        <p className="font-plant text-[12px] leading-tight text-grove-cream truncate">{bouquet.name || 'Bouquet'}</p>
+        <p className="font-latin text-[12px] text-grove-sprout">{vaseLabel}</p>
       </div>
     </button>
   );

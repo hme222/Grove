@@ -53,7 +53,7 @@ export default function VerifiedProBadge({
         <TooltipContent
           side="top"
           align="center"
-          className="bg-grove-lime text-grove-root text-[11px] font-ui px-2 py-1 rounded-[4px] border-0"
+          className="bg-grove-lime text-grove-root text-[12px] font-ui px-2 py-1 rounded-[4px] border-0"
         >
           Verified Pro — manually verified by FloraGrove
         </TooltipContent>

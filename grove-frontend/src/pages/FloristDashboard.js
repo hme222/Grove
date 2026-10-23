@@ -115,9 +115,9 @@ export default function FloristDashboard() {
         rightContent={
           <Dialog open={showCreate} onOpenChange={setShowCreate}>
             <DialogTrigger asChild>
-              <button
+              <button aria-label="Add to portfolio"
                 data-testid="florist-add-button"
-                className="rounded-full w-9 h-9 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
+                className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -164,7 +164,7 @@ export default function FloristDashboard() {
                         onClick={() => setFormData({ ...formData, photo_url: '' })}
                         className="absolute top-2 right-2 p-2 bg-grove-canopy rounded-full border-[0.5px] border-grove-moss"
                       >
-                        <Trash2 className="h-4 w-4 text-grove-bloom" />
+                        <Trash2 className="h-4 w-4 text-grove-blush" />
                       </button>
                     </div>
                   ) : (
@@ -244,7 +244,7 @@ export default function FloristDashboard() {
                   )}
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="mt-2 text-xs text-grove-bloom hover:underline"
+                    className="mt-2 text-xs text-grove-blush hover:underline"
                     data-testid="portfolio-delete-button"
                   >
                     Delete

@@ -78,7 +78,7 @@ export default function WorkingTowardSection() {
                     {g.name}
                   </p>
                   <p
-                    className="font-mono text-[11px] text-grove-sage flex-shrink-0"
+                    className="font-mono text-[12px] text-grove-sage flex-shrink-0"
                     data-testid={`goal-${g.slug}-progress`}
                   >
                     {p.current} / {p.target}{' '}

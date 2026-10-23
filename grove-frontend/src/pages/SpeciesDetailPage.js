@@ -36,9 +36,9 @@ function buildBadges(species) {
 const BADGE_TONES = {
   native: 'border-grove-fernLine bg-grove-moss text-grove-cream',
   pollinator: 'border-grove-moss bg-grove-sun/15 text-grove-sun',
-  invasive: 'border-grove-moss bg-grove-bloom/15 text-grove-bloom',
+  invasive: 'border-grove-moss bg-grove-bloom/15 text-grove-blush',
   cultivar: 'border-grove-moss bg-grove-moss text-grove-sprout',
-  cut: 'border-grove-bloom bg-grove-bloom/15 text-grove-bloom',
+  cut: 'border-grove-bloom bg-grove-bloom/15 text-grove-blush',
   medicinal: 'border-grove-lime bg-grove-lime/15 text-grove-sprout',
   collector: 'border-grove-moss bg-grove-moss text-grove-cream',
 };
@@ -176,7 +176,7 @@ export default function SpeciesDetailPage() {
                 className="w-full max-h-72 object-contain bg-grove-canopy"
                 loading="lazy"
               />
-              <p className="px-3 py-1.5 font-latin italic text-[11px] text-grove-lichen bg-grove-canopy">
+              <p className="px-3 py-1.5 font-latin italic text-[12px] text-grove-lichen bg-grove-canopy">
                 {species.botanical_illustration_title || 'Botanical illustration'} — {species.botanical_illustration_license || 'Public Domain'}
               </p>
             </div>
@@ -226,7 +226,7 @@ export default function SpeciesDetailPage() {
                   <span
                     key={b.key}
                     data-testid={`species-badge-${b.key}`}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[20px] border-[0.5px] text-[11px] font-ui ${BADGE_TONES[b.tone]}`}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[20px] border-[0.5px] text-[12px] font-ui ${BADGE_TONES[b.tone]}`}
                   >
                     <Icon className="h-3 w-3" />
                     {b.label}
@@ -307,7 +307,7 @@ export default function SpeciesDetailPage() {
                 />
               </div>
             </div>
-            <p className="font-latin italic text-[11px] text-grove-lichen mt-2">
+            <p className="font-latin italic text-[12px] text-grove-lichen mt-2">
               Photo from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="underline">Wikimedia Commons</a> — CC / Public Domain
             </p>
           </div>
@@ -330,7 +330,7 @@ export default function SpeciesDetailPage() {
                   >
                     <div className="flex items-baseline justify-between gap-2 mb-1">
                       <span className="font-plant text-sm text-grove-cream">{c.common_name}</span>
-                      <span className="font-latin italic text-[11px] text-grove-cream">{c.latin_name}</span>
+                      <span className="font-latin italic text-[12px] text-grove-cream">{c.latin_name}</span>
                     </div>
                     <p className="font-ui text-xs text-grove-cream leading-snug">{c.reasoning}</p>
                   </button>
@@ -372,14 +372,14 @@ export default function SpeciesDetailPage() {
                     loading="lazy"
                   />
                   {ill.source_title && (
-                    <p className="px-1.5 py-1 font-latin italic text-[8px] text-grove-lichen truncate">
+                    <p className="px-1.5 py-1 font-latin italic text-[12px] text-grove-lichen truncate">
                       {ill.source_title}{ill.publication_date ? `, ${ill.publication_date}` : ''}
                     </p>
                   )}
                 </a>
               ))}
             </div>
-            <p className="font-latin italic text-[11px] text-grove-lichen mt-2">
+            <p className="font-latin italic text-[12px] text-grove-lichen mt-2">
               From the <a href="https://www.biodiversitylibrary.org" target="_blank" rel="noopener noreferrer" className="underline">Biodiversity Heritage Library</a> — public domain botanical archives.
             </p>
           </div>
@@ -541,7 +541,7 @@ function PerfStat({ label, value, sub, testid }) {
       className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-2.5"
       data-testid={testid}
     >
-      <p className="font-ui text-[11px] text-grove-sage">{label}</p>
+      <p className="font-ui text-[12px] text-grove-sage">{label}</p>
       <p className="font-plant text-sm text-grove-cream mt-0.5 leading-tight">{value}</p>
       {sub && <p className="font-latin text-xs text-grove-lichen mt-0.5">{sub}</p>}
     </div>

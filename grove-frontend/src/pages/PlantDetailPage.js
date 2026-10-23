@@ -232,7 +232,7 @@ export default function PlantDetailPage() {
                   {plant.ai_identified && !plant.ai_species_confirmed && (
                     <span
                       data-testid="plant-ai-identified-badge"
-                      className="ml-2 font-mono text-[11px] tracking-[0.05em] text-grove-lichen uppercase"
+                      className="ml-2 font-mono text-[12px] tracking-[0.05em] text-grove-lichen uppercase"
                     >
                       AI identified
                     </span>
@@ -271,10 +271,10 @@ export default function PlantDetailPage() {
                 <Droplets className="h-3.5 w-3.5" />
                 Log Care
               </button>
-              <button
+              <button aria-label="Delete plant"
                 onClick={handleDelete}
                 data-testid="plant-delete-button"
-                className="w-8 h-8 rounded-[12px] border-[0.5px] border-grove-moss flex items-center justify-center text-grove-bloom hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
+                className="w-11 h-11 rounded-[12px] border-[0.5px] border-grove-moss flex items-center justify-center text-grove-blush hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -324,7 +324,7 @@ export default function PlantDetailPage() {
                   />
                   <p
                     data-testid="watering-schedule-label"
-                    className="font-plant italic text-[11px] text-grove-sage mt-1 leading-snug"
+                    className="font-plant italic text-[12px] text-grove-sage mt-1 leading-snug"
                   >
                     {plant.watering_frequency_source === 'ai' ? 'AI-suggested' : 'Your schedule'}
                   </p>

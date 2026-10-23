@@ -63,6 +63,11 @@
   button, a, [role="button"] {
     touch-action: manipulation; /* removes the double-tap-to-zoom delay without blocking pinch zoom */
   }
+  /* Form controls need a 3:1 outline to be identifiable (WCAG 1.4.11); the decorative moss border is about 1.5:1. */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="color"]),
+  select, textarea {
+    border-color: #869A68 !important;
+  }
   /* iOS Safari zooms the page when a field under 16px is focused. */
   @media (max-width: 768px) {
     input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea {

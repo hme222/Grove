@@ -84,13 +84,13 @@ export default function BouquetsPage() {
           >
             <div className="flex items-center gap-2.5">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${atLimit ? 'bg-grove-bloom/15' : 'bg-grove-forest'}`}>
-                <Flower2 className={`h-4 w-4 ${atLimit ? 'text-grove-bloom' : 'text-grove-sprout'}`} />
+                <Flower2 className={`h-4 w-4 ${atLimit ? 'text-grove-blush' : 'text-grove-sprout'}`} />
               </div>
               <div>
                 <p className="font-plant text-grove-cream text-sm">
                   {limits.active_count}/{limits.max_active} active bouquets
                 </p>
-                <p className="font-ui text-[11px] text-grove-cream leading-snug">
+                <p className="font-ui text-[12px] text-grove-cream leading-snug">
                   {atLimit
                     ? 'Free tier is full. Archive one to add another, or upgrade for unlimited arrangements.'
                     : 'Bouquet tracking is free — keep up to 2 active at a time.'}
@@ -101,7 +101,7 @@ export default function BouquetsPage() {
               data-testid="bouquet-limit-counter"
               className={`font-plant text-xs px-2 py-1 rounded-[4px] border-[0.5px] ${
                 atLimit
-                  ? 'border-grove-bloom/40 text-grove-bloom bg-grove-canopy'
+                  ? 'border-grove-bloom/40 text-grove-blush bg-grove-root'
                   : 'border-grove-moss text-grove-sprout bg-grove-forest'
               }`}
             >
@@ -129,22 +129,22 @@ export default function BouquetsPage() {
                   {b.photo_url ? (
                     <div className="w-full h-full bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="w-full h-full object-cover" /></div>
                   ) : (
-                    <Flower2 className="h-10 w-10 text-grove-bloom opacity-30" />
+                    <Flower2 className="h-10 w-10 text-grove-blush opacity-30" />
                   )}
                 </div>
                 <div className="px-3 py-2.5">
                   <p className="font-plant text-grove-cream text-sm truncate">{b.name || 'Bouquet'}</p>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <Calendar className="h-3 w-3 text-grove-bloom" />
-                    <span className="font-latin text-xs text-grove-bloom">{formatDate(b.received_date)}</span>
+                    <Calendar className="h-3 w-3 text-grove-blush" />
+                    <span className="font-latin text-xs text-grove-blush">{formatDate(b.received_date)}</span>
                     {b.vase_life_expected && (
-                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-canopy px-1.5 py-0.5 text-[11px] font-ui text-grove-bloom">
+                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-1.5 py-0.5 text-[12px] font-ui text-grove-blush">
                         {b.vase_life_expected}d life
                       </span>
                     )}
                   </div>
                   {b.occasion && (
-                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-canopy px-2 py-0.5 text-[11px] font-ui text-grove-bloom mt-1.5 capitalize">
+                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-root px-2 py-0.5 text-[12px] font-ui text-grove-blush mt-1.5 capitalize">
                       {b.occasion}
                     </span>
                   )}

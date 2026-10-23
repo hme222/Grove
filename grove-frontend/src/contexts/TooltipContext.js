@@ -74,7 +74,7 @@ function Tooltip({ tooltip, targetRect, onDismiss }) {
           <h4 className="font-plant text-[13px] leading-tight text-[#EAF3DE] font-medium">
             {tooltip.title}
           </h4>
-          <p className="font-ui text-[11px] leading-[1.5] text-[#9FE1CB]">{tooltip.body}</p>
+          <p className="font-ui text-[12px] leading-[1.5] text-[#9FE1CB]">{tooltip.body}</p>
         </div>
         <button
           onClick={onDismiss}

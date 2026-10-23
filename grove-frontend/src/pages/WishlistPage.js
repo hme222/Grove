@@ -45,7 +45,7 @@ export default function WishlistPage() {
         ) : items.length === 0 ? (
           <div className="text-center py-12" data-testid="wishlist-empty">
             <div className="w-14 h-14 mx-auto rounded-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 flex items-center justify-center mb-3">
-              <Scissors className="h-6 w-6 text-grove-bloom" />
+              <Scissors className="h-6 w-6 text-grove-blush" />
             </div>
             <p className="font-plant text-grove-cream text-lg mb-1">Your wishlist is quiet</p>
             <p className="font-ui text-sm text-grove-cream">
@@ -67,7 +67,7 @@ export default function WishlistPage() {
                 className="flex items-center gap-3 rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss px-3 py-3"
               >
                 <div className="w-10 h-10 rounded-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 flex items-center justify-center flex-shrink-0">
-                  <Leaf className="h-5 w-5 text-grove-bloom" />
+                  <Leaf className="h-5 w-5 text-grove-blush" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-plant text-grove-cream text-sm truncate">{item.common_name || 'Unknown plant'}</p>
@@ -79,7 +79,7 @@ export default function WishlistPage() {
                   onClick={() => handleRemove(item.id)}
                   aria-label="Remove from wishlist"
                   data-testid="wishlist-remove"
-                  className="w-8 h-8 rounded-full border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-bloom hover:text-grove-bloom flex items-center justify-center"
+                  className="w-8 h-8 rounded-full border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-bloom hover:text-grove-blush flex items-center justify-center"
                 >
                   <X className="h-4 w-4" />
                 </button>

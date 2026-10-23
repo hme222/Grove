@@ -366,7 +366,7 @@ function IdentityStep({
           </div>
           {!phoneSavedOrSkipped && (
             <div className="flex flex-col sm:flex-row gap-2">
-              <input
+              <input aria-label="Phone number"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -446,7 +446,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
         >
           {ackedCount} of 8
         </span>
-        <span className="ml-auto font-latin italic text-[11px] text-grove-lichen">
+        <span className="ml-auto font-latin italic text-[12px] text-grove-lichen">
           Each section needs its own checkbox
         </span>
       </div>

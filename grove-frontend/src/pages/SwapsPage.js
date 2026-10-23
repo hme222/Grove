@@ -161,7 +161,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
           <Icon className="h-3 w-3" />
           {title}
         </p>
-        <p className="font-ui text-[11px] text-grove-sage mt-0.5">{detail}</p>
+        <p className="font-ui text-[12px] text-grove-sage mt-0.5">{detail}</p>
       </span>
       {cta && (
         <button

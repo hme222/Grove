@@ -229,7 +229,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       <div className="mb-3">
         <p className="font-ui text-xs text-grove-lichen">{lowConf ? 'We think this might be…' : 'Identified'}</p>
         <h1 className="font-plant text-grove-cream text-lg leading-tight">{identified?.commonName || 'Plant'}</h1>
-        {identified?.latinName && <p className="font-latin text-[11px] text-[#639922]">{identified.latinName}</p>}
+        {identified?.latinName && <p className="font-latin text-[12px] text-[#639922]">{identified.latinName}</p>}
         <p
           data-testid="identify-confidence"
           className={`font-ui text-xs mt-1 ${lowConf ? 'text-[#8A5A0F]' : 'text-grove-sage'}`}
@@ -254,7 +254,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       <div className="h-px bg-grove-moss my-3" />
 
       <FieldRow label="Species" testId="field-species" editing={editing.species} onEditToggle={() => toggleEdit('species')} display={form.common_name}>
-        <input
+        <input aria-label="Species"
           autoFocus
           value={form.common_name}
           onChange={(e) => setField('common_name', e.target.value)}
@@ -263,7 +263,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       </FieldRow>
 
       <FieldRow label="Nickname" testId="field-nickname" editing={editing.nickname} onEditToggle={() => toggleEdit('nickname')} display={form.nickname || '—'}>
-        <input
+        <input aria-label="Nickname"
           autoFocus
           value={form.nickname}
           onChange={(e) => setField('nickname', e.target.value)}
@@ -310,7 +310,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         {identified?.healthSummary && (
           <p className="italic font-plant text-xs text-grove-sage mt-1.5 leading-snug">"{identified.healthSummary}"</p>
         )}
-        <p className="font-plant italic text-[11px] text-grove-lichen mt-1">
+        <p className="font-plant italic text-[12px] text-grove-lichen mt-1">
           Based on your photo today. This score improves as FloraGrove learns your plant's real patterns over time.
         </p>
       </div>

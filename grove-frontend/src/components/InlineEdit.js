@@ -129,7 +129,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
         >
           <ul className="py-1 max-h-60 overflow-auto">
             {options.length === 0 && !creating && (
-              <li className="px-3 py-2 text-[11px] font-ui text-grove-sage">No rooms yet.</li>
+              <li className="px-3 py-2 text-[12px] font-ui text-grove-sage">No rooms yet.</li>
             )}
             {options.map((r) => (
               <li key={r}>
@@ -150,7 +150,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
             <li className="border-t-[0.5px] border-grove-moss mt-1 pt-1">
               {creating ? (
                 <div className="flex items-center gap-1 px-2 py-1">
-                  <input
+                  <input aria-label="Room name"
                     autoFocus
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
