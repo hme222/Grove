@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import useDialogA11y from '../lib/useDialogA11y';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI } from '../lib/api';
 import { Leaf, Droplets, Users, BookOpen, Sun, X } from 'lucide-react';
@@ -76,12 +77,17 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
     }
   }, [tutorialId, user, refreshUser]);
 
+  const dialogRef = React.useRef(null);
+  useDialogA11y(dialogRef, dismiss, !!(open && copy));
   if (!open || !copy) return null;
   const Icon = copy.icon;
 
   return (
     <div
-      className="fixed inset-0 z-[300] bg-grove-lime/85 flex items-end sm:items-center justify-center p-4 animate-in fade-in duration-200"
+      ref={dialogRef}
+      tabIndex={-1}
+      aria-label="Tip"
+      className="fixed inset-0 z-[300] bg-grove-night/85 flex items-end sm:items-center justify-center p-4 animate-in fade-in duration-200 focus:outline-none"
       data-testid={`section-tutorial-${tutorialId}`}
       role="dialog"
       aria-modal="true"

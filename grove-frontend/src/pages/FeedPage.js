@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import useDialogA11y from '../lib/useDialogA11y';
 import { useNavigate } from 'react-router-dom';
 import { feedAPI, plantAPI, getFileUrl } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -33,18 +34,18 @@ function BotanicalFallback({ tone = 'grove' }) {
 }
 
 function Lightbox({ src, onClose }) {
-  useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [onClose]);
+  const ref = React.useRef(null);
+  useDialogA11y(ref, onClose);
   return (
     <div
       role="dialog"
       aria-modal="true"
+      aria-label="Photo"
       data-testid="feed-lightbox"
+      ref={ref}
+      tabIndex={-1}
       onClick={onClose}
-      className="fixed inset-0 z-[250] bg-grove-lime/90 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[250] bg-grove-night/90 flex items-center justify-center p-4 focus:outline-none"
     >
       <button
         onClick={onClose}
@@ -216,7 +217,7 @@ export default function FeedPage() {
 
       <div className="max-w-[600px] mx-auto px-4 py-4 space-y-4">
         <nav aria-label="Community areas" className="flex flex-wrap gap-2" data-testid="community-shortcuts">
-          {[['Groves', '/groves'], ['Swaps', '/swaps'], ['Offer a swap', '/swap']].map(([label, path]) => (
+          {[['Groves', '/groves'], ['Swaps', '/swaps'], ['Offer a swap', '/swap'], ['Saved cuttings', '/wishlist']].map(([label, path]) => (
             <button key={path} type="button" onClick={() => navigate(path)} data-testid={`community-shortcut-${label.toLowerCase().replace(/ /g, '-')}`}
               className="min-h-[44px] inline-flex items-center rounded-full border-[0.5px] border-grove-moss px-4 font-ui text-xs text-grove-cream hover:border-grove-fernLine transition-colors duration-150">
               {label}

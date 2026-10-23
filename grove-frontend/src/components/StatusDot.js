@@ -27,6 +27,7 @@ export function StatusDot({ status, size = 'sm', showLabel = false, className = 
         className={`${sizeClass} rounded-full ${colorClass} ring-2 ring-grove-lime ${isPulsing ? 'status-pulse' : ''}`}
         data-testid={`status-dot-${status}`}
       />
+      {!showLabel && <span className="sr-only">{statusLabels[status] || status}</span>}
       {showLabel && (
         <span className="text-xs font-ui text-grove-cream">{statusLabels[status] || status}</span>
       )}

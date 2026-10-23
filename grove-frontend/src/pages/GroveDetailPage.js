@@ -101,7 +101,7 @@ export default function GroveDetailPage() {
             </button>
             <div className="flex-1">
               <h1 className="font-plant text-grove-cream text-xl">{grove?.name}</h1>
-              <p className="font-ui text-xs text-grove-cream">{grove?.member_count} members</p>
+              <p className="font-ui text-xs text-grove-cream">{grove?.member_count} {grove?.member_count === 1 ? 'member' : 'members'}</p>
             </div>
             {grove?.is_member && (
               <button

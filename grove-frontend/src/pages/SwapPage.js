@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useDialogA11y from '../lib/useDialogA11y';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
 import { getFileUrl, swapsAPI } from '../lib/api';
 import axios from 'axios';
@@ -20,10 +21,17 @@ function CelebrationOverlay({ onDone }) {
     return () => clearTimeout(id);
   }, [onDone]);
 
+  const dialogRef = React.useRef(null);
+  useDialogA11y(dialogRef, onDone);
   return (
     <div
       data-testid="swap-celebration"
-      className="fixed inset-0 z-[240] bg-grove-lime/85 flex items-center justify-center p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Swap unlocked"
+      ref={dialogRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-[240] bg-grove-night/85 flex items-center justify-center p-6 focus:outline-none"
       onClick={onDone}
     >
       <div className="relative text-center">
@@ -129,31 +137,8 @@ export default function SwapPage() {
   const currentStreak = deck?.current_streak || 0;
 
   if (!unlocked) {
-    return (
-      <div>
-        <PageHeader
-          title="Swap"
-          rightContent={
-            <button
-              onClick={() => navigate('/profile')}
-              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-              Back
-            </button>
-          }
-        />
-        <div className="max-w-[500px] mx-auto px-4 py-8 text-center">
-          <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-[0.5px] border-grove-moss flex items-center justify-center mb-4">
-            <Leaf className="h-7 w-7 text-grove-sprout" />
-          </div>
-          <h2 className="font-plant text-grove-cream text-2xl mb-2">Swap opens at a 30-day streak</h2>
-          <p className="font-ui text-sm text-grove-cream leading-relaxed">
-            You're on day {currentStreak}. Keep tending daily and swapping opens up with {30 - currentStreak} more days of care.
-          </p>
-        </div>
-      </div>
-    );
+    // Swaps follow the eligibility rules on the Swaps page, so explain them there.
+    return <Navigate to="/swaps" replace />;
   }
 
   const cards = deck.cards || [];

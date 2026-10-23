@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import useDialogA11y from '../lib/useDialogA11y';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Lock, Check, X as XIcon, Sparkles, Award, Filter, Target, Pin, PinOff } from 'lucide-react';
@@ -50,6 +51,7 @@ export default function BadgesPage() {
         goalAPI.list().catch(() => ({ data: { items: [] } })),
       ]);
       setData(catalogRes.data);
+      if ((catalogRes.data.items || []).some((it) => it.earned)) setFilter('earned'); // lead with what you've earned
       setPickerSelection(catalogRes.data.displayed || []);
       setPinnedSlugs(new Set((goalsRes.data.items || []).map((g) => g.slug)));
     } catch (e) {
@@ -457,11 +459,18 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
     return Array.from(map.entries());
   }, [earnedDisplayable]);
 
+  const dialogRef = React.useRef(null);
+  useDialogA11y(dialogRef, onCancel);
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[4px]"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[4px] focus:outline-none"
       onClick={onCancel}
       data-testid="badges-picker-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choose badges to display"
+      ref={dialogRef}
+      tabIndex={-1}
     >
       <div
         className="bg-grove-canopy rounded-[14px] border-[0.5px] border-grove-moss shadow-xl w-full max-w-[640px] max-h-[85vh] overflow-hidden flex flex-col"

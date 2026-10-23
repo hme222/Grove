@@ -134,7 +134,7 @@ export default function GrovesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
-                        <p className="font-ui text-xs text-grove-cream">{grove.member_count} members</p>
+                        <p className="font-ui text-xs text-grove-cream">{grove.member_count} {grove.member_count === 1 ? 'member' : 'members'}</p>
                         {grove.description && (
                           <p className="font-ui text-xs text-grove-sage truncate mt-0.5">{grove.description}</p>
                         )}

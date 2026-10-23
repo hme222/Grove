@@ -44,8 +44,8 @@ export default function AddPlantPage() {
     {
       key: 'manual',
       icon: Edit3,
-      title: 'Enter details manually',
-      desc: 'The default way in. You know your plant — just type the basics.',
+      title: 'Search by name',
+      desc: 'Pick your plant from our guide and we fill in the care for you.',
       testId: 'add-option-manual',
       onClick: () => setMode('manual'),
     },
@@ -68,7 +68,7 @@ export default function AddPlantPage() {
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
       <h1 className="font-plant text-grove-cream text-xl mb-1">Add to your collection</h1>
-      <p className="font-plant italic text-grove-sage text-xs mb-5">Two ways in — both equally good.</p>
+      <p className="font-plant italic text-grove-sage text-xs mb-5">Start with a name or a photo.</p>
       <div className="space-y-2">
         {opts.map(({ key, icon: Icon, title, desc, testId, onClick }) => (
           <button

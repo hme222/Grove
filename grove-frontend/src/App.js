@@ -61,6 +61,8 @@ import DualPathLandingVariations from "./pages/DualPathLandingVariations";
 import CozyRoomPlannerVariations from "./pages/CozyRoomPlannerVariations";
 import BehavioralChangeWidgets from "./pages/BehavioralChangeWidgets";
 import BottomNav from "./components/BottomNav";
+import HelpMyPlantPage from "./pages/HelpMyPlantPage";
+import SearchPage from "./pages/SearchPage";
 import CareLayout from "./components/CareLayout";
 
 function ProtectedRoute({ children }) {
@@ -106,6 +108,13 @@ function AppRoutes() {
   // whatever its age or saved track, so the first-run flow can always be seen.
   const [replayFirstRun, setReplayFirstRun] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    // Inside the desktop phone preview, report the route so the outer address bar follows along.
+    if (window.self !== window.top) {
+      window.parent.postMessage({ type: 'grove-route', path: `${location.pathname}${location.search}` }, window.location.origin);
+    }
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     if (location.pathname !== '/first-run' || loading || !user) return;
@@ -171,6 +180,16 @@ function AppRoutes() {
         <Route path="/dual-path-landing" element={<DualPathLandingVariations />} />
         <Route path="/cozy-room-planner" element={<CozyRoomPlannerVariations />} />
         <Route path="/behavioral-change-widgets" element={<BehavioralChangeWidgets />} />
+        <Route path="/help-my-plant" element={
+          <ProtectedRoute>
+            <AppLayout><HelpMyPlantPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/search" element={
+          <ProtectedRoute>
+            <AppLayout><SearchPage /></AppLayout>
+          </ProtectedRoute>
+        } />
         <Route path="/lessons" element={
           <ProtectedRoute>
             <AppLayout><LessonsPage /></AppLayout>

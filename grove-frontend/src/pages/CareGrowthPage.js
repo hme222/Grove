@@ -124,17 +124,7 @@ export default function CareGrowthPage() {
               </div>
             </div>
           </div>
-        ) : (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="growth-advanced-locked">
-            <div className="flex items-center gap-2 mb-1.5">
-              <TrendingUp className="h-4 w-4 text-grove-sprout" />
-              <h3 className="font-plant text-grove-cream text-sm">Advanced Analytics</h3>
-            </div>
-            <p className="font-ui text-xs text-grove-cream leading-relaxed">
-              Unlock propagation trends, streak analysis, and more when you reach 10+ plants on a Pro plan.
-            </p>
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -172,7 +172,7 @@ export default function CollectionPage() {
 
       <div className="max-w-[1100px] mx-auto px-4 py-4">
         <nav aria-label="More ways to browse your plants" className="mb-3 flex flex-wrap gap-2" data-testid="plants-shortcuts">
-          {[['Rooms', '/rooms'], ['Wishlist', '/wishlist'], ['Want list', '/wants']].map(([label, path]) => (
+          {[['Search', '/search'], ['Rooms', '/rooms'], ['Want list', '/wants']].map(([label, path]) => (
             <button key={path} type="button" onClick={() => navigate(path)} data-testid={`plants-shortcut-${label.toLowerCase().replace(' ', '-')}`}
               className="min-h-[44px] inline-flex items-center rounded-full border-[0.5px] border-grove-moss px-4 font-ui text-xs text-grove-cream hover:border-grove-fernLine transition-colors duration-150">
               {label}

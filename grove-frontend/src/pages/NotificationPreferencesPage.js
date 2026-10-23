@@ -94,12 +94,12 @@ export default function NotificationPreferencesPage() {
           disabled={isSaving}
           onClick={() => update({ [k]: !on })}
           className={`shrink-0 w-11 h-6 rounded-full relative motion-safe:transition-colors motion-safe:duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-2 focus-visible:ring-offset-grove-forest disabled:opacity-60 ${
-            on ? 'bg-grove-lime' : 'bg-grove-moss'
+            on ? 'bg-grove-lime border border-grove-lime' : 'bg-grove-moss border border-[#869A68]'
           }`}
         >
           <span
-            className={`absolute top-0.5 h-5 w-5 rounded-full bg-grove-canopy motion-safe:transition-transform motion-safe:duration-200 ${
-              on ? 'translate-x-[22px]' : 'translate-x-0.5'
+            className={`absolute left-0 top-px h-5 w-5 rounded-full motion-safe:transition-transform motion-safe:duration-200 ${
+              on ? 'translate-x-[20px] bg-grove-root' : 'translate-x-px bg-grove-sage'
             }`}
           />
         </button>

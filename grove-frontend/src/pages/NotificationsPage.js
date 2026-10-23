@@ -94,7 +94,7 @@ export default function NotificationsPage() {
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center">
             <Bell className="h-12 w-12 text-grove-sage mx-auto mb-3" />
             <p className="text-sm text-grove-cream">No notifications yet</p>
-            <p className="text-xs text-grove-cream mt-1">We'll notify you about goals, care reminders, and grove activity</p>
+            <p className="text-xs text-grove-cream mt-1">We'll let you know about care reminders and grove activity</p>
           </div>
         ) : (
           <div className="space-y-2">

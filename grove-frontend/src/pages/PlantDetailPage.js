@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import useDialogA11y from '../lib/useDialogA11y';
 import { useParams, useNavigate } from 'react-router-dom';
 import { plantAPI, careAPI, roomAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
@@ -26,6 +27,8 @@ export default function PlantDetailPage() {
   const [aiSchedule, setAiSchedule] = useState(null);
   const [generatingSchedule, setGeneratingSchedule] = useState(false);
   const [openEntry, setOpenEntry] = useState(null);
+  const entryModalRef = React.useRef(null);
+  useDialogA11y(entryModalRef, () => setOpenEntry(null), !!openEntry);
   const [rooms, setRooms] = useState([]);
 
   // Phase 14B.1 — merge plant.photos[] into the timeline so each photo becomes
@@ -460,8 +463,11 @@ export default function PlantDetailPage() {
           role="dialog"
           aria-modal="true"
           data-testid="timeline-entry-modal"
+          ref={entryModalRef}
+          tabIndex={-1}
+          aria-label="Journal entry"
           onClick={() => setOpenEntry(null)}
-          className="fixed inset-0 z-[220] bg-grove-lime/85 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[220] bg-grove-night/85 flex items-center justify-center p-4 focus:outline-none"
         >
           <div
             onClick={(e) => e.stopPropagation()}

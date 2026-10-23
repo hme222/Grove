@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useDialogA11y from '../lib/useDialogA11y';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI, statsAPI, zoneAPI, verificationAPI, badgeAPI } from '../lib/api';
@@ -6,7 +7,7 @@ import { useTooltips } from '../contexts/TooltipContext';
 import { PageHeader } from '../components/PageHeader';
 import { TUTORIAL_COPY } from '../components/SectionTutorial';
 import { toast } from 'sonner';
-import { LogOut, Sparkles, Leaf, Flame, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X } from 'lucide-react';
+import { LogOut, Sparkles, Leaf, Flame, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X, ChevronRight } from 'lucide-react';
 import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
@@ -182,26 +183,29 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/bouquets')}
               data-testid="profile-bouquets-link"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Flower2 className="h-4 w-4 text-grove-blush" />
               Bouquets
+              <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
             </button>
                                     <button
               onClick={() => navigate('/challenges')}
               data-testid="profile-challenges-link"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Trophy className="h-4 w-4 text-grove-sprout" />
               Challenges
+              <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
             </button>
             <button
               onClick={() => navigate('/settings/notifications')}
               data-testid="profile-notifications-button"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
             >
               <Bell className="h-4 w-4" />
               Notification Settings
+              <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -278,7 +282,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/help')}
               data-testid="profile-help-button"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <HelpCircle className="h-4 w-4" />
               Help & Tutorial
@@ -286,7 +290,7 @@ export default function ProfilePage() {
             <button
               onClick={handleReplayOnboarding}
               data-testid="profile-replay-onboarding-button"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <RefreshCw className="h-4 w-4" />
               Replay first-run
@@ -782,11 +786,18 @@ function PactReaderModal({ onClose }) {
     return () => { document.body.style.overflow = prev; };
   }, []);
 
+  const dialogRef = React.useRef(null);
+  useDialogA11y(dialogRef, onClose);
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[4px]"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[4px] focus:outline-none"
       onClick={onClose}
       data-testid="pact-reader-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Community pact"
+      ref={dialogRef}
+      tabIndex={-1}
     >
       <div
         className="bg-grove-canopy rounded-[14px] border-[0.5px] border-grove-moss shadow-xl w-full max-w-[640px] max-h-[85vh] overflow-hidden flex flex-col"

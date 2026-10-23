@@ -124,6 +124,9 @@ export default function ChallengesPage() {
               <h2 className="font-plant text-grove-cream text-sm mb-3">
                 {activeChallenges.length > 0 ? 'More Challenges' : 'Available Challenges'}
               </h2>
+              {templates.length === 0 && (
+                <p className="font-ui text-sm text-grove-sage" data-testid="challenges-empty">No challenges right now. Check back soon.</p>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {templates.map((template) => {
                   const Icon = getChallengeIcon(template.goal_type);

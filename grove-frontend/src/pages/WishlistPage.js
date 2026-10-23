@@ -35,7 +35,7 @@ export default function WishlistPage() {
 
   return (
     <div>
-      <PageHeader title="Wishlist" count={items.length} />
+      <PageHeader title="Saved cuttings" count={items.length} />
 
       <div className="max-w-[700px] mx-auto px-4 py-4">
         {loading ? (
@@ -47,9 +47,9 @@ export default function WishlistPage() {
             <div className="w-14 h-14 mx-auto rounded-full bg-grove-bloom/15 border-[0.5px] border-grove-bloom/30 flex items-center justify-center mb-3">
               <Scissors className="h-6 w-6 text-grove-blush" />
             </div>
-            <p className="font-plant text-grove-cream text-lg mb-1">Your wishlist is quiet</p>
+            <p className="font-plant text-grove-cream text-lg mb-1">No saved cuttings yet</p>
             <p className="font-ui text-sm text-grove-cream">
-              React with <span className="font-plant">Cutting</span> on any post in the Grove to add a plant here.
+              Tap <span className="font-plant">Cutting</span> on a Grove post to save it here.
             </p>
             <button
               onClick={() => navigate('/feed')}

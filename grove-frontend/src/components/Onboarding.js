@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useDialogA11y from '../lib/useDialogA11y';
 import { Button } from '@/components/ui/button';
 import { GROVE_BRAND } from '@/constants/brand';
 import { X } from 'lucide-react';
@@ -79,14 +80,22 @@ export function Onboarding({ onComplete }) {
   };
 
   // The first screen is the designed FloraGrove welcome (Studio 12): dark, hand-drawn lines, built in order.
+  const dialogRef = React.useRef(null);
+  useDialogA11y(dialogRef, null, screen.id !== 'welcome');
+
   if (screen.id === 'welcome') {
     return <WelcomeScreen onContinue={handleNext} onSkip={handleSkip} disabled={isCompleting} />;
   }
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${screen.dark ? 'bg-grove-lime' : 'bg-grove-forest'}`}
+      className={`fixed inset-0 z-[60] flex items-center justify-center focus:outline-none ${screen.dark ? 'bg-grove-root' : 'bg-grove-forest'}`}
       data-testid="onboarding-flow"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Welcome to FloraGrove"
+      ref={dialogRef}
+      tabIndex={-1}
     >
       <div className="w-full max-w-md px-4">
         {/* Skip button */}
@@ -151,7 +160,7 @@ export function Onboarding({ onComplete }) {
             data-testid="onboarding-continue"
             className={`w-full rounded-[12px] font-[Georgia] text-xs px-4 py-3 border-[0.5px] transition-colors duration-150 ${
               screen.dark
-                ? 'bg-grove-lime text-grove-cream border-grove-lime hover:bg-grove-sprout hover:border-grove-moss'
+                ? 'bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout hover:border-grove-moss'
                 : 'bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout hover:border-grove-fernLine'
             }`}
           >

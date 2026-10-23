@@ -12,7 +12,7 @@ import SectionTutorial from '../components/SectionTutorial';
 import WorkingTowardSection from '../components/WorkingTowardSection';
 import DailyTriviaCard from '../components/DailyTriviaCard';
 import { notificationsAPI } from '../lib/api';
-import { Droplets, Check, Leaf, X, Sparkles } from 'lucide-react';
+import { Droplets, Check, Leaf, X, Sparkles, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
@@ -216,16 +216,19 @@ export default function CarePage() {
         }
       >
         <FilterChips filters={FILTERS} active={filter} onChange={setFilter} />
-        <div className="mt-2">
-          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />
-        </div>
       </PageHeader>
 
-      <div className="max-w-[900px] mx-auto px-4 py-4">
-        <NextLessonCard />
-        <DailyMissionCard />
+      <div className="max-w-[900px] mx-auto px-4 pt-4 space-y-3">
+        <button
+          type="button"
+          onClick={() => navigate('/search')}
+          data-testid="today-search"
+          className="flex min-h-[44px] w-full items-center gap-2 rounded-[12px] border-[0.5px] border-grove-fernLine bg-grove-canopy px-4 text-left font-ui text-sm text-grove-sage hover:border-grove-lime"
+        >
+          <Search className="h-4 w-4" aria-hidden="true" />
+          Search plants, guides and lessons
+        </button>
         <ScheduleReviewBanner />
-        <WorkingTowardSection />
       </div>
 
       <div className="max-w-[900px] mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -340,9 +343,28 @@ export default function CarePage() {
       {/* Phase 14C.4 — Daily plant trivia (Supplement v1 Part D.7).
           Positioned below the care queue so the urgent count + plant grid
           remain the primary above-the-fold focus. */}
-      <div className="max-w-[900px] mx-auto px-4 pb-2">
-        <DailyTriviaCard />
+      <div className="max-w-[900px] mx-auto px-4 pb-4">
+        <button
+          type="button"
+          onClick={() => navigate('/help-my-plant')}
+          data-testid="help-my-plant-entry"
+          className="block w-full rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-4 text-left hover:border-grove-fernLine"
+        >
+          <p className="font-plant text-lg text-grove-cream">Something look off?</p>
+          <p className="mt-0.5 font-ui text-sm text-grove-sage">Yellow leaves, drooping, bugs. Get quick checks to try first.</p>
+        </button>
       </div>
+
+      <section aria-labelledby="pip-heading" className="max-w-[900px] mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
+        <h2 id="pip-heading" className="font-plant text-xl text-grove-cream pt-2">From Pip</h2>
+        <NextLessonCard />
+        <DailyMissionCard />
+        <DailyTriviaCard />
+        <WorkingTowardSection />
+        <div className="pt-1">
+          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />
+        </div>
+      </section>
 
       {/* Sticky in-progress session bar (above bottom nav) */}
       {sessionActive && (
