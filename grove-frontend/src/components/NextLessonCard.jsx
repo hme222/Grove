@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { lessonAPI } from '../lib/api';
 import { LESSON_META, lessonPath } from '../lessons/lessonMeta';
@@ -7,7 +8,7 @@ import { LESSON_META, lessonPath } from '../lessons/lessonMeta';
 // Care Today's way into the lessons. With a saved track it shows the next
 // unfinished lesson. Everyone else, and anyone whose lesson cannot be shown,
 // gets a quiet link to the lessons list, so the lessons are always reachable.
-export default function NextLessonCard() {
+export default function NextLessonCard({ embedded = false }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const hasTrack = !!user?.primary_track;
@@ -35,6 +36,22 @@ export default function NextLessonCard() {
   const lesson = state.lessonId ? LESSON_META[state.lessonId] : null;
 
   if (!lesson) {
+    if (embedded) {
+      return (
+        <button
+          type="button"
+          onClick={() => navigate('/lessons')}
+          className="flex min-h-[44px] w-full items-center justify-between gap-3 py-4 text-left"
+          data-testid="lessons-link"
+        >
+          <span>
+            <span className="block font-plant text-base text-grove-cream">Short lessons</span>
+            <span className="block font-ui text-sm text-grove-sage">Watering, light and soil in a few minutes.</span>
+          </span>
+          <ChevronRight className="h-4 w-4 flex-shrink-0 text-grove-sage" aria-hidden="true" />
+        </button>
+      );
+    }
     return (
       <div className="text-right">
         <button
@@ -51,7 +68,7 @@ export default function NextLessonCard() {
 
   return (
     <section
-      className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 flex items-center justify-between gap-3"
+      className={embedded ? 'flex items-center justify-between gap-3 py-4' : 'rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 flex items-center justify-between gap-3'}
       data-testid="next-lesson-card"
     >
       <div>

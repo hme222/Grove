@@ -249,7 +249,7 @@ export default function PlantDetailPage() {
                       data-testid="plant-view-in-greenhouse"
                       className="ml-2 inline-flex items-center text-xs font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
                     >
-                      View in Greenhouse
+                      View in the plant guide
                     </button>
                   )}
                 </p>

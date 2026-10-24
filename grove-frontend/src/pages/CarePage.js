@@ -357,9 +357,11 @@ export default function CarePage() {
 
       <section aria-labelledby="pip-heading" className="max-w-[900px] mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
         <h2 id="pip-heading" className="font-plant text-xl text-grove-cream pt-2">From Pip</h2>
-        <NextLessonCard />
-        <DailyMissionCard />
-        <DailyTriviaCard />
+        <div className="divide-y divide-grove-fernLine/30 rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
+          <DailyMissionCard embedded />
+          <NextLessonCard embedded />
+          <DailyTriviaCard embedded />
+        </div>
         <WorkingTowardSection />
         <div className="pt-1">
           <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />

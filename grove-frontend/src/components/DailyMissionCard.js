@@ -11,7 +11,7 @@ const ICON_MAP = {
   sparkles: Sparkles,
 };
 
-export default function DailyMissionCard({ onCompleted }) {
+export default function DailyMissionCard({ onCompleted, embedded = false }) {
   const navigate = useNavigate();
   const [mission, setMission] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -69,11 +69,13 @@ export default function DailyMissionCard({ onCompleted }) {
       data-testid="daily-mission-card"
       data-mission-type={mission.mission_type}
       data-mission-completed={completed ? 'true' : 'false'}
-      className={`relative overflow-hidden rounded-[16px] border-[0.5px] px-4 py-3 mb-3 ${
-        completed
-          ? 'border-grove-fernLine/40 bg-grove-moss'
-          : 'border-grove-moss bg-grove-canopy'
-      }`}
+      className={embedded
+        ? 'relative py-4'
+        : `relative overflow-hidden rounded-[16px] border-[0.5px] px-4 py-3 mb-3 ${
+          completed
+            ? 'border-grove-fernLine/40 bg-grove-moss'
+            : 'border-grove-moss bg-grove-canopy'
+        }`}
     >
       <div className="flex items-center gap-3">
         <div

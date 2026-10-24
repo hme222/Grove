@@ -54,8 +54,8 @@ export default function WantListPage() {
             data-testid="want-list-empty"
             icon={Bookmark}
             title="Nothing on your want list yet"
-            body="Browse the Greenhouse and tap the bookmark on any species to save it for later."
-            action={{ label: 'Browse Greenhouse', onClick: () => navigate('/greenhouse') }}
+            body="Browse the plant guide and tap the bookmark on any species to save it for later."
+            action={{ label: 'Browse the plant guide', onClick: () => navigate('/greenhouse') }}
           />
         ) : (
           <ul className="space-y-2" data-testid="want-list-items">

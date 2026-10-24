@@ -51,7 +51,7 @@ export default function GuildDetailPage() {
             onClick={() => navigate('/greenhouse')}
             className="text-grove-cream hover:text-grove-sprout transition-colors"
             data-testid="guild-back-button"
-            aria-label="Back to Greenhouse"
+            aria-label="Back to Learn"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>

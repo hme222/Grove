@@ -6,11 +6,26 @@ import StatusDot from '../components/StatusDot';
 import { getFileUrl } from '../lib/api';
 import { toast } from 'sonner';
 import { Leaf, ChevronRight } from 'lucide-react';
+import { LIGHT_LEVELS, lightHelp, roomSummary } from '../lib/roomLight';
 
 export default function RoomPage() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Optimistic: show the new level straight away, and put the old one back if saving fails.
+  const setLight = async (roomName, light) => {
+    const previous = rooms;
+    setRooms((rs) => rs.map((r) => (r.room === roomName ? { ...r, light, fits: (r.fits || []).map((f) => ({ ...f, fit: null })) } : r)));
+    try {
+      await roomAPI.setLight(roomName, light);
+      const res = await roomAPI.getRooms();
+      setRooms(res.data);
+    } catch (e) {
+      setRooms(previous);
+      toast.error('Could not save the light. Try again.');
+    }
+  };
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -96,6 +111,42 @@ export default function RoomPage() {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* How much light the room gets, and whether the plants here suit it */}
+              <div className="border-t-[0.5px] border-grove-fernLine/40 px-4 pb-4 pt-3" data-testid="room-light">
+                <p id={`light-${room.room}`} className="mb-2 font-ui text-xs text-grove-sage">How much light does this room get?</p>
+                <div role="group" aria-labelledby={`light-${room.room}`} className="flex flex-wrap gap-2">
+                  {LIGHT_LEVELS.map((l) => {
+                    const active = room.light === l.id;
+                    return (
+                      <button
+                        key={l.id}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => setLight(room.room, active ? null : l.id)}
+                        data-testid={`room-light-${l.id}`}
+                        className={`min-h-[44px] rounded-full border-[0.5px] px-4 font-ui text-sm transition-colors duration-150 ${
+                          active ? 'border-grove-lime bg-grove-lime text-grove-root' : 'border-grove-fernLine bg-grove-canopy text-grove-cream hover:border-grove-lime'
+                        }`}
+                      >
+                        {l.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {room.light && <p className="mt-2 font-ui text-xs text-grove-sage">{lightHelp(room.light)}</p>}
+                {(() => {
+                  const s = roomSummary(room);
+                  if (s.tone === 'issues') {
+                    return (
+                      <ul className="mt-3 space-y-1.5" aria-live="polite" data-testid="room-light-issues">
+                        {s.issues.map((t) => <li key={t} className="rounded-[12px] bg-grove-canopy px-3 py-2 font-ui text-sm text-grove-cream">{t}</li>)}
+                      </ul>
+                    );
+                  }
+                  return s.text ? <p className={`mt-3 font-ui text-sm ${s.tone === 'good' ? 'text-grove-sprout' : 'text-grove-sage'}`} aria-live="polite" data-testid="room-light-summary">{s.text}</p> : null;
+                })()}
               </div>
             </div>
           ))

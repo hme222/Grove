@@ -26,7 +26,7 @@ const CATEGORY_LABELS = {
   pollinator: 'Pollinator fact',
 };
 
-export default function DailyTriviaCard() {
+export default function DailyTriviaCard({ embedded = false }) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [hidden, setHidden] = useState(false);
@@ -59,16 +59,13 @@ export default function DailyTriviaCard() {
   };
 
   const handleReadMore = () => {
-    if (linked?.slug) {
-      navigate(`/encyclopedia/species/${linked.slug}`);
-    } else {
-      navigate('/encyclopedia');
-    }
+    // The guide opens species by id; fall back to the guide's list.
+    navigate(linked?.id ? `/greenhouse/${linked.id}` : '/greenhouse');
   };
 
   return (
     <article
-      className="rounded-[14px] border-[0.5px] border-grove-fernLine/40 bg-grove-canopy p-4 mb-3 relative"
+      className={embedded ? 'relative py-4' : 'rounded-[14px] border-[0.5px] border-grove-fernLine/40 bg-grove-canopy p-4 mb-3 relative'}
       data-testid="daily-trivia-card"
       data-category={card.category}
     >
@@ -77,9 +74,9 @@ export default function DailyTriviaCard() {
         onClick={handleDismiss}
         data-testid="daily-trivia-dismiss"
         aria-label="Dismiss for today"
-        className="absolute top-2 right-2 p-1 rounded-[6px] text-grove-lichen hover:bg-grove-moss hover:text-grove-cream transition-colors duration-150"
+        className={`absolute right-0 flex h-11 w-11 items-center justify-center rounded-[6px] text-grove-lichen hover:bg-grove-moss hover:text-grove-cream transition-colors duration-150 ${embedded ? 'top-1' : 'top-2'}`}
       >
-        <X className="h-3.5 w-3.5" />
+        <X className="h-4 w-4" />
       </button>
 
       <div className="flex items-start gap-3">
@@ -111,7 +108,7 @@ export default function DailyTriviaCard() {
             <BookOpen className="h-3 w-3" />
             {linked
               ? `Read more about ${linked.common_name || 'this species'}`
-              : 'Read more in Greenhouse'}
+              : 'Read more in Learn'}
           </button>
         </div>
       </div>

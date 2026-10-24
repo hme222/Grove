@@ -153,6 +153,7 @@ export const speciesAPI = {
 // Rooms
 export const roomAPI = {
   getRooms: () => api.get('/rooms'),
+  setLight: (room, light) => api.put('/rooms/light', { room, light }),
 };
 
 // Stats

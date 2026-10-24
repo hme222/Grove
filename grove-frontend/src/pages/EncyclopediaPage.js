@@ -133,7 +133,7 @@ export default function EncyclopediaPage() {
         ) : species.length === 0 ? (
           <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center">
             <p className="text-sm text-grove-cream">
-              {searchQuery ? `No species found for "${searchQuery}"` : 'No species in Greenhouse yet'}
+              {searchQuery ? `No species found for "${searchQuery}"` : 'No species in the guide yet'}
             </p>
           </div>
         ) : (

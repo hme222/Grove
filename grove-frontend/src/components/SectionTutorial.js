@@ -18,25 +18,25 @@ import { Leaf, Droplets, Users, BookOpen, Sun, X } from 'lucide-react';
 
 export const TUTORIAL_COPY = {
   collection: {
-    title: 'Welcome to Collection',
+    title: 'Welcome to Plants',
     icon: Leaf,
     body: "Every plant you grow lives here. Tap a tile to open its full record — care, photos, growth. Long press a tile, or tap Select, to log care across many plants at once.",
     accent: '#3B6D11',
   },
   care: {
-    title: 'Welcome to Care',
+    title: 'Welcome to Today',
     icon: Droplets,
     body: "This is your daily rhythm. Today shows what's due now and the badges you're working toward. Growth tracks change over time. Each tap is a small act of attention.",
     accent: '#92B44B',
   },
   grove: {
-    title: 'Welcome to Grove',
+    title: 'Welcome to Community',
     icon: Users,
     body: "The community feed, your Groves, and plant swaps live here. Share photos, ask questions, swap cuttings. Grove unlocks gradually as your collection deepens.",
     accent: '#D4537E',
   },
   greenhouse: {
-    title: 'Welcome to Greenhouse',
+    title: 'Welcome to Learn',
     icon: BookOpen,
     body: "Your library of plant knowledge. Hand-curated species with native ranges, citations, and care guides. Browse to learn — or tap a species in your Collection to jump straight to its entry.",
     accent: '#BA7517',

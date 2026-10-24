@@ -20,6 +20,7 @@ from auth import (
     decode_access_token, decode_refresh_token, get_current_user, get_optional_user
 )
 from storage import init_storage, put_object, get_object, generate_storage_path
+from room_light import light_fit, normalize_light
 from ai_service import (
     suggest_watering_schedule, generate_plant_biography, generate_plant_personality,
     call_claude, call_claude_vision, parse_json_response,
@@ -2721,18 +2722,56 @@ async def delete_plant_photo(plant_id: str, photo_id: str, current_user: dict = 
 async def get_rooms(current_user: dict = Depends(get_current_user)):
     pipeline = [
         {"$match": {"user_id": current_user['user_id'], "is_archived": {"$ne": True}, "room": {"$ne": ""}}},
-        {"$group": {"_id": "$room", "count": {"$sum": 1}, "plants": {"$push": {"id": "$id", "common_name": "$common_name", "photo_url": "$photo_url", "status": "$status"}}}},
+        {"$group": {"_id": "$room", "count": {"$sum": 1}, "plants": {"$push": {"id": "$id", "common_name": "$common_name", "latin_name": "$latin_name", "nickname": "$nickname", "photo_url": "$photo_url", "status": "$status"}}}},
         {"$sort": {"_id": 1}}
     ]
     rooms = await db.plants.aggregate(pipeline).to_list(50)
+
+    # Each room's light, and each plant's light need from its species (matched by name).
+    light_by_room = {d['name']: d.get('light') async for d in db.rooms.find({"user_id": current_user['user_id']})}
+    need_by_name = {}
+    async for sp in db.species.find({}, {"common_name": 1, "latin_name": 1, "default_light_level": 1}):
+        for key in (sp.get('common_name'), sp.get('latin_name')):
+            if key:
+                need_by_name[key.strip().lower()] = sp.get('default_light_level')
+
     result = []
     for r in rooms:
-        plants_preview = r['plants'][:4]
+        light = light_by_room.get(r['_id'])
+        fits = []
+        for p in r['plants']:
+            need = next((need_by_name[k.strip().lower()] for k in (p.get('latin_name'), p.get('common_name')) if k and k.strip().lower() in need_by_name), None)
+            fit = light_fit(light, need)
+            if need:
+                fits.append({"id": p['id'], "name": p.get('nickname') or p.get('common_name'), "need": need, "fit": fit})
+        plants_preview = [{k: v for k, v in p.items() if k not in ('latin_name', 'nickname')} for p in r['plants'][:4]]
         result.append({
             "room": r['_id'], "count": r['count'],
-            "plants": plants_preview, "overflow": max(0, r['count'] - 4)
+            "plants": plants_preview, "overflow": max(0, r['count'] - 4),
+            "light": light, "fits": fits,
         })
     return result
+
+
+class RoomLightInput(BaseModel):
+    room: str
+    light: Optional[str] = None
+
+
+@api_router.put("/rooms/light")
+async def set_room_light(data: RoomLightInput, current_user: dict = Depends(get_current_user)):
+    """Set how much light a room gets. A missing or unknown level clears it."""
+    name = data.room.strip()
+    if not name or len(name) > 80:
+        raise HTTPException(status_code=422, detail="Room name is required")
+    light = normalize_light(data.light)
+    await db.rooms.update_one(
+        {"user_id": current_user['user_id'], "name": name},
+        {"$set": {"light": light, "updated_at": datetime.now(timezone.utc).isoformat()},
+         "$setOnInsert": {"id": str(uuid.uuid4()), "created_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True,
+    )
+    return {"room": name, "light": light}
 
 # ============ STATS ============
 
