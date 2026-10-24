@@ -190,7 +190,7 @@ export default function SwapChatPage() {
                   isOwn ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout'
                 }`}
               >
-                <span className="font-plant text-[12px]">
+                <span className="font-plant text-xs">
                   {isOwn
                     ? (user?.display_name?.[0] || 'Y').toUpperCase()
                     : (otherUser?.display_name?.[0] || 'G').toUpperCase()}
@@ -204,11 +204,11 @@ export default function SwapChatPage() {
                       : 'bg-grove-canopy border-[0.5px] border-grove-moss text-grove-cream rounded-tl-[2px]'
                   }`}
                 >
-                  <p className="font-ui text-[13px] leading-snug whitespace-pre-wrap break-words">
+                  <p className="font-ui text-[0.8125rem] leading-snug whitespace-pre-wrap break-words">
                     {msg.body}
                   </p>
                 </div>
-                <span className="font-latin italic text-[12px] text-grove-lichen mt-0.5 mx-1">
+                <span className="font-latin italic text-xs text-grove-lichen mt-0.5 mx-1">
                   {formatTime(msg.created_at)}
                 </span>
               </div>
@@ -273,7 +273,7 @@ export default function SwapChatPage() {
               }}
               placeholder="Message about the swap…"
               rows={1}
-              className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[13px] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
+              className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[0.8125rem] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
             />
             <button
               type="button"

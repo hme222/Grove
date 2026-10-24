@@ -8,8 +8,9 @@ export function PageHeader({ title, count, rightContent, children, hideBell, hid
   return (
     <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss">
       <div className="max-w-[1100px] mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
+        {/* Wraps instead of running off the edge when the reader's text is large. */}
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+          <div className="flex min-w-0 flex-1 basis-28 items-center gap-2">
             <h1 className="font-plant text-grove-cream text-xl truncate">{title}</h1>
             {count !== undefined && (
               <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-moss bg-grove-moss px-2.5 py-0.5 text-xs font-ui text-grove-cream">
@@ -17,7 +18,7 @@ export function PageHeader({ title, count, rightContent, children, hideBell, hid
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}
             {!hideBell && <NotificationBell />}
             {!hideProfile && (
@@ -41,13 +42,13 @@ export function PageHeader({ title, count, rightContent, children, hideBell, hid
 
 export function FilterChips({ filters, active, onChange }) {
   return (
-    <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
+    <div className="mt-3 flex flex-wrap gap-2 pb-1">
       {filters.map(({ value, label }) => (
         <button
           key={value}
           onClick={() => onChange(value)}
           data-testid={`filter-chip-${value}`}
-          className={`inline-flex items-center whitespace-nowrap rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${
+          className={`inline-flex min-h-[44px] items-center whitespace-nowrap rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${
             active === value
               ? 'border-grove-fernLine bg-grove-lime text-grove-root'
               : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'

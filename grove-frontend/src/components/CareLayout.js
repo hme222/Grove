@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTooltips } from '@/contexts/TooltipContext';
 
 const SUBTABS = [
-  { path: '/care/today', label: 'Care', testid: 'care-today-tab', tooltipId: 'care_today_first_visit' },
-  { path: '/care/growth', label: 'Growth', testid: 'care-growth-tab', tooltipId: 'care_growth_first_visit' },
+  { path: '/care/today', label: 'To do', testid: 'care-today-tab', tooltipId: 'care_today_first_visit' },
+  { path: '/care/growth', label: 'Progress', testid: 'care-growth-tab', tooltipId: 'care_growth_first_visit' },
   // Phase 14C.4 — Goals tab removed. Goals are now pinned locked badges
   // surfaced in the "Working toward" section on /care/today, and managed
   // from the badge gallery at /badges. Old deep links (/care/goals,

@@ -119,7 +119,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
         <header className="mb-4">
-          <h1 className="font-plant text-grove-cream text-[17px]">Photograph your plant</h1>
+          <h1 className="font-plant text-grove-cream text-[1.0625rem]">Photograph your plant</h1>
           <p className="font-plant italic text-grove-sage text-xs mt-1">FloraGrove will identify it for you.</p>
         </header>
         <PlantImage
@@ -157,7 +157,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             type="button"
             onClick={onSwitchToManual}
             data-testid="identify-switch-manual"
-            className="font-ui text-[12px] text-grove-sprout underline-offset-2 hover:underline"
+            className="font-ui text-xs text-grove-sprout underline-offset-2 hover:underline"
           >
             I know my plant — enter details →
           </button>
@@ -229,7 +229,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       <div className="mb-3">
         <p className="font-ui text-xs text-grove-lichen">{lowConf ? 'We think this might be…' : 'Identified'}</p>
         <h1 className="font-plant text-grove-cream text-lg leading-tight">{identified?.commonName || 'Plant'}</h1>
-        {identified?.latinName && <p className="font-latin text-[12px] text-[#639922]">{identified.latinName}</p>}
+        {identified?.latinName && <p className="font-latin text-xs text-[#639922]">{identified.latinName}</p>}
         <p
           data-testid="identify-confidence"
           className={`font-ui text-xs mt-1 ${lowConf ? 'text-[#8A5A0F]' : 'text-grove-sage'}`}
@@ -310,7 +310,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         {identified?.healthSummary && (
           <p className="italic font-plant text-xs text-grove-sage mt-1.5 leading-snug">"{identified.healthSummary}"</p>
         )}
-        <p className="font-plant italic text-[12px] text-grove-lichen mt-1">
+        <p className="font-plant italic text-xs text-grove-lichen mt-1">
           Based on your photo today. This score improves as FloraGrove learns your plant's real patterns over time.
         </p>
       </div>

@@ -216,11 +216,11 @@ export default function BouquetDetailPage() {
                         <p className="font-latin text-xs text-grove-blush">{f.latin_name}</p>
                       </div>
                       <div className="text-right">
-                        <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-2 py-0.5 text-[12px] font-ui text-grove-blush">
+                        <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-2 py-0.5 text-xs font-ui text-grove-blush">
                           {f.vase_life_days}d life
                         </span>
                         {confidenceText(f.ai_confidence) && (
-                          <p data-testid="bouquet-flower-confidence" className="font-ui text-[12px] text-grove-sage mt-1">
+                          <p data-testid="bouquet-flower-confidence" className="font-ui text-xs text-grove-sage mt-1">
                             {confidenceText(f.ai_confidence)}
                           </p>
                         )}
@@ -324,7 +324,7 @@ export default function BouquetDetailPage() {
                     }`}
                   >
                     <Icon className="h-5 w-5 text-grove-blush" />
-                    <span className="text-[12px] font-ui text-grove-cream text-center">{label}</span>
+                    <span className="text-xs font-ui text-grove-cream text-center">{label}</span>
                   </button>
                 ))}
               </div>
@@ -355,7 +355,7 @@ export default function BouquetDetailPage() {
                         <p className="font-ui text-xs text-grove-cream capitalize">{log.action?.replace('_', ' ')}</p>
                         {log.notes && <p className="font-ui text-xs text-grove-blush">{log.notes}</p>}
                       </div>
-                      <span className="font-latin text-[12px] text-grove-sage">{formatDate(log.logged_at)}</span>
+                      <span className="font-latin text-xs text-grove-sage">{formatDate(log.logged_at)}</span>
                     </div>
                   ))}
                 </div>

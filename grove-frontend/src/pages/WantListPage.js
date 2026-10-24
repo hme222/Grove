@@ -72,7 +72,7 @@ export default function WantListPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <p className="font-plant text-sm text-grove-cream">{s.common_name}</p>
-                        <p className="font-latin italic text-[12px] text-grove-cream mt-0.5">{s.latin_name}</p>
+                        <p className="font-latin italic text-xs text-grove-cream mt-0.5">{s.latin_name}</p>
                         <div className="flex flex-wrap gap-2 mt-1.5 text-xs font-ui text-grove-sage">
                           {s.default_light_level && (
                             <span className="inline-flex items-center gap-1">

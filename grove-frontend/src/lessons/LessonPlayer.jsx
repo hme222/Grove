@@ -35,7 +35,7 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
 
         <div className={`rounded-[14px] border-[0.5px] border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-6`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
-          <p className="text-[11px] font-ui text-grove-cream mb-2">{card.header}</p>
+          <p className="text-xs font-ui text-grove-cream mb-2">{card.header}</p>
           <h1
             ref={headingRef}
             tabIndex={-1}

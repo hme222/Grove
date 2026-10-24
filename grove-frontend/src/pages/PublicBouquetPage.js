@@ -86,7 +86,7 @@ export default function PublicBouquetPage() {
                       <p className="font-plant text-grove-cream text-sm">{f.common_name}</p>
                       <p className="font-latin text-xs text-grove-blush">{f.latin_name}</p>
                     </div>
-                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-[12px] font-ui text-grove-blush">
+                    <span className="rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 px-2 py-0.5 text-xs font-ui text-grove-blush">
                       {f.vase_life_days}d life
                     </span>
                   </div>

@@ -165,7 +165,7 @@ export default function GroveDetailPage() {
                       <span>{post.display_name || post.username}</span>
                       <VerifiedProBadge user={post} size={12} />
                     </span>
-                    <span className="font-latin text-[12px] text-grove-sage">{formatTime(post.created_at)}</span>
+                    <span className="font-latin text-xs text-grove-sage">{formatTime(post.created_at)}</span>
                   </div>
                   {post.caption && <p className="font-ui text-sm text-grove-cream mb-2">{post.caption}</p>}
                   <div className="flex items-center gap-3 pt-2 border-t-[0.5px] border-grove-moss/30">
@@ -208,10 +208,10 @@ export default function GroveDetailPage() {
                     <span className="truncate">{m.display_name || m.username}</span>
                     <VerifiedProBadge user={m} size={14} />
                   </p>
-                  <p className="font-latin text-[12px] text-grove-cream">@{m.username}</p>
+                  <p className="font-latin text-xs text-grove-cream">@{m.username}</p>
                 </div>
                 {m.role === 'admin' && (
-                  <span className="rounded-[20px] border-[0.5px] border-grove-lime bg-grove-moss px-2 py-0.5 text-[12px] font-ui text-grove-sprout">Admin</span>
+                  <span className="rounded-[20px] border-[0.5px] border-grove-lime bg-grove-moss px-2 py-0.5 text-xs font-ui text-grove-sprout">Admin</span>
                 )}
               </div>
             ))}

@@ -237,7 +237,7 @@ export default function PlantDetailPage() {
                   {plant.ai_identified && !plant.ai_species_confirmed && (
                     <span
                       data-testid="plant-ai-identified-badge"
-                      className="ml-2 font-mono text-[12px] tracking-[0.05em] text-grove-lichen uppercase"
+                      className="ml-2 font-mono text-xs tracking-[0.05em] text-grove-lichen uppercase"
                     >
                       AI identified
                     </span>
@@ -329,7 +329,7 @@ export default function PlantDetailPage() {
                   />
                   <p
                     data-testid="watering-schedule-label"
-                    className="font-plant italic text-[12px] text-grove-sage mt-1 leading-snug"
+                    className="font-plant italic text-xs text-grove-sage mt-1 leading-snug"
                   >
                     {plant.watering_frequency_source === 'ai' ? 'AI-suggested' : 'Your schedule'}
                   </p>

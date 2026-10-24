@@ -1,4 +1,4 @@
-import { SYMPTOMS, SAFETY_NOTE } from './plantHelp';
+import { SYMPTOMS, SAFETY_NOTE, SOIL_CHECK } from './plantHelp';
 import { matchPlants, matchLessons } from './search';
 
 describe('plantHelp', () => {
@@ -15,6 +15,13 @@ describe('plantHelp', () => {
     for (const s of SYMPTOMS) for (const c of s.causes) {
       expect(c.title && c.check && c.fix).toBeTruthy();
     }
+  });
+  test('moisture-dependent symptoms start with the soil check, before any cause', () => {
+    for (const id of ['yellow-leaves', 'drooping', 'brown-tips', 'dropping-leaves']) {
+      expect(SYMPTOMS.find((s) => s.id === id).soilCheck).toBe(true);
+    }
+    expect(SOIL_CHECK.dry).toMatch(/water/i);
+    expect(SOIL_CHECK.wet).toMatch(/do not water/i);
   });
   test('has a pet and child safety note', () => {
     expect(SAFETY_NOTE).toMatch(/pet|child/i);

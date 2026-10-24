@@ -91,7 +91,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
       </button>
 
       <header>
-        <h2 className="font-plant text-grove-cream text-[17px] leading-tight">
+        <h2 className="font-plant text-grove-cream text-[1.0625rem] leading-tight">
           Add a photo of {plantName || 'your plant'}
         </h2>
         <p className="font-ui italic text-grove-sage text-xs mt-1">
@@ -138,7 +138,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
           data-testid="photo-validation-feedback"
         >
           <p className="font-plant text-grove-cream text-sm">We couldn't quite see the plant clearly</p>
-          <p className="italic font-ui text-[12px] text-grove-sage mt-1">"{photoFeedback}"</p>
+          <p className="italic font-ui text-xs text-grove-sage mt-1">"{photoFeedback}"</p>
           <div className="mt-3 flex items-center gap-2">
             <button
               type="button"

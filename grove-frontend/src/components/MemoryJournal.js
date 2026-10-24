@@ -111,7 +111,7 @@ function PhotoMemory({ item, plantName, index, onOpen }) {
         style={{ transform: `rotate(${tilt}deg)` }}
       >
         {item.first && (
-          <span className="absolute -top-2 left-3 z-10 rounded-full bg-grove-sun px-2.5 py-0.5 font-ui text-[12px] font-medium text-grove-root">
+          <span className="absolute -top-2 left-3 z-10 rounded-full bg-grove-sun px-2.5 py-0.5 font-ui text-xs font-medium text-grove-root">
             First photo
           </span>
         )}
@@ -122,8 +122,8 @@ function PhotoMemory({ item, plantName, index, onOpen }) {
           className="aspect-[4/3] w-full rounded-[3px] bg-grove-moss object-cover"
         />
         <figcaption className="px-1 pt-2.5">
-          <p className="font-plant text-[17px] italic leading-snug text-grove-root">{caption}</p>
-          <p className="mt-1 font-ui text-[12px] text-grove-root/75">{when(item.logged_at)}</p>
+          <p className="font-plant text-[1.0625rem] italic leading-snug text-grove-root">{caption}</p>
+          <p className="mt-1 font-ui text-xs text-grove-root/75">{when(item.logged_at)}</p>
         </figcaption>
       </figure>
     </button>
@@ -138,10 +138,10 @@ function Milestone({ item, onOpen }) {
       className="block w-full rounded-[22px] border-[0.5px] border-grove-sun/30 bg-gradient-to-br from-grove-canopy to-grove-moss px-5 py-4 text-left transition-colors duration-200 hover:border-grove-sun/60"
       data-testid="journal-milestone"
     >
-      <p className="font-ui text-[12px] font-medium text-grove-sun">{item.kicker}</p>
+      <p className="font-ui text-xs font-medium text-grove-sun">{item.kicker}</p>
       <p className="mt-0.5 font-plant text-2xl leading-tight text-grove-cream">{item.title}</p>
       <p className="mt-1 font-ui text-sm leading-snug text-grove-sage">{item.subtitle}</p>
-      <p className="mt-2 font-ui text-[12px] text-grove-sage">{when(item.logged_at)}</p>
+      <p className="mt-2 font-ui text-xs text-grove-sage">{when(item.logged_at)}</p>
     </button>
   );
 }
@@ -155,7 +155,7 @@ function NoteMemory({ item, onOpen }) {
       data-testid="journal-note"
     >
       <p className="font-plant text-lg italic leading-snug text-grove-cream">&ldquo;{item.notes}&rdquo;</p>
-      <p className="mt-1.5 font-ui text-[12px] text-grove-sage">
+      <p className="mt-1.5 font-ui text-xs text-grove-sage">
         {item.verb ? `${item.verb[0].toUpperCase()}${item.verb.slice(1)} · ` : ''}{when(item.logged_at)}
       </p>
     </button>

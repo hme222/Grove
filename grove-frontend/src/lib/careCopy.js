@@ -1,5 +1,5 @@
-// Care-card wording. Gentle by default: a plant past its schedule gets a
-// check-in, not a deadline (survey: strict-new owners chose gentle 9 of 12).
+// Care-card wording. Gentle by default: say what happened (last watered, or due N days ago),
+// not that someone is late (survey: strict-new owners chose gentle 9 of 12).
 // The days-since number stays on the card so no information is lost.
 
 const DAY_MS = 1000 * 60 * 60 * 24;
@@ -19,8 +19,8 @@ export function dueLabel(plant, now = new Date()) {
   if (diffDays < 0) {
     const since = daysSince(plant.last_watered_at, now);
     return since != null
-      ? `Check-in time · watered ${plural(since, 'day')} ago`
-      : `Check-in time · ${plural(Math.abs(diffDays), 'day')} past schedule`;
+      ? `Last watered ${plural(since, 'day')} ago`
+      : `Due ${plural(Math.abs(diffDays), 'day')} ago`;
   }
   if (diffDays === 0) return 'Due today';
   if (diffDays === 1) return 'Due tomorrow';

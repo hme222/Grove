@@ -123,7 +123,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="font-plant text-grove-cream text-sm">Photos</h3>
-          <p className="font-latin text-[12px] text-grove-sage mt-0.5">
+          <p className="font-latin text-xs text-grove-sage mt-0.5">
             {count} of {cap} · each photo feeds the growth timeline.
           </p>
         </div>
@@ -157,7 +157,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
           data-testid="photo-gallery-empty"
         >
           <p className="font-plant text-grove-cream text-sm">No photos yet</p>
-          <p className="font-ui text-[12px] text-grove-sage mt-1 leading-snug">
+          <p className="font-ui text-xs text-grove-sage mt-1 leading-snug">
             Add a photo every few weeks — the timeline turns them into a visible story of growth.
           </p>
         </div>
@@ -170,14 +170,14 @@ export default function PhotoGallery({ plantId, onChanged }) {
               </div>
               {p.is_cover && (
                 <span
-                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime px-2 py-0.5 text-[12px] font-ui text-grove-root"
+                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime px-2 py-0.5 text-xs font-ui text-grove-root"
                   data-testid="photo-cover-badge"
                 >
                   <Star className="h-2.5 w-2.5 fill-current" /> Cover
                 </span>
               )}
               <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/70 px-2 py-0.5 text-[12px] font-ui text-grove-cream">
+                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/70 px-2 py-0.5 text-xs font-ui text-grove-cream">
                   <Calendar className="h-2.5 w-2.5" />
                   {formatWhen(p.taken_at)}
                 </span>
@@ -263,7 +263,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
         />
       </div>
       <div>
-        <label className="block font-ui text-[12px] text-grove-cream mb-1">
+        <label className="block font-ui text-xs text-grove-cream mb-1">
           Taken on
         </label>
         <input aria-label="Taken on"
@@ -277,7 +277,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
         <p className="font-latin text-xs text-grove-lichen mt-1">Used to sort photos chronologically in the growth timeline.</p>
       </div>
       <div>
-        <label className="block font-ui text-[12px] text-grove-cream mb-1">
+        <label className="block font-ui text-xs text-grove-cream mb-1">
           Caption
         </label>
         <textarea aria-label="Caption"

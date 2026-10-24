@@ -90,7 +90,7 @@ export default function BouquetsPage() {
                 <p className="font-plant text-grove-cream text-sm">
                   {limits.active_count}/{limits.max_active} active bouquets
                 </p>
-                <p className="font-ui text-[12px] text-grove-cream leading-snug">
+                <p className="font-ui text-xs text-grove-cream leading-snug">
                   {atLimit
                     ? 'Free tier is full. Archive one to add another, or upgrade for unlimited arrangements.'
                     : 'Bouquet tracking is free — keep up to 2 active at a time.'}
@@ -138,13 +138,13 @@ export default function BouquetsPage() {
                     <Calendar className="h-3 w-3 text-grove-blush" />
                     <span className="font-latin text-xs text-grove-blush">{formatDate(b.received_date)}</span>
                     {b.vase_life_expected && (
-                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-1.5 py-0.5 text-[12px] font-ui text-grove-blush">
+                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-1.5 py-0.5 text-xs font-ui text-grove-blush">
                         {b.vase_life_expected}d life
                       </span>
                     )}
                   </div>
                   {b.occasion && (
-                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-root px-2 py-0.5 text-[12px] font-ui text-grove-blush mt-1.5 capitalize">
+                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-root px-2 py-0.5 text-xs font-ui text-grove-blush mt-1.5 capitalize">
                       {b.occasion}
                     </span>
                   )}

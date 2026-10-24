@@ -252,7 +252,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
         ) : messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6">
             <p className="font-plant text-grove-cream text-sm">No messages yet</p>
-            <p className="font-latin italic text-[12px] text-grove-lichen mt-1">
+            <p className="font-latin italic text-xs text-grove-lichen mt-1">
               Be the first to say hello.
             </p>
           </div>
@@ -287,7 +287,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
               alt="attachment preview"
               className="w-10 h-10 rounded-[6px] object-cover"
             />
-            <span className="font-ui text-[12px] text-grove-sage flex-1 truncate">Photo attached</span>
+            <span className="font-ui text-xs text-grove-sage flex-1 truncate">Photo attached</span>
             <button
               type="button"
               onClick={() => setPhotoPath(null)}
@@ -334,7 +334,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             placeholder="Say something to your Grove…"
             rows={1}
             data-testid="grove-chat-input"
-            className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[13px] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
+            className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[0.8125rem] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
           />
           <button
             type="button"
@@ -387,7 +387,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
   if (msg.is_deleted) {
     return (
       <div className="flex justify-center my-1" data-testid={`chat-msg-${msg.id}`} data-deleted="true">
-        <span className="font-latin italic text-[12px] text-grove-sage px-3 py-1 rounded-[12px] bg-grove-moss">
+        <span className="font-latin italic text-xs text-grove-sage px-3 py-1 rounded-[12px] bg-grove-moss">
           Message deleted
         </span>
       </div>
@@ -406,11 +406,11 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
         }`}
         title={msg.author_display_name || msg.author_username || ''}
       >
-        <span className="font-plant text-[12px]">{initial}</span>
+        <span className="font-plant text-xs">{initial}</span>
       </div>
       <div className={`max-w-[78%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
         {!isOwn && (
-          <p className="font-plant text-[12px] text-grove-sage mb-0.5 ml-1">
+          <p className="font-plant text-xs text-grove-sage mb-0.5 ml-1">
             {msg.author_display_name || msg.author_username || ''}
           </p>
         )}
@@ -444,14 +444,14 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                 onChange={(e) => setEditBody(e.target.value)}
                 rows={2}
                 data-testid={`chat-msg-${msg.id}-edit-input`}
-                className="w-full resize-none rounded-[6px] border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream px-2 py-1 font-ui text-[13px] focus:outline-none focus:border-grove-fernLine"
+                className="w-full resize-none rounded-[6px] border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream px-2 py-1 font-ui text-[0.8125rem] focus:outline-none focus:border-grove-fernLine"
               />
               <div className="flex items-center gap-1.5 justify-end">
                 <button
                   type="button"
                   onClick={onEditCancel}
                   data-testid={`chat-msg-${msg.id}-edit-cancel`}
-                  className="rounded-[12px] font-ui text-[12px] px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
+                  className="rounded-[12px] font-ui text-xs px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
                 >
                   Cancel
                 </button>
@@ -459,7 +459,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditSave}
                   data-testid={`chat-msg-${msg.id}-edit-save`}
-                  className="rounded-[12px] font-ui text-[12px] px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
+                  className="rounded-[12px] font-ui text-xs px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
                 >
                   <Check className="h-3 w-3" /> Save
                 </button>
@@ -467,14 +467,14 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
             </div>
           ) : (
             msg.body && (
-              <p className="font-ui text-[13px] leading-snug whitespace-pre-wrap break-words">
+              <p className="font-ui text-[0.8125rem] leading-snug whitespace-pre-wrap break-words">
                 {msg.body}
               </p>
             )
           )}
         </div>
         <div className={`flex items-center gap-1.5 mt-0.5 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="font-latin italic text-[12px] text-grove-lichen">
+          <span className="font-latin italic text-xs text-grove-lichen">
             {formatChatTime(msg.created_at)}
             {msg.edited && ' · edited'}
           </span>

@@ -6,12 +6,12 @@ const daysAhead = (n) => new Date(NOW.getTime() + n * 86400000).toISOString();
 
 describe('dueLabel', () => {
   test('a plant past its schedule gets a check-in that keeps days since watering', () => {
-    expect(dueLabel({ next_water_due: daysAgo(3), last_watered_at: daysAgo(10) }, NOW)).toBe('Check-in time · watered 10 days ago');
+    expect(dueLabel({ next_water_due: daysAgo(3), last_watered_at: daysAgo(10) }, NOW)).toBe('Last watered 10 days ago');
   });
 
   test('without a last-watered date it keeps how far past schedule', () => {
-    expect(dueLabel({ next_water_due: daysAgo(2) }, NOW)).toBe('Check-in time · 2 days past schedule');
-    expect(dueLabel({ next_water_due: daysAgo(1.2) }, NOW)).toBe('Check-in time · 1 day past schedule');
+    expect(dueLabel({ next_water_due: daysAgo(2) }, NOW)).toBe('Due 2 days ago');
+    expect(dueLabel({ next_water_due: daysAgo(1.2) }, NOW)).toBe('Due 1 day ago');
   });
 
   test('never uses deadline words', () => {

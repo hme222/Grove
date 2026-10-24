@@ -128,7 +128,7 @@ export default function ProfilePage() {
             <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
-              <p className="font-ui text-[12px] text-grove-cream">{label}</p>
+              <p className="font-ui text-xs text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
@@ -532,7 +532,7 @@ function HardinessZoneControls() {
               <>
                 {system === 'USDA' ? `USDA Zone ${zone}` : `RHS ${zone}`}
                 {' '}
-                <span className="font-latin italic text-[12px] text-grove-sage">
+                <span className="font-latin italic text-xs text-grove-sage">
                   {user.location_postcode ? `\u00b7 ${user.location_postcode}` : ''}
                 </span>
               </>
@@ -719,7 +719,7 @@ function VerificationStatusCard() {
                 <p className="font-plant text-sm text-grove-cream" data-testid="verification-state-verified">
                   You're verified
                 </p>
-                <p className="font-ui text-[12px] text-grove-sage mt-0.5">
+                <p className="font-ui text-xs text-grove-sage mt-0.5">
                   {v.verified_at
                     ? `Pact signed ${new Date(v.verified_at).toLocaleDateString()}.`
                     : v.pact_signed_at
@@ -733,7 +733,7 @@ function VerificationStatusCard() {
                 <p className="font-plant text-sm text-grove-sun" data-testid="verification-state-needs-reverify">
                   Re-verification needed
                 </p>
-                <p className="font-ui text-[12px] text-grove-sage mt-0.5">
+                <p className="font-ui text-xs text-grove-sage mt-0.5">
                   The community pact has been updated. Re-sign before your next swap.
                 </p>
               </>
@@ -742,7 +742,7 @@ function VerificationStatusCard() {
                 <p className="font-plant text-sm text-grove-cream" data-testid="verification-state-unverified">
                   Not yet verified
                 </p>
-                <p className="font-ui text-[12px] text-grove-sage mt-0.5">
+                <p className="font-ui text-xs text-grove-sage mt-0.5">
                   Sign the 8-section community pact to unlock swaps once you've been on FloraGrove for 3 months and have an active Pro subscription.
                 </p>
               </>
@@ -806,7 +806,7 @@ function PactReaderModal({ onClose }) {
         <div className="flex items-start justify-between p-5 border-b-[0.5px] border-grove-moss">
           <div className="flex-1 min-w-0">
             <h3 className="font-plant text-grove-cream text-lg">{PACT_INTRO.heading}</h3>
-            <p className="font-latin italic text-[12px] text-grove-lichen mt-1">
+            <p className="font-latin italic text-xs text-grove-lichen mt-1">
               Pact v{PACT_VERSION} — read-only view
             </p>
           </div>
@@ -822,15 +822,15 @@ function PactReaderModal({ onClose }) {
         </div>
 
         <div className="overflow-y-auto p-5 space-y-4">
-          <p className="font-ui text-[13px] text-grove-cream leading-relaxed">{PACT_INTRO.body}</p>
+          <p className="font-ui text-[0.8125rem] text-grove-cream leading-relaxed">{PACT_INTRO.body}</p>
 
           {PACT_SECTIONS.map((s) => (
             <section key={s.number} className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-4">
-              <h4 className="font-plant text-[14px] text-grove-cream mb-2">
+              <h4 className="font-plant text-sm text-grove-cream mb-2">
                 {s.number}. {s.title}
               </h4>
               {s.bodyAsList ? (
-                <ul className="space-y-1.5 font-ui text-[13px] text-grove-cream leading-relaxed">
+                <ul className="space-y-1.5 font-ui text-[0.8125rem] text-grove-cream leading-relaxed">
                   {s.body.map((line, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="text-grove-sprout flex-shrink-0">•</span>
@@ -839,18 +839,18 @@ function PactReaderModal({ onClose }) {
                   ))}
                 </ul>
               ) : (
-                <div className="space-y-2 font-ui text-[13px] text-grove-cream leading-relaxed">
+                <div className="space-y-2 font-ui text-[0.8125rem] text-grove-cream leading-relaxed">
                   {s.body.map((p, i) => <p key={i}>{p}</p>)}
                 </div>
               )}
-              <p className="font-plant italic text-[12px] text-grove-sprout mt-3">
+              <p className="font-plant italic text-xs text-grove-sprout mt-3">
                 {s.acknowledgement}
               </p>
             </section>
           ))}
 
           <blockquote className="rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-moss p-4">
-            <p className="font-plant italic text-[13px] text-grove-cream leading-relaxed">
+            <p className="font-plant italic text-[0.8125rem] text-grove-cream leading-relaxed">
               "{FINAL_COPY.oath}"
             </p>
           </blockquote>
@@ -883,7 +883,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
     // Fallback while catalog loads — show first 3 earned badges from /badges
     if (allBadges.length === 0) {
       return (
-        <p className="font-latin italic text-[12px] text-grove-lichen">
+        <p className="font-latin italic text-xs text-grove-lichen">
           No badges yet — log your first care action to start earning.
         </p>
       );
@@ -898,7 +898,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
             <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
               <BadgeIcon name={badge?.icon} className="h-5 w-5 text-grove-sprout" />
             </span>
-            <p className="font-plant text-[12px] text-grove-cream leading-tight">
+            <p className="font-plant text-xs text-grove-cream leading-tight">
               {badge?.name}
             </p>
           </div>
@@ -912,7 +912,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
 
   if (items.length === 0 && catalog.earned_count === 0) {
     return (
-      <p className="font-latin italic text-[12px] text-grove-lichen" data-testid="profile-badges-empty">
+      <p className="font-latin italic text-xs text-grove-lichen" data-testid="profile-badges-empty">
         No badges yet — log your first care action to start earning.
       </p>
     );
@@ -927,7 +927,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
         className="w-full rounded-[10px] border-[0.5px] border-dashed border-grove-fernLine bg-grove-moss p-4 text-center hover:bg-grove-canopy transition-colors duration-150"
       >
         <p className="font-plant text-grove-cream text-sm">Pick up to 3 to display</p>
-        <p className="font-latin italic text-[12px] text-grove-sage mt-0.5">
+        <p className="font-latin italic text-xs text-grove-sage mt-0.5">
           You've earned {catalog.earned_count} of {catalog.total} badges. Choose your favourites.
         </p>
       </button>
@@ -945,11 +945,11 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
           <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
             <BadgeIcon name={it.icon} className="h-5 w-5 text-grove-sprout" />
           </span>
-          <p className="font-plant text-[12px] text-grove-cream leading-tight">
+          <p className="font-plant text-xs text-grove-cream leading-tight">
             {it.name}
           </p>
           {it.tier && (
-            <span className="font-plant text-[12px] text-grove-sage mt-0.5">
+            <span className="font-plant text-xs text-grove-sage mt-0.5">
               {it.tier}
             </span>
           )}

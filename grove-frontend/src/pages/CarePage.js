@@ -6,6 +6,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
+import ReminderNote from '../components/ReminderNote';
 import NextLessonCard from '../components/NextLessonCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
@@ -28,18 +29,19 @@ const FILTERS = [
 
 // Urgency visual tokens (kept on-brand, no raw reds/greens/blues).
 const URGENCY_STYLES = {
+  // Calm on purpose: a coloured stripe and dot mark the plant, the words say what happened.
   urgent: {
-    border: 'border-grove-bloom/60',
-    bg: 'bg-grove-bloom/15',
+    border: 'border-grove-bloom/40',
+    bg: 'bg-grove-canopy',
     dot: 'bg-grove-bloom',
-    label: 'text-grove-blush',
+    label: 'text-grove-sage',
     accent: '#E57A9C',
   },
   needs_water: {
-    border: 'border-grove-sun/40',
-    bg: 'bg-grove-sun/10',
+    border: 'border-grove-sun/30',
+    bg: 'bg-grove-canopy',
     dot: 'bg-grove-sun',
-    label: 'text-grove-sun',
+    label: 'text-grove-sage',
     accent: '#E8D77A',
   },
   healthy: {
@@ -207,7 +209,7 @@ export default function CarePage() {
               onClick={handleWaterAll}
               disabled={wateringAll}
               data-testid="water-all-button"
-              className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+              className="min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
             >
               <Droplets className="h-3.5 w-3.5" />
               {wateringAll ? 'Watering...' : 'Water All'}
@@ -218,7 +220,7 @@ export default function CarePage() {
         <FilterChips filters={FILTERS} active={filter} onChange={setFilter} />
       </PageHeader>
 
-      <div className="max-w-[900px] mx-auto px-4 pt-4 space-y-3">
+      <div className="max-w-[900px] mx-auto px-4 pt-4 pb-4 space-y-3">
         <button
           type="button"
           onClick={() => navigate('/search')}
@@ -229,6 +231,7 @@ export default function CarePage() {
           Search plants, guides and lessons
         </button>
         <ScheduleReviewBanner />
+        {!loading && plants.length > 0 && <ReminderNote />}
       </div>
 
       <div className="max-w-[900px] mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -294,7 +297,7 @@ export default function CarePage() {
                       {textMode === 'detailed' && plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
                         <p
                           data-testid="care-card-status-reason"
-                          className="font-ui text-[12px] text-grove-sage mt-0.5 leading-snug"
+                          className="font-ui text-xs text-grove-sage mt-0.5 leading-snug"
                         >
                           <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
@@ -309,7 +312,7 @@ export default function CarePage() {
                       <button
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
-                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout font-plant text-xs px-3 py-2 flex items-center justify-center gap-1.5 transition-colors duration-150"
+                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout font-plant text-xs px-3 py-2 min-h-[44px] flex items-center justify-center gap-1.5 transition-colors duration-150"
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
@@ -327,7 +330,7 @@ export default function CarePage() {
                         }}
                         aria-label="Mark done"
                         data-testid="care-mark-done"
-                        className="relative overflow-hidden w-9 h-9 rounded-full border-[0.5px] border-grove-fernLine bg-grove-moss text-grove-sprout hover:bg-grove-sprout hover:text-grove-cream flex items-center justify-center transition-colors duration-150"
+                        className="relative overflow-hidden w-11 h-11 rounded-full border-[0.5px] border-grove-fernLine bg-grove-moss text-grove-sprout hover:bg-grove-sprout hover:text-grove-cream flex items-center justify-center transition-colors duration-150"
                       >
                         <Check className="h-4 w-4" />
                       </button>
@@ -503,7 +506,7 @@ function ScheduleReviewBanner() {
         <p className="font-plant text-sm text-grove-cream leading-tight">
           Time to review your AI schedule
         </p>
-        <p className="font-ui text-[12px] text-grove-sage mt-0.5 leading-snug">
+        <p className="font-ui text-xs text-grove-sage mt-0.5 leading-snug">
           It&apos;s been 30 days since the AI suggested a watering cadence for {first.nickname || first.common_name}
           {more > 0 ? ` and ${more} other plant${more === 1 ? '' : 's'}` : ''}. Tap to review and adjust if your reality has changed.
         </p>

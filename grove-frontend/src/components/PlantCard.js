@@ -59,7 +59,7 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
           {plant.nickname || plant.common_name}
         </p>
         {plant.latin_name && (
-          <p className="font-latin text-grove-sage text-[12px] truncate">
+          <p className="font-latin text-grove-sage text-xs truncate">
             {plant.latin_name}
           </p>
         )}

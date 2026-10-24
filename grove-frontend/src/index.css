@@ -51,7 +51,7 @@
   body {
     @apply bg-grove-forest text-grove-cream;
     font-family: 'Alegreya Sans', Optima, Candara, system-ui, sans-serif;
-    font-size: 17px; /* Alegreya Sans runs small; 17px matches the 16px system face's x-height */
+    font-size: 1.0625rem; /* 17px at the default size. Alegreya Sans runs small; this matches a 16px system face's x-height, and scales with the reader's text size */
     -webkit-font-smoothing: antialiased;
     /* Behave like an installed app on a phone: no rubber-band bounce, no grey tap flash, clear the notch in landscape. */
     overscroll-behavior-y: none;

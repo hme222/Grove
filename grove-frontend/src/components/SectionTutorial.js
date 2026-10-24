@@ -26,7 +26,7 @@ export const TUTORIAL_COPY = {
   care: {
     title: 'Welcome to Today',
     icon: Droplets,
-    body: "This is your daily rhythm. Today shows what's due now and the badges you're working toward. Growth tracks change over time. Each tap is a small act of attention.",
+    body: "This is your daily rhythm. To do shows what's due now and the badges you're working toward. Progress tracks change over time. Each tap is a small act of attention.",
     accent: '#92B44B',
   },
   grove: {

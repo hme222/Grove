@@ -65,6 +65,17 @@ import HelpMyPlantPage from "./pages/HelpMyPlantPage";
 import SearchPage from "./pages/SearchPage";
 import CareLayout from "./components/CareLayout";
 
+// The free server sleeps when quiet, so the first open can take about a minute. Say so.
+function SlowStartNote() {
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setSlow(true), 6000);
+    return () => clearTimeout(t);
+  }, []);
+  if (!slow) return null;
+  return <p className="mt-2 font-ui text-sm text-grove-sage" data-testid="slow-start">Waking up. The first open after a quiet spell can take about a minute.</p>;
+}
+
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
@@ -73,6 +84,7 @@ function ProtectedRoute({ children }) {
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="font-plant text-grove-cream text-lg">Loading FloraGrove...</p>
+          <SlowStartNote />
         </div>
       </div>
     );
@@ -152,6 +164,7 @@ function AppRoutes() {
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="font-plant text-grove-cream text-lg">Loading FloraGrove...</p>
+          <SlowStartNote />
         </div>
       </div>
     );

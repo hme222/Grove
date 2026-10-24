@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
-import { SYMPTOMS, SAFETY_NOTE } from '../lib/plantHelp';
+import { SYMPTOMS, SAFETY_NOTE, SOIL_CHECK } from '../lib/plantHelp';
 import { ChevronLeft } from 'lucide-react';
 
 export default function HelpMyPlantPage() {
@@ -52,11 +52,21 @@ export default function HelpMyPlantPage() {
         <section aria-live="polite" data-testid="causes">
           {symptom && (
             <div className="space-y-3">
-              <h2 className="font-plant text-xl text-grove-cream">Most likely causes</h2>
+              {symptom.soilCheck && (
+                <div className="rounded-[22px] border-[0.5px] border-grove-sun/40 bg-grove-canopy px-5 py-4" data-testid="soil-check">
+                  <h2 className="font-plant text-xl text-grove-cream">{SOIL_CHECK.title}</h2>
+                  <p className="mt-1 font-ui text-sm text-grove-sage">{SOIL_CHECK.body}</p>
+                  <ul className="mt-2 space-y-1 font-ui text-sm text-grove-cream">
+                    <li>{SOIL_CHECK.dry}</li>
+                    <li>{SOIL_CHECK.wet}</li>
+                  </ul>
+                </div>
+              )}
+              <h2 className="font-plant text-xl text-grove-cream">{symptom.soilCheck ? 'Then match what you see' : 'Most likely causes'}</h2>
               <ol className="space-y-3">
                 {symptom.causes.map((c, i) => (
                   <li key={c.title} className="rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-4">
-                    <h3 className="font-plant text-lg text-grove-cream">{i === 0 ? 'Start here: ' : ''}{c.title}</h3>
+                    <h3 className="font-plant text-lg text-grove-cream">{i === 0 && !symptom.soilCheck ? 'Start here: ' : ''}{c.title}</h3>
                     <p className="mt-2 font-ui text-sm leading-relaxed text-grove-sage"><span className="text-grove-cream">What to check. </span>{c.check}</p>
                     <p className="mt-2 font-ui text-sm leading-relaxed text-grove-sage"><span className="text-grove-cream">What to try. </span>{c.fix}</p>
                   </li>

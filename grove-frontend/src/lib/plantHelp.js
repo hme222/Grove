@@ -3,6 +3,7 @@
 export const SYMPTOMS = [
   {
     id: 'yellow-leaves',
+    soilCheck: true,
     label: 'Yellow leaves',
     causes: [
       { title: 'Too much water', check: 'Push a finger two inches into the soil. If it is still wet days after watering, this is likely it. Lower leaves go yellow and soft first.', fix: 'Let the soil dry out before the next drink, empty the saucer, and make sure the pot has drainage holes.' },
@@ -13,6 +14,7 @@ export const SYMPTOMS = [
   },
   {
     id: 'brown-tips',
+    soilCheck: true,
     label: 'Brown, crispy tips',
     causes: [
       { title: 'Dry soil or dry air', check: 'The soil is bone dry, or the plant sits near a heater or vent.', fix: 'Water thoroughly until it drains, then move it away from direct heat or airflow.' },
@@ -22,6 +24,7 @@ export const SYMPTOMS = [
   },
   {
     id: 'drooping',
+    soilCheck: true,
     label: 'Drooping or wilting',
     causes: [
       { title: 'Thirsty', check: 'The soil is dry and the pot feels light.', fix: 'Water thoroughly. Most plants perk up within a day.' },
@@ -39,6 +42,7 @@ export const SYMPTOMS = [
   },
   {
     id: 'dropping-leaves',
+    soilCheck: true,
     label: 'Leaves dropping',
     causes: [
       { title: 'A recent change', check: 'It was moved, repotted, or the light or temperature changed in the last few weeks.', fix: 'Keep conditions steady. Some drop after a move is normal.' },
@@ -80,5 +84,14 @@ export const SYMPTOMS = [
     ],
   },
 ];
+
+// Overwatering is the most common way a new owner hurts a plant, and wilting looks the same whether
+// the soil is dry or soaked. So for symptoms that depend on moisture, the soil check comes first.
+export const SOIL_CHECK = {
+  title: 'First, feel the soil',
+  body: 'Push a finger two inches into the soil.',
+  dry: 'Dry: water thoroughly, until it runs out of the bottom.',
+  wet: 'Wet or soggy: do not water. Check the roots and the drainage.',
+};
 
 export const SAFETY_NOTE = 'If a pet or child has eaten part of a plant, call a vet or poison control right away.';

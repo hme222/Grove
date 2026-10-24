@@ -129,7 +129,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
         >
           <ul className="py-1 max-h-60 overflow-auto">
             {options.length === 0 && !creating && (
-              <li className="px-3 py-2 text-[12px] font-ui text-grove-sage">No rooms yet.</li>
+              <li className="px-3 py-2 text-xs font-ui text-grove-sage">No rooms yet.</li>
             )}
             {options.map((r) => (
               <li key={r}>

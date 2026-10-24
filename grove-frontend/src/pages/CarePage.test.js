@@ -76,7 +76,7 @@ describe('gentle wording', () => {
   test('a plant past schedule reads as a check-in, with days since watering', async () => {
     await mount();
     const card = q('care-card');
-    expect(card.textContent).toContain('Check-in time · watered 10 days ago');
+    expect(card.textContent).toContain('Last watered 10 days ago');
     expect(card.textContent).not.toMatch(/overdue|urgent/i);
   });
 

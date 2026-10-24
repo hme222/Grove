@@ -11,7 +11,7 @@ export default function CareTextToggle({ value = 'simple', onChange, disabled = 
   return (
     <fieldset data-testid="care-text-toggle" className="flex items-center gap-2" disabled={disabled}>
       <legend className="sr-only">Care tips</legend>
-      <span aria-hidden="true" className="font-ui text-[12px] text-grove-sage">Care tips</span>
+      <span aria-hidden="true" className="font-ui text-xs text-grove-sage">Care tips</span>
       <div className="inline-flex rounded-[10px] border-[0.5px] border-grove-moss bg-grove-moss p-0.5">
         {OPTIONS.map((opt) => {
           const active = value === opt.value;

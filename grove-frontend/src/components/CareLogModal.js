@@ -112,7 +112,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
           <DialogTitle className="font-plant text-grove-cream text-lg">
             Log care for {plantName}
           </DialogTitle>
-          <p className="text-[12px] font-ui text-grove-cream opacity-70 mt-1">
+          <p className="text-xs font-ui text-grove-cream opacity-70 mt-1">
             Tap every action you just did — they&apos;ll log together as one sweep.
           </p>
         </DialogHeader>
@@ -141,7 +141,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
         {selected.has('soil_check') && (
           <div className="mb-3 p-3 bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px]" data-testid="care-soil-fields">
-            <p className="text-[12px] font-ui text-grove-cream mb-2">Press a finger 2 inches into the soil. What did you feel?</p>
+            <p className="text-xs font-ui text-grove-cream mb-2">Press a finger 2 inches into the soil. What did you feel?</p>
             <div className="flex gap-2 mb-2">
               {[['dry', 'Dry and dusty'], ['damp', 'Damp and cool']].map(([value, label]) => (
                 <button
@@ -149,7 +149,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
                   type="button"
                   aria-pressed={soilOutcome === value}
                   onClick={() => setSoilOutcome(value)}
-                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-[12px] font-ui text-grove-cream ${
+                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-xs font-ui text-grove-cream ${
                     soilOutcome === value ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-canopy'
                   }`}
                   data-testid={`care-soil-outcome-${value}`}
@@ -158,7 +158,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
                 </button>
               ))}
             </div>
-            <p className="text-[12px] font-ui text-grove-cream mb-2">What will you do? (optional)</p>
+            <p className="text-xs font-ui text-grove-cream mb-2">What will you do? (optional)</p>
             <div className="flex gap-2">
               {[['water', 'Water it'], ['wait', 'Wait']].map(([value, label]) => (
                 <button
@@ -166,7 +166,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
                   type="button"
                   aria-pressed={soilDecision === value}
                   onClick={() => setSoilDecision(soilDecision === value ? '' : value)}
-                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-[12px] font-ui text-grove-cream ${
+                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-xs font-ui text-grove-cream ${
                     soilDecision === value ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-canopy'
                   }`}
                   data-testid={`care-soil-decision-${value}`}
@@ -176,7 +176,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
               ))}
             </div>
             {soilError && (
-              <p role="alert" className="mt-2 text-[12px] font-ui text-red-700" data-testid="care-soil-error">
+              <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="care-soil-error">
                 {soilError}
               </p>
             )}
@@ -188,12 +188,12 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             className="flex items-center justify-between px-3 py-2 mb-2 bg-grove-moss border-[0.5px] border-grove-fernLine/30 rounded-[6px]"
             data-testid="care-multi-summary"
           >
-            <span className="text-[12px] font-ui text-grove-cream">
+            <span className="text-xs font-ui text-grove-cream">
               {count} action{count === 1 ? '' : 's'} selected
             </span>
             <button
               onClick={() => setSelected(new Set())}
-              className="text-[12px] font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
+              className="text-xs font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
               data-testid="care-multi-clear"
             >
               Clear

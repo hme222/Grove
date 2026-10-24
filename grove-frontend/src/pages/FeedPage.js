@@ -305,7 +305,7 @@ export default function FeedPage() {
                       <span className="truncate">{post.display_name || post.username}</span>
                       <VerifiedProBadge user={post} size={14} />
                     </p>
-                    <p className="font-latin text-[12px] text-grove-cream">{formatTime(post.created_at)} ago</p>
+                    <p className="font-latin text-xs text-grove-cream">{formatTime(post.created_at)} ago</p>
                   </div>
                   {post.plant_name && (
                     <div className="flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5">
@@ -369,7 +369,7 @@ export default function FeedPage() {
                         <p className="font-plant text-xs text-grove-cream">
                           Conversation · {post.comment_count || 0}
                         </p>
-                        <p className="font-latin text-[12px] text-grove-cream truncate max-w-[60%]">
+                        <p className="font-latin text-xs text-grove-cream truncate max-w-[60%]">
                           on {post.display_name || post.username}'s post
                         </p>
                       </div>
@@ -378,7 +378,7 @@ export default function FeedPage() {
                         {(commentsData[post.id] || []).map(c => (
                           <div key={c.id} className="flex items-start gap-2">
                             <div className="w-6 h-6 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
-                              <span className="text-[12px] font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
+                              <span className="text-xs font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs"><span className="font-medium text-grove-cream">{c.username}</span> <span className="text-grove-cream">{c.body}</span></p>

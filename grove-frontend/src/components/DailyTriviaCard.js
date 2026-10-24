@@ -88,13 +88,13 @@ export default function DailyTriviaCard({ embedded = false }) {
             Daily {CATEGORY_LABELS[card.category] || 'plant fact'}
           </p>
           <h4
-            className="font-plant text-[14px] text-grove-cream leading-snug mb-1"
+            className="font-plant text-sm text-grove-cream leading-snug mb-1"
             data-testid="daily-trivia-headline"
           >
             {card.headline}
           </h4>
           <p
-            className="font-ui text-[12px] text-grove-cream leading-relaxed"
+            className="font-ui text-xs text-grove-cream leading-relaxed"
             data-testid="daily-trivia-body"
           >
             {card.body}

@@ -237,7 +237,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
           >
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="h-4 w-4 text-grove-sprout" />
-              <h4 className="font-plant text-[13px] text-grove-cream">{c.title}</h4>
+              <h4 className="font-plant text-[0.8125rem] text-grove-cream">{c.title}</h4>
             </div>
 
             {c.hero ? (
@@ -251,7 +251,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                     <c.Bad />
                     <span className="absolute inset-0 rounded-[10px] bg-grove-bloom/12 pointer-events-none" />
                   </div>
-                  <figcaption className="mt-1 font-latin text-[12px] text-[#A32D2D]">
+                  <figcaption className="mt-1 font-latin text-xs text-[#A32D2D]">
                     ✗ {c.BadLabel}
                   </figcaption>
                 </figure>
@@ -260,14 +260,14 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                     <c.Good />
                     <span className="absolute inset-0 rounded-[10px] bg-grove-lime/8 pointer-events-none" />
                   </div>
-                  <figcaption className="mt-1 font-latin text-[12px] text-[#27500A]">
+                  <figcaption className="mt-1 font-latin text-xs text-[#27500A]">
                     ✓ {c.GoodLabel}
                   </figcaption>
                 </figure>
               </div>
             )}
 
-            <p className="font-ui text-[12px] text-grove-sage leading-[1.55]">{c.body}</p>
+            <p className="font-ui text-xs text-grove-sage leading-[1.55]">{c.body}</p>
             <p className="font-latin text-xs text-grove-lichen mt-2">{i + 1} of {CARDS.length}</p>
           </article>
         ))}

@@ -45,11 +45,11 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
         </div>
         <div className="text-right">
           <p className="font-plant text-grove-cream text-2xl leading-none">{total}</p>
-          <p className="font-latin text-[12px] text-grove-cream">/ 100</p>
+          <p className="font-latin text-xs text-grove-cream">/ 100</p>
           {isEarly && (
             <span
               data-testid="plant-health-early-reading"
-              className="inline-block mt-1 rounded-full px-1.5 py-[1px] bg-grove-forest text-grove-lichen font-mono text-[12px] tracking-[0.05em]"
+              className="inline-block mt-1 rounded-full px-1.5 py-[1px] bg-grove-forest text-grove-lichen font-mono text-xs tracking-[0.05em]"
             >
               Early reading
             </span>

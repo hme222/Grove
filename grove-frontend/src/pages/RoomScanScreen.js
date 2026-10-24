@@ -175,7 +175,7 @@ export default function RoomScanScreen() {
         <button onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-1 font-plant text-xs text-grove-cream hover:text-grove-sprout">
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
-        <h1 className="font-plant text-grove-cream text-[17px]">Scan a room</h1>
+        <h1 className="font-plant text-grove-cream text-[1.0625rem]">Scan a room</h1>
         <p className="font-plant italic text-grove-sage text-xs mt-1 mb-4">Photograph a shelf or whole room. FloraGrove finds every plant.</p>
         <PlantImage tone="plant" rounded="lg" className="w-full aspect-[4/3] mb-3" testId="room-viewfinder" />
         <p className="font-ui text-xs text-grove-sage text-center mb-3">Frame the whole space — windowsill, shelf, or corner. Steady the camera.</p>
@@ -281,7 +281,7 @@ export default function RoomScanScreen() {
       </button>
       <div className="flex items-start justify-between gap-2 mb-3">
         <div>
-          <h1 className="font-plant text-grove-cream text-[17px]">FloraGrove found {scanResult?.plantsFound || 0} plants.</h1>
+          <h1 className="font-plant text-grove-cream text-[1.0625rem]">FloraGrove found {scanResult?.plantsFound || 0} plants.</h1>
           <p className="font-plant italic text-grove-sage text-xs">Select which ones to add.</p>
         </div>
         {Object.keys(selected).length > 0 && (
@@ -344,7 +344,7 @@ export default function RoomScanScreen() {
                     <span className={lowConf ? 'text-grove-sun' : ''}>{Math.round((p.confidence || 0) * 100)}% confident</span>
                   </p>
                   {lowConf && p.notes && (
-                    <p className="italic font-plant text-[12px] text-grove-sage mt-1 line-clamp-2">"{p.notes}"</p>
+                    <p className="italic font-plant text-xs text-grove-sage mt-1 line-clamp-2">"{p.notes}"</p>
                   )}
                   <div className="flex items-center gap-2 mt-1.5">
                     <div className="flex-1 h-1.5 bg-grove-moss rounded-full overflow-hidden">
@@ -373,7 +373,7 @@ export default function RoomScanScreen() {
                               key={d}
                               type="button"
                               onClick={() => setEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], watering_frequency_days: d } }))}
-                              className={`rounded-[16px] border-[0.5px] px-2 py-1 text-[12px] font-ui ${e.watering_frequency_days === d ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
+                              className={`rounded-[16px] border-[0.5px] px-2 py-1 text-xs font-ui ${e.watering_frequency_days === d ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
                             >{d}d</button>
                           ))}
                         </div>

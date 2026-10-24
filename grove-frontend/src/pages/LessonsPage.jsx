@@ -41,7 +41,7 @@ export default function LessonsPage() {
 
         {next && (
           <section className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="lessons-up-next">
-            <p className="text-[11px] font-ui text-grove-cream">Up next</p>
+            <p className="text-xs font-ui text-grove-cream">Up next</p>
             <p className="font-plant text-grove-cream text-xl">{LESSON_META[next].title}</p>
             <p className="text-sm text-grove-cream mb-3">{LESSON_META[next].blurb}</p>
             <button

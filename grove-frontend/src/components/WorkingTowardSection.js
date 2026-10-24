@@ -74,11 +74,11 @@ export default function WorkingTowardSection() {
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline justify-between gap-2 mb-1">
-                  <p className="font-plant text-[13px] text-grove-cream truncate">
+                  <p className="font-plant text-[0.8125rem] text-grove-cream truncate">
                     {g.name}
                   </p>
                   <p
-                    className="font-mono text-[12px] text-grove-sage flex-shrink-0"
+                    className="font-mono text-xs text-grove-sage flex-shrink-0"
                     data-testid={`goal-${g.slug}-progress`}
                   >
                     {p.current} / {p.target}{' '}

@@ -71,10 +71,10 @@ function Tooltip({ tooltip, targetRect, onDismiss }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1 flex-1 min-w-0">
-          <h4 className="font-plant text-[13px] leading-tight text-[#EAF3DE] font-medium">
+          <h4 className="font-plant text-[0.8125rem] leading-tight text-[#EAF3DE] font-medium">
             {tooltip.title}
           </h4>
-          <p className="font-ui text-[12px] leading-[1.5] text-[#9FE1CB]">{tooltip.body}</p>
+          <p className="font-ui text-xs leading-[1.5] text-[#9FE1CB]">{tooltip.body}</p>
         </div>
         <button
           onClick={onDismiss}

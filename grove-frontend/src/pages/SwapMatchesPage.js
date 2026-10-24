@@ -95,7 +95,7 @@ export default function SwapMatchesPage() {
                   <StatusPill status={match.status} />
                 </div>
                 <div className="flex items-center gap-1 mt-0.5">
-                  <span className="font-ui text-[12px] text-grove-sage">
+                  <span className="font-ui text-xs text-grove-sage">
                     with @{other_user?.username || 'grower'}
                   </span>
                   {other_user && (
@@ -138,7 +138,7 @@ function StatusPill({ status }) {
   };
   const c = config[status] || config.matched;
   return (
-    <span className={`inline-flex items-center rounded-[20px] border-[0.5px] ${c.border} ${c.bg} px-1.5 py-0.5 font-latin text-[12px] ${c.text}`}>
+    <span className={`inline-flex items-center rounded-[20px] border-[0.5px] ${c.border} ${c.bg} px-1.5 py-0.5 font-latin text-xs ${c.text}`}>
       {c.label}
     </span>
   );
