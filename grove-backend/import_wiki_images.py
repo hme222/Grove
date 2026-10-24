@@ -46,6 +46,15 @@ SPECIES_WIKI_MAP = {
     "dracaena-fragrans": "Dracaena_fragrans",
     "schlumbergera-buckleyi": "Schlumbergera_%C3%97_buckleyi",
     "haworthiopsis-fasciata": "Haworthiopsis_fasciata",
+    "echeveria-elegans": "Echeveria_elegans",
+    "sedum-morganianum": "Sedum_morganianum",
+    "beaucarnea-recurvata": "Beaucarnea_recurvata",
+    "pachira-aquatica": "Pachira_aquatica",
+    "aspidistra-elatior": "Aspidistra_elatior",
+    "peperomia-obtusifolia": "Peperomia_obtusifolia",
+    "dracaena-marginata": "Dracaena_marginata",
+    "kalanchoe-blossfeldiana": "Kalanchoe_blossfeldiana",
+    "opuntia-microdasys": "Opuntia_microdasys",
 }
 
 # Fallback article names if the primary doesn't have an image

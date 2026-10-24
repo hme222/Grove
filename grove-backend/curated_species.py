@@ -557,4 +557,168 @@ CURATED_SPECIES = [
             {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/zebra-haworthia"}
         ],
     },
+    # Added after the first synthetic user test: more common houseplants, succulents and a cactus.
+    # Only species with a direct ASPCA page are listed; pet safety is never guessed.
+    # 32
+    {
+        "slug": "echeveria-elegans",
+        "common_name": "Echeveria",
+        "latin_name": "Echeveria elegans",
+        "family": "Crassulaceae",
+        "native_range": "Mexico",
+        "default_watering_days": 14,
+        "default_light_level": "bright_direct",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A rosette succulent that wants as much sun as you can give it, such as a south or west window. Use gritty, fast-draining compost. Water moderately while it grows and not at all when it is resting in winter. It rots if it stays wet.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/6226/echeveria-elegans/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/hens-and-chickens"}
+        ],
+    },
+    # 33
+    {
+        "slug": "sedum-morganianum",
+        "common_name": "Burro's Tail",
+        "latin_name": "Sedum morganianum",
+        "family": "Crassulaceae",
+        "native_range": "Mexico",
+        "default_watering_days": 14,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A trailing succulent for bright, filtered light. Use gritty compost, water freely while it grows and sparingly in winter. The fat leaves drop off if it is knocked or moved a lot.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/16969/sedum-morganianum/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/burros-tail"}
+        ],
+    },
+    # 34
+    {
+        "slug": "beaucarnea-recurvata",
+        "common_name": "Ponytail Palm",
+        "latin_name": "Beaucarnea recurvata",
+        "family": "Asparagaceae",
+        "native_range": "Mexico",
+        "default_watering_days": 14,
+        "default_light_level": "bright_direct",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A slow plant that stores water in its swollen base, so it forgives forgotten waterings. Give it as much light as possible and water moderately while it grows, then keep it drier in winter. Overwatering is the way to lose it.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/1993/beaucarnea-recurvata/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/pony-tail"}
+        ],
+    },
+    # 35
+    {
+        "slug": "pachira-aquatica",
+        "common_name": "Money Tree",
+        "latin_name": "Pachira aquatica",
+        "family": "Malvaceae",
+        "native_range": "Central America and northern South America",
+        "default_watering_days": 7,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "Bright light or partial shade, and compost that stays lightly moist but drains freely. Not the same plant as the jade plant, which is also sold as a money tree and is toxic to pets: check the Latin name on the label.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/12078/pachira-aquatica/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/money-tree"}
+        ],
+    },
+    # 36
+    {
+        "slug": "aspidistra-elatior",
+        "common_name": "Cast Iron Plant",
+        "latin_name": "Aspidistra elatior",
+        "family": "Asparagaceae",
+        "native_range": "Japan",
+        "default_watering_days": 10,
+        "default_light_level": "low",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "Named for its toughness: it copes with low light, patchy watering and cool rooms (about 5 to 20°C). Keep it out of hot sun and away from heaters. The one way to harm it is soggy compost, which rots the roots.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/1715/aspidistra-elatior/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/cast-iron-plant"}
+        ],
+    },
+    # 37
+    {
+        "slug": "peperomia-obtusifolia",
+        "common_name": "Baby Rubber Plant",
+        "latin_name": "Peperomia obtusifolia",
+        "family": "Piperaceae",
+        "native_range": "Mexico, South America and the West Indies",
+        "default_watering_days": 7,
+        "default_light_level": "medium",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A compact, glossy plant that likes partial shade or filtered light and compost that is moist but well drained. Let the top of the compost dry a little between waterings. It is not related to the rubber plant (Ficus), which is a different species.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/106212/peperomia-obtusifolia/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/baby-rubber-plant"}
+        ],
+    },
+    # 38
+    {
+        "slug": "dracaena-marginata",
+        "common_name": "Madagascar Dragon Tree",
+        "latin_name": "Dracaena marginata",
+        "family": "Asparagaceae",
+        "native_range": "Madagascar",
+        "default_watering_days": 10,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "toxic",
+        "care_summary": "Bright light with some shade from hot sun. Water once the top 5 cm of compost is dry, and use rain or filtered water because fluoride in tap water browns the leaf tips. All parts are harmful to cats and dogs if eaten, so keep it out of reach.",
+        "flags": {"introduced_widely": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/31916/dracaena-marginata-v/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/madagascar-dragon-tree"}
+        ],
+    },
+    # 39
+    {
+        "slug": "kalanchoe-blossfeldiana",
+        "common_name": "Flaming Katy",
+        "latin_name": "Kalanchoe blossfeldiana",
+        "family": "Crassulaceae",
+        "native_range": "North-eastern Madagascar",
+        "default_watering_days": 10,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "toxic",
+        "care_summary": "Bright, filtered light. Water moderately while it grows and sparingly when it is resting, using gritty compost. Harmful to cats and dogs if eaten (it can affect the heart), so keep it where pets cannot reach it.",
+        "flags": {"introduced_widely": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/78810/kalanchoe-blossfeldiana/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/kalanchoe"}
+        ],
+    },
+    # 40
+    {
+        "slug": "opuntia-microdasys",
+        "common_name": "Bunny Ears Cactus",
+        "latin_name": "Opuntia microdasys",
+        "family": "Cactaceae",
+        "native_range": "Central and northern Mexico",
+        "default_watering_days": 14,
+        "default_light_level": "bright_direct",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A desert cactus that needs full sun and sharply draining compost. Water only once the compost has dried out while it grows, and keep it dry in winter. It is not poisonous, but the tiny barbed bristles and spines injure mouths and paws, so keep it out of reach; handle it with folded newspaper.",
+        "flags": {"introduced_widely": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/11881/opuntia-microdasys/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/tree-cactus"}
+        ],
+    },
 ]

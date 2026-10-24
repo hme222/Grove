@@ -50,7 +50,20 @@ def test_new_species_cite_https_sources_for_care_and_pet_safety():
             assert any("aspca.org" in u for u in urls), s["slug"]
 
 
+def test_the_cactus_is_not_flagged_pet_safe_because_its_spines_injure():
+    cactus = next(s for s in CURATED_SPECIES if s["slug"] == "opuntia-microdasys")
+    assert not cactus["flags"].get("pet_safe")
+    assert "spines" in cactus["care_summary"].lower()
+
+
+def test_the_money_tree_warns_that_the_jade_plant_is_the_toxic_one():
+    money = next(s for s in CURATED_SPECIES if s["slug"] == "pachira-aquatica")
+    assert "jade" in money["care_summary"].lower()
+
+
 def test_common_houseplants_that_were_missing_are_now_covered():
     names = {s["common_name"] for s in CURATED_SPECIES}
-    for expected in ["Moth Orchid", "Parlor Palm", "Chinese Evergreen", "Corn Plant", "Christmas Cactus", "Zebra Haworthia"]:
+    for expected in ["Moth Orchid", "Parlor Palm", "Chinese Evergreen", "Corn Plant", "Christmas Cactus", "Zebra Haworthia",
+                     "Echeveria", "Burro's Tail", "Ponytail Palm", "Money Tree", "Cast Iron Plant", "Baby Rubber Plant",
+                     "Madagascar Dragon Tree", "Flaming Katy", "Bunny Ears Cactus"]:
         assert expected in names
