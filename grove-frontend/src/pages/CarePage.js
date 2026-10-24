@@ -6,7 +6,8 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
-import ReminderNote from '../components/ReminderNote';
+import SetupNote from '../components/SetupNote';
+import ToxicityBadge from '../components/ToxicityBadge';
 import NextLessonCard from '../components/NextLessonCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
@@ -231,7 +232,7 @@ export default function CarePage() {
           Search plants, guides and lessons
         </button>
         <ScheduleReviewBanner />
-        {!loading && plants.length > 0 && <ReminderNote />}
+        {!loading && plants.length > 0 && <SetupNote />}
       </div>
 
       <div className="max-w-[900px] mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -289,6 +290,9 @@ export default function CarePage() {
                       <p className={`font-ui text-xs mt-1 ${style.label}`}>
                         {dueLabel(plant)}
                       </p>
+                      {user?.has_pets && (
+                        <ToxicityBadge toxicity={plant.species_toxicity} size="sm" className="mt-1.5" testId="care-card-toxicity" />
+                      )}
                       {(status === 'urgent' || status === 'needs_water') && (
                         <p data-testid="care-card-step" className="font-ui text-xs text-grove-cream mt-0.5 leading-snug">
                           {careStep(plant)}

@@ -92,6 +92,6 @@ Checked on a local copy of the app, at iPhone width, with the real backend and M
 | 6. Reminders never asked about | **Fixed.** A one-time card after the first plant: "One reminder a day, only when needed" with Sounds good, Turn off and Settings. |
 | 8. Small targets on Today | **Fixed** for the ✓, Water All, Log care and filter chips (44px). |
 | 9. Slow first open | **Fixed (message only).** After 6 seconds the loading screen says the first open after a quiet spell can take about a minute. The server still sleeps on the free plan. |
-| 5. Pet safety for custom plants | **Open.** Needs a "Do you have pets?" setting and a decision on where safety shows. |
-| 7. 25-species guide | **Open.** Needs content: orchids, parlor palm, Chinese evergreen, dracaena, cacti. |
+| 5. Pet safety for custom plants | **Fixed.** A "Do you have pets at home?" question in the one-time setup card (and a control on Profile). For pet owners every card on Today shows a pet-safety chip. Plants added by typing a name are now matched to the guide by common name as well, so they stop reading as "unknown" when the guide knows them. A plant the guide does not know still says unknown. |
+| 7. 25-species guide | **Partly fixed.** Six species added to the live guide, each with an RHS care source and an ASPCA pet-safety source: moth orchid, parlor palm, Chinese evergreen, corn plant (dracaena), Christmas cactus, zebra haworthia. Still missing: desert cacti, other succulents, more orchids and palms. The guide now has 31 species. |
 | Unverified items | **Open.** VoiceOver on the welcome screens, iOS Larger Text, dark theme in direct sun. |

@@ -40,6 +40,12 @@ SPECIES_WIKI_MAP = {
     "crassula-ovata": "Crassula_ovata",
     "dahlia-pinnata": "Dahlia_pinnata",
     "dahlia-cafe-au-lait": "Dahlia_pinnata",
+    "phalaenopsis": "Phalaenopsis",
+    "chamaedorea-elegans": "Chamaedorea_elegans",
+    "aglaonema-modestum": "Aglaonema_modestum",
+    "dracaena-fragrans": "Dracaena_fragrans",
+    "schlumbergera-buckleyi": "Schlumbergera_%C3%97_buckleyi",
+    "haworthiopsis-fasciata": "Haworthiopsis_fasciata",
 }
 
 # Fallback article names if the primary doesn't have an image
@@ -50,6 +56,8 @@ FALLBACKS = {
     "eucalyptus-polyanthemos": ["Eucalyptus_cinerea", "Eucalyptus_polyanthemos", "Eucalyptus"],
     "dahlia-cafe-au-lait": ["Dahlia_pinnata", "Dahlia"],
     "spathiphyllum-wallisii": ["Spathiphyllum"],
+    "schlumbergera-buckleyi": ["Schlumbergera"],
+    "haworthiopsis-fasciata": ["Haworthia_fasciata", "Haworthiopsis"],
 }
 
 WIKI_API = "https://en.wikipedia.org/api/rest_v1/page/summary/{}"

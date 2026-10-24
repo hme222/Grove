@@ -21,6 +21,22 @@ export default function ProfilePage() {
   const [generatingPersonality, setGeneratingPersonality] = useState(false);
   const [savingPref, setSavingPref] = useState(false);
 
+  const [savingPets, setSavingPets] = useState(false);
+  const savePets = async (value) => {
+    if (savingPets || user?.has_pets === value) return;
+    const previous = user?.has_pets ?? null;
+    updateUser({ has_pets: value });
+    setSavingPets(true);
+    try {
+      await userAPI.updateMe({ has_pets: value });
+    } catch (e) {
+      updateUser({ has_pets: previous });
+      toast.error("Couldn't save that. Try again.");
+    } finally {
+      setSavingPets(false);
+    }
+  };
+
   const handleManualToggle = async () => {
     if (savingPref) return;
     const next = !user?.prefer_manual_plant_entry;
@@ -240,13 +256,13 @@ export default function ProfilePage() {
             </span>
             <span
               className={`relative w-10 h-6 rounded-full flex-shrink-0 transition-colors duration-150 ${
-                user?.prefer_manual_plant_entry ? 'bg-grove-lime' : 'bg-grove-moss'
+                user?.prefer_manual_plant_entry ? 'bg-grove-lime border border-grove-lime' : 'bg-grove-moss border border-[#869A68]'
               }`}
               aria-hidden="true"
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-grove-canopy shadow transition-transform duration-150 ${
-                  user?.prefer_manual_plant_entry ? 'translate-x-4' : ''
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full shadow transition-transform duration-150 ${
+                  user?.prefer_manual_plant_entry ? 'translate-x-4 bg-grove-root' : 'bg-grove-sage'
                 }`}
               />
             </span>
@@ -254,6 +270,32 @@ export default function ProfilePage() {
           <p className="italic font-plant text-xs text-grove-sage mt-3 leading-snug">
             For experienced growers who know their plants and prefer to enter details directly.
           </p>
+        </div>
+
+        {/* Pets at home: pet owners see pet safety on their plants */}
+        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-pets">
+          <h3 id="pets-heading" className="font-plant text-grove-cream text-sm">Pets at home</h3>
+          <p className="mt-1 font-ui text-xs text-grove-sage">If pets share your home, each plant shows whether it is safe for them.</p>
+          <div role="group" aria-labelledby="pets-heading" className="mt-3 flex gap-2">
+            {[[true, 'Yes, I have pets'], [false, 'No pets']].map(([value, label]) => {
+              const active = user?.has_pets === value;
+              return (
+                <button
+                  key={String(value)}
+                  type="button"
+                  aria-pressed={active}
+                  disabled={savingPets}
+                  onClick={() => savePets(value)}
+                  data-testid={value ? 'profile-pets-yes' : 'profile-pets-no'}
+                  className={`min-h-[44px] rounded-full border-[0.5px] px-4 font-ui text-sm transition-colors duration-150 disabled:opacity-60 ${
+                    active ? 'border-grove-lime bg-grove-lime text-grove-root' : 'border-grove-fernLine bg-grove-canopy text-grove-cream hover:border-grove-lime'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Hardiness zone — Phase 14C */}
@@ -397,13 +439,13 @@ function TutorialsAndTipsControls() {
         </span>
         <span
           className={`relative w-10 h-6 rounded-full flex-shrink-0 transition-colors duration-150 ${
-            tooltipsOn ? 'bg-grove-lime' : 'bg-grove-moss'
+            tooltipsOn ? 'bg-grove-lime border border-grove-lime' : 'bg-grove-moss border border-[#869A68]'
           }`}
           aria-hidden="true"
         >
           <span
-            className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-grove-canopy shadow transition-transform duration-150 ${
-              tooltipsOn ? 'translate-x-4' : ''
+            className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full shadow transition-transform duration-150 ${
+              tooltipsOn ? 'translate-x-4 bg-grove-root' : 'bg-grove-sage'
             }`}
           />
         </span>

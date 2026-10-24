@@ -21,6 +21,7 @@ from auth import (
 )
 from storage import init_storage, put_object, get_object, generate_storage_path
 from room_light import light_fit, normalize_light
+from species_lookup import lookup as species_lookup_value, name_index as species_name_index
 from ai_service import (
     suggest_watering_schedule, generate_plant_biography, generate_plant_personality,
     call_claude, call_claude_vision, parse_json_response,
@@ -665,6 +666,8 @@ class UserUpdate(BaseModel):
     verification_phone: Optional[str] = None  # optional contact phone (never displayed publicly)
     # survey-2026 — Care tips: "simple" (exact step) or "detailed" (step + why)
     care_text_detail: Optional[Literal["simple", "detailed"]] = None
+    # Do pets share the home? Pet owners see pet safety on their plants.
+    has_pets: Optional[bool] = None
 
 @api_router.patch("/users/me")
 async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_user)):
@@ -1451,18 +1454,21 @@ async def search_species(q: str = ""):
     ).limit(20).to_list(20)
     return [serialize_doc(s) for s in species]
 
-async def find_library_species(species_id: Optional[str] = None, latin_name: Optional[str] = None) -> Optional[dict]:
-    """Grove's own species record, by id or exact (case-insensitive) Latin name. None if no match."""
+async def find_library_species(species_id: Optional[str] = None, latin_name: Optional[str] = None, common_name: Optional[str] = None) -> Optional[dict]:
+    """Grove's own species record, by id, then exact (case-insensitive) Latin name, then common name. None if no match."""
     try:
         if species_id:
             found = await db.species.find_one({"id": species_id}, {"_id": 0})
             if found:
                 return found
-        name = (latin_name or '').strip()
-        if name:
-            return await db.species.find_one(
-                {"latin_name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}}, {"_id": 0}
-            )
+        for field, value in (("latin_name", latin_name), ("common_name", common_name)):
+            name = (value or '').strip()
+            if name:
+                found = await db.species.find_one(
+                    {field: {"$regex": f"^{re.escape(name)}$", "$options": "i"}}, {"_id": 0}
+                )
+                if found:
+                    return found
     except Exception:
         logger.exception("species library lookup failed")
     return None
@@ -1527,6 +1533,13 @@ class PlantUpdate(BaseModel):
     # Phase 13 — when user manually edits species name, set ai_species_confirmed=True
     ai_species_confirmed: Optional[bool] = None
 
+async def attach_species_toxicity(plants):
+    """Add `species_toxicity` to each plant from the guide. None means unknown, never safe."""
+    index = species_name_index(await db.species.find({}, {"_id": 0, "latin_name": 1, "common_name": 1, "toxicity": 1}).to_list(500), "toxicity")
+    for p in plants:
+        p['species_toxicity'] = species_lookup_value(p, index)
+
+
 @api_router.get("/plants")
 async def get_plants(
     current_user: dict = Depends(get_current_user),
@@ -1547,6 +1560,7 @@ async def get_plants(
     for p in plants:
         p['status'] = calculate_plant_status(p)
         p['status_reason'] = compute_status_reason(p, p['status'])
+    await attach_species_toxicity(plants)
     return {"plants": [serialize_doc(p) for p in plants], "total": total, "page": page, "limit": limit}
 
 @api_router.get("/plants/water-round")
@@ -1762,7 +1776,7 @@ async def get_plant(plant_id: str, current_user: dict = Depends(get_current_user
     plant['status_reason'] = compute_status_reason(plant, plant['status'])
     # Pet safety comes from Grove's species library, never from the AI.
     # None means "unknown", and the UI must not read it as pet-safe.
-    match = await find_library_species(plant.get('species_id'), plant.get('latin_name'))
+    match = await find_library_species(plant.get('species_id'), plant.get('latin_name'), plant.get('common_name'))
     plant['species_toxicity'] = (match or {}).get('toxicity')
     return serialize_doc(plant)
 
@@ -2041,6 +2055,7 @@ async def get_due_today(current_user: dict = Depends(get_current_user)):
     for p in plants:
         p['status'] = calculate_plant_status(p)
         p['status_reason'] = compute_status_reason(p, p['status'])
+    await attach_species_toxicity(plants)
     return [serialize_doc(p) for p in plants]
 
 # ============ FILE UPLOAD ============
@@ -2729,18 +2744,14 @@ async def get_rooms(current_user: dict = Depends(get_current_user)):
 
     # Each room's light, and each plant's light need from its species (matched by name).
     light_by_room = {d['name']: d.get('light') async for d in db.rooms.find({"user_id": current_user['user_id']})}
-    need_by_name = {}
-    async for sp in db.species.find({}, {"common_name": 1, "latin_name": 1, "default_light_level": 1}):
-        for key in (sp.get('common_name'), sp.get('latin_name')):
-            if key:
-                need_by_name[key.strip().lower()] = sp.get('default_light_level')
+    need_by_name = species_name_index(await db.species.find({}, {"_id": 0, "common_name": 1, "latin_name": 1, "default_light_level": 1}).to_list(500), "default_light_level")
 
     result = []
     for r in rooms:
         light = light_by_room.get(r['_id'])
         fits = []
         for p in r['plants']:
-            need = next((need_by_name[k.strip().lower()] for k in (p.get('latin_name'), p.get('common_name')) if k and k.strip().lower() in need_by_name), None)
+            need = species_lookup_value(p, need_by_name)
             fit = light_fit(light, need)
             if need:
                 fits.append({"id": p['id'], "name": p.get('nickname') or p.get('common_name'), "need": need, "fit": fit})

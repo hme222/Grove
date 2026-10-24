@@ -108,6 +108,26 @@ CHALLENGES_DATA = [
 
 ROOMS = ["Living Room", "Bedroom", "Kitchen", "Bathroom", "Office", "Balcony", "Patio", "Greenhouse", "Hallway", "Dining Room"]
 
+
+def build_species_doc(s):
+    """The stored form of one curated species. Shared by the full seed and by add_species.py."""
+    return {
+        "id": str(uuid.uuid4()),
+        **s,
+        # Phase 14B.2 — companion list (slugs only here; the API
+        # hydrates these with the linked species' name + id at read time
+        # so the wire shape gives the frontend everything it needs).
+        "companions": COMPANIONS.get(s["slug"], []),
+        "encyclopedia_entry": (
+            f"{s['common_name']} ({s['latin_name']}) belongs to the {s['family']} family, "
+            f"native to {s.get('native_range') or s.get('native_habitat', 'unknown')}. "
+            f"{s['care_summary']}"
+        ),
+        "photo_library_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 async def seed_database(db):
     """Seed the database with initial data if empty."""
     # Phase 14B.1 — replace the legacy 50+ species with the user's 25-species
@@ -120,24 +140,7 @@ async def seed_database(db):
         # catalog becomes the source of truth.
         await db.species.delete_many({})
         await db.plants.update_many({}, {"$unset": {"species_id": ""}})
-        species_docs = []
-        for s in CURATED_SPECIES:
-            doc = {
-                "id": str(uuid.uuid4()),
-                **s,
-                # Phase 14B.2 — companion list (slugs only here; the API
-                # hydrates these with the linked species' name + id at read time
-                # so the wire shape gives the frontend everything it needs).
-                "companions": COMPANIONS.get(s["slug"], []),
-                "encyclopedia_entry": (
-                    f"{s['common_name']} ({s['latin_name']}) belongs to the {s['family']} family, "
-                    f"native to {s.get('native_range') or s.get('native_habitat', 'unknown')}. "
-                    f"{s['care_summary']}"
-                ),
-                "photo_library_count": 0,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-            }
-            species_docs.append(doc)
+        species_docs = [build_species_doc(s) for s in CURATED_SPECIES]
         if species_docs:
             await db.species.insert_many(species_docs)
             try:

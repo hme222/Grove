@@ -449,4 +449,112 @@ CURATED_SPECIES = [
             {"label": "American Dahlia Society", "url": "https://www.dahlia.org/"}
         ],
     },
+    # 26. Added after the first synthetic user test found common houseplants missing
+    {
+        "slug": "phalaenopsis",
+        "common_name": "Moth Orchid",
+        "latin_name": "Phalaenopsis",
+        "family": "Orchidaceae",
+        "native_range": "Tropical Asia and northern Australia",
+        "default_watering_days": 7,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "Bright, indirect light, such as an east or west window. Water about once a week with tepid water and let it drain fully; the roots rot if they stay wet. Pot it in bark-based orchid mix, not regular potting soil, and keep it above 16°C.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/phalaenopsis/growing-guide"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/phalaenopsis-orchid"}
+        ],
+    },
+    # 27
+    {
+        "slug": "chamaedorea-elegans",
+        "common_name": "Parlor Palm",
+        "latin_name": "Chamaedorea elegans",
+        "family": "Arecaceae",
+        "native_range": "Southern Mexico to Guatemala",
+        "default_watering_days": 7,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "Bright, indirect light; summer sun scorches the fronds. Keep the soil lightly moist but never waterlogged, and use rain or filtered water if your tap water is hard. It copes with cooler rooms, around 13°C in winter.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/29185/chamaedorea-elegans/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/parlor-palm"}
+        ],
+    },
+    # 28
+    {
+        "slug": "aglaonema-modestum",
+        "common_name": "Chinese Evergreen",
+        "latin_name": "Aglaonema modestum",
+        "family": "Araceae",
+        "native_range": "Tropical Asia",
+        "default_watering_days": 7,
+        "default_light_level": "medium",
+        "default_grow_medium": "soil",
+        "toxicity": "mild",
+        "care_summary": "Filtered, medium light; direct sun burns the leaves. Keep the soil lightly moist and let the top dry a little between waterings. Chewing it irritates the mouth (calcium oxalate crystals), so keep it away from pets, and wear gloves when handling it.",
+        "flags": {"introduced_widely": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/707/aglaonema-modestum/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/chinese-evergreen"}
+        ],
+    },
+    # 29
+    {
+        "slug": "dracaena-fragrans",
+        "common_name": "Corn Plant",
+        "latin_name": "Dracaena fragrans",
+        "family": "Asparagaceae",
+        "native_range": "Tropical Africa",
+        "default_watering_days": 10,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "toxic",
+        "care_summary": "Bright, indirect light with shade from hot sun. Water moderately while it is growing and sparingly in winter; let the top inch dry between drinks. It is harmful to cats and dogs if eaten, so keep it out of reach.",
+        "flags": {"introduced_widely": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/6093/dracaena-fragrans/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/corn-plant"}
+        ],
+    },
+    # 30
+    {
+        "slug": "schlumbergera-buckleyi",
+        "common_name": "Christmas Cactus",
+        "latin_name": "Schlumbergera × buckleyi",
+        "family": "Cactaceae",
+        "native_range": "Rainforests of southeastern Brazil",
+        "default_watering_days": 7,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A rainforest cactus, not a desert one. Bright, indirect light, away from strong sun, and compost that stays moist but never waterlogged. Two cool, drier rests (around 12 to 15°C), one in autumn and one after flowering, help it set buds. Moving it or sudden temperature swings make the buds drop.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/christmas-cactus/how-to-grow"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/christmas-cactus"}
+        ],
+    },
+    # 31
+    {
+        "slug": "haworthiopsis-fasciata",
+        "common_name": "Zebra Haworthia",
+        "latin_name": "Haworthiopsis fasciata",
+        "family": "Asphodelaceae",
+        "native_range": "South Africa (Cape)",
+        "default_watering_days": 14,
+        "default_light_level": "bright_indirect",
+        "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
+        "care_summary": "A small succulent that likes bright light but not hot midday sun. Use gritty cactus compost, water moderately while it grows, and keep it almost dry in winter. It rots if it sits in damp compost.",
+        "flags": {"introduced_widely": True, "pet_safe": True},
+        "citations": [
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/504897/haworthiopsis-fasciata/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/zebra-haworthia"}
+        ],
+    },
 ]
