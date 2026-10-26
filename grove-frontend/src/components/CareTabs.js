@@ -1,6 +1,7 @@
 import React from 'react';
 import AppLink from './AppLink';
 import { useLocation } from 'react-router-dom';
+import { TAB_STRIP_CLASS, tabClass } from './tabStyles';
 
 export const SUBTABS = [
   { path: '/care/today', label: 'To do', testid: 'care-today-tab', tooltipId: 'care_today_first_visit' },
@@ -14,7 +15,7 @@ export const SUBTABS = [
 export function CareTabs() {
   const location = useLocation();
   return (
-    <nav aria-label="Care views" className="-mx-1 mt-1 flex items-center gap-1 overflow-x-auto" data-testid="care-subtabs">
+    <nav aria-label="Care views" className={`mt-1 ${TAB_STRIP_CLASS}`} data-testid="care-subtabs">
       {SUBTABS.map((tab) => {
         const active = location.pathname.startsWith(tab.path);
         return (
@@ -23,9 +24,7 @@ export function CareTabs() {
             to={tab.path}
             data-testid={tab.testid}
             aria-current={active ? 'page' : undefined}
-            className={`min-h-touch flex-shrink-0 border-b-strong px-3 font-ui text-sm transition-colors duration-150 ${
-              active ? 'border-grove-fernLine text-grove-cream' : 'border-transparent text-grove-sage hover:text-grove-cream'
-            }`}
+            className={tabClass(active)}
           >
             {tab.label}
           </AppLink>

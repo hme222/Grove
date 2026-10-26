@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Spinner } from '../components/Loading';
 import LoadError from '../components/LoadError';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ const ROOMS = ['Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Office', 'Balco
 const MEDIUMS = [
   { value: 'soil', label: 'Soil' },
   { value: 'leca', label: 'LECA' },
+  { value: 'bark', label: 'Bark', orchidOnly: true },
   { value: 'water', label: 'Water' },
   { value: 'propagation_jar', label: 'Propagation Jar' },
   { value: 'other', label: 'Other' },
@@ -35,14 +36,18 @@ export default function AddPlantPage() {
   // mode: 'chooser' | 'identify' | 'room' | 'manual'
   // Arriving from a species page ('Add to my plants') goes straight to the form with that species chosen.
   const speciesFromLink = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('species') : null;
+  const nameFromLink = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('name') : null;
   const initialMode = speciesFromLink || user?.prefer_manual_plant_entry ? 'manual' : 'chooser';
   const [mode, setMode] = useState(initialMode);
+  // True once the person chose "Search by name" themselves, so focus follows them into the form.
+  const switchedByPerson = useRef(false);
+  const goManual = () => { switchedByPerson.current = true; setMode('manual'); };
 
   if (mode === 'identify') {
-    return <PlantIdentifyScreen onSwitchToManual={() => setMode('manual')} />;
+    return <PlantIdentifyScreen onSwitchToManual={goManual} />;
   }
   if (mode === 'manual') {
-    return <ManualEntryFlow onBack={() => setMode('chooser')} presetSpeciesId={speciesFromLink} />;
+    return <ManualEntryFlow onBack={() => setMode('chooser')} presetSpeciesId={speciesFromLink} presetName={nameFromLink} focusSearch={switchedByPerson.current} />;
   }
   // Chooser
   const opts = [
@@ -52,7 +57,7 @@ export default function AddPlantPage() {
       title: 'Search by name',
       desc: 'Pick your plant from our guide and we fill in the care for you.',
       testId: 'add-option-manual',
-      onClick: () => setMode('manual'),
+      onClick: goManual,
     },
     {
       key: 'identify',
@@ -93,10 +98,13 @@ export default function AddPlantPage() {
 }
 
 // ---- Manual entry flow (legacy two-step preserved verbatim) ----
-function ManualEntryFlow({ onBack, presetSpeciesId }) {
+function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
   const navigate = useNavigate();
   const [species, setSpecies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(presetName || '');
+  const searchRef = useRef(null);
+  // Switching from the chooser to the form moves focus to the search field, so a keyboard or screen-reader user lands on it.
+  useEffect(() => { if (focusSearch) searchRef.current?.focus(); }, [focusSearch]);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
   const [showSearch, setShowSearch] = useState(true);
   const [step, setStep] = useState('details');
@@ -190,7 +198,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
             onSkip={() => handlePhotoReady(null)}
           />
           {saving && (
-            <div className="fixed inset-0 bg-grove-lime/50 z-sheet flex items-center justify-center">
+            <div className="fixed inset-0 bg-grove-lime/40 z-sheet flex items-center justify-center">
               <div className="bg-grove-forest rounded-small p-5 text-center" role="status">
                 <Spinner className="mx-auto mb-2 block h-6 w-6" />
                 <p className="font-ui text-grove-cream text-sm font-medium">Adding to your grove…</p>
@@ -200,23 +208,14 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
         </div>
       ) : (
       <div className="max-w-column mx-auto px-4 py-4">
-        {presetFailed && (
-          <div className="mb-4">
-            <LoadError compact what="the plant you chose" note="You can still search for it below." onRetry={loadPreset} testId="preset-failed" />
-          </div>
-        )}
-        {showSearch && searchFailed && !presetFailed && (
-          <div className="mb-4">
-            <LoadError compact what="the plant search" note="You can still add a custom plant below." onRetry={runSearch} testId="search-failed" />
-          </div>
-        )}
         {showSearch ? (
           <div>
             <div className="mb-4">
-              <label htmlFor="addplant-search-species" className="font-ui text-xs text-grove-cream block mb-1.5">Search species</label>
+              <label htmlFor="addplant-search-species" className="font-ui text-xs text-grove-cream block mb-1.5">Search by name</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-sage" />
-                <input id="addplant-search-species" 
+                <input id="addplant-search-species"
+                  ref={searchRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -226,6 +225,16 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
                 />
               </div>
             </div>
+            {presetFailed && (
+              <div className="mb-4">
+                <LoadError compact what={presetName ? `${presetName} from the plant guide` : 'the plant you chose'} note="You can still search for it above." onRetry={loadPreset} testId="preset-failed" />
+              </div>
+            )}
+            {searchFailed && !presetFailed && (
+              <div className="mb-4">
+                <LoadError compact what="the plant search" note="You can still add a custom plant below." onRetry={runSearch} testId="search-failed" />
+              </div>
+            )}
             <div className="space-y-1 max-h-96 overflow-y-auto">
               {species.map(sp => (
                 <button
@@ -238,7 +247,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
                   <p className="font-latin text-xs text-grove-cream">{sp.latin_name}</p>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
                     <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" />
-                    <span className="text-xs font-ui text-grove-cream">Water every {sp.default_watering_days}d</span>
+                    <span className="text-xs font-ui text-grove-cream">Check about every {sp.default_watering_days}d</span>
                   </div>
                 </button>
               ))}
@@ -319,7 +328,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
             <div>
               <p id="addplant-grow-medium-label" className="font-ui text-xs text-grove-cream block mb-1.5">Grow Medium</p>
               <div role="group" aria-labelledby="addplant-grow-medium-label" className="flex flex-wrap gap-1.5">
-                {MEDIUMS.map(m => (
+                {MEDIUMS.filter(m => !m.orchidOnly || selectedSpecies?.family === 'Orchidaceae' || formData.grow_medium === 'bark').map(m => (
                   <button
                     key={m.value}
                     type="button"
@@ -346,13 +355,13 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
             </div>
             <div>
               <p id="addplant-watering-label" className="font-ui text-xs text-grove-cream block mb-1.5">
-                Watering frequency
+                How often to check the soil
                 {formData.watering_frequency_days && (
-                  <span className="text-grove-sprout normal-case"> · Every {formData.watering_frequency_days} days</span>
+                  <span className="text-grove-sprout normal-case"> · about {formData.watering_frequency_days} days</span>
                 )}
               </p>
               <div role="group" aria-labelledby="addplant-watering-label" className="flex flex-wrap gap-1.5">
-                {[3, 5, 7, 10, 14, 21].map(days => (
+                {[3, 5, 7, 10, 14, 21, 28].map(days => (
                   <button
                     key={days}
                     type="button"
@@ -372,6 +381,9 @@ function ManualEntryFlow({ onBack, presetSpeciesId }) {
                 placeholder="Any notes about your plant…"
               />
             </div>
+            <p className="font-ui text-xs text-grove-sage" data-testid="add-plant-new-plant-note">
+              Keep a new plant apart from your others for two weeks and check leaves and soil for pests. A few dropped leaves in the first weeks are normal; do not repot or feed right away.
+            </p>
             <button
               type="submit"
               disabled={saving}

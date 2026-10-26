@@ -14,7 +14,7 @@ export default function NotFoundPage({ title = 'Page not found', heading = 'We c
       <div className="mx-auto max-w-page px-4 py-6">
         <div className="mx-auto max-w-form rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-center">
           <Compass className="mx-auto h-8 w-8 text-grove-sage" aria-hidden="true" />
-          <h2 className="mt-3 font-plant text-2xl text-grove-cream">{heading}</h2>
+          <h2 className="mt-3 font-plant text-xl text-grove-cream">{heading}</h2>
           <p className="mt-2 font-ui text-sm leading-relaxed text-grove-sage">
             {message}
           </p>

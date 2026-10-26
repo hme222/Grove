@@ -53,7 +53,7 @@ export function impactMedium(target) {
   if (!safeVibrate(18)) spawnRipple(target);
 }
 
-// Success pattern — used for milestones, first care, streak unlocks
+// Success pattern — used for milestones, first care, first check-in
 export function success(target) {
   if (!safeVibrate([12, 40, 18])) spawnRipple(target, { tone: 'success' });
 }

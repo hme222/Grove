@@ -29,9 +29,8 @@ jest.mock(
 jest.mock('../components/PlantCard', () => ({ plant }) => <div data-testid="plant-card">{plant.common_name}</div>);
 jest.mock('../components/PlantImage', () => () => null);
 jest.mock('../components/PageHeader', () => ({
-  PageHeader: ({ count, rightContent }) => (
+  PageHeader: ({ rightContent }) => (
     <header>
-      <span data-testid="header-count">{count}</span>
       {rightContent}
     </header>
   ),
@@ -76,7 +75,8 @@ test('the plant grid shows plants only and counts plants only', async () => {
   await mount();
   expect(qa('plant-card')).toHaveLength(2);
   expect(qa('collection-grid-bouquet-tile')).toHaveLength(0);
-  expect(q('header-count').textContent).toBe('2');
+  expect(q('collection-view-plants').textContent).toBe('Plants2');
+  expect(q('collection-view-bouquets').textContent).toBe('Bouquets1');
   expect(q('collection-view-plants').getAttribute('aria-pressed')).toBe('true');
 });
 
@@ -87,10 +87,10 @@ test('the Bouquets segment shows bouquets and is linkable', async () => {
   await mount();
   expect(qa('collection-grid-bouquet-tile')).toHaveLength(1);
   expect(qa('plant-card')).toHaveLength(0);
-  expect(q('header-count').textContent).toBe('1');
+  expect(q('collection-view-bouquets').getAttribute('aria-pressed')).toBe('true');
   expect(q('collection-select-button')).toBeNull();
   await act(async () => { q('collection-grid-bouquet-tile').click(); });
-  expect(mockNavigate).toHaveBeenCalledWith('/bouquets/b1');
+  expect(mockNavigate).toHaveBeenCalledWith('/bouquets/b1', { state: { name: 'Tulips' } });
 });
 
 test('people with no bouquets never see the switch', async () => {

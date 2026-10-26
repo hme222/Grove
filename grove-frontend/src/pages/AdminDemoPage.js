@@ -6,7 +6,7 @@ import { PageHeader } from '../components/PageHeader';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { adminAPI } from '../lib/api';
-import { RefreshCw, Zap, User, Check, AlertTriangle } from 'lucide-react';
+import { RefreshCw, User, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -55,19 +55,6 @@ export default function AdminDemoPage() {
       fetchStatus();
     } catch (e) {
       toast.error('Reset failed');
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  const handleQuickState = async (username, action, label) => {
-    setActionLoading(`${username}-${action}`);
-    try {
-      const res = await adminAPI.setQuickState(username, action);
-      toast.success(res.data.message || label);
-      fetchStatus();
-    } catch (e) {
-      toast.error('Action failed');
     } finally {
       setActionLoading(null);
     }
@@ -125,11 +112,11 @@ export default function AdminDemoPage() {
                   {account.display_name} <span className="text-sm text-grove-cream">@{account.username}</span>
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-round bg-grove-canopy text-grove-cream text-xs font-ui min-h-6 border-hairline border-grove-moss">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-pill bg-grove-canopy text-grove-cream text-xs font-ui min-h-6 border-hairline border-grove-moss">
                     {account.tier}
                   </span>
                   <span className="text-xs text-grove-cream">
-                    Streak: {account.current_streak} days
+                    Check-ins this week: {account.check_ins_this_week}
                   </span>
                   <span className="text-xs text-grove-cream">
                     Plants: {account.plants_count}
@@ -139,62 +126,10 @@ export default function AdminDemoPage() {
                   </span>
                 </div>
                 
-                {/* Unlocks */}
-                <div className="flex items-center gap-3 mt-3">
-                  <span className="text-xs font-ui text-grove-cream">Unlocks:</span>
-                  {Object.entries(account.unlocks).map(([key, unlocked]) => (
-                    <div key={key} className="flex items-center gap-1">
-                      {unlocked ? (
-                        <Check className="h-3 w-3 text-grove-sprout" />
-                      ) : (
-                        <div className="h-3 w-3 rounded-full border-hairline border-grove-moss" />
-                      )}
-                      <span className="text-xs text-grove-cream capitalize">{key.replace('_', ' ')}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
 
-            {/* Quick State Buttons */}
             <div className="space-y-3">
-              <h3 className="font-ui text-xs text-grove-cream">Quick State Actions</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {account.username === 'mayagreens' && (
-                  <>
-                    <Button
-                      onClick={() => handleQuickState('mayagreens', 'set_streak_6', 'Streak set to 6 days')}
-                      disabled={actionLoading === 'mayagreens-set_streak_6'}
-                      
-                    >
-                      <Zap className="h-3 w-3 mr-1" />
-                      Set streak to 6 days
-                    </Button>
-                    <Button
-                      onClick={() => handleQuickState('mayagreens', 'set_streak_7', 'Feed unlocked!')}
-                      disabled={actionLoading === 'mayagreens-set_streak_7'}
-                      
-                    >
-                      <Zap className="h-3 w-3 mr-1" />
-                      Unlock feed (7 days)
-                    </Button>
-                  </>
-                )}
-                
-                {account.username === 'rootsandstems' && (
-                  <>
-                    <Button
-                      onClick={() => handleQuickState('rootsandstems', 'set_streak_30', 'Swaps unlocked!')}
-                      disabled={actionLoading === 'rootsandstems-set_streak_30'}
-                      
-                    >
-                      <Zap className="h-3 w-3 mr-1" />
-                      Unlock swaps (30 days)
-                    </Button>
-                  </>
-                )}
-              </div>
-
               {/* Reset Button */}
               <Button
                 onClick={() => handleReset(account.username)}

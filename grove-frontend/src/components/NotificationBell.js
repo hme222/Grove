@@ -2,15 +2,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Loading from './Loading';
 import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../lib/api';
-import { Bell, X, Trash2, Leaf, Flame, Sprout, Users, Heart, MessageCircle, Flower2 } from 'lucide-react';
+import { Bell, X, Trash2, Leaf, Sprout, Users, Heart, MessageCircle, Flower2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const UNREAD_POLL_MS = 45000;
 
 function iconForType(type) {
   switch (type) {
-    case 'streak_milestone': return Flame;
-    case 'streak_at_risk': return Flame;
     case 'care_due':
     case 'care_overdue': return Sprout;
     case 'swap_match': return Users;
@@ -40,7 +38,7 @@ function relativeTime(iso) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function routeForNotification(n) {
+export function routeForNotification(n) {
   const t = n.type;
   if (t === 'swap_match') return n.entity_id ? `/swaps/${n.entity_id}` : '/swaps/matches';
   if (t === 'swap_message') return n.entity_id ? `/swaps/${n.entity_id}` : '/swaps/matches';
@@ -48,7 +46,6 @@ function routeForNotification(n) {
   if (t === 'swap_cancelled') return '/swaps/matches';
   if (t === 'unlock') return '/swap';
   if (t === 'care_due' || t === 'care_overdue') return '/care/today';
-  if (t === 'streak_at_risk' || t === 'streak_milestone') return '/care/today';
   if (t === 'goal_completed') return '/badges';
   if (t === 'kudos_received' || t === 'comment_received' || t === 'reaction_received') return '/feed';
   if (t === 'bouquet_reminder') return '/bouquets';
@@ -204,7 +201,7 @@ export default function NotificationBell() {
                 return (
                   <div
                     key={n.id}
-                    className={`w-full border-b-hairline border-grove-moss/60 flex items-start transition-colors duration-150 ${
+                    className={`w-full border-b-hairline border-grove-moss/80 flex items-start transition-colors duration-150 ${
                       !n.is_read
                         ? 'bg-grove-moss border-l-accent border-l-grove-lime hover:bg-grove-moss'
                         : 'hover:bg-grove-moss'

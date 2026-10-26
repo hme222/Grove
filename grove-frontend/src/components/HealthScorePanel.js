@@ -63,7 +63,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-3 border-t-hairline border-grove-moss/60 pt-3">
+        <div className="px-4 pb-4 space-y-3 border-t-hairline border-grove-moss/80 pt-3">
           {/* Factor list */}
           <div className="space-y-2" data-testid="plant-health-factors">
             {factors.map((f) => {

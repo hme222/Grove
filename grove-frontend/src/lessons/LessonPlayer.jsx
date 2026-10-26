@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import BackButton from '../components/BackButton';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
@@ -7,7 +7,7 @@ import { buttonVariants } from '../components/ui/button';
 // Steps through a lesson's cards. The last card hands over to
 // `renderFinalCard`, which holds the lesson's "your turn" action. Card text
 // comes from Grove's own lesson files and may contain simple HTML.
-export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
+export default function LessonPlayer({ cards, renderFinalCard, onExit, sources }) {
   const [index, setIndex] = useState(0);
   const headingRef = useRef(null);
   const card = cards[index];
@@ -70,6 +70,33 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit }) {
             </div>
           )}
         </div>
+        {sources && (sources.sources?.length > 0 || sources.gaps?.length > 0) && (
+          <details className="group mt-6 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3" data-testid="lesson-sources">
+            <summary className="flex min-h-touch cursor-pointer items-center justify-between font-ui text-base font-medium text-grove-cream">
+              Sources for this lesson
+              <ChevronDown className="h-4 w-4 shrink-0 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
+            </summary>
+            <ul className="mt-2 space-y-3">
+              {sources.sources.map((src) => (
+                <li key={src.url} className="font-ui text-sm text-grove-sage">
+                  <a
+                    href={src.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-touch items-center text-grove-cream underline underline-offset-2"
+                  >
+                    {src.publisher}: {src.title}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  <p className="mt-0.5 leading-snug">{src.supports}</p>
+                </li>
+              ))}
+            </ul>
+            {sources.gaps?.map((g) => (
+              <p key={g} className="mt-3 font-ui text-sm leading-snug text-grove-sage">{g}</p>
+            ))}
+          </details>
+        )}
       </div>
     </div>
   );

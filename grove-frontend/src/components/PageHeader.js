@@ -8,7 +8,7 @@ import BackButton from './BackButton';
 
 // One header for every screen: [Back] Title ... [page action] [bell] [profile].
 // `back` is true (step back in history) or { to, where } (go to a named place).
-export function PageHeader({ title, count, rightContent, children, hideBell, hideProfile, back, countLabel }) {
+export function PageHeader({ title, rightContent, children, hideBell, hideProfile, back }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const onProfile = pathname === '/profile';
@@ -24,13 +24,7 @@ export function PageHeader({ title, count, rightContent, children, hideBell, hid
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
           <div className="flex min-w-0 flex-1 basis-28 items-center gap-2">
             {back && <BackButton {...(back === true ? {} : back)} />}
-            <h1 id="page-title" className="flex min-h-touch items-center font-plant text-grove-cream text-xl leading-tight break-words"><span className="line-clamp-2 overflow-hidden">{title}</span></h1>
-            {count !== undefined && (
-              <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
-                {count}
-                {countLabel && <span className="sr-only"> {countLabel}</span>}
-              </span>
-            )}
+            <h1 id="page-title" className="flex min-h-touch items-center font-plant text-grove-cream text-2xl leading-tight break-words"><span className="line-clamp-2 overflow-hidden">{title}</span></h1>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}
@@ -92,8 +86,8 @@ export function FilterChips({ filters, active, onChange, className = '' }) {
 
 export function EmptyState({ title, description, action }) {
   return (
-    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center my-8 mx-4">
-      <p className="font-plant text-grove-cream text-lg mb-1">{title}</p>
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center my-8">
+      <p className="font-plant text-grove-cream text-base mb-1">{title}</p>
       <p className="text-sm font-ui text-grove-cream mb-4">{description}</p>
       {action}
     </div>

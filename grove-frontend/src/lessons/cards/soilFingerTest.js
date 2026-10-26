@@ -19,7 +19,7 @@ export const CARDS = [
     header: "Card 2 of 5 · The Probe",
     headline: "Your natural moisture sensor.",
     body:
-      "Use your index finger as a physical moisture probe. Push it <strong>2 inches deep</strong> into the soil &mdash; up to your second knuckle. That&rsquo;s the whole tool. No gadgets, no apps.",
+      "Use your index finger as a physical moisture probe. Push it into the soil <strong>up to your second knuckle</strong> in a pot 6 in (15 cm) or bigger. In a small pot, the first knuckle is enough. That&rsquo;s the whole tool. No gadgets, no apps.",
     cta: "Got it &mdash; finger as probe",
     icon: Hand,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -57,7 +57,7 @@ export const CARDS = [
     header: "Card 5 of 5 · Your Turn",
     headline: "60 seconds. One plant. Real answer.",
     body:
-      "Go to your nearest plant right now. Press your finger 2 inches into the soil. Then tap what you found below &mdash; there is no wrong answer.",
+      "Go to your nearest plant right now. Press your finger into the soil, to the second knuckle (the first in a small pot). Then tap what you found below &mdash; there is no wrong answer.",
     cta: "Log my first soil test",
     icon: Timer,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

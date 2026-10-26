@@ -21,7 +21,7 @@ describe('normalizeToxicity', () => {
     'missing or unrecognized %p is unknown, never pet-safe',
     (value) => {
       expect(normalizeToxicity(value)).toBe('unknown');
-      expect(getToxicityInfo(value).label).not.toBe('Pet-safe');
+      expect(getToxicityInfo(value).label).not.toBe('Non-toxic to pets');
     }
   );
 });
@@ -57,7 +57,7 @@ describe('ToxicityBadge', () => {
     expect(toxic.textContent).toBe('Toxic if ingested');
     expect(toxic.querySelector('svg')).not.toBeNull();
     const safe = render('non_toxic');
-    expect(safe.textContent).toBe('Pet-safe');
+    expect(safe.textContent).toBe('Non-toxic to pets');
     expect(safe.className).not.toBe(toxicClass);
   });
 

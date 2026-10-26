@@ -2,16 +2,14 @@ import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { cn } from "@/lib/utils"
+import { TAB_STRIP_CLASS, TAB_CLASS } from "@/components/tabStyles"
 
 const Tabs = TabsPrimitive.Root
 
 const TabsList = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn(
-      "inline-flex min-h-touch items-center justify-center rounded-control bg-muted p-1 text-muted-foreground",
-      className
-    )}
+    className={cn(TAB_STRIP_CLASS, className)}
     {...props} />
 ))
 TabsList.displayName = TabsPrimitive.List.displayName
@@ -19,10 +17,7 @@ TabsList.displayName = TabsPrimitive.List.displayName
 const TabsTrigger = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap min-h-touch rounded-inset px-3 py-1 font-ui text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-2 focus-visible:ring-offset-grove-forest disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-rest",
-      className
-    )}
+    className={cn(TAB_CLASS, "data-[state=active]:border-grove-lime data-[state=active]:font-medium data-[state=active]:text-grove-cream", className)}
     {...props} />
 ))
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName

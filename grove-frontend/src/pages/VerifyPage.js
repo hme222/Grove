@@ -272,7 +272,7 @@ function StepCard({ children, testid }) {
 function WelcomeStep({ onContinue, onCancel }) {
   return (
     <StepCard testid="verify-step-welcome">
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/10 mb-4">
+      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/15 mb-4">
         <ShieldCheck className="h-6 w-6 text-grove-sprout" />
       </span>
       <h2 className="font-plant text-grove-cream text-2xl leading-tight mb-4">
@@ -479,7 +479,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
                 aria-expanded={isOpen}
                 data-testid={`pact-section-${s.number}-toggle`}
               >
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-grove-lime/10 text-grove-sprout font-ui text-xs font-medium flex items-center justify-center">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-grove-lime/15 text-grove-sprout font-ui text-xs font-medium flex items-center justify-center">
                   {s.number}
                 </span>
                 <span className="flex-1 min-w-0 font-ui text-sm font-medium text-grove-cream">

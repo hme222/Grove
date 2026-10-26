@@ -6,7 +6,7 @@ import { buttonVariants } from '../components/ui/button';
 import useDialogA11y from '../lib/useDialogA11y';
 
 import { AppLink } from '../components/AppLink';
-import { feedAPI, plantAPI, getFileUrl } from '../lib/api';
+import { feedAPI, plantAPI, userAPI, getFileUrl } from '../lib/api';
 import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
@@ -60,7 +60,7 @@ function Lightbox({ src, onClose }) {
         onClick={onClose}
         aria-label="Close photo"
         data-testid="feed-lightbox-close"
-        className="pointer-events-auto absolute top-4 right-4 min-h-touch min-w-touch rounded-full bg-grove-forest/20 text-grove-cream hover:bg-grove-forest/30 flex items-center justify-center transition-colors duration-150"
+        className="pointer-events-auto absolute top-4 right-4 min-h-touch min-w-touch rounded-full bg-grove-forest/25 text-grove-cream hover:bg-grove-forest/25 flex items-center justify-center transition-colors duration-150"
       >
         <X className="h-5 w-5" />
       </button>
@@ -74,7 +74,15 @@ function Lightbox({ src, onClose }) {
   );
 }
 
+// Community is open to read for everyone. Posting, reacting and commenting need a first plant or care log;
+// the server enforces it and says why, so show its words when it refuses.
+function takePartMessage(e, fallback) {
+  const detail = e?.response?.data?.detail;
+  return e?.response?.status === 403 && typeof detail === 'string' ? detail : fallback;
+}
+
 export default function FeedPage() {
+  const [canPost, setCanPost] = useState(null); // null until known; false means browse only
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -112,6 +120,12 @@ export default function FeedPage() {
     fetchPlants();
   }, []);
 
+  useEffect(() => {
+    userAPI.getUnlocks()
+      .then((res) => setCanPost(res.data?.can_post !== false))
+      .catch(() => setCanPost(null)); // unknown: leave everything on, the server decides
+  }, []);
+
   const handlePost = async () => {
     if (!caption.trim()) return;
     setPosting(true);
@@ -127,7 +141,7 @@ export default function FeedPage() {
       setShowCompose(false);
       fetchFeed();
     } catch (e) {
-      toast.error('Failed to post');
+      toast.error(takePartMessage(e, 'Failed to post'));
     } finally {
       setPosting(false);
     }
@@ -146,7 +160,7 @@ export default function FeedPage() {
       }
       fetchFeed();
     } catch (e) {
-      toast.error('Reaction failed');
+      toast.error(takePartMessage(e, 'Reaction failed'));
     }
   };
 
@@ -178,7 +192,7 @@ export default function FeedPage() {
       setCommentTexts(prev => ({ ...prev, [postId]: '' }));
       fetchFeed();
     } catch (e) {
-      toast.error('Failed to comment');
+      toast.error(takePartMessage(e, 'Failed to comment'));
     }
   };
 
@@ -208,6 +222,18 @@ export default function FeedPage() {
       />
 
       <div className="max-w-column mx-auto px-4 py-4 space-y-4">
+        {!loadError && canPost === false && (
+          <p className="font-ui text-sm text-grove-cream" data-testid="feed-browse-only">
+            Anyone can browse the community. To post, react or comment, <AppLink to="/add-plant" className="underline underline-offset-4">add a plant</AppLink> or log your first care.
+          </p>
+        )}
+        {!loadError && canPost !== false && (
+          <div className="flex items-center justify-end">
+            <HeaderAction icon={Plus} onClick={() => setShowCompose(!showCompose)} data-testid="feed-compose-button" pressed={showCompose}>
+              Post an update
+            </HeaderAction>
+          </div>
+        )}
         <nav aria-label="Community areas" className="flex flex-wrap gap-2" data-testid="community-shortcuts">
           {[['Groves', '/groves'], ['Swaps', '/swaps'], ['Saved cuttings', '/wishlist']].map(([label, path]) => (
             <AppLink key={path} to={path} data-testid={`community-shortcut-${label.toLowerCase().replace(/ /g, '-')}`}
@@ -217,13 +243,6 @@ export default function FeedPage() {
             </AppLink>
           ))}
         </nav>
-        {!loadError && (
-          <div className="flex items-center justify-end">
-            <HeaderAction icon={Plus} onClick={() => setShowCompose(!showCompose)} data-testid="feed-compose-button" pressed={showCompose}>
-              Post an update
-            </HeaderAction>
-          </div>
-        )}
         {/* Compose */}
         {showCompose && (
           <div className="rounded-card border-hairline border-grove-lime bg-grove-moss p-5" data-testid="feed-compose-form">
@@ -262,7 +281,7 @@ export default function FeedPage() {
         {loadError && !loading ? (<LoadError what="community" onRetry={retryLoad} />) : loading ? (
           <LoadingList label="Loading the feed" />
         ) : posts.length === 0 ? (
-          <EmptyState config={EMPTY_STATES.feed_no_grove} />
+          <EmptyState config={EMPTY_STATES.feed_empty} />
         ) : (
           posts.map(post => {
             const isBouquet = post.post_type === 'bouquet';
@@ -273,7 +292,7 @@ export default function FeedPage() {
                 key={post.id}
                 data-testid="feed-post"
                 className={`rounded-card border-hairline overflow-hidden ${
-                  isBouquet ? 'border-grove-bloom/30 bg-grove-bloom/15' : 'border-grove-moss bg-grove-moss'
+                  isBouquet ? 'border-grove-bloom/25 bg-grove-bloom/15' : 'border-grove-moss bg-grove-moss'
                 }`}
               >
                 {/* Hero media (photo-first; botanical SVG fallback when none) */}
@@ -285,7 +304,7 @@ export default function FeedPage() {
                   className={`block w-full aspect-[4/3] ${photoSrc ? 'cursor-zoom-in' : 'cursor-default'}`}
                 >
                   {photoSrc ? (
-                    <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={photoSrc} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                    <img src={photoSrc} alt="" className="h-full w-full object-cover" />
                   ) : (
                     <BotanicalFallback tone={tone} />
                   )}
@@ -306,7 +325,7 @@ export default function FeedPage() {
                     <p className="font-latin text-xs text-grove-cream">{formatTime(post.created_at)} ago</p>
                   </div>
                   {post.plant_name && (
-                    <div className="flex items-center gap-1 min-h-6 rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1">
+                    <div className="flex items-center gap-1 min-h-6 rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1">
                       <Leaf className="h-3 w-3 text-grove-sprout" />
                       <span className="font-ui text-xs font-medium text-grove-cream truncate max-w-chipLabel">{post.plant_name}</span>
                     </div>
@@ -334,9 +353,10 @@ export default function FeedPage() {
                         <button
                           key={type}
                           onClick={() => handleReaction(post, type)}
+                          disabled={canPost === false}
                           data-testid={`feed-reaction-${type}`}
                           aria-pressed={active}
-                          className={`min-h-touch flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-round border-hairline transition-colors duration-150 ${
+                          className={`min-h-touch flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-pill border-hairline transition-colors duration-150 ${
                             active
                               ? `border-transparent ${activeClass}`
                               : 'border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine'
@@ -362,7 +382,7 @@ export default function FeedPage() {
                   {expandedComments.has(post.id) && (
                     <div className="mt-3" data-testid="feed-comments-panel">
                       {/* Sticky conversation header */}
-                      <div className="sticky top-0 z-raised -mx-4 px-4 py-2 bg-grove-forest/95 backdrop-blur border-y-hairline border-grove-moss/60 flex items-center justify-between">
+                      <div className="sticky top-0 z-raised -mx-4 px-4 py-2 bg-grove-forest/80 backdrop-blur border-y-hairline border-grove-moss/80 flex items-center justify-between">
                         <p className="font-ui text-xs font-medium text-grove-cream">
                           Conversation · {post.comment_count || 0}
                         </p>
@@ -392,7 +412,7 @@ export default function FeedPage() {
                             </div>
                           </div>
                         ))}
-                        <div className="flex gap-2 mt-2">
+                        {canPost !== false && (<div className="flex gap-2 mt-2">
                           <input aria-label="Write a comment"
                             type="text"
                             value={commentTexts[post.id] || ''}
@@ -410,7 +430,7 @@ export default function FeedPage() {
                           >
                             <Send className="h-3 w-3" />
                           </button>
-                        </div>
+                        </div>)}
                       </div>
                     </div>
                   )}

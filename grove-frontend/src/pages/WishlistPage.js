@@ -41,7 +41,7 @@ export default function WishlistPage() {
 
   return (
     <div>
-      <PageHeader title="Saved cuttings" count={loadError || loading ? undefined : items.length} back />
+      <PageHeader title="Saved cuttings" back />
 
       <div className="max-w-sheet mx-auto px-4 py-4">
         {loadError && !loading ? (<LoadError what="saved cuttings" onRetry={fetchItems} />) : loading ? (

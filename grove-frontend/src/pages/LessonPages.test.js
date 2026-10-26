@@ -1,5 +1,6 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
+import { LESSON_QUIZZES } from '../lessons/lessonQuizzes';
 import LessonPage from './LessonPage';
 import LessonsPage from './LessonsPage';
 import { lessonAPI, plantAPI, careAPI } from '../lib/api';
@@ -20,6 +21,10 @@ jest.mock('../lessons/registry', () => ({
     'soil-finger-test': [
       { header: 'Card 1 of 2', headline: 'Soil one', body: 'First.', cta: 'Next' },
       { header: 'Card 2 of 2', headline: 'Soil last', body: 'Your turn.', cta: 'Go' },
+    ],
+    'plant-parent-reset': [
+      { header: 'Card 1 of 2', headline: 'Reset one', body: 'First.', cta: 'Next' },
+      { header: 'Card 2 of 2', headline: 'Reset last', body: 'Finish.', cta: 'Go' },
     ],
     'plant-er': [
       { header: 'Card 1 of 2', headline: 'ER one', body: 'First.', cta: 'Next' },
@@ -84,6 +89,15 @@ const toLastCard = async () => {
   await click(q('lesson-next'));
 };
 
+// Answer every quick-check question correctly.
+const passQuiz = async () => {
+  while (q('lesson-quiz')) {
+    const question = LESSON_QUIZZES[mockParams.lessonId][Number(q('lesson-quiz-progress').textContent.match(/Question (\d)/)[1]) - 1];
+    await click(q(`lesson-quiz-option-${question.options.find((o) => o.correct).id}`));
+    await click(q('lesson-quiz-next'));
+  }
+};
+
 describe('LessonPage', () => {
   test('an unknown lesson says so and links back to the lessons list', async () => {
     mockParams = { lessonId: 'not-a-lesson' };
@@ -94,21 +108,25 @@ describe('LessonPage', () => {
   });
 
   test('a lesson without a soil test ends in mark done, which saves and returns to the list', async () => {
-    mockParams = { lessonId: 'plant-er' };
+    mockParams = { lessonId: 'plant-parent-reset' };
     await mount(<LessonPage />);
-    expect(q('lesson-headline').textContent).toBe('ER one');
+    expect(q('lesson-headline').textContent).toBe('Reset one');
     await toLastCard();
+    expect(q('lesson-quiz')).not.toBeNull();
+    expect(q('mark-done-step')).toBeNull();
+    await passQuiz();
     expect(q('mark-done-step')).not.toBeNull();
     await click(q('mark-done-done'));
     await flush();
-    expect(lessonAPI.complete).toHaveBeenCalledWith('plant-er');
+    expect(lessonAPI.complete).toHaveBeenCalledWith('plant-parent-reset');
     expect(mockNavigate).toHaveBeenCalledWith('/lessons');
   });
 
   test('"Not yet" returns to the list without saving', async () => {
-    mockParams = { lessonId: 'plant-er' };
+    mockParams = { lessonId: 'plant-parent-reset' };
     await mount(<LessonPage />);
     await toLastCard();
+    await passQuiz();
     await click(q('mark-done-not-yet'));
     expect(lessonAPI.complete).not.toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith('/lessons');
@@ -116,13 +134,26 @@ describe('LessonPage', () => {
 
   test('a failed save shows an error and does not leave the lesson', async () => {
     lessonAPI.complete.mockRejectedValue(new Error('network'));
-    mockParams = { lessonId: 'plant-er' };
+    mockParams = { lessonId: 'plant-parent-reset' };
     await mount(<LessonPage />);
     await toLastCard();
+    await passQuiz();
     await click(q('mark-done-done'));
     await flush();
     expect(q('lesson-error').textContent).toBe('Could not save your progress. Try again.');
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  test('a lesson with a natural action ends in Try it on your plant, which saves and goes there', async () => {
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    await toLastCard();
+    await passQuiz();
+    expect(q('mark-done-step')).toBeNull();
+    await click(q('try-it-go'));
+    await flush();
+    expect(lessonAPI.complete).toHaveBeenCalledWith('plant-er');
+    expect(mockNavigate).toHaveBeenCalledWith('/plants');
   });
 
   test('the soil lesson ends in a real soil test and finishes without a celebration after a first log', async () => {

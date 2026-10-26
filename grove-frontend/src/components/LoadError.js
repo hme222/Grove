@@ -64,10 +64,10 @@ export default function LoadError({ what = 'this page', onRetry, busy = false, c
   );
   if (compact) {
     return (
-      <div ref={box} tabIndex={-1} role="alert" aria-live="off" data-testid={testId} className="flex items-start gap-3 focus:outline-none rounded-card border-hairline border-grove-moss bg-grove-canopy px-4 py-3">
+      <div ref={box} tabIndex={-1} role="alert" aria-live="off" data-testid={testId} className="flex items-start gap-3 focus:outline-none rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3">
         <WifiOff className="mt-0.5 h-5 w-5 shrink-0 text-grove-sage" aria-hidden="true" />
         <div className="min-w-0">
-          <h2 className="font-plant text-lg text-grove-cream">Couldn&rsquo;t load {what}</h2>
+          <h2 className="font-plant text-base font-semibold text-grove-cream">Couldn&rsquo;t load {what}</h2>
           <p className="mt-1 font-ui text-sm leading-relaxed text-grove-sage">
             {body}
             {note ? ` ${note}` : ''}
@@ -81,7 +81,7 @@ export default function LoadError({ what = 'this page', onRetry, busy = false, c
   return (
     <div ref={box} tabIndex={-1} role="alert" aria-live="off" data-testid={testId} className="mx-auto max-w-form focus:outline-none rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-center">
       <WifiOff className="mx-auto h-8 w-8 text-grove-sage" aria-hidden="true" />
-      <h2 className="mt-3 font-plant text-2xl text-grove-cream">Couldn&rsquo;t load {what}</h2>
+      <h2 className="mt-3 font-plant text-xl text-grove-cream">Couldn&rsquo;t load {what}</h2>
       <p className="mt-2 font-ui text-sm leading-relaxed text-grove-sage">{body}</p>
       {retryButton}
       {status}

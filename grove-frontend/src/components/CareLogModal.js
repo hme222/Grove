@@ -139,7 +139,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
         {selected.has('soil_check') && (
           <div className="mb-3 p-3 bg-grove-forest border-hairline border-grove-moss rounded-control" data-testid="care-soil-fields">
-            <p className="text-xs font-ui text-grove-cream mb-2">Press a finger 2 inches into the soil. What did you feel?</p>
+            <p className="text-xs font-ui text-grove-cream mb-2">Push a finger into the soil, to the second knuckle in a pot 6 in (15 cm) or bigger and the first in a small pot. What did you feel?</p>
             <div className="flex gap-2 mb-2">
               {[['dry', 'Dry and dusty'], ['damp', 'Damp and cool']].map(([value, label]) => (
                 <button
@@ -183,7 +183,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
         {count > 0 && (
           <div
-            className="flex items-center justify-between px-3 py-2 mb-2 bg-grove-moss border-hairline border-grove-fernLine/30 rounded-tag"
+            className="flex items-center justify-between px-3 py-2 mb-2 bg-grove-moss border-hairline border-grove-fernLine/25 rounded-tag"
             data-testid="care-multi-summary"
           >
             <span className="text-xs font-ui text-grove-cream">

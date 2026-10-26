@@ -32,7 +32,7 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
       
       {/* Status dot */}
       <div className="absolute top-2 left-2">
-        <StatusDot status={plant.status || 'healthy'} showLabel={(plant.status || 'healthy') !== 'healthy'} className="rounded-round bg-grove-night/80 py-0.5 pl-1 pr-2" />
+        <StatusDot status={plant.status || 'healthy'} showLabel={(plant.status || 'healthy') !== 'healthy'} className="rounded-pill bg-grove-night/80 py-0.5 pl-1 pr-2" />
       </div>
       
       {/* Selection check */}
@@ -60,6 +60,6 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
   return selecting ? (
     <button type="button" onClick={() => onSelect(plant.id)} data-testid="collection-grid-plant-tile" className={tileClass}>{content}</button>
   ) : (
-    <AppLink to={`/plants/${plant.id}`} data-testid="collection-grid-plant-tile" className={`block ${tileClass}`}>{content}</AppLink>
+    <AppLink to={`/plants/${plant.id}`} state={{ name: plant.nickname || plant.common_name }} data-testid="collection-grid-plant-tile" className={`block ${tileClass}`}>{content}</AppLink>
   );
 }

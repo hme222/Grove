@@ -72,7 +72,7 @@ export default function PhonePreviewShell({ children }) {
             <StatusBar />
             <iframe title="FloraGrove app preview" src={initialSrc} style={{ width: PHONE.width, height: screenH, border: 0, display: 'block', background: 'var(--grove-forest)' }} />
             <div className="flex items-center justify-center bg-grove-forest" style={{ height: PHONE.homeBar }} aria-hidden="true">
-              <span className="h-[5px] w-[134px] rounded-full bg-grove-cream/70" />
+              <span className="h-[5px] w-[134px] rounded-full bg-grove-cream/80" />
             </div>
           </div>
         </div>

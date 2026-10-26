@@ -66,11 +66,11 @@ export default function SwapsPage() {
             data-testid="swaps-locked-card"
           >
             <div className="flex items-start gap-3 mb-3">
-              <span className="w-10 h-10 rounded-full bg-grove-sun/20 flex items-center justify-center flex-shrink-0">
+              <span className="w-10 h-10 rounded-full bg-grove-sun/25 flex items-center justify-center flex-shrink-0">
                 <Lock className="h-5 w-5 text-grove-sun" />
               </span>
               <div className="flex-1">
-                <h2 className="font-plant text-grove-cream text-xl font-semibold leading-tight">
+                <h2 className="font-plant text-grove-cream text-base font-semibold leading-tight">
                   Swaps unlock at 3 months on FloraGrove with a Pro subscription, after a one-time verification.
                 </h2>
                 <p className="font-ui text-xs text-grove-sage leading-relaxed mt-2">
@@ -160,7 +160,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
   return (
     <li
       data-testid={testid}
-      className={`rounded-small border-hairline px-4 py-3 flex items-start gapx-4 py-3 ${
+      className={`rounded-small border-hairline px-4 py-3 flex items-start gap-3 ${
         done ? 'bg-grove-moss border-grove-fernLine' : 'bg-grove-canopy border-grove-moss'
       }`}
     >
@@ -173,7 +173,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
       </span>
       <span className="flex-1 min-w-0">
         <p className="font-ui text-xs font-medium text-grove-cream flex items-center gap-1.5">
-          <Icon className="h-3 w-3" />
+          <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
           {title}
         </p>
         <p className="font-ui text-xs text-grove-sage mt-0.5">{detail}</p>

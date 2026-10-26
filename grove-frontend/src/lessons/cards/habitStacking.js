@@ -47,7 +47,7 @@ export const CARDS = [
     eyebrow: "The Furry Friend",
     headline: "Cat bowl \u2192 desk plant.",
     body:
-      "&ldquo;Right after I feed my cat (like Luna, who keeps things grounded), I will touch the soil of my desk plant.&rdquo; Two little rituals, one shared moment.",
+      "&ldquo;Right after I feed my cat (like Luna, who keeps things grounded), I will touch the soil of my desk plant.&rdquo; Two little rituals, one shared moment. Push a finger in to the first knuckle in a small pot, or the second in a pot 6 in (15 cm) or bigger, and water only if it&rsquo;s dry. Succulents and cacti want the whole pot dry.",
     cta: "This one too",
     icon: Cat,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

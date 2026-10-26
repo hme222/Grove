@@ -133,10 +133,10 @@ export default function GroveDetailPage() {
 
       <div className="max-w-column mx-auto px-4 py-4">
         <Tabs defaultValue="feed">
-          <TabsList className="bg-transparent border-b-hairline border-grove-moss rounded-none w-full justify-start gap-1 h-auto p-0">
-            <TabsTrigger value="feed" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Feed</TabsTrigger>
-            <TabsTrigger value="chat" data-testid="grove-chat-tab" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Chat</TabsTrigger>
-            <TabsTrigger value="members" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Members ({members.length})</TabsTrigger>
+          <TabsList className="border-b-hairline border-grove-moss">
+            <TabsTrigger value="feed">Feed</TabsTrigger>
+            <TabsTrigger value="chat" data-testid="grove-chat-tab">Chat</TabsTrigger>
+            <TabsTrigger value="members">Members ({members.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="feed" className="pt-4 space-y-4">
@@ -180,7 +180,7 @@ export default function GroveDetailPage() {
                     <span className="font-latin text-xs text-grove-sage">{formatTime(post.created_at)}</span>
                   </div>
                   {post.caption && <p className="font-ui text-sm text-grove-cream mb-2">{post.caption}</p>}
-                  <div className="flex items-center gap-3 pt-2 border-t-hairline border-grove-moss/30">
+                  <div className="flex items-center gap-3 pt-2 border-t-hairline border-grove-moss/25">
                     <button onClick={() => handleKudos(post.id, post.user_gave_kudos)} className={`flex items-center gap-1 text-xs ${post.user_gave_kudos ? 'text-grove-blush' : 'text-grove-cream'}`}>
                       <Heart className="h-3.5 w-3.5" fill={post.user_gave_kudos ? 'var(--grove-bloom)' : 'none'} />{post.kudos_count || 0}
                     </button>
@@ -223,7 +223,7 @@ export default function GroveDetailPage() {
                   <p className="font-latin text-xs text-grove-cream">@{m.username}</p>
                 </div>
                 {m.role === 'admin' && (
-                  <span className="inline-flex items-center rounded-round border-hairline border-grove-lime bg-grove-moss px-2.5 py-1 text-xs font-ui text-grove-sprout min-h-6">Admin</span>
+                  <span className="inline-flex items-center rounded-pill border-hairline border-grove-lime bg-grove-moss px-2.5 py-1 text-xs font-ui text-grove-sprout min-h-6">Admin</span>
                 )}
               </div>
             ))}

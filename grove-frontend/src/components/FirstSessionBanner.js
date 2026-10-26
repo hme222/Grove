@@ -59,7 +59,7 @@ export default function FirstSessionBanner() {
           onClick={handleDismiss}
           aria-label="Dismiss welcome banner"
           data-testid="first-session-banner-dismiss"
-          className="relative overflow-hidden flex-shrink-0 w-8 h-8 rounded-full border-hairline border-grove-lime/30 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
+          className="relative overflow-hidden flex-shrink-0 w-8 h-8 rounded-full border-hairline border-grove-lime/25 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
         >
           <X className="h-4 w-4" />
         </button>

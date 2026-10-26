@@ -22,7 +22,7 @@ const statusIcons = {
 const statusLabels = {
   healthy: 'Healthy',
   needs_water: 'Due soon',
-  urgent: 'Needs a check',
+  urgent: 'Check',
   propagating: 'Propagating',
   dormant: 'Dormant',
 };
@@ -43,7 +43,7 @@ export function StatusDot({ status, size = 'sm', showLabel = false, className = 
       </span>
       {!showLabel && <span className="sr-only">{statusLabels[status] || status}</span>}
       {showLabel && (
-        <span className="text-xs font-ui text-grove-cream">{statusLabels[status] || status}</span>
+        <span className="whitespace-nowrap text-xs font-ui text-grove-cream">{statusLabels[status] || status}</span>
       )}
     </span>
   );

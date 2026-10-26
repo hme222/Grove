@@ -107,9 +107,9 @@ export default function CareGrowthPage() {
                 .sort((a, b) => b[1].count - a[1].count)
                 .map(([action, data]) => (
                   <div key={action} className="flex items-center justify-between">
-                    <span className="font-ui text-sm text-grove-cream capitalize">{action.replace('_', ' ')}</span>
+                    <span className="font-ui text-sm text-grove-cream first-letter:uppercase">{action.replace('_', ' ')}</span>
                     <div className="flex items-center gap-2">
-                      <span className="font-ui text-sm tabular-nums text-grove-cream">{data.count} times</span>
+                      <span className="font-ui text-sm tabular-nums text-grove-cream">{data.count === 1 ? '1 time' : `${data.count} times`}</span>
                       <span aria-hidden="true" className="font-ui text-xs text-grove-sage">·</span>
                       <span className="font-ui text-sm tabular-nums text-grove-cream">{data.estimated_minutes} min</span>
                     </div>

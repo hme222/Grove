@@ -5,7 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import BackButton from '../components/BackButton';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { bouquetAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
 import { confidenceText } from '../lib/aiTrust';
@@ -23,6 +23,7 @@ const BOUQUET_CARE_ACTIONS = [
 
 export default function BouquetDetailPage() {
   const { bouquetId } = useParams();
+  const knownName = useLocation().state?.name;
   const [bouquet, setBouquet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -52,8 +53,9 @@ export default function BouquetDetailPage() {
 
   // The tab strip and screen-reader history name the bouquet.
   useEffect(() => {
-    if (bouquet?.name) document.title = `${bouquet.name} · FloraGrove`;
-  }, [bouquet]);
+    const name = bouquet?.name || (loadError ? knownName : null);
+    if (name) document.title = `${name} · FloraGrove`;
+  }, [bouquet, loadError, knownName]);
 
   const handleIdentify = async () => {
     setIdentifying(true);
@@ -128,7 +130,7 @@ export default function BouquetDetailPage() {
 
   if (notFound) return <NotFoundPage />;
   if (loadError) {
-    return <LoadErrorPage title="Bouquet" back={{ to: '/bouquets', where: 'bouquets' }} onRetry={fetchBouquet} />;
+    return <LoadErrorPage title={knownName || 'Bouquet'} what={knownName ? knownName : undefined} back={{ to: '/bouquets', where: 'bouquets' }} onRetry={fetchBouquet} />;
   }
   if (loading || !bouquet) {
     return <Loading label="Loading your bouquet" />;
@@ -173,14 +175,14 @@ export default function BouquetDetailPage() {
               <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name || 'Bouquet'}</h1>
               <div className="flex items-center gap-2 mt-1">
                 {bouquet.occasion && (
-                  <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream capitalize min-h-6">{bouquet.occasion}</span>
+                  <span className="inline-flex items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream capitalize min-h-6">{bouquet.occasion}</span>
                 )}
                 <span className="font-ui text-xs text-grove-sage">{formatDate(bouquet.received_date)}</span>
               </div>
             </div>
             <div className="text-right">
               {vaseTotal > 0 && (
-                <div data-testid="bouquet-day-chip" className="inline-flex items-center rounded-round border-hairline border-grove-fernLine bg-grove-forest px-2.5 py-1 text-grove-cream text-xs font-ui min-h-6">
+                <div data-testid="bouquet-day-chip" className="inline-flex items-center rounded-pill border-hairline border-grove-fernLine bg-grove-forest px-2.5 py-1 text-grove-cream text-xs font-ui min-h-6">
                   Day {dayNumber} of {vaseTotal}
                 </div>
               )}
@@ -192,10 +194,10 @@ export default function BouquetDetailPage() {
       {/* Content */}
       <div className="max-w-page mx-auto px-4 py-4">
         <Tabs defaultValue="flowers">
-          <TabsList className="bg-transparent border-b-hairline border-grove-moss rounded-none w-full justify-start gap-1 h-auto p-0">
-            <TabsTrigger value="flowers" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-canopy data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Flowers</TabsTrigger>
-            <TabsTrigger value="care" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-canopy data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Care plan</TabsTrigger>
-            <TabsTrigger value="log" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-canopy data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Log care</TabsTrigger>
+          <TabsList className="border-b-hairline border-grove-moss">
+            <TabsTrigger value="flowers">Flowers</TabsTrigger>
+            <TabsTrigger value="care">Care plan</TabsTrigger>
+            <TabsTrigger value="log">Log care</TabsTrigger>
           </TabsList>
 
           {/* Flowers Tab */}
@@ -234,7 +236,7 @@ export default function BouquetDetailPage() {
                       </div>
                       <div className="text-right">
                         {Number(f.vase_life_days) > 0 && (
-                          <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
+                          <span className="inline-flex items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
                             About {f.vase_life_days} days of vase life
                           </span>
                         )}

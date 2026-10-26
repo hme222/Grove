@@ -48,4 +48,11 @@ describe('search', () => {
     expect(matchLessons(meta, 'soil').map((l) => l.id)).toEqual(['a']);
     expect(matchLessons(meta, 'light').map((l) => l.id)).toEqual(['b']);
   });
+
+  test('pest treatments say to test on one leaf first, and winter rest has its own line', () => {
+    const bugs = SYMPTOMS.find((s) => s.id === 'bugs');
+    expect(bugs.causes.filter((c) => /test on one leaf first/.test(c.fix)).length).toBeGreaterThanOrEqual(2);
+    const winter = SYMPTOMS.flatMap((s) => s.causes).filter((c) => c.title === 'Resting for winter');
+    expect(winter.length).toBeGreaterThanOrEqual(1);
+  });
 });

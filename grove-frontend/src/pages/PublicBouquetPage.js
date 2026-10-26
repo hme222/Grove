@@ -57,7 +57,7 @@ export default function PublicBouquetPage() {
   return (
     <div className="min-h-screen bg-grove-bloom/15">
       {/* Header */}
-      <div className="bg-grove-canopy border-b-hairline border-grove-bloom/20 px-4 py-3 flex items-center justify-between">
+      <div className="bg-grove-canopy border-b-hairline border-grove-bloom/25 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FloraGroveWordmark size={16} />
         </div>
@@ -70,13 +70,13 @@ export default function PublicBouquetPage() {
         {/* Bouquet info */}
         <div className="text-center mb-6">
           {bouquet.photo_url && (
-            <div className="rounded-small overflow-hidden border-hairline border-grove-bloom/20 mb-4">
+            <div className="rounded-small overflow-hidden border-hairline border-grove-bloom/25 mb-4">
               <div className="w-full aspect-[4/3] bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="w-full h-full object-cover" /></div>
             </div>
           )}
           <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name}</h1>
           {bouquet.occasion && (
-            <span className="inline-flex items-center rounded-round border-hairline border-grove-bloom/30 bg-grove-root px-2.5 py-1 text-xs font-ui text-grove-blush capitalize mt-2 min-h-6">{bouquet.occasion}</span>
+            <span className="inline-flex items-center rounded-pill border-hairline border-grove-bloom/25 bg-grove-root px-2.5 py-1 text-xs font-ui text-grove-blush capitalize mt-2 min-h-6">{bouquet.occasion}</span>
           )}
           {bouquet.personal_note && (
             <p className="font-ui text-sm text-grove-cream mt-3 italic">"{bouquet.personal_note}"</p>
@@ -89,13 +89,13 @@ export default function PublicBouquetPage() {
             <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">Flowers in this arrangement</h2>
             <div className="space-y-2">
               {bouquet.flowers.map((f, i) => (
-                <div key={i} className="rounded-card border-hairline border-grove-bloom/20 bg-grove-canopy p-5">
+                <div key={i} className="rounded-card border-hairline border-grove-bloom/25 bg-grove-canopy p-5">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-ui text-grove-cream text-sm font-medium">{f.common_name}</p>
                       <p className="font-latin text-xs text-grove-blush">{f.latin_name}</p>
                     </div>
-                    <span className="inline-flex items-center rounded-round border-hairline border-grove-bloom/30 bg-grove-bloom/15 px-2.5 py-1 text-xs font-ui text-grove-blush min-h-6">
+                    <span className="inline-flex items-center rounded-pill border-hairline border-grove-bloom/25 bg-grove-bloom/15 px-2.5 py-1 text-xs font-ui text-grove-blush min-h-6">
                       {f.vase_life_days}d life
                     </span>
                   </div>
@@ -113,7 +113,7 @@ export default function PublicBouquetPage() {
           <div className="mb-6">
             <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">Care Instructions</h2>
             {bouquet.care_plan.immediate_steps?.length > 0 && (
-              <div className="rounded-card border-hairline border-grove-bloom/20 bg-grove-canopy p-5 mb-2">
+              <div className="rounded-card border-hairline border-grove-bloom/25 bg-grove-canopy p-5 mb-2">
                 <h3 className="font-plant text-grove-blush text-base font-semibold  mb-2">Immediate</h3>
                 <ul className="space-y-1">
                   {bouquet.care_plan.immediate_steps.map((s, i) => (
@@ -123,7 +123,7 @@ export default function PublicBouquetPage() {
               </div>
             )}
             {bouquet.care_plan.daily_steps?.length > 0 && (
-              <div className="rounded-card border-hairline border-grove-bloom/20 bg-grove-canopy p-5">
+              <div className="rounded-card border-hairline border-grove-bloom/25 bg-grove-canopy p-5">
                 <h3 className="font-plant text-grove-blush text-base font-semibold  mb-2">Daily</h3>
                 <ul className="space-y-1">
                   {bouquet.care_plan.daily_steps.map((s, i) => (
@@ -143,7 +143,7 @@ export default function PublicBouquetPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 pt-6 border-t-hairline border-grove-bloom/20 text-center">
+        <div className="mt-8 pt-6 border-t-hairline border-grove-bloom/25 text-center">
           <p className="font-ui text-grove-cream text-sm font-medium mb-2">{GROVE_BRAND.name}</p>
           <p className="font-ui text-xs text-grove-cream leading-relaxed max-w-md mx-auto">
             {GROVE_BRAND.publicFooterDescription}

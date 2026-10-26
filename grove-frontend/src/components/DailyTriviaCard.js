@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, X, BookOpen } from 'lucide-react';
 import { triviaAPI } from '../lib/api';
+import { useAuth } from '../contexts/AuthContext';
+import { showDailyTrivia } from '../lib/dailyTrivia';
 
 /**
  * Phase 14C.4 — Daily plant trivia card on the Care/Today tab
@@ -26,7 +28,14 @@ const CATEGORY_LABELS = {
   pollinator: 'Pollinator fact',
 };
 
-export default function DailyTriviaCard({ embedded = false }) {
+// Off by default: the tip appears on Today only after the person turns it on (Profile, "Show a daily plant tip on Today").
+export default function DailyTriviaCard(props) {
+  const { user } = useAuth();
+  if (!showDailyTrivia(user)) return null;
+  return <DailyTriviaCardBody {...props} />;
+}
+
+function DailyTriviaCardBody({ embedded = false }) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [hidden, setHidden] = useState(false);

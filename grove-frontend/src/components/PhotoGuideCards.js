@@ -249,7 +249,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                 <figure className="flex-1 text-center">
                   <div className="relative inline-block">
                     <c.Bad />
-                    <span className="absolute inset-0 rounded-chip bg-grove-bloom/12 pointer-events-none" />
+                    <span className="absolute inset-0 rounded-chip bg-grove-bloom/15 pointer-events-none" />
                   </div>
                   <figcaption className="mt-1 font-latin text-xs inline-flex items-center gap-1 text-destructive">
                     <X className="h-3 w-3" aria-hidden="true" />{c.BadLabel}
@@ -258,7 +258,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
                 <figure className="flex-1 text-center">
                   <div className="relative inline-block">
                     <c.Good />
-                    <span className="absolute inset-0 rounded-chip bg-grove-lime/8 pointer-events-none" />
+                    <span className="absolute inset-0 rounded-chip bg-grove-lime/15 pointer-events-none" />
                   </div>
                   <figcaption className="mt-1 font-latin text-xs inline-flex items-center gap-1 text-grove-sprout">
                     <Check className="h-3 w-3" aria-hidden="true" />{c.GoodLabel}

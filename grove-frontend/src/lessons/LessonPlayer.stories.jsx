@@ -18,7 +18,7 @@ const SAMPLE_CARDS = [
     n: 2,
     header: 'Card 2 of 3 · The Probe',
     headline: 'Your natural moisture sensor.',
-    body: 'Push your index finger <strong>2 inches deep</strong> into the soil.',
+    body: 'Push your index finger <strong>up to the second knuckle</strong> into the soil.',
     cta: 'Got it &mdash; finger as probe',
     icon: Hand,
     accent: 'from-grove-sun/20 via-grove-bloom/10 to-grove-lime/10',

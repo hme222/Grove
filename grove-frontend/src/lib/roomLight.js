@@ -6,13 +6,18 @@ export const LIGHT_LEVELS = [
   { id: 'bright_direct', label: 'Direct sun', phrase: 'direct sun', help: 'Sun lands on it for a few hours a day.' },
 ];
 
-export const lightHelp = (id) => LIGHT_LEVELS.find((l) => l.id === id)?.help || '';
+// The sunniest-window advice flips with the hemisphere: the sun is in the north sky south of the equator.
+export const lightHelp = (id, hemisphere = 'north') => {
+  if (id === 'low' && hemisphere === 'south') return 'Far from a window, or a room that faces south.';
+  return LIGHT_LEVELS.find((l) => l.id === id)?.help || '';
+};
 export const lightPhrase = (id) => LIGHT_LEVELS.find((l) => l.id === id)?.phrase || 'its own kind of light';
 
 // One sentence about a plant that does not suit the room's light. Plants that suit it get none.
 export function fitSentence({ name, need, fit }) {
   if (fit === 'dim') return `This room is a little dim for ${name}, which likes ${lightPhrase(need)}.`;
   if (fit === 'too_dim') return `${name} needs much more light than this room gets. It likes ${lightPhrase(need)}.`;
+  if (fit === 'bright') return `Direct sun is more than ${name} needs. It is fine if the sun is filtered or only reaches it for a short time; it prefers ${lightPhrase(need)}.`;
   if (fit === 'too_bright') return `This room is brighter than ${name} likes. It prefers ${lightPhrase(need)}.`;
   return '';
 }

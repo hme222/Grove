@@ -11,7 +11,7 @@ const illustrations = {
   bloom: BloomIllustration,
 };
 
-export function EmptyState({ config, currentStreak }) {
+export function EmptyState({ config }) {
   const navigate = useNavigate();
   const IllustrationComponent = illustrations[config.illustration] || illustrations.leaf;
 
@@ -31,11 +31,6 @@ export function EmptyState({ config, currentStreak }) {
         <div className="space-y-2 text-center">
           <h3 className="font-plant text-base font-semibold text-grove-cream">{config.heading}</h3>
           <p className="text-sm text-grove-cream">{config.body}</p>
-          {config.streakProgress && currentStreak !== undefined && (
-            <p className="text-xs font-ui text-grove-sprout mt-3">
-              Current Streak: {currentStreak} / 30 days
-            </p>
-          )}
         </div>
         {config.cta && (
           <Button

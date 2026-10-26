@@ -1,3 +1,4 @@
+import { checkInterval } from '../lib/careCopy';
 import { LoadErrorPage } from '../components/LoadError';
 import Loading, { Spinner } from '../components/Loading';
 import { buttonVariants } from '../components/ui/button';
@@ -6,9 +7,9 @@ import AppLink from '../components/AppLink';
 import React, { useState, useEffect, useMemo } from 'react';
 import NotFoundPage from './NotFoundPage';
 import { PageHeader } from '../components/PageHeader';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { encyclopediaAPI, wantsAPI } from '../lib/api';
-import { Leaf, Droplets, Sun, Sprout, Bug, BookOpen, ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Bookmark, BookmarkCheck, Camera } from 'lucide-react';
+import { Leaf, Droplets, Sun, Sprout, Bug, BookOpen, ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Bookmark, BookmarkCheck, Camera, Plus } from 'lucide-react';
 import SectionTutorial from '../components/SectionTutorial';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { toast } from 'sonner';
@@ -33,6 +34,7 @@ function buildBadges(species) {
   if (flags.cut_flower) list.push({ key: 'cut', icon: Scissors, label: 'Cut-flower staple', tone: 'cut' });
   if (flags.medicinal) list.push({ key: 'medicinal', icon: Heart, label: 'Medicinal use', tone: 'medicinal' });
   if (flags.collector) list.push({ key: 'collector', icon: Bug, label: 'Collector species', tone: 'collector' });
+  if (species.beginner_friendly === false) list.push({ key: 'not-beginner', icon: ShieldAlert, label: 'Not for a first plant', tone: 'collector' });
   return list;
 }
 
@@ -46,8 +48,21 @@ const BADGE_TONES = {
   collector: 'border-grove-moss bg-grove-moss text-grove-cream',
 };
 
+// One treatment for every card heading on this page: a 20px sprout icon at the card's left edge, then a 16px
+// display-face h2 (headings inside a card are text-base; only headings sitting directly on the page are text-xl).
+function SectionHeading({ icon: Icon, children, aside }) {
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      <Icon className="h-5 w-5 flex-shrink-0 text-grove-sprout" aria-hidden="true" />
+      <h2 className="font-plant text-base font-semibold text-grove-cream">{children}</h2>
+      {aside}
+    </div>
+  );
+}
+
 export default function SpeciesDetailPage() {
   const { speciesId } = useParams();
+  const knownName = useLocation().state?.name;
   const [species, setSpecies] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -136,11 +151,13 @@ export default function SpeciesDetailPage() {
     return () => { alive = false; };
   }, [species]);
 
+  useEffect(() => { if (loadError && knownName) document.title = `${knownName} · FloraGrove`; }, [loadError, knownName]);
+
   const badges = useMemo(() => (species ? buildBadges(species) : []), [species]);
 
   if (notFound) return <NotFoundPage title="Plant not found" heading="We can't find that plant" message="It may have been renamed or removed from the guide." to="/greenhouse" toLabel="Back to Learn" />;
   if (loadError) {
-    return <LoadErrorPage back title="Species" onRetry={() => window.location.reload()} />;
+    return <LoadErrorPage back title={knownName || 'Species'} what={knownName ? `${knownName} in the plant guide` : undefined} onRetry={() => window.location.reload()} />;
   }
   if (loading) {
     return (
@@ -149,7 +166,7 @@ export default function SpeciesDetailPage() {
   }
   if (!species) return null;
 
-  const lightCopy = LIGHT_COPY[species.default_light_level] || 'Bright indirect light';
+  const lightCopy = LIGHT_COPY[species.light_ideal || species.default_light_level] || 'Bright indirect light';
   const nativeAlts = species.flags?.native_alternatives_us || [];
 
   return (
@@ -181,18 +198,24 @@ export default function SpeciesDetailPage() {
           <div className="flex items-start gap-4 mb-4">
             
             <div className="flex-1 min-w-0">
-              <p className="font-latin text-lg italic text-grove-cream">{species.latin_name}</p>
+              {(species.latin_name || '').trim().toLowerCase() !== (species.common_name || '').trim().toLowerCase() && (
+                <p className="font-latin text-lg italic text-grove-cream">{species.latin_name}</p>
+              )}
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-round bg-grove-canopy text-grove-cream text-xs font-ui min-h-6 border-hairline border-grove-moss">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-pill bg-grove-canopy text-grove-cream text-xs font-ui min-h-6 border-hairline border-grove-moss">
                   {species.family}
                 </span>
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
+                <p className="mt-1.5 font-ui text-xs text-grove-sage" data-testid="species-safety-line">
+                  Based on ASPCA listings for cats and dogs. Any plant can upset a stomach. If something was eaten, see Help my plant for who to call.
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2" data-testid="species-actions">
-            <AppLink to={`/add-plant?species=${species.id}`} className={buttonVariants()} data-testid="species-add-plant">
+          <div className="mt-4 mb-4 flex flex-wrap gap-2" data-testid="species-actions">
+            <AppLink to={`/add-plant?species=${species.id}&name=${encodeURIComponent(species.common_name || '')}`} className={buttonVariants()} data-testid="species-add-plant">
+              <Plus className="h-4 w-4" aria-hidden="true" />
               Add to my plants
             </AppLink>
             <button
@@ -217,7 +240,7 @@ export default function SpeciesDetailPage() {
                   <span
                     key={b.key}
                     data-testid={`species-badge-${b.key}`}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-round border-hairline text-xs font-ui ${BADGE_TONES[b.tone]}`}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill border-hairline text-xs font-ui ${BADGE_TONES[b.tone]}`}
                   >
                     <Icon className="h-3 w-3" />
                     {b.label}
@@ -248,11 +271,8 @@ export default function SpeciesDetailPage() {
         {/* Care info grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-watering-card">
-            <div className="flex items-center gap-2 mb-2">
-              <Droplets className="h-5 w-5 text-grove-sprout" />
-              <h2 className="font-plant text-xl font-semibold text-grove-cream">Watering</h2>
-            </div>
-            <p className="font-ui text-sm text-grove-cream">Every {species.default_watering_days} days</p>
+            <SectionHeading icon={Droplets}>Watering</SectionHeading>
+            <p className="font-ui text-sm text-grove-cream">{checkInterval(species.default_watering_days)}</p>
             <p className="font-latin text-xs text-grove-cream mt-1 capitalize">Medium: {species.default_grow_medium || 'soil'}</p>
           </div>
 
@@ -262,20 +282,14 @@ export default function SpeciesDetailPage() {
             data-testid="species-lighting-card"
             className="text-left rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 hover:border-grove-fernLine transition-colors duration-150"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <Sun className="h-5 w-5 text-grove-sun" />
-              <h2 className="font-plant text-xl font-semibold text-grove-cream">Light</h2>
-            </div>
+            <SectionHeading icon={Sun}>Light</SectionHeading>
             <p className="font-ui text-sm text-grove-cream">{lightCopy}</p>
             <p className="font-latin text-xs text-grove-cream mt-1 underline">Tap for a primer on light</p>
           </button>
 
           {(species.native_range || species.native_habitat) && (
             <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-origin-card">
-              <div className="flex items-center gap-2 mb-2">
-                <Leaf className="h-5 w-5 text-grove-sprout" />
-                <h2 className="font-plant text-xl font-semibold text-grove-cream">Origin</h2>
-              </div>
+              <SectionHeading icon={Leaf}>Origin</SectionHeading>
               <p className="font-ui text-sm text-grove-cream">{species.native_range || species.native_habitat}</p>
             </div>
           )}
@@ -284,10 +298,7 @@ export default function SpeciesDetailPage() {
         {/* Photo gallery — real photographs from Wikipedia / Wikimedia Commons */}
         {species.wiki_image && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-photo-gallery">
-            <div className="flex items-center gap-2 mb-3">
-              <Camera className="h-4 w-4 text-grove-sage" />
-              <h2 className="font-plant text-xl font-semibold text-grove-cream">Photo</h2>
-            </div>
+            <SectionHeading icon={Camera}>Photo</SectionHeading>
             <div className="grid grid-cols-1 gap-2">
               <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy">
                 <img
@@ -307,21 +318,18 @@ export default function SpeciesDetailPage() {
         {/* Companions — Phase 14B.2 */}
         {Array.isArray(species.companions) && species.companions.length > 0 && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-companions">
-            <div className="flex items-center gap-2 mb-3">
-              <Sprout className="h-4 w-4 text-grove-sprout" />
-              <h2 className="font-plant text-xl font-semibold text-grove-cream">Pairs well with</h2>
-            </div>
+            <SectionHeading icon={Sprout}>Pairs well with</SectionHeading>
             <ul className="space-y-2">
               {species.companions.map((c) => (
                 <li key={c.id} data-testid={`species-companion-${c.slug}`}>
-                  <AppLink to={`/greenhouse/${c.id}`}
-                                        className="w-full text-left rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3 hover:border-grove-fernLine transition-colors duration-150"
+                  <AppLink to={`/greenhouse/${c.id}`} state={{ name: c.common_name }}
+                    className="block w-full text-left rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3 hover:border-grove-fernLine transition-colors duration-150"
                   >
                     <div className="flex items-baseline justify-between gap-2 mb-1">
                       <span className="font-ui text-sm font-medium text-grove-cream">{c.common_name}</span>
                       <span className="font-latin italic text-xs text-grove-cream">{c.latin_name}</span>
                     </div>
-                    <p className="font-ui text-xs text-grove-cream leading-snug">{c.reasoning}</p>
+                    {c.reasoning && <p className="font-ui text-xs text-grove-cream leading-snug">{c.reasoning}</p>}
                   </AppLink>
                 </li>
               ))}
@@ -340,11 +348,9 @@ export default function SpeciesDetailPage() {
         {/* BHL illustration gallery */}
         {Array.isArray(species.bhl_illustrations) && species.bhl_illustrations.length > 1 && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-bhl-gallery">
-            <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="h-4 w-4 text-grove-sage" />
-              <h2 className="font-plant text-xl font-semibold text-grove-cream">Historical illustrations</h2>
+            <SectionHeading icon={BookOpen} aside={
               <span className="font-latin italic text-xs text-grove-lichen">{species.bhl_illustrations.length} from BHL</span>
-            </div>
+            }>Historical illustrations</SectionHeading>
             <div className="grid grid-cols-3 gap-2">
               {species.bhl_illustrations.map((ill) => (
                 <a
@@ -376,10 +382,7 @@ export default function SpeciesDetailPage() {
 
         {Array.isArray(species.citations) && species.citations.length > 0 && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-citations">
-            <div className="flex items-center gap-2 mb-2">
-              <BookOpen className="h-4 w-4 text-grove-sage" />
-              <h2 className="font-plant text-xl font-semibold text-grove-cream">Sources</h2>
-            </div>
+            <SectionHeading icon={BookOpen}>Sources</SectionHeading>
             <ul className="space-y-1.5">
               {species.citations.map((c, i) => (
                 <li key={i}>
@@ -430,18 +433,16 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
 
   return (
     <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-performance">
-      <div className="flex items-center gap-2 mb-3">
-        <BarChart3 className="h-4 w-4 text-grove-cream" />
-        <h2 className="font-plant text-xl font-semibold text-grove-cream">How growers fare</h2>
-        {sample && sample.total_plants > 0 && (
+      <SectionHeading icon={BarChart3} aside={
+        sample && sample.total_plants > 0 && (
           <span
             data-testid="species-performance-confidence"
             className="ml-auto text-xs font-ui text-grove-sage"
           >
             {confidenceLabel} · {sample.total_plants} plant{sample.total_plants === 1 ? '' : 's'} from {sample.unique_growers} grower{sample.unique_growers === 1 ? '' : 's'}
           </span>
-        )}
-      </div>
+        )
+      }>How growers fare</SectionHeading>
 
       {loading && !performance && (
         <div className="flex items-center gap-2 py-4 text-grove-sage" role="status">

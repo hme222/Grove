@@ -17,6 +17,7 @@ import { Plus, Check, Leaf, Flower2, AlertTriangle, ChevronRight } from 'lucide-
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AppLink } from '../components/AppLink';
+import TabStrip from '../components/TabStrip';
 
 // Phase 14A.2 — bulk multi-action set. Matches the single-plant CareLogModal.
 
@@ -128,6 +129,8 @@ export default function CollectionPage() {
   const showingBouquets = view === 'bouquets' && !roomFilter;
   const totalCount = showingBouquets ? bouquets.length : filteredPlants.length;
   const isEmpty = totalCount === 0 && !loading;
+  // Counts live in tab labels or the toolbar line, never as a zero and never twice on screen.
+  const tabCount = (n) => (loading || loadError || n === 0 ? undefined : n);
   const showViewSwitch = !roomFilter && (bouquets.length > 0 || showingBouquets);
 
   const setView = (next) => {
@@ -147,14 +150,17 @@ export default function CollectionPage() {
     <div>
       <SectionTutorial tutorialId="collection" />
       <FirstSessionBanner />
-      <PageHeader
-        title="Plants"
-        count={loadError || loading ? undefined : totalCount}
-      />
+      <PageHeader title="Plants" />
 
       <div className="max-w-page mx-auto px-4 py-4">
         {!loadError && (
-          <div className="mb-3 flex items-center justify-end gap-2" data-testid="collection-toolbar">
+          <div className="mb-3 flex items-center justify-between gap-2" data-testid="collection-toolbar">
+            <p className="font-ui text-sm text-grove-sage" data-testid="collection-count">
+              {!showViewSwitch && !loading && totalCount > 0
+                ? `${totalCount} ${showingBouquets ? (totalCount === 1 ? 'bouquet' : 'bouquets') : totalCount === 1 ? 'plant' : 'plants'}${roomFilter ? ' shown' : ''}`
+                : ''}
+            </p>
+            <div className="flex items-center gap-2">
             {!showingBouquets && (
               <HeaderAction
                 onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
@@ -167,6 +173,7 @@ export default function CollectionPage() {
             <HeaderAction icon={Plus} onClick={() => setShowTypePicker(true)} data-testid="collection-add-button">
               Add
             </HeaderAction>
+            </div>
           </div>
         )}
         <nav aria-label="More ways to browse your plants" className="mb-3 flex flex-wrap gap-2" data-testid="plants-shortcuts">
@@ -179,33 +186,17 @@ export default function CollectionPage() {
           ))}
         </nav>
         {showViewSwitch && (
-          <div
-            role="group"
-            aria-label="Show plants or bouquets"
-            data-testid="collection-view-switch"
-            className="mb-3 flex w-full max-w-sm flex-wrap rounded-chip border-hairline border-grove-moss bg-grove-moss p-0.5"
-          >
-            {[
-              { value: 'plants', label: 'Plants', count: plants.length, Icon: Leaf },
-              { value: 'bouquets', label: 'Bouquets', count: bouquets.length, Icon: Flower2 },
-            ].map(({ value, label, count, Icon }) => {
-              const active = view === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => setView(value)}
-                  data-testid={`collection-view-${value}`}
-                  className={cn(buttonVariants({ variant: 'chip' }), 'flex-1')}
-                >
-                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                  {label}
-                  <span>{count}</span>
-                </button>
-              );
-            })}
-          </div>
+          <TabStrip
+            label="Show plants or bouquets"
+            testid="collection-view-switch"
+            className="mb-3 border-b-hairline border-grove-moss"
+            value={view}
+            onChange={setView}
+            items={[
+              { value: 'plants', label: 'Plants', count: tabCount(plants.length), testid: 'collection-view-plants' },
+              { value: 'bouquets', label: 'Bouquets', count: tabCount(bouquets.length), testid: 'collection-view-bouquets' },
+            ]}
+          />
         )}
         {roomFilter && (
           <div className="flex items-center justify-between mb-3 px-1">
@@ -308,7 +299,7 @@ export default function CollectionPage() {
                 data-testid="bulk-warning-banner"
               >
                 <AlertTriangle className="h-3.5 w-3.5 text-grove-sun flex-shrink-0 mt-0.5" />
-                <span className="text-xs font-ui text-grove-cream/90 leading-snug">
+                <span className="text-xs font-ui text-grove-cream/80 leading-snug">
                   {selectedCount} plants selected — large sweeps can feel rushed. Double-check you&apos;ve actually cared for each one.
                 </span>
               </div>
@@ -332,7 +323,7 @@ export default function CollectionPage() {
                         style={{ color: isOn ? 'var(--grove-sprout)' : color }}
                         strokeWidth={isOn ? 2.2 : 1.75}
                       />
-                      <span className={`text-xs font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/70'}`}>
+                      <span className={`text-xs font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/80'}`}>
                         {label}
                       </span>
                     </button>
@@ -435,6 +426,7 @@ function BouquetTile({ bouquet }) {
   return (
     <AppLink
       to={`/bouquets/${bouquet.id}`}
+      state={{ name: bouquet.name }}
       data-testid="collection-grid-bouquet-tile"
       className="relative block aspect-square rounded-control overflow-hidden border-hairline border-grove-moss bg-grove-bloom/15 hover:border-grove-fernLine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
     >

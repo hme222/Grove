@@ -34,7 +34,7 @@ export const TUTORIAL_COPY = {
   grove: {
     title: 'Welcome to Community',
     icon: Users,
-    body: "The community feed, your groves, and plant swaps live here. Share photos, ask questions, swap cuttings. The rest unlocks gradually as your collection deepens.",
+    body: "The community feed, your groves, and plant swaps live here. Share photos, ask questions, swap cuttings. Anyone can browse. Add a plant to post, react or swap.",
     accent: 'var(--grove-bloom)',
   },
   greenhouse: {
@@ -94,7 +94,7 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
           onClick={dismiss}
           aria-label="Close tutorial"
           data-testid={`section-tutorial-close-${tutorialId}`}
-          className="absolute right-3 top-3 z-raised flex h-8 w-8 items-center justify-center rounded-round bg-grove-forest text-grove-cream hover:bg-grove-moss"
+          className="absolute right-3 top-3 z-raised flex h-8 w-8 items-center justify-center rounded-pill bg-grove-forest text-grove-cream hover:bg-grove-moss"
         >
           <X className="h-4 w-4" />
         </button>

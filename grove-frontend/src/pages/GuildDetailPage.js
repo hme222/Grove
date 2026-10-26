@@ -6,7 +6,7 @@ import { guildIcon } from '../lib/guildIcon';
 import React, { useState, useEffect, useCallback } from 'react';
 import { LoadErrorPage } from '../components/LoadError';
 import { PageHeader } from '../components/PageHeader';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import AppLink from '../components/AppLink';
 import { guildAPI } from '../lib/api';
 import { Leaf, Droplets, Sun } from 'lucide-react';
@@ -20,6 +20,8 @@ const LIGHT_LABEL = {
 
 export default function GuildDetailPage() {
   const { slug } = useParams();
+  const location = useLocation();
+  const knownName = location.state?.name;
   const [guild, setGuild] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -42,10 +44,11 @@ export default function GuildDetailPage() {
   }, [slug]);
 
   useEffect(() => { run(); }, [run]);
+  useEffect(() => { if (loadError && knownName) document.title = `${knownName} · FloraGrove`; }, [loadError, knownName]);
 
   if (notFound) return <NotFoundPage title="Guild not found" heading="We can't find that guild" message="It may have been renamed or removed." to="/greenhouse" toLabel="Back to Learn" />;
   if (loadError) {
-    return <LoadErrorPage title="Guild" what="this guild" back={{ to: '/greenhouse', where: 'Learn' }} onRetry={run} />;
+    return <LoadErrorPage title={knownName || 'Guild'} what={knownName ? `the ${knownName} guild` : 'this guild'} back={{ to: '/greenhouse', where: 'Learn' }} onRetry={run} />;
   }
 
   if (loading) {
@@ -82,7 +85,7 @@ export default function GuildDetailPage() {
               {guild.tags.map((t) => (
                 <span
                   key={t}
-                  className="inline-flex items-center px-2.5 py-1 rounded-round bg-grove-canopy border-hairline border-grove-moss text-xs font-ui text-grove-sage min-h-6"
+                  className="inline-flex items-center px-2.5 py-1 rounded-pill bg-grove-canopy border-hairline border-grove-moss text-xs font-ui text-grove-sage min-h-6"
                 >
                   {t}
                 </span>
@@ -91,32 +94,9 @@ export default function GuildDetailPage() {
           )}
         </div>
 
-        {/* Description */}
-        <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="guild-description">
-          {paragraphs.map((p, i) => (
-            <p key={i} className={`font-ui text-sm leading-relaxed text-grove-cream ${i > 0 ? 'mt-3' : ''}`}>
-              {p}
-            </p>
-          ))}
-        </div>
-
-        {/* Design notes */}
-        {guild.design_notes && (
-          <div
-            className="rounded-card border-hairline bg-grove-canopy p-5"
-            style={{ borderColor: tint(accent, 25) }}
-            data-testid="guild-design-notes"
-          >
-            <h2 className="font-plant text-xl font-semibold  text-grove-cream mb-1.5">
-              Design notes
-            </h2>
-            <p className="font-ui text-xs leading-relaxed text-grove-cream">{guild.design_notes}</p>
-          </div>
-        )}
-
         {/* Species */}
         <div data-testid="guild-species-list">
-          <h2 className="font-plant text-grove-cream text-xl font-semibold  mb-2">
+          <h2 className="font-plant text-grove-cream text-xl font-semibold mb-2">
             The {guild.species.length} species in this guild
           </h2>
           <ul className="space-y-2">
@@ -124,6 +104,7 @@ export default function GuildDetailPage() {
               <li key={s.id}>
                 <AppLink
                   to={`/greenhouse/${s.id}`}
+                  state={{ name: s.common_name }}
                   data-testid={`guild-species-${s.slug}`}
                   className="block w-full text-left rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
@@ -150,6 +131,29 @@ export default function GuildDetailPage() {
             ))}
           </ul>
         </div>
+
+        {/* Description */}
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="guild-description">
+          {paragraphs.map((p, i) => (
+            <p key={i} className={`font-ui text-sm leading-relaxed text-grove-cream ${i > 0 ? 'mt-3' : ''}`}>
+              {p}
+            </p>
+          ))}
+        </div>
+
+        {/* Design notes */}
+        {guild.design_notes && (
+          <div
+            className="rounded-card border-hairline bg-grove-canopy p-5"
+            style={{ borderColor: tint(accent, 25) }}
+            data-testid="guild-design-notes"
+          >
+            <h2 className="font-plant text-base font-semibold text-grove-cream mb-1.5">
+              Design notes
+            </h2>
+            <p className="font-ui text-xs leading-relaxed text-grove-cream">{guild.design_notes}</p>
+          </div>
+        )}
       </div>
     </div>
   );

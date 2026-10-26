@@ -6,7 +6,7 @@ export const SYMPTOMS = [
     soilCheck: true,
     label: 'Yellow leaves',
     causes: [
-      { title: 'Too much water', check: 'Push a finger two inches into the soil. If it is still wet days after watering, this is likely it. Lower leaves go yellow and soft first.', fix: 'Let the soil dry out before the next drink, empty the saucer, and make sure the pot has drainage holes.' },
+      { title: 'Too much water', check: 'Push a finger into the soil, to the second knuckle in a pot 6 in (15 cm) or bigger and the first in a small pot. If it is still wet days after watering, this is likely it. Lower leaves go yellow and soft first.', fix: 'Let the soil dry out before the next drink, empty the saucer, and make sure the pot has drainage holes.' },
       { title: 'Not enough light', check: 'Older leaves turn yellow while the plant slows down or stretches toward the window.', fix: 'Move it closer to bright, indirect light.' },
       { title: 'Normal aging', check: 'One lower leaf yellows now and then while the rest looks healthy.', fix: 'Pinch off the old leaf. No other change is needed.' },
       { title: 'Hungry for nutrients', check: 'New growth looks pale during spring and summer, and the plant has not been fed in months.', fix: 'Feed at half the strength on the label, once a month in the growing season.' },
@@ -48,6 +48,7 @@ export const SYMPTOMS = [
       { title: 'A recent change', check: 'It was moved, repotted, or the light or temperature changed in the last few weeks.', fix: 'Keep conditions steady. Some drop after a move is normal.' },
       { title: 'Watering at the extremes', check: 'The soil has been either soaked or dry for a long stretch.', fix: 'Aim for even watering. Use the finger test before each drink.' },
       { title: 'The season', check: 'It is autumn or winter and only a few older leaves are falling.', fix: 'This can be natural. Water a little less and keep it bright.' },
+      { title: 'Resting for winter', check: 'It is the dark months, growth has slowed, and the plant looks otherwise healthy.', fix: 'Many plants rest in winter and use less water. Check the soil first, water less often, and do not feed or repot until spring.' },
     ],
   },
   {
@@ -61,8 +62,8 @@ export const SYMPTOMS = [
     id: 'bugs',
     label: 'Bugs or sticky leaves',
     causes: [
-      { title: 'Spider mites or scale', check: 'Fine webbing, tiny speckles, or small brown bumps with a sticky residue.', fix: 'Move it away from other plants, wipe leaves with a damp cloth or mild soapy water, and repeat weekly for three weeks.' },
-      { title: 'Mealybugs', check: 'White cottony patches where leaves meet the stem.', fix: 'Dab each patch with a cotton bud dipped in rubbing alcohol, then wipe the plant down. Check again after a week.' },
+      { title: 'Spider mites or scale', check: 'Fine webbing, tiny speckles, or small brown bumps with a sticky residue.', fix: 'Move it away from other plants, wipe leaves with a damp cloth or mild soapy water (test on one leaf first and wait a day), and repeat weekly for three weeks.' },
+      { title: 'Mealybugs', check: 'White cottony patches where leaves meet the stem.', fix: 'Dab each patch with a cotton bud dipped in rubbing alcohol, then wipe the plant down (test on one leaf first). Check again after a week.' },
       { title: 'Fungus gnats', check: 'Tiny flies rising from the soil when you water.', fix: 'Let the top two inches of soil dry between drinks and use yellow sticky traps.' },
     ],
   },
@@ -89,9 +90,9 @@ export const SYMPTOMS = [
 // the soil is dry or soaked. So for symptoms that depend on moisture, the soil check comes first.
 export const SOIL_CHECK = {
   title: 'First, feel the soil',
-  body: 'Push a finger two inches into the soil.',
+  body: 'Push a finger into the soil, to the second knuckle in a pot 6 in (15 cm) or bigger and the first in a small pot.',
   dry: 'Dry: water thoroughly, until it runs out of the bottom.',
   wet: 'Wet or soggy: do not water. Check the roots and the drainage.',
 };
 
-export const SAFETY_NOTE = 'If a pet or child has eaten part of a plant, call a vet or poison control right away.';
+export const SAFETY_NOTE = 'If a pet or child has eaten part of a plant, act at once. Pets: call your vet or the ASPCA Animal Poison Control line, (888) 426-4435 in the US (a fee may apply). Children: call your local poison centre or emergency number (US: 1-800-222-1222). Do not make them vomit unless told to, and bring the plant or a photo of it.';

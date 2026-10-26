@@ -197,3 +197,42 @@ describe('Undo on Water All', () => {
     expect(q('undo-snackbar')).toBeNull();
   });
 });
+
+describe('end-of-round summary', () => {
+  const inDays = (n) => new Date(Date.now() + n * 86400000).toISOString();
+
+  test('when the list empties after logging care, a calm summary replaces the bare empty state', async () => {
+    jest.useFakeTimers();
+    try {
+      waterAPI.logRound.mockResolvedValue({ data: { watered: 2, round_id: 'r2' } });
+      const due = [DUE[0], { ...DUE[0], id: 'p2', nickname: 'Fern', status: 'needs_water' }];
+      careAPI.getDueToday.mockResolvedValueOnce({ data: due }).mockResolvedValue({ data: [] });
+      plantAPI.getAll.mockResolvedValue({ data: { plants: [
+        { id: 'p1', common_name: 'Pothos', next_water_due: inDays(5) },
+        { id: 'p2', nickname: 'Fern', common_name: 'Boston fern', next_water_due: inDays(2) },
+      ] } });
+      await mount();
+      expect(q('round-summary')).toBeNull();
+      await act(async () => { q('water-all-button').click(); });
+      await act(async () => { q('water-all-confirm').click(); });
+      await act(async () => { jest.advanceTimersByTime(400); });
+      expect(q('round-summary-title').textContent).toBe('2 plants tended.');
+      expect(q('round-summary-names').textContent).toBe('Pothos and Fern.');
+      const weekday = new Date(inDays(2)).toLocaleDateString(undefined, { weekday: 'long' });
+      expect(q('round-summary-next').textContent).toBe(`Next up: Fern, ${weekday}`);
+      expect(q('round-summary-lesson').textContent).toBe('Do a one-minute lesson');
+      expect(q('care-session-bar').textContent).toContain('2 plants checked');
+      expect(q('care-session-bar').textContent).not.toMatch(/keep going/i);
+      await act(async () => { q('round-summary-done').click(); });
+      expect(q('round-summary')).toBeNull();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  test('no summary when nothing was logged this visit', async () => {
+    careAPI.getDueToday.mockResolvedValue({ data: [] });
+    await mount();
+    expect(q('round-summary')).toBeNull();
+  });
+});

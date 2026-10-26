@@ -18,10 +18,7 @@ export default {
 
 export const CollectionZeroPlants = { args: { config: EMPTY_STATES.collection_zero_plants } };
 export const CareAllDone = { args: { config: EMPTY_STATES.care_all_done } };
-export const SwapsLocked = {
-  args: { config: EMPTY_STATES.swaps_locked, currentStreak: 12 },
-};
-export const FeedNoGrove = { args: { config: EMPTY_STATES.feed_no_grove } };
+export const FeedEmpty = { args: { config: EMPTY_STATES.feed_empty } };
 export const BouquetNone = { args: { config: EMPTY_STATES.bouquet_none } };
 export const LibraryNoPhotos = { args: { config: EMPTY_STATES.library_no_photos } };
 export const GoalsNone = { args: { config: EMPTY_STATES.goals_none } };

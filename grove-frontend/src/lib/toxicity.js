@@ -1,6 +1,6 @@
 // Pet-safety labels for a species' `toxicity` value.
 //
-// Safety rule: only an explicit non-toxic value may read as "Pet-safe".
+// Safety rule: only an explicit non-toxic value may read as "Non-toxic to pets" (ASPCA wording; any plant can still upset a stomach).
 // A missing, empty, or unrecognized value is "unknown", never safe.
 // Every level carries its own icon and words, so meaning never rests on color.
 // Every level's text is at least 4.5:1 against the dark forest surface.
@@ -8,13 +8,13 @@
 export const TOXICITY_LEVELS = {
   non_toxic: {
     level: 'non_toxic',
-    label: 'Pet-safe',
+    label: 'Non-toxic to pets',
     icon: 'safe',
     className: 'text-grove-sprout bg-grove-canopy border-grove-lime',
   },
   mild: {
     level: 'mild',
-    label: 'Mildly toxic',
+    label: 'Toxic to pets (mild)',
     icon: 'caution',
     className: 'text-grove-sun bg-grove-canopy border-grove-sun',
   },

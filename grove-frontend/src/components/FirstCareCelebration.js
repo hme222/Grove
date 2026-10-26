@@ -49,7 +49,7 @@ export default function FirstCareCelebration({ open, onClose }) {
       role="dialog"
       aria-modal="true"
     >
-      <div className="relative max-w-dialog w-full rounded-round border-hairline border-grove-lime/40 bg-grove-canopy px-6 py-6 grove-celebrate-pop">
+      <div className="relative max-w-dialog w-full rounded-card border-hairline border-grove-lime/40 bg-grove-canopy px-6 py-6 grove-celebrate-pop">
         {/* Burst leaves around the central icon */}
         <div className="absolute inset-0 pointer-events-none flex items-start justify-center">
           <div className="relative h-px w-px" style={{ marginTop: 70 }}>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import SwitchRow from '../components/SwitchRow';
+import { showDailyTrivia, writeTriviaFlag } from '../lib/dailyTrivia';
 import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -12,7 +13,7 @@ import { useTooltips } from '../contexts/TooltipContext';
 import { PageHeader } from '../components/PageHeader';
 import { TUTORIAL_COPY } from '../components/SectionTutorial';
 import { toast } from 'sonner';
-import { LogOut, Sparkles, Leaf, Droplets, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X, ChevronRight } from 'lucide-react';
+import { LogOut, Sparkles, Leaf, Droplets, Sprout, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X, ChevronRight } from 'lucide-react';
 import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
@@ -56,6 +57,24 @@ export default function ProfilePage() {
     } finally {
       setSavingPref(false);
     }
+  };
+
+  // Daily plant tip on Today: off until chosen. Stored on the user and mirrored locally (see lib/dailyTrivia.js).
+  const [savingTrivia, setSavingTrivia] = useState(false);
+  const handleTriviaToggle = async () => {
+    if (savingTrivia) return;
+    const next = !showDailyTrivia(user);
+    setSavingTrivia(true);
+    writeTriviaFlag(next);
+    updateUser({ show_daily_trivia: next });
+    try {
+      await userAPI.updateMe({ show_daily_trivia: next });
+    } catch {
+      // The choice is already kept on this device; the server copy catches up on the next save.
+    } finally {
+      setSavingTrivia(false);
+    }
+    toast.success(next ? 'A daily plant tip will show on Today' : 'The daily plant tip is hidden');
   };
 
   useEffect(() => {
@@ -128,13 +147,14 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* At-a-glance: Plants + Care logs only (no streaks). Full stats live under Care > Growth. */}
+        {/* At-a-glance: plants, care logs and this week's check-ins. No daily streak. Full stats live under Care > Growth. */}
         <div className="grid grid-cols-2 gap-2" data-testid="profile-stats-card">
           {[
             { label: 'Plants', value: stats?.total_plants || 0, icon: Leaf },
             { label: 'Care logs', value: stats?.total_care_logs || 0, icon: Droplets },
-          ].map(({ label, value, icon: Icon }) => (
-            <div key={label} className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
+            { label: 'Check-ins this week', value: `${stats?.check_ins?.this_week || 0} of ${stats?.check_ins?.weekly_goal || 3}`, icon: Sprout, wide: true },
+          ].map(({ label, value, icon: Icon, wide }) => (
+            <div key={label} className={`${wide ? 'col-span-2 ' : ''}rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center`}>
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
               <p className="font-ui text-xs text-grove-cream">{label}</p>
@@ -145,7 +165,7 @@ export default function ProfilePage() {
         {/* Personality card */}
         <div className="rounded-card border-hairline border-grove-fernLine/40 bg-grove-canopy p-5">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-plant text-grove-cream text-xl font-semibold ">Plant personality</h3>
+            <h3 className="font-plant text-grove-cream text-base font-semibold">Plant personality</h3>
             <button
               onClick={handleGeneratePersonality}
               disabled={generatingPersonality}
@@ -188,7 +208,7 @@ export default function ProfilePage() {
 
         {/* Quick links */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Quick Links</h3>
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Quick links</h3>
           <div className="grid grid-cols-1 gap-2">
             <button
               onClick={() => navigate('/bouquets')}
@@ -222,7 +242,7 @@ export default function ProfilePage() {
 
         {/* Tier info */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Your Tier</h3>
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Your tier</h3>
           <p className="font-ui text-sm text-grove-cream capitalize">{user?.tier?.replace('_', ' ') || 'Free'}</p>
           {user?.tier === 'free' && (
             <p className="font-ui text-xs text-grove-cream mt-1">
@@ -245,6 +265,18 @@ export default function ProfilePage() {
           <p className="italic font-ui text-xs font-medium text-grove-sage mt-3 leading-snug">
             For experienced growers who know their plants and prefer to enter details directly.
           </p>
+        </div>
+
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-today-preferences">
+          <h3 className="font-plant text-grove-cream text-base font-semibold mb-3">Today</h3>
+          <SwitchRow
+            label="Show a daily plant tip on Today"
+            help="One short plant fact a day. Off unless you want it."
+            checked={showDailyTrivia(user)}
+            disabled={savingTrivia}
+            onChange={handleTriviaToggle}
+            testId="profile-daily-trivia-toggle"
+          />
         </div>
 
         {/* Pets at home: pet owners see pet safety on their plants */}
@@ -301,7 +333,7 @@ export default function ProfilePage() {
               className={cn(buttonVariants({ variant: 'outline' }), "flex")}
             >
               <HelpCircle className="h-4 w-4" />
-              Help & Tutorial
+              Help and tutorial
             </button>
             {user?.is_admin && (
             <button
@@ -504,6 +536,18 @@ function HardinessZoneControls() {
     }
   };
 
+  const saveHemisphere = async (hemisphere) => {
+    setSaving(true);
+    try {
+      await userAPI.updateMe({ hemisphere });
+      if (refreshUser) await refreshUser();
+    } catch {
+      toast.error('Couldn\u2019t save your hemisphere. Try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const saveOverride = async () => {
     if (!manualZone.trim()) return;
     setSaving(true);
@@ -554,6 +598,26 @@ function HardinessZoneControls() {
               {sourceLabel}
             </p>
           )}
+        </div>
+      </div>
+
+      <div className="mb-3" role="group" aria-labelledby="hemisphere-label" data-testid="profile-hemisphere">
+        <p id="hemisphere-label" className="font-ui text-sm text-grove-cream">Hemisphere</p>
+        <p className="font-ui text-sm text-grove-sage">The seasons run the other way in the south, so seasonal tips follow this.</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {[['north', 'Northern'], ['south', 'Southern']].map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={user?.hemisphere === id}
+              disabled={saving}
+              onClick={() => saveHemisphere(id)}
+              data-testid={`profile-hemisphere-${id}`}
+              className={buttonVariants({ variant: 'chip' })}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -714,7 +778,7 @@ function VerificationStatusCard() {
     <>
       <div className="space-y-3" data-testid="verification-status-card">
         <div
-          className={`rounded-small border-hairline px-4 py-3 flex items-start gapx-4 py-3 ${
+          className={`rounded-small border-hairline px-4 py-3 flex items-start gap-3 ${
             isVerified && !needsRe
               ? 'bg-grove-moss border-grove-fernLine'
               : 'bg-grove-canopy border-grove-moss'

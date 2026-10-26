@@ -18,7 +18,7 @@ const plantLabel = (p) => p.nickname || p.common_name || 'Unnamed plant';
 
 const choiceClass = (on) =>
   `flex-1 rounded-inset border-hairline px-3 py-3 text-sm font-ui text-grove-cream ${
-    on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/20' : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
+    on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/25' : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
   }`;
 
 // The Soil Finger-Test's last card. With a plant it logs a real soil test.
@@ -154,7 +154,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       )}
 
       <fieldset>
-        <legend className="text-xs font-ui text-grove-cream mb-2">What did you feel, two inches down?</legend>
+        <legend className="text-xs font-ui text-grove-cream mb-2">What did you feel in the soil?</legend>
         <div className="flex gap-2">
           {OUTCOMES.map((o) => (
             <button
@@ -198,7 +198,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
               type="button"
               aria-pressed={chips.includes(chip)}
               onClick={() => toggleChip(chip)}
-              className={`rounded-round border-hairline px-3 py-1 text-xs font-ui ${
+              className={`rounded-pill border-hairline px-3 py-1 text-xs font-ui ${
                 chips.includes(chip) ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-forest'
               }`}
             >

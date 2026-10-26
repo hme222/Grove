@@ -75,7 +75,6 @@ export default function GrovesPage() {
     <div>
       <PageHeader back
         title="Groves"
-        count={loadError || loading ? undefined : myGroves.length}
       />
 
       <div className="max-w-column mx-auto px-4 py-4 space-y-6">
@@ -92,7 +91,7 @@ export default function GrovesPage() {
           <>
             {/* My Groves */}
             <div>
-              <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">My groves</h2>
+              <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">My groves{myGroves.length > 0 && <span className="ml-2 font-ui text-sm font-normal text-grove-sage">{myGroves.length}</span>}</h2>
               {myGroves.length === 0 ? (
                 <EmptyState
                   title="No groves yet"
@@ -105,9 +104,9 @@ export default function GrovesPage() {
                       key={grove.id}
                       to={`/groves/${grove.id}`}
                       data-testid="grove-card"
-                      className="w-full flex items-center gap-3 rounded-small border-hairline border-grove-lime/30 bg-grove-moss px-4 py-3 text-left hover:border-grove-lime transition-colors duration-150"
+                      className="w-full flex items-center gap-3 rounded-small border-hairline border-grove-lime/25 bg-grove-moss px-4 py-3 text-left hover:border-grove-lime transition-colors duration-150"
                     >
-                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 border-hairline border-grove-lime/30">
+                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 border-hairline border-grove-lime/25">
                         <Users className="h-5 w-5 text-grove-sprout" />
                       </div>
                       <div className="flex-1 min-w-0">

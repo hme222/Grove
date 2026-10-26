@@ -75,7 +75,6 @@ export default function NotificationsPage() {
     <div>
       <PageHeader back
         title="Notifications"
-        count={loadError || loading ? undefined : unreadCount}
       />
 
       <div className="max-w-page mx-auto px-4 py-4">

@@ -58,7 +58,6 @@ export default function BouquetsPage() {
       <PageHeader
         title="Bouquets"
         back
-        count={loadError || loading ? undefined : bouquets.length}
       />
 
       <div className="max-w-page mx-auto px-4 py-4">
@@ -97,7 +96,7 @@ export default function BouquetsPage() {
             </div>
             <span
               data-testid="bouquet-limit-counter"
-              className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 font-ui text-xs text-grove-cream min-h-6"
+              className="inline-flex items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 font-ui text-xs text-grove-cream min-h-6"
             >
               {atLimit ? 'Full' : 'Free'}
             </span>
@@ -113,7 +112,7 @@ export default function BouquetsPage() {
             {bouquets.map(b => (
               <button
                 key={b.id}
-                onClick={() => navigate(`/bouquets/${b.id}`)}
+                onClick={() => navigate(`/bouquets/${b.id}`, { state: { name: b.name } })}
                 data-testid="bouquet-card"
                 className="rounded-card border-hairline border-grove-moss bg-grove-canopy overflow-hidden text-left hover:border-grove-fernLine transition-colors duration-150"
               >
@@ -130,13 +129,13 @@ export default function BouquetsPage() {
                     <Calendar className="h-3 w-3 text-grove-sage" aria-hidden="true" />
                     <span className="font-ui text-xs text-grove-sage">{formatDate(b.received_date)}</span>
                     {Number(b.vase_life_expected) > 0 && (
-                      <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
+                      <span className="inline-flex items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
                         About {b.vase_life_expected} days
                       </span>
                     )}
                   </div>
                   {b.occasion && (
-                    <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream mt-1.5 capitalize min-h-6">
+                    <span className="inline-flex items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream mt-1.5 capitalize min-h-6">
                       {b.occasion}
                     </span>
                   )}

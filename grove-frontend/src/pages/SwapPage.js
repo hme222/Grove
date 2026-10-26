@@ -1,7 +1,6 @@
 import { LoadErrorPage } from '../components/LoadError';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
-import useDialogA11y from '../lib/useDialogA11y';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { getFileUrl, swapsAPI } from '../lib/api';
@@ -19,78 +18,25 @@ function authedGet(path) {
   return axios.get(`${API}${path}`, { headers: { Authorization: `Bearer ${token}` } });
 }
 
-function CelebrationOverlay({ onDone }) {
-  useEffect(() => {
-    const id = setTimeout(onDone, 2200);
-    return () => clearTimeout(id);
-  }, [onDone]);
-
-  const dialogRef = React.useRef(null);
-  useDialogA11y(dialogRef, onDone);
-  return (
-    <div
-      data-testid="swap-celebration"
-      role="presentation"
-      className="fixed inset-0 z-swap bg-scrim"
-      onClick={onDone}
-    >
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Swap unlocked"
-      ref={dialogRef}
-      tabIndex={-1}
-      className="absolute inset-0 pointer-events-none flex items-center justify-center p-6 focus:outline-none"
-    >
-      <div className="relative text-center">
-        {/* Floating petals */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(10)].map((_, i) => (
-            <span
-              key={i}
-              className="absolute block w-2 h-2 rounded-full bg-grove-moss opacity-0 animate-petal"
-              style={{
-                left: `${(i * 13) % 100}%`,
-                top: `${(i * 17) % 100}%`,
-                animationDelay: `${i * 0.08}s`,
-              }}
-            />
-          ))}
-        </div>
-        <div className="w-20 h-20 mx-auto rounded-full bg-grove-lime border-hairline border-grove-lime flex items-center justify-center mb-4 animate-popin">
-          <Sparkles className="h-9 w-9 text-grove-sprout" />
-        </div>
-        <h2 className="font-plant text-grove-cream text-3xl mb-2">Swap unlocked</h2>
-        <p className="font-ui text-sm text-grove-sprout max-w-sm">
-          Thirty days of care earned you a pass to the community swap deck. Your first matches are ready.
-        </p>
-      </div>
-    </div>
-    </div>
-  );
-}
-
 export default function SwapPage() {
   const navigate = useNavigate();
   const [deck, setDeck] = useState(null);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const [showCelebrate, setShowCelebrate] = useState(false);
+  const [ineligible, setIneligible] = useState(false);
   const [leaving, setLeaving] = useState(null); // 'left' | 'right' | null
 
   useEffect(() => {
     const fetchDeck = async () => {
       try {
         setLoadError(false);
+        // The Swaps page owns the eligibility rules (account age, Pro, verification). Someone who does not meet
+        // them is sent there; if the check itself fails, the deck's own unlock flag decides.
+        const elig = await swapsAPI.eligibility().then((r) => r.data).catch(() => null);
+        if (elig && elig.eligible === false) { setIneligible(true); setLoading(false); return; }
         const res = await authedGet('/swap/deck?limit=20');
         setDeck(res.data);
-        // Show celebration once per session if user just unlocked
-        const seen = sessionStorage.getItem('grove_swap_celebrated');
-        if (res.data.unlocked && !seen) {
-          setShowCelebrate(true);
-          sessionStorage.setItem('grove_swap_celebrated', '1');
-        }
       } catch (e) {
         setLoadError(true);
       } finally {
@@ -120,11 +66,14 @@ export default function SwapPage() {
         await swapsAPI.pass(card.plant_id);
       }
     } catch (e) {
-      // Don't block the UI on swipe failures
+      // Don't block the card on a failure, but say why when the server explains it (for example: add a plant first).
+      const detail = e?.response?.data?.detail;
+      if (e?.response?.status === 403 && typeof detail === 'string') toast.error(detail);
       console.error('Swap action failed', e);
     }
   };
 
+  if (ineligible) return <Navigate to="/swaps" replace />;
   if (loadError) {
     return <LoadErrorPage back title="Browse swaps" what="swaps" onRetry={() => window.location.reload()} />;
   }
@@ -146,15 +95,12 @@ export default function SwapPage() {
 
   const cards = deck.cards || [];
   const current = cards[index];
-  const remaining = cards.length - index;
 
   return (
     <div>
-      {showCelebrate && <CelebrationOverlay onDone={() => setShowCelebrate(false)} />}
 
       <PageHeader back
         title="Browse swaps"
-        count={Math.max(0, remaining)}
       />
 
       <div className="max-w-form mx-auto px-4 py-4">
@@ -188,7 +134,7 @@ export default function SwapPage() {
                 <p className="font-latin text-xs text-grove-cream italic">{current.latin_name}</p>
               )}
               <div className="flex items-center gap-1.5 mt-2">
-                <span className="inline-flex items-center gap-1 rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 font-latin text-xs text-grove-cream min-h-6">
+                <span className="inline-flex items-center gap-1 rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 font-latin text-xs text-grove-cream min-h-6">
                   <span>from @{current.owner_username}</span>
                   <VerifiedProBadge
                     verified_user={current.owner_verified_user}

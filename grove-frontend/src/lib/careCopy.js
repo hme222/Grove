@@ -27,6 +27,13 @@ export function dueLabel(plant, now = new Date()) {
   return `Due in ${diffDays} days`;
 }
 
+// An interval is a reminder to look, not an order to water: "Check about every 7 days", never "Water every 7 days".
+export function checkInterval(days) {
+  const n = Number(days);
+  if (!Number.isFinite(n) || n <= 0) return 'Check the soil first';
+  return `Check about every ${plural(n, 'day')}`;
+}
+
 // The one exact step, shown in both Simple and Detailed modes.
 export function careStep(plant) {
   if (plant?.grow_medium === 'leca') return "Check the reservoir. Top it up if it's low.";

@@ -9,6 +9,13 @@ import { Bell, Mail, Moon, Gauge } from 'lucide-react';
 
 export const CARE_CAP_CHOICES = [1, 2, 3];
 
+// Streak alerts are retired, so they are never listed. Their stored values stay on the account, untouched.
+// Bloom hour and grove challenge pushes are off by default and left out of the list for new owners.
+// Someone who already turned one on still sees it, so they can turn it off again.
+export function visibleKeys(keys, prefs) {
+  return keys.filter((item) => !item.quietByDefault || !!prefs?.[item.key]);
+}
+
 const TOGGLE_GROUPS = [
   {
     title: 'Push notifications',
@@ -17,15 +24,13 @@ const TOGGLE_GROUPS = [
     keys: [
       { key: 'push_care_due', label: 'Daily care check', help: 'One message that bundles every plant due for a check.' },
       { key: 'push_care_overdue', label: 'Extra check-in nudges', help: 'A separate message when a plant has gone a while without a check. These plants are already in the daily care check.' },
-      { key: 'push_streak_at_risk', label: 'Streak reminders', help: 'A heads-up before a care streak resets. Off unless you want it.' },
-      { key: 'push_streak_milestone', label: 'Streak milestones', help: 'Day 7, 14, 30, 60, 100 moments worth noting.' },
       { key: 'push_swap_match', label: 'Swap matches', help: 'When two groves align on plant wants.' },
       { key: 'push_swap_message', label: 'Swap messages', help: 'New messages inside an active swap.' },
       { key: 'push_kudos_received', label: 'Reactions on your posts', help: 'Leaf / light / cutting reactions from your grove.' },
       { key: 'push_sitter_logged', label: 'Plant sitter activity', help: 'When a sitter logs care on your plants.' },
-      { key: 'push_bloom_hour', label: 'Bloom hour', help: 'Daily moments when your grove is blooming.' },
+      { key: 'push_bloom_hour', label: 'Bloom hour', help: 'Daily moments when your grove is blooming.', quietByDefault: true },
       { key: 'push_bouquet_reminder', label: 'Bouquet reminders', help: 'Care actions for active arrangements.' },
-      { key: 'push_grove_challenge', label: 'Grove challenges', help: 'Community challenge progress in your groves.' },
+      { key: 'push_grove_challenge', label: 'Grove challenges', help: 'Community challenge progress in your groves.', quietByDefault: true },
     ],
   },
   {
@@ -85,7 +90,7 @@ export default function NotificationPreferencesPage() {
       onChange={(next) => update({ [k]: next })}
       rowTestId={`pref-row-${k}`}
       testId={`pref-toggle-${k}`}
-      className="border-b-hairline border-grove-moss/50 last:border-b-0"
+      className="border-b-hairline border-grove-moss/40 last:border-b-0"
     />
   );
 
@@ -113,7 +118,7 @@ export default function NotificationPreferencesPage() {
                 </div>
                 <p className="font-ui text-xs text-grove-cream mb-3">{desc}</p>
                 <div>
-                  {keys.map((item) => <Toggle key={item.key} k={item.key} label={item.label} help={item.help} />)}
+                  {visibleKeys(keys, prefs).map((item) => <Toggle key={item.key} k={item.key} label={item.label} help={item.help} />)}
                 </div>
               </div>
             ))}

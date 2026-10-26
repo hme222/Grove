@@ -1,12 +1,13 @@
 import NotFoundPage from '../pages/NotFoundPage';
 import React, { useEffect, useState } from 'react';
+import { LESSON_SOURCES } from '../lessons/sources';
 import { useNavigate, useParams } from 'react-router-dom';
 import { lessonAPI } from '../lib/api';
 import { LESSON_CARDS } from '../lessons/registry';
 import { LESSON_META } from '../lessons/lessonMeta';
 import LessonPlayer from '../lessons/LessonPlayer';
 import SoilTestStep from '../lessons/SoilTestStep';
-import MarkDoneStep from '../lessons/MarkDoneStep';
+import LessonFinalStep from '../lessons/LessonFinalStep';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 
 export default function LessonPage() {
@@ -36,11 +37,11 @@ export default function LessonPage() {
     return <NotFoundPage title="Lesson not found" heading="That lesson isn't here" message="It may have been renamed or removed." to="/lessons" toLabel="Back to lessons" />;
   }
 
-  const finish = async () => {
+  const finish = async (to = '/lessons') => {
     setError('');
     try {
       await lessonAPI.complete(lessonId);
-      navigate('/lessons');
+      navigate(to);
     } catch (_e) {
       setError('Could not save your progress. Try again.');
     }
@@ -56,7 +57,7 @@ export default function LessonPage() {
       {lessonId === 'soil-finger-test' ? (
         <SoilTestStep hasPlant={hasPlant} onLogged={onSoilLogged} />
       ) : (
-        <MarkDoneStep onDone={finish} onNotYet={() => navigate('/lessons')} />
+        <LessonFinalStep lessonId={lessonId} hasPlant={hasPlant} onDone={finish} onNotYet={() => navigate('/lessons')} />
       )}
       {error && (
         <p role="alert" className="mt-2 text-xs font-ui text-destructive" data-testid="lesson-error">
@@ -68,7 +69,7 @@ export default function LessonPage() {
 
   return (
     <>
-      <LessonPlayer cards={cards} renderFinalCard={renderFinalCard} onExit={() => navigate('/lessons')} />
+      <LessonPlayer cards={cards} renderFinalCard={renderFinalCard} onExit={() => navigate('/lessons')} sources={LESSON_SOURCES[lessonId]} />
       <FirstCareCelebration
         open={celebrate}
         onClose={() => {

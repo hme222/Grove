@@ -119,7 +119,6 @@ export default function FloristDashboard() {
     <div>
       <PageHeader back
         title="Florist Pro"
-        count={portfolio.length}
         rightContent={
           <Dialog open={showCreate} onOpenChange={setShowCreate}>
             <DialogTrigger asChild>
@@ -206,7 +205,7 @@ export default function FloristDashboard() {
         {/* Pro Badge */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 mb-6">
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center px-2.5 py-1 rounded-round border-hairline border-grove-sun bg-grove-canopy text-grove-sun text-xs font-ui min-h-6">
+            <div className="inline-flex items-center px-2.5 py-1 rounded-pill border-hairline border-grove-sun bg-grove-canopy text-grove-sun text-xs font-ui min-h-6">
               Pro
             </div>
             <div>

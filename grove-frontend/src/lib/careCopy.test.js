@@ -33,3 +33,15 @@ test('daysSince ignores missing and bad dates', () => {
   expect(daysSince('not a date', NOW)).toBeNull();
   expect(daysSince(daysAgo(9), NOW)).toBe(9);
 });
+
+describe('checkInterval', () => {
+  const { checkInterval } = require('./careCopy');
+  test('words an interval as a check, never a command to water', () => {
+    expect(checkInterval(7)).toBe('Check about every 7 days');
+    expect(checkInterval(1)).toBe('Check about every 1 day');
+    expect(checkInterval(7)).not.toMatch(/^Water/);
+  });
+  test('has a safe line when there is no interval', () => {
+    expect(checkInterval(null)).toBe('Check the soil first');
+  });
+});

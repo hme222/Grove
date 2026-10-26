@@ -69,7 +69,7 @@ export default function HelpPage() {
       <div className="max-w-page mx-auto px-4 pt-6 space-y-6">
         {/* Mission Statement */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-          <h2 className="font-plant text-xl font-semibold text-grove-cream mb-2">{GROVE_BRAND.name}</h2>
+          <h2 className="font-plant text-base font-semibold text-grove-cream mb-2">{GROVE_BRAND.name}</h2>
           <p className="text-sm text-grove-cream leading-relaxed mb-3">{GROVE_BRAND.mission}</p>
           <p className="text-xs text-grove-cream italic">{GROVE_BRAND.closingLine}</p>
         </div>

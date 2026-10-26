@@ -19,7 +19,7 @@ export default function ToxicityBadge({ toxicity, size = 'md', className = '', t
     <span
       data-testid={testId}
       data-level={info.level}
-      className={`inline-flex items-center rounded-round border-hairline font-ui leading-snug ${s.box} ${info.className} ${className}`}
+      className={`inline-flex items-center rounded-pill border-hairline font-ui ${s.box} ${info.className} ${className}`}
     >
       <Icon className={`${s.icon} flex-shrink-0`} aria-hidden="true" />
       <span>{info.label}</span>

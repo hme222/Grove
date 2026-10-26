@@ -7,7 +7,7 @@ import {
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '../components/ui/alert-dialog';
 import BackButton from '../components/BackButton';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { plantAPI, roomAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
 import StatusDot from '../components/StatusDot';
@@ -27,6 +27,7 @@ import { buttonVariants } from '../components/ui/button';
 
 export default function PlantDetailPage() {
   const { plantId } = useParams();
+  const knownName = useLocation().state?.name;
   const navigate = useNavigate();
   const [plant, setPlant] = useState(null);
   const [timeline, setTimeline] = useState([]);
@@ -97,9 +98,9 @@ export default function PlantDetailPage() {
 
   // The tab strip and screen-reader history name the plant, not just the app.
   useEffect(() => {
-    const name = plant?.nickname || plant?.common_name;
+    const name = plant?.nickname || plant?.common_name || (loadError ? knownName : null);
     if (name) document.title = `${name} · FloraGrove`;
-  }, [plant]);
+  }, [plant, loadError, knownName]);
 
   // Phase 14A.2 — fetch the user's existing rooms once for the inline room
   // dropdown. Refreshes whenever the plant updates so newly-created rooms
@@ -190,7 +191,7 @@ export default function PlantDetailPage() {
 
   if (notFound) return <NotFoundPage />;
   if (loadError) {
-    return <LoadErrorPage title="This plant" back={{ to: '/plants', where: 'plants' }} onRetry={fetchPlant} />;
+    return <LoadErrorPage title={knownName || 'This plant'} what={knownName ? knownName : undefined} back={{ to: '/plants', where: 'plants' }} onRetry={fetchPlant} />;
   }
   if (loading || !plant) {
     return (
@@ -267,7 +268,7 @@ export default function PlantDetailPage() {
                   {plant.species_id && (
                     <button
                       type="button"
-                      onClick={() => navigate(`/greenhouse/${plant.species_id}`)}
+                      onClick={() => navigate(`/greenhouse/${plant.species_id}`, { state: { name: plant.common_name } })}
                       data-testid="plant-view-in-greenhouse"
                       className="ml-2 inline-flex items-center text-xs font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
                     >
@@ -276,18 +277,19 @@ export default function PlantDetailPage() {
                   )}
                 </p>
               )}
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex flex-wrap items-center gap-2 mt-1">
                 <InlineRoom
                   value={plant.room || ''}
                   options={rooms}
                   onSave={(v) => patchPlant({ room: v })}
                   testid="plant-room"
                 />
-                <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
+                <span className="inline-flex items-center whitespace-nowrap rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
                   Grows in {String(plant.grow_medium || 'soil').replace('_', ' ')}
                 </span>
               </div>
               <ToxicityBadge toxicity={plant.species_toxicity} size="sm" className="mt-1.5" testId="plant-toxicity" />
+              <p className="mt-1 font-ui text-xs text-grove-sage">If a pet or child ate any of it, see Help my plant for who to call.</p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <button
@@ -315,12 +317,12 @@ export default function PlantDetailPage() {
       {/* Tabs */}
       <div className="max-w-page mx-auto px-4 py-4" data-testid="plant-detail-tabs">
         <Tabs defaultValue="timeline">
-          <TabsList className="bg-transparent border-b-hairline border-grove-moss rounded-none w-full justify-start gap-1 h-auto p-0">
-            <TabsTrigger value="timeline" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Journal</TabsTrigger>
-            <TabsTrigger value="photos" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2" data-testid="plant-tab-photos">Photos</TabsTrigger>
-            <TabsTrigger value="care" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Care</TabsTrigger>
-            <TabsTrigger value="notes" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Notes</TabsTrigger>
-            <TabsTrigger value="stats" className="rounded-t-inset rounded-b-none data-[state=active]:bg-grove-moss data-[state=active]:text-grove-cream text-xs font-ui px-4 py-2">Stats</TabsTrigger>
+          <TabsList className="border-b-hairline border-grove-moss">
+            <TabsTrigger value="timeline">Journal</TabsTrigger>
+            <TabsTrigger value="photos" data-testid="plant-tab-photos">Photos</TabsTrigger>
+            <TabsTrigger value="care">Care</TabsTrigger>
+            <TabsTrigger value="notes">Notes</TabsTrigger>
+            <TabsTrigger value="stats">Stats</TabsTrigger>
           </TabsList>
 
           {/* Timeline Tab */}
@@ -509,7 +511,7 @@ export default function PlantDetailPage() {
                 onClick={() => setOpenEntry(null)}
                 aria-label="Close"
                 data-testid="timeline-entry-modal-close"
-                className="absolute right-3 top-3 z-raised flex h-touch w-touch items-center justify-center rounded-full bg-grove-forest/90 text-grove-cream hover:bg-grove-moss"
+                className="absolute right-3 top-3 z-raised flex h-touch w-touch items-center justify-center rounded-full bg-grove-forest/80 text-grove-cream hover:bg-grove-moss"
               >
                 <X className="h-4 w-4" />
               </button>

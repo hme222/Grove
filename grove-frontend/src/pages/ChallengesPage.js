@@ -70,7 +70,6 @@ export default function ChallengesPage() {
     <div>
       <PageHeader back
         title="Challenges"
-        count={loadError || loading ? undefined : activeChallenges.length}
       />
 
       <div className="max-w-page mx-auto px-4 py-4 space-y-6">
@@ -126,7 +125,7 @@ export default function ChallengesPage() {
             {/* Available Challenges */}
             <div>
               <h2 className="font-plant text-grove-cream text-xl font-semibold  mb-3">
-                {activeChallenges.length > 0 ? 'More Challenges' : 'Available Challenges'}
+                {activeChallenges.length > 0 ? 'More challenges' : 'Available challenges'}
               </h2>
               {templates.length === 0 && (
                 <p className="font-ui text-sm text-grove-sage" data-testid="challenges-empty">No challenges right now. Check back soon.</p>

@@ -6,19 +6,12 @@ export const EMPTY_STATES = {
     cta: 'Add a plant',
     ctaPath: '/add-plant',
   },
-  feed_no_grove: {
+  feed_empty: {
     illustration: 'cluster',
-    heading: 'No one in your grove yet',
-    body: 'A grove is never a single tree. Invite a friend or join an existing grove to see their plants here.',
+    heading: 'Nothing shared yet',
+    body: 'Updates from you and your groves show up here. Anyone can browse the community. Join a grove to see more plants.',
     cta: 'Find a grove',
     ctaPath: '/groves',
-  },
-  swaps_locked: {
-    illustration: 'leaf',
-    heading: 'Swap matching unlocks at day 30',
-    body: "Keep your streak going. When you reach 30 days, you'll be matched with grove members whose plants you want — and who want yours.",
-    cta: null,
-    streakProgress: true,
   },
   bouquet_none: {
     illustration: 'bloom',

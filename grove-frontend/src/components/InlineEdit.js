@@ -56,7 +56,7 @@ export function InlineText({
         type="button"
         onClick={() => setEditing(true)}
         data-testid={`${testid}-display`}
-        className={`group inline-flex items-center gap-1.5 hover:bg-grove-moss rounded-tag px-1 -mx-1 transition-colors duration-150 ${className}`}
+        className={`group inline-flex items-center gap-1.5 hover:bg-grove-moss rounded-control px-1 -mx-1 transition-colors duration-150 ${className}`}
       >
         <span>{value || <span className="text-grove-lichen">{placeholder}</span>}</span>
         <Pencil className="h-3 w-3 text-grove-sage opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
@@ -128,7 +128,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
         aria-haspopup="true"
         aria-expanded={open}
         data-testid={`${testid}-trigger`}
-        className="inline-flex items-center gap-1 rounded-round border-hairline border-grove-fernLine bg-grove-moss px-2.5 py-1 text-xs font-ui text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+        className={cn(buttonVariants({ variant: 'chip' }), "gap-1 px-3 py-1")}
       >
         <span>{value || 'Add room'}</span>
         <ChevronDown className="h-2.5 w-2.5" />

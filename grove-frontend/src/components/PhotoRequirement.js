@@ -115,7 +115,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onSkip }) {
               className="w-full aspect-[4/3] bg-grove-moss object-contain"
             />
             {validating && (
-              <div className="absolute inset-0 bg-grove-lime/60 flex items-center justify-center">
+              <div className="absolute inset-0 bg-grove-lime/80 flex items-center justify-center">
                 <div className="text-center" role="status">
                   <Spinner className="mx-auto mb-2 block h-6 w-6" />
                   <p className="font-ui text-grove-sprout text-xs font-medium">Checking your photo…</p>
@@ -245,7 +245,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onSkip }) {
           {guideOpen ? <ChevronUp className="h-4 w-4 text-grove-cream" /> : <ChevronDown className="h-4 w-4 text-grove-cream" />}
         </button>
         {guideOpen && (
-          <div className="px-3 pb-3 border-t-hairline border-grove-moss/50 pt-3">
+          <div className="px-3 pb-3 border-t-hairline border-grove-moss/40 pt-3">
             <PhotoGuideCards />
           </div>
         )}

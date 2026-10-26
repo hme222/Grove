@@ -30,12 +30,12 @@ export default function SwapMatchesPage() {
   useEffect(() => { load(); }, []);
 
   if (loadError) {
-    return <LoadErrorPage title="Swap Matches" what="your matches" back={{ to: '/swap', where: 'swaps' }} onRetry={load} />;
+    return <LoadErrorPage title="Swap matches" what="your matches" back={{ to: '/swap', where: 'swaps' }} onRetry={load} />;
   }
   if (loading) {
     return (
       <div>
-        <PageHeader back title="Swap Matches" />
+        <PageHeader back title="Swap matches" />
         <Loading label="Loading matches" />
       </div>
     );
@@ -44,21 +44,23 @@ export default function SwapMatchesPage() {
   return (
     <div className="pb-24">
       <PageHeader back
-        title="Swap Matches"
+        title="Swap matches"
       />
 
       <div className="max-w-column mx-auto px-4 pt-4 space-y-3">
-        <div className="flex items-center justify-end">
-          <HeaderAction icon={Repeat} onClick={() => navigate('/swap')} data-testid="swap-matches-deck-button">
-            Back to deck
-          </HeaderAction>
-        </div>
+        {matches.length > 0 && (
+          <div className="flex items-center justify-end">
+            <HeaderAction icon={Repeat} onClick={() => navigate('/swap')} data-testid="swap-matches-deck-button">
+              Back to deck
+            </HeaderAction>
+          </div>
+        )}
         {matches.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-4">
               <Sparkles className="h-7 w-7 text-grove-sprout" />
             </div>
-            <h2 className="font-plant text-grove-cream text-xl font-semibold mb-1">No matches yet</h2>
+            <h2 className="font-plant text-grove-cream text-base font-semibold mb-1">No matches yet</h2>
             <p className="font-ui text-sm text-grove-cream mb-4">
               Keep swiping the deck — when someone likes your plants back, you'll match here.
             </p>
@@ -141,7 +143,7 @@ function StatusPill({ status }) {
   };
   const c = config[status] || config.matched;
   return (
-    <span className={`inline-flex items-center rounded-round border-hairline ${c.border} ${c.bg} px-2.5 py-1 min-h-6 font-ui text-xs ${c.text}`}>
+    <span className={`inline-flex items-center rounded-pill border-hairline ${c.border} ${c.bg} px-2.5 py-1 min-h-6 font-ui text-xs ${c.text}`}>
       {c.label}
     </span>
   );

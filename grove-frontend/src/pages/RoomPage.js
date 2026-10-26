@@ -49,7 +49,7 @@ export default function RoomPage() {
 
   return (
     <div>
-      <PageHeader back title="Rooms" count={loadError || loading ? undefined : rooms.length} />
+      <PageHeader back title="Rooms" />
 
       <div className="max-w-page mx-auto px-4 py-4 space-y-4">
         {loadError && !loading ? (<LoadError what="rooms" onRetry={() => window.location.reload()} />) : loading ? (
@@ -81,7 +81,7 @@ export default function RoomPage() {
               >
                 <div className="flex items-center gap-2">
                   <h3 className="font-plant text-grove-cream text-base font-semibold">{room.room}</h3>
-                  <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
+                  <span className="inline-flex items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
                     {room.count}
                   </span>
                 </div>
@@ -95,6 +95,7 @@ export default function RoomPage() {
                     <AppLink
                       key={plant.id || i}
                       to={`/plants/${plant.id}`}
+                      state={{ name: plant.nickname || plant.common_name }}
                       className="relative block aspect-square rounded-chip overflow-hidden border-hairline border-grove-moss"
                     >
                       {plant.photo_url ? (

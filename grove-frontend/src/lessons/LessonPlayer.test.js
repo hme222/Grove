@@ -77,3 +77,22 @@ test('exit calls onExit', () => {
   click('lesson-exit');
   expect(onExit).toHaveBeenCalledTimes(1);
 });
+
+test('a lesson with sources lists each one with what it supports, and says what has no source', () => {
+  render({
+    sources: {
+      sources: [{ publisher: 'RHS', title: 'How plants absorb water', url: 'https://example.org/a', supports: 'Feel the soil first.' }],
+      gaps: ['No page was found for draughts.'],
+    },
+  });
+  const panel = q('lesson-sources');
+  expect(panel.textContent).toContain('RHS: How plants absorb water');
+  expect(panel.textContent).toContain('Feel the soil first.');
+  expect(panel.textContent).toContain('No page was found for draughts.');
+  expect(panel.querySelector('a').getAttribute('target')).toBe('_blank');
+});
+
+test('a lesson with no sources shows no panel', () => {
+  render({});
+  expect(q('lesson-sources')).toBeNull();
+});

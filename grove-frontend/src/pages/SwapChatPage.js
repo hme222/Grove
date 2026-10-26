@@ -190,7 +190,7 @@ export default function SwapChatPage() {
       >
         {/* Match announcement */}
         <div className="flex justify-center my-2">
-          <span className="inline-flex items-center gap-1.5 rounded-round bg-grove-moss border-hairline border-grove-fernLine px-2.5 py-1.5 font-ui text-xs font-medium text-grove-sprout min-h-6">
+          <span className="inline-flex items-center gap-1.5 rounded-pill bg-grove-moss border-hairline border-grove-fernLine px-2.5 py-1.5 font-ui text-xs font-medium text-grove-sprout min-h-6">
             <Leaf className="h-3 w-3" /> You matched — introduce yourself
           </span>
         </div>

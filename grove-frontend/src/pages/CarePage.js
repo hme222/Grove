@@ -31,6 +31,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
 import CareTextToggle from '../components/CareTextToggle';
 import UndoSnackbar from '../components/UndoSnackbar';
+import RoundSummaryCard from '../components/RoundSummaryCard';
 
 const FILTERS = [
   { value: 'all', label: 'All due' },
@@ -49,14 +50,14 @@ const URGENCY_STYLES = {
     accent: 'var(--grove-bloom)',
   },
   needs_water: {
-    border: 'border-grove-sun/30',
+    border: 'border-grove-sun/25',
     bg: 'bg-grove-canopy',
     dot: 'bg-grove-sun',
     label: 'text-grove-sage',
     accent: 'var(--grove-sun)',
   },
   healthy: {
-    border: 'border-grove-fernLine/30',
+    border: 'border-grove-fernLine/25',
     bg: 'bg-grove-moss',
     dot: 'bg-grove-lime',
     label: 'text-grove-sprout',
@@ -64,7 +65,7 @@ const URGENCY_STYLES = {
   },
   propagating: {
     border: 'border-grove-lime/40',
-    bg: 'bg-grove-lime/10',
+    bg: 'bg-grove-lime/15',
     dot: 'bg-grove-lime',
     label: 'text-grove-sprout',
     accent: 'var(--grove-sprout)',
@@ -88,6 +89,7 @@ export default function CarePage() {
   const waterAllRef = React.useRef(null);
   const [exiting, setExiting] = useState(new Set()); // plant ids currently animating out
   const [sessionCount, setSessionCount] = useState(0); // session = plants logged this visit
+  const [sessionPlants, setSessionPlants] = useState([]); // { id, name } of each plant tended this visit
   const [showFirstCare, setShowFirstCare] = useState(false);
   const [allPlants, setAllPlants] = useState([]); // for named-plant empty state
   const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
@@ -134,6 +136,19 @@ export default function CarePage() {
 
   useEffect(() => { fetchDue(); fetchAllPlantsLite(); }, []);
 
+  // When the list empties, read the plants again so "Next up" reflects what was just logged.
+  const dueCount = plants.length;
+  useEffect(() => {
+    if (!loading && dueCount === 0 && sessionPlants.length > 0) fetchAllPlantsLite();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, dueCount]);
+
+  const plantName = (p) => p.nickname || p.common_name || 'A plant';
+  const addToSession = (list) => setSessionPlants((prev) => {
+    const seen = new Set(prev.map((x) => x.id));
+    return [...prev, ...list.filter((x) => !seen.has(x.id)).map((x) => ({ id: x.id, name: plantName(x) }))];
+  });
+
   const maybeCelebrateFirstCare = (firstCarePending) => {
     if (firstCarePending && user && !user.first_care_celebrated) {
       setShowFirstCare(true);
@@ -161,9 +176,10 @@ export default function CarePage() {
       const res = await waterAPI.logRound(filteredPlants.map((p) => p.id));
       const watered = res.data.watered || 0;
       // The Water All button disappears with the list, so the Undo bar takes focus.
-      if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered });
+      if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: filteredPlants.map((p) => p.id) });
       else toast.success(`Watered ${watered} plants`);
       setSessionCount((c) => c + watered);
+      if (watered > 0) addToSession(filteredPlants);
       maybeCelebrateFirstCare(res.data.first_care_pending);
       window.dispatchEvent(new Event('grove:mission-refresh'));
       // Animate everything out
@@ -185,7 +201,7 @@ export default function CarePage() {
     try {
       const res = await waterAPI.logRound([plant.id]);
       const watered = res.data.watered || 0;
-      if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered });
+      if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: [plant.id] });
       handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending });
     } catch {
       toast.error("Couldn't save that. Check your connection and try again.");
@@ -200,6 +216,7 @@ export default function CarePage() {
     try {
       await waterAPI.undoRound(lastRound.roundId);
       setSessionCount((c) => Math.max(0, c - lastRound.count));
+      setSessionPlants((prev) => prev.filter((x) => !(lastRound.ids || []).includes(x.id)));
       toast.success('Water round undone');
       fetchDue();
     } catch (err) {
@@ -213,6 +230,8 @@ export default function CarePage() {
   // Called when a per-plant care action is logged via the modal.
   const handlePlantLogged = (plantId, meta) => {
     setSessionCount((c) => c + 1);
+    const logged = plants.find((p) => p.id === plantId);
+    if (logged) addToSession([logged]);
     setExiting((prev) => {
       const next = new Set(prev);
       next.add(plantId);
@@ -231,6 +250,8 @@ export default function CarePage() {
   };
 
   const sessionActive = sessionCount > 0;
+  const endSession = () => { setSessionCount(0); setSessionPlants([]); };
+  const showRoundSummary = !loading && !loadError && plants.length === 0 && sessionPlants.length > 0;
 
   // Try again keeps the error card up (it says "Trying again…") until the request settles, so a retry
   // can never flash an empty list or a zero.
@@ -242,11 +263,7 @@ export default function CarePage() {
   return (
     <div className="pb-24">
       <SectionTutorial tutorialId="care" />
-      <PageHeader
-        title="Today"
-        count={loading || loadError ? undefined : plants.length}
-        countLabel="plants due"
-      >
+      <PageHeader title="Today">
         <CareTabs />
       </PageHeader>
 
@@ -296,7 +313,15 @@ export default function CarePage() {
           </div>
         ) : filteredPlants.length === 0 ? (
           <div className="col-span-full">
-            <NamedPlantEmptyState plants={allPlants} />
+            {showRoundSummary ? (
+              <RoundSummaryCard
+                names={sessionPlants.map((x) => x.name)}
+                plants={allPlants}
+                onDone={() => { endSession(); document.getElementById('main-content')?.focus(); }}
+              />
+            ) : (
+              <NamedPlantEmptyState plants={allPlants} />
+            )}
           </div>
         ) : (
           filteredPlants.map(plant => {
@@ -315,17 +340,18 @@ export default function CarePage() {
                 {/* Urgency stripe */}
                 <div
                   aria-hidden="true"
-                  className={`absolute left-0 top-0 bottom-0 w-1 ${style.dot}`}
+                  className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-pill ${style.dot}`}
                 />
 
                 <div className="flex gap-3 px-4 py-3">
                   <AppLink
                     to={`/plants/${plant.id}`}
+                    state={{ name: plant.nickname || plant.common_name }}
                     className="flex-shrink-0 w-20 h-20 rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss flex items-center justify-center"
                     aria-label={`Open ${plant.nickname || plant.common_name}`}
                   >
                     {plant.photo_url ? (
-                      <img src={getFileUrl(plant.photo_url)} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" />
+                      <img src={getFileUrl(plant.photo_url)} alt="" className="h-full w-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Leaf className="h-7 w-7 text-grove-sprout opacity-40" />
@@ -416,7 +442,7 @@ export default function CarePage() {
 
       <section aria-labelledby="pip-heading" className="max-w-content mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
         <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
-        <div className="divide-y-hairline divide-grove-fernLine/30 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
+        <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <DailyMissionCard embedded />
           <NextLessonCard embedded />
           <DailyTriviaCard embedded />
@@ -450,19 +476,19 @@ export default function CarePage() {
         >
           <div className="rounded-small border-hairline border-grove-fernLine bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
-              <Sparkles className="h-4 w-4 text-grove-sprout" />
+              <Sparkles className="h-4 w-4 text-grove-root" aria-hidden="true" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-ui text-xs font-medium text-grove-sprout">Watering session in progress</p>
+              <p className="font-ui text-xs font-medium text-grove-root">Watering session in progress</p>
               <p className="font-ui text-sm truncate">
-                {sessionCount} {sessionCount === 1 ? 'plant' : 'plants'} tended so far. Keep going.
+                {sessionCount} {sessionCount === 1 ? 'plant' : 'plants'} checked
               </p>
             </div>
             <button
-              onClick={() => setSessionCount(0)}
+              onClick={endSession}
               aria-label="End session"
               data-testid="care-session-end"
-              className="w-8 h-8 rounded-full border-hairline border-grove-lime/40 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
+              className="w-8 h-8 rounded-full border-hairline border-grove-root text-grove-root hover:bg-grove-root hover:text-grove-lime flex items-center justify-center"
             >
               <X className="h-4 w-4" />
             </button>
@@ -570,7 +596,7 @@ function ScheduleReviewBanner() {
       className="mt-3 rounded-control border-hairline border-grove-moss bg-grove-sun/15 p-3 flex items-start gap-3"
       data-testid="schedule-review-banner"
     >
-      <span className="w-8 h-8 rounded-full bg-grove-sun/20 flex items-center justify-center flex-shrink-0">
+      <span className="w-8 h-8 rounded-full bg-grove-sun/25 flex items-center justify-center flex-shrink-0">
         <Sparkles className="h-4 w-4 text-grove-sun" />
       </span>
       <div className="flex-1 min-w-0">
@@ -584,7 +610,7 @@ function ScheduleReviewBanner() {
       </div>
       <button
         type="button"
-        onClick={() => navigate(`/plants/${first.plant_id}`)}
+        onClick={() => navigate(`/plants/${first.plant_id}`, { state: { name: first.nickname || first.common_name } })}
         data-testid="schedule-review-cta"
         className={cn(buttonVariants(), "flex-shrink-0")}
       >

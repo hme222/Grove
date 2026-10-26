@@ -20,7 +20,7 @@ export const CARDS = [
     header: "Lesson 2 of 5 · Watering 101",
     headline: "Ditch the calendar schedule.",
     body:
-      "Don\u2019t water on a rigid weekly routine. Instead, <strong>poke your finger 2 inches deep</strong> into the soil. If it feels dry and dusty like a cookie crumb, it\u2019s time to water. If it feels damp, walk away!",
+      "Don\u2019t water on a rigid weekly routine. Instead, <strong>push a finger in to the second knuckle</strong> (the first knuckle in a small pot under 6 in or 15 cm). If it feels dry and dusty like a cookie crumb, it\u2019s time to water. If it feels damp, walk away! Succulents and cacti are different: they want the whole pot dry.",
     visualAlt: "Diagram: dry topsoil finger test vs. damp deep soil",
     cta: "Got it, check the soil first",
     icon: Droplets,
@@ -33,7 +33,7 @@ export const CARDS = [
     header: "Lesson 3 of 5 · Potting Basics",
     headline: "Give those roots some air.",
     body:
-      "Imagine standing in wet socks all day\u2014that\u2019s what happens to roots in a pot with no drainage. <strong>Always</strong> use a pot with a hole at the bottom so excess water can escape. Your plant\u2019s roots need to breathe!",
+      "Imagine standing in wet socks all day\u2014that\u2019s what happens to roots in a pot with no drainage. pots need <strong>drainage holes</strong> so excess water can escape. If a decorative pot has none, keep the plant in its nursery pot inside it and empty the outer pot after watering. Your plant\u2019s roots need to breathe!",
     visualAlt: "Water safely draining from the bottom of a terracotta pot",
     cta: "Use pots with holes, got it",
     icon: Wind,
@@ -46,7 +46,7 @@ export const CARDS = [
     header: "Lesson 4 of 5 · Light Matching",
     headline: "\u201CBright, indirect light\u201D demystified.",
     body:
-      "If you can comfortably read a book in a spot without turning on a light, your plant will love it. Avoid blasting direct, hot afternoon sun right onto the leaves\u2014it sunburns them just like us!",
+      "Bright, indirect light is a few feet back from a window, or a bright spot out of direct midday sun. Being able to read there is not a reliable test. Avoid blasting direct, hot afternoon sun right onto the leaves\u2014it sunburns them just like us!",
     visualAlt: "Cozy room diagram with safe light zones away from direct sun",
     cta: "Find my light zone",
     icon: Sun,

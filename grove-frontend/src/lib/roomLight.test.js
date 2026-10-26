@@ -27,4 +27,16 @@ describe('room light', () => {
     expect(bad.tone).toBe('issues');
     expect(bad.issues).toHaveLength(1);
   });
+
+  test('direct sun on a tolerant plant is a soft note that does not call the plant too bright', () => {
+    const text = fitSentence({ name: 'Sandra', need: 'bright_indirect', fit: 'bright' });
+    expect(text).toMatch(/more than Sandra needs/);
+    expect(text).not.toMatch(/brighter than Sandra likes/);
+  });
+
+  test('the low-light help names the window that faces away from the sun in each hemisphere', () => {
+    expect(lightHelp('low')).toMatch(/faces north/);
+    expect(lightHelp('low', 'south')).toMatch(/faces south/);
+    expect(lightHelp('medium', 'south')).toBe(lightHelp('medium'));
+  });
 });

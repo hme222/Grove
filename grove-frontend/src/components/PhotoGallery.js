@@ -181,7 +181,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                 </span>
               )}
               <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/70 px-2 py-0.5 text-xs font-ui text-grove-cream">
+                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/80 px-2 py-0.5 text-xs font-ui text-grove-cream">
                   <Calendar className="h-2.5 w-2.5" />
                   {formatWhen(p.taken_at)}
                 </span>
@@ -192,7 +192,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                   onClick={() => setEditing(p)}
                   data-testid={`photo-edit-${p.id}`}
                   aria-label="Edit photo"
-                  className="w-6 h-6 rounded-full bg-grove-forest/95 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
+                  className="w-6 h-6 rounded-full bg-grove-forest/80 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
                 >
                   <Pencil className="h-3 w-3" />
                 </button>
@@ -202,7 +202,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                     onClick={() => handleSetCover(p.id)}
                     data-testid={`photo-setcover-${p.id}`}
                     aria-label="Set as cover"
-                    className="w-6 h-6 rounded-full bg-grove-forest/95 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
+                    className="w-6 h-6 rounded-full bg-grove-forest/80 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
                   >
                     <Star className="h-3 w-3" />
                   </button>
@@ -212,7 +212,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
                   onClick={() => handleDelete(p.id)}
                   data-testid={`photo-delete-${p.id}`}
                   aria-label="Delete photo"
-                  className="w-6 h-6 rounded-full bg-grove-forest/95 text-grove-blush flex items-center justify-center hover:bg-grove-sprout hover:text-grove-cream"
+                  className="w-6 h-6 rounded-full bg-grove-forest/80 text-grove-blush flex items-center justify-center hover:bg-grove-sprout hover:text-grove-cream"
                 >
                   <Trash2 className="h-3 w-3" />
                 </button>

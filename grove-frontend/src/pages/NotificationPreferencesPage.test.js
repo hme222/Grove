@@ -16,8 +16,6 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const DEFAULTS = {
   push_care_due: true,
   push_care_overdue: false,
-  push_streak_at_risk: false,
-  push_streak_milestone: false,
   push_swap_match: false,
   push_swap_message: false,
   push_kudos_received: false,
@@ -52,10 +50,38 @@ afterEach(() => {
   container.remove();
 });
 
-test('streak reminders show as off and care check as on', () => {
-  expect(q('pref-toggle-push_streak_at_risk').getAttribute('aria-checked')).toBe('false');
-  expect(q('pref-toggle-push_streak_milestone').getAttribute('aria-checked')).toBe('false');
+test('care check shows as on', () => {
   expect(q('pref-toggle-push_care_due').getAttribute('aria-checked')).toBe('true');
+});
+
+test('streak, bloom hour and challenge pushes are not offered to a new owner', () => {
+  ['push_streak_at_risk', 'push_streak_milestone', 'push_bloom_hour', 'push_grove_challenge'].forEach((key) => {
+    expect(q(`pref-row-${key}`)).toBeNull();
+  });
+  expect(container.textContent.toLowerCase()).not.toContain('streak');
+});
+
+test('care reminders, swap messages and email stay on the list', () => {
+  ['push_care_due', 'push_swap_message', 'email_digest', 'email_swap_match'].forEach((key) => {
+    expect(q(`pref-row-${key}`)).not.toBeNull();
+  });
+});
+
+test('someone who already turned bloom hour on can still see it to turn it off', async () => {
+  act(() => root.unmount());
+  notificationAPI.getPreferences.mockResolvedValue({ data: { ...DEFAULTS, push_bloom_hour: true } });
+  root = createRoot(container);
+  await act(async () => { root.render(<NotificationPreferencesPage />); });
+  expect(q('pref-toggle-push_bloom_hour').getAttribute('aria-checked')).toBe('true');
+  expect(q('pref-row-push_grove_challenge')).toBeNull();
+});
+
+test('a stored streak value never brings the toggle back', async () => {
+  act(() => root.unmount());
+  notificationAPI.getPreferences.mockResolvedValue({ data: { ...DEFAULTS, push_streak_at_risk: true } });
+  root = createRoot(container);
+  await act(async () => { root.render(<NotificationPreferencesPage />); });
+  expect(q('pref-row-push_streak_at_risk')).toBeNull();
 });
 
 test('quiet hours show as on with their window', () => {

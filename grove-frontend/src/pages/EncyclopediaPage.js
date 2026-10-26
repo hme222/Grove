@@ -74,7 +74,7 @@ export default function EncyclopediaPage() {
 
       <div className="max-w-page mx-auto px-4 py-4 space-y-4">
         <AppLink to="/lessons" data-testid="learn-lessons-card"
-          className="block w-full rounded-card border-hairline border-grove-sun/30 bg-gradient-to-br from-grove-canopy to-grove-moss p-5 text-left transition-colors duration-200 hover:border-grove-sun/60">
+          className="block w-full rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss p-5 text-left transition-colors duration-200 hover:border-grove-sun/80">
           <span className="flex items-center justify-between gap-3">
             <span className="min-w-0">
               <span className="block font-plant text-base font-semibold text-grove-cream">Short lessons</span>
@@ -102,6 +102,7 @@ export default function EncyclopediaPage() {
                   <AppLink
                     key={g.id}
                     to={`/guilds/${g.slug}`}
+                    state={{ name: g.name }}
                     data-testid={`guild-card-${g.slug}`}
                     className="block text-left rounded-chip border-hairline p-3 hover:brightness-125 transition-[filter] duration-150"
                     style={{
@@ -115,10 +116,10 @@ export default function EncyclopediaPage() {
                     >
                       <GuildGlyph guild={g} className="h-3.5 w-3.5" style={{ color: accent }} />
                     </div>
-                    <p className="font-ui text-xs font-medium text-grove-cream leading-tight">
+                    <h3 className="font-plant text-base font-semibold text-grove-cream leading-tight">
                       {g.name}
-                    </p>
-                    <p className="font-latin text-xs text-grove-sage mt-1">
+                    </h3>
+                    <p className="font-ui text-xs font-normal text-grove-sage mt-1">
                       {g.species_count} species
                     </p>
                   </AppLink>
@@ -162,6 +163,7 @@ export default function EncyclopediaPage() {
               <AppLink
                 key={s.id}
                 to={`/greenhouse/${s.id}`}
+                state={{ name: s.common_name }}
                 className="block w-full text-left rounded-card border-hairline border-grove-moss bg-grove-moss p-5 cursor-pointer hover:border-grove-fernLine transition-all duration-150"
                 data-testid="species-card"
               >

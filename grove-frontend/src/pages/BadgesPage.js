@@ -184,7 +184,7 @@ export default function BadgesPage() {
 
   return (
     <div className="pb-24" data-testid="badges-page">
-      <PageHeader title="Badges" back={{ to: '/profile', where: 'Profile' }} count={`${data.earned_count}/${data.total}`} />
+      <PageHeader title="Badges" back={{ to: '/profile', where: 'Profile' }} />
 
       <div className="max-w-page mx-auto px-4 pt-4 space-y-4">
         <p className="font-ui text-xs text-grove-sage">
@@ -218,10 +218,10 @@ export default function BadgesPage() {
           data-testid="badges-displayed-section"
         >
           <div className="flex items-center justify-between gap-2 mb-3">
-            <h3 className="font-plant text-base font-semibold  text-grove-cream inline-flex items-center gap-2">
+            <h2 className="font-plant text-base font-semibold text-grove-cream inline-flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-grove-sprout" />
               Displayed on your profile
-            </h3>
+            </h2>
             <button
               type="button"
               onClick={() => { setPickerSelection(data.displayed || []); setPickerOpen(true); }}
@@ -279,9 +279,9 @@ export default function BadgesPage() {
             aria-pressed={filter === t.id}
             >
               {t.label}
+              {t.id === 'earned' && data.earned_count > 0 && <span>{data.earned_count}</span>}
             </button>
           ))}
-          <span className="w-px h-4 bg-grove-moss mx-1" />
           <button
             type="button"
             onClick={() => setSelectedCategory('all')}
@@ -318,7 +318,7 @@ export default function BadgesPage() {
         {/* Grid grouped by subcategory */}
         {grouped.map(([title, items]) => (
           <section key={title} data-testid={`badges-group-${title.toLowerCase().replace(/[^a-z]+/g, '-')}`}>
-            <h3 className="font-plant text-base font-semibold  text-grove-sage mb-2">{title}</h3>
+            <h2 className="font-plant text-xl font-semibold text-grove-cream mb-2">{title}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
               {items.map((it) => (
                 <BadgeTile
@@ -357,7 +357,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
   return (
     <div
       className={`relative rounded-chip border-hairline p-3 flex flex-col items-center text-center transition-colors duration-150 ${
-        earned ? 'bg-grove-canopy border-grove-moss' : 'bg-grove-moss/60 border-dashed border-grove-moss'
+        earned ? 'bg-grove-canopy border-grove-moss' : 'bg-grove-moss/80 border-dashed border-grove-moss'
       } ${isPinned ? 'ring-1 ring-grove-lime ring-offset-1 ring-offset-grove-forest' : ''} ${compact ? 'p-1' : ''}`}
       data-testid={`badge-tile-${item.slug}`}
       data-earned={earned ? 'true' : 'false'}

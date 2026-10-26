@@ -123,7 +123,7 @@ function PhotoMemory({ item, plantName, index, onOpen }) {
         />
         <figcaption className="px-1 pt-2.5">
           <p className="font-plant text-lead italic leading-snug text-grove-root">{caption}</p>
-          <p className="mt-1 font-ui text-xs text-grove-root/75">{when(item.logged_at)}</p>
+          <p className="mt-1 font-ui text-xs text-grove-root/80">{when(item.logged_at)}</p>
         </figcaption>
       </figure>
     </button>
@@ -135,11 +135,11 @@ function Milestone({ item, onOpen }) {
     <button
       type="button"
       onClick={() => onOpen(item)}
-      className="block w-full rounded-card border-hairline border-grove-sun/30 bg-gradient-to-br from-grove-canopy to-grove-moss p-5 text-left transition-colors duration-200 hover:border-grove-sun/60"
+      className="block w-full rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss p-5 text-left transition-colors duration-200 hover:border-grove-sun/80"
       data-testid="journal-milestone"
     >
       <p className="font-ui text-xs font-medium text-grove-sun">{item.kicker}</p>
-      <p className="mt-0.5 font-plant text-2xl leading-tight text-grove-cream">{item.title}</p>
+      <p className="mt-0.5 font-plant text-base leading-tight text-grove-cream">{item.title}</p>
       <p className="mt-1 font-ui text-sm leading-snug text-grove-sage">{item.subtitle}</p>
       <p className="mt-2 font-ui text-xs text-grove-sage">{when(item.logged_at)}</p>
     </button>
@@ -151,7 +151,7 @@ function NoteMemory({ item, onOpen }) {
     <button
       type="button"
       onClick={() => onOpen(item)}
-      className="block w-full rounded-card border-l-accent border-grove-sun/60 bg-grove-canopy py-3 pl-4 pr-4 text-left"
+      className="block w-full rounded-card border-l-accent border-grove-sun/80 bg-grove-canopy py-3 pl-4 pr-4 text-left"
       data-testid="journal-note"
     >
       <p className="font-plant text-base font-semibold italic leading-snug text-grove-cream">&ldquo;{item.notes}&rdquo;</p>
@@ -173,7 +173,7 @@ export default function MemoryJournal({ logs, plant, onOpenEntry }) {
   if (!logs || logs.length === 0 || months.length === 0) {
     return (
       <div data-testid="timeline-empty" className="rounded-card border-hairline border-grove-moss bg-grove-canopy px-6 py-12 text-center">
-        <p className="font-plant text-2xl text-grove-cream">{plantName}&rsquo;s story starts here.</p>
+        <p className="font-plant text-xl text-grove-cream">{plantName}&rsquo;s story starts here.</p>
         <p className="mx-auto mt-2 max-w-note font-ui text-sm leading-relaxed text-grove-sage">
           Add a photo or note, or log some care, and it will show up here like pages in a journal.
         </p>
@@ -188,7 +188,7 @@ export default function MemoryJournal({ logs, plant, onOpenEntry }) {
       {months.map((m) => (
         <section key={m.key} aria-labelledby={`journal-${m.key}`} className="relative pb-10">
           <span aria-hidden="true" className="absolute -left-6 top-2.5 h-2.5 w-2.5 rounded-full bg-grove-sun ring-4 ring-grove-forest" />
-          <h2 id={`journal-${m.key}`} className="font-plant text-2xl leading-none text-grove-cream">{m.label}</h2>
+          <h2 id={`journal-${m.key}`} className="font-plant text-xl leading-none text-grove-cream">{m.label}</h2>
           {m.summary && <p className="mt-2 font-ui text-sm leading-relaxed text-grove-sage">{m.summary}</p>}
           <ul className={m.items.length ? 'mt-5 space-y-6' : 'hidden'}>
             {m.items.map((it) => (

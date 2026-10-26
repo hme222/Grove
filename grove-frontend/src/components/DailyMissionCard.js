@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
 import { Droplet, Camera, Leaf, Sparkles, Check, ArrowRight } from 'lucide-react';
 import { missionAPI } from '../lib/api';
-import { impactLight, success, spawnRipple } from '../lib/haptics';
+import { impactLight } from '../lib/haptics';
 
 const ICON_MAP = {
   droplet: Droplet,
@@ -13,12 +13,10 @@ const ICON_MAP = {
   sparkles: Sparkles,
 };
 
-export default function DailyMissionCard({ onCompleted, embedded = false }) {
+export default function DailyMissionCard({ embedded = false }) {
   const navigate = useNavigate();
   const [mission, setMission] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [completing, setCompleting] = useState(false);
-  const [justCompleted, setJustCompleted] = useState(false);
 
   const fetchMission = async () => {
     try {
@@ -43,27 +41,13 @@ export default function DailyMissionCard({ onCompleted, embedded = false }) {
   if (loading || !mission) return null;
 
   const Icon = ICON_MAP[mission.icon] || Leaf;
-  const completed = mission.completed || justCompleted;
+  // A mission only completes from something that really happened (a soil check, a photo, a plant added).
+  // There is no way to mark it done by hand.
+  const completed = !!mission.completed;
 
   const handleCta = (e) => {
     impactLight(e.currentTarget);
     if (mission.cta_path) navigate(mission.cta_path);
-  };
-
-  const handleManualComplete = async (e) => {
-    if (completing || completed) return;
-    setCompleting(true);
-    try {
-      const res = await missionAPI.completeDaily();
-      setMission(res.data);
-      setJustCompleted(true);
-      success(e.currentTarget);
-      if (onCompleted) onCompleted(res.data);
-    } catch (err) {
-      spawnRipple(e.currentTarget, { tone: 'warm' });
-    } finally {
-      setCompleting(false);
-    }
   };
 
   return (
@@ -105,27 +89,15 @@ export default function DailyMissionCard({ onCompleted, embedded = false }) {
           </p>
         </div>
         {!completed && (
-          <div className="flex flex-col items-end gap-1.5">
-            <button
-              type="button"
-              onClick={handleCta}
-              data-testid="daily-mission-cta"
-              className={cn(buttonVariants({ variant: 'outline' }), "relative overflow-hidden transition-colors duration-150 flex items-center gap-1")}
-            >
-              {mission.cta || 'Begin'}
-              <ArrowRight className="h-3 w-3" />
-            </button>
-            {mission.mission_type === 'health_check' && (
-              <button
-                type="button"
-                onClick={handleManualComplete}
-                data-testid="daily-mission-manual-complete"
-                className="text-xs font-ui text-grove-sage underline-offset-2 hover:underline"
-              >
-                {completing ? 'Logging…' : 'Mark done'}
-              </button>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={handleCta}
+            data-testid="daily-mission-cta"
+            className={cn(buttonVariants({ variant: 'outline' }), "relative overflow-hidden transition-colors duration-150 flex items-center gap-1")}
+          >
+            {mission.cta || 'Begin'}
+            <ArrowRight className="h-3 w-3" />
+          </button>
         )}
       </div>
     </section>
