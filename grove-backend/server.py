@@ -500,7 +500,12 @@ async def get_user_stats(user_id: str) -> dict:
     # Thriving rate: positive phrasing instead of "survival rate"
     total_ever = total_plants + past_plants_count
     thriving_rate = int(round((total_plants / total_ever) * 100)) if total_ever > 0 else 100
+    active_docs = await db.plants.find({"user_id": user_id, "is_archived": {"$ne": True}}, {"_id": 0}).to_list(500)
+    # Same rule the Today list uses, so Progress and Today can never disagree.
+    needing_water = sum(1 for p in active_docs if calculate_plant_status(p) in ('urgent', 'needs_water'))
     return {
+        "plants_needing_water": needing_water,
+        "plants_on_schedule": max(0, len(active_docs) - needing_water),
         "total_plants": total_plants, "active_plants": active_plants,
         "past_plants_count": past_plants_count,
         "total_care_logs": total_care_logs,
@@ -1533,11 +1538,26 @@ class PlantUpdate(BaseModel):
     # Phase 13 — when user manually edits species name, set ai_species_confirmed=True
     ai_species_confirmed: Optional[bool] = None
 
+def watering_sentence(care_summary):
+    """The sentence of a species' care summary that is about water, or None."""
+    for sentence in re.split(r'(?<=[.!?])\s+', care_summary or ''):
+        if re.search(r'\bwater|\bsoil\b|\bdry\b|\bmoist', sentence, re.I):
+            return sentence.strip()
+    return None
+
+
 async def attach_species_toxicity(plants):
-    """Add `species_toxicity` to each plant from the guide. None means unknown, never safe."""
-    index = species_name_index(await db.species.find({}, {"_id": 0, "latin_name": 1, "common_name": 1, "toxicity": 1}).to_list(500), "toxicity")
+    """Add `species_toxicity` and `care_tip` to each plant from the guide.
+
+    None means unknown, never safe; care_tip is None when the plant is not in the guide, so the
+    app falls back to a generic line instead of inventing one.
+    """
+    docs = await db.species.find({}, {"_id": 0, "latin_name": 1, "common_name": 1, "toxicity": 1, "care_summary": 1}).to_list(500)
+    index = species_name_index(docs, "toxicity")
+    tips = species_name_index(docs, "care_summary")
     for p in plants:
         p['species_toxicity'] = species_lookup_value(p, index)
+        p['care_tip'] = watering_sentence(species_lookup_value(p, tips))
 
 
 @api_router.get("/plants")
@@ -1588,12 +1608,18 @@ WATER_ROUND_UNDO_MINUTES = 15
 _ROUND_RESTORE_FIELDS = ("last_watered_at", "next_water_due", "status")
 
 
+class WaterRoundInput(BaseModel):
+    # When given, only these plants are watered (a filtered list, or one plant). Omitted = every due plant.
+    plant_ids: Optional[List[str]] = None
+
+
 @api_router.post("/plants/water-round/log")
-async def log_water_round(current_user: dict = Depends(get_current_user)):
+async def log_water_round(input: Optional[WaterRoundInput] = None, current_user: dict = Depends(get_current_user)):
     now = datetime.now(timezone.utc)
-    plants = await db.plants.find({
-        "user_id": current_user['user_id'], "is_archived": {"$ne": True}
-    }).to_list(200)
+    query = {"user_id": current_user['user_id'], "is_archived": {"$ne": True}}
+    if input and input.plant_ids is not None:
+        query["id"] = {"$in": input.plant_ids}
+    plants = await db.plants.find(query).to_list(200)
     round_id = str(uuid.uuid4())
     entries = []
     for p in plants:
@@ -1808,6 +1834,17 @@ async def delete_plant(plant_id: str, current_user: dict = Depends(get_current_u
     if result.modified_count == 0:
         raise HTTPException(status_code=404, detail="Plant not found")
     return {"message": "Plant archived"}
+
+@api_router.post("/plants/{plant_id}/restore")
+async def restore_plant(plant_id: str, current_user: dict = Depends(get_current_user)):
+    """Undo an archive. Care history was never removed, so the plant comes back whole."""
+    result = await db.plants.update_one(
+        {"id": plant_id, "user_id": current_user['user_id'], "is_archived": True},
+        {"$set": {"is_archived": False, "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Plant not found")
+    return {"message": "Plant restored"}
 
 @api_router.post("/plants/{plant_id}/ai-schedule")
 async def ai_schedule(plant_id: str, current_user: dict = Depends(get_current_user)):

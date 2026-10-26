@@ -206,7 +206,7 @@ async def seed_maya(db):
         "location_country": "US",
         "location_postcode": "112",
         "personality_title": "The Careful Beginner",
-        "personality_body": "You're six weeks in and already logging more consistently than most owners manage in six months. You gravitate toward forgiving species — which is exactly the right move. Your Spider Plant is the one to watch: a little more attention and she'll reward you."
+        "personality_body": "You're six weeks in and have settled into a steady rhythm with your plants. You gravitate toward forgiving species — which is exactly the right move. Your Spider Plant is the one to watch: a little more attention and she'll reward you."
     }
     await db.users.insert_one(user)
     print(f"  ✓ Created user: @mayagreens")

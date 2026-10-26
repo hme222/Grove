@@ -112,7 +112,7 @@ async def generate_plant_personality(stats: dict) -> dict:
 - Propagation count: {stats.get('propagation_count', 0)}
 - Swap count: {stats.get('swap_count', 0)}
 - Collection vitality: {stats.get('thriving_rate', 100)}% of plants currently thriving
-Give them a 2-3 word title and a 3-4 sentence description using warm, encouraging language (avoid clinical or negative framing).
+Give them a 2-3 word title and a 3-4 sentence description using warm, encouraging language (avoid clinical or negative framing). Never compare them with other owners, never mention streaks or consistency scores, and never say they are doing better or worse than anyone.
 Return ONLY valid JSON: {{ "title": "<string>", "body": "<string>" }}"""
     response = await call_claude(system, prompt)
     return parse_json_response(response)
