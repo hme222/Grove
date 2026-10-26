@@ -1,20 +1,24 @@
+import LoadError from '../components/LoadError';
+import { LoadingList } from '../components/Loading';
 import React, { useState, useEffect, useCallback } from 'react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import useDialogA11y from '../lib/useDialogA11y';
-import { useNavigate } from 'react-router-dom';
+
+import { AppLink } from '../components/AppLink';
 import { feedAPI, plantAPI, getFileUrl } from '../lib/api';
-import { useAuth } from '../contexts/AuthContext';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import SectionTutorial from '../components/SectionTutorial';
 import { toast } from 'sonner';
-import { Heart, MessageCircle, Send, Leaf, X, Sun, Scissors } from 'lucide-react';
+import { MessageCircle, Send, Leaf, X, Sun, Scissors, ChevronRight, Plus } from 'lucide-react';
 import VerifiedProBadge from '../components/VerifiedProBadge';
 
 // Decorative SVG used as a fallback when a post has no photo.
 function BotanicalFallback({ tone = 'grove' }) {
-  const stroke = tone === 'bloom' ? '#E57A9C' : '#92B44B';
-  const bg = tone === 'bloom' ? '#3C4D26' : '#2D3B1A';
+  const stroke = tone === 'bloom' ? 'var(--grove-bloom)' : 'var(--grove-lime)';
+  const bg = tone === 'bloom' ? 'var(--grove-moss)' : 'var(--grove-canopy)';
   return (
     <div
       aria-hidden="true"
@@ -38,38 +42,42 @@ function Lightbox({ src, onClose }) {
   useDialogA11y(ref, onClose);
   return (
     <div
+      role="presentation"
+      data-testid="feed-lightbox"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-lightbox bg-scrim"
+    >
+    <div
       role="dialog"
       aria-modal="true"
-      aria-label="Photo"
-      data-testid="feed-lightbox"
+      aria-label="Enlarged picture"
       ref={ref}
       tabIndex={-1}
-      onClick={onClose}
-      className="fixed inset-0 z-[250] bg-grove-night/90 flex items-center justify-center p-4 focus:outline-none"
+      className="absolute inset-0 pointer-events-none flex items-center justify-center p-4 focus:outline-none"
     >
       <button
+        type="button"
         onClick={onClose}
         aria-label="Close photo"
         data-testid="feed-lightbox-close"
-        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-grove-forest/20 text-grove-cream hover:bg-grove-forest/30 flex items-center justify-center transition-colors duration-150"
+        className="pointer-events-auto absolute top-4 right-4 min-h-touch min-w-touch rounded-full bg-grove-forest/20 text-grove-cream hover:bg-grove-forest/30 flex items-center justify-center transition-colors duration-150"
       >
         <X className="h-5 w-5" />
       </button>
       <img
         src={src}
         alt="Expanded post"
-        onClick={(e) => e.stopPropagation()}
-        className="max-w-full max-h-full object-contain rounded-[4px]"
+        className="pointer-events-auto max-w-full max-h-full object-contain rounded-hairline"
       />
+    </div>
     </div>
   );
 }
 
 export default function FeedPage() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [posting, setPosting] = useState(false);
   const [showCompose, setShowCompose] = useState(false);
   const [caption, setCaption] = useState('');
@@ -84,8 +92,9 @@ export default function FeedPage() {
     try {
       const res = await feedAPI.getFeed();
       setPosts(res.data.posts || []);
+      setLoadError(false);
     } catch (e) {
-      toast.error('Failed to load feed');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -121,19 +130,6 @@ export default function FeedPage() {
       toast.error('Failed to post');
     } finally {
       setPosting(false);
-    }
-  };
-
-  const handleKudos = async (postId, hasKudos) => {
-    try {
-      if (hasKudos) {
-        await feedAPI.removeKudos(postId);
-      } else {
-        await feedAPI.addKudos(postId);
-      }
-      fetchFeed();
-    } catch (e) {
-      toast.error('Failed to update kudos');
     }
   };
 
@@ -197,48 +193,52 @@ export default function FeedPage() {
     return `${days}d`;
   };
 
+  // Try again keeps the error card up (it says "Trying again…") until the request settles, so a retry
+  // can never flash an empty list or a zero.
+  const retryLoad = async () => {
+    await fetchFeed();
+    document.getElementById('main-content')?.focus();
+  };
+
   return (
     <div>
       <SectionTutorial tutorialId="grove" />
       <PageHeader
         title="Community"
-        rightContent={
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowCompose(!showCompose)}
-              data-testid="feed-compose-button"
-              className="min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout transition-colors duration-150"
-            >
-              Post Update
-            </button>
-          </div>
-        }
       />
 
-      <div className="max-w-[600px] mx-auto px-4 py-4 space-y-4">
+      <div className="max-w-column mx-auto px-4 py-4 space-y-4">
         <nav aria-label="Community areas" className="flex flex-wrap gap-2" data-testid="community-shortcuts">
-          {[['Groves', '/groves'], ['Swaps', '/swaps'], ['Offer a swap', '/swap'], ['Saved cuttings', '/wishlist']].map(([label, path]) => (
-            <button key={path} type="button" onClick={() => navigate(path)} data-testid={`community-shortcut-${label.toLowerCase().replace(/ /g, '-')}`}
-              className="min-h-[44px] inline-flex items-center rounded-full border-[0.5px] border-grove-moss px-4 font-ui text-xs text-grove-cream hover:border-grove-fernLine transition-colors duration-150">
+          {[['Groves', '/groves'], ['Swaps', '/swaps'], ['Saved cuttings', '/wishlist']].map(([label, path]) => (
+            <AppLink key={path} to={path} data-testid={`community-shortcut-${label.toLowerCase().replace(/ /g, '-')}`}
+              className="inline-flex min-h-touch items-center gap-0.5 rounded-control pl-1 pr-2 font-ui text-sm text-grove-cream underline-offset-4 hover:underline">
               {label}
-            </button>
+              <ChevronRight className="h-4 w-4 text-grove-sage" aria-hidden="true" />
+            </AppLink>
           ))}
         </nav>
+        {!loadError && (
+          <div className="flex items-center justify-end">
+            <HeaderAction icon={Plus} onClick={() => setShowCompose(!showCompose)} data-testid="feed-compose-button" pressed={showCompose}>
+              Post an update
+            </HeaderAction>
+          </div>
+        )}
         {/* Compose */}
         {showCompose && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-lime bg-grove-moss p-4" data-testid="feed-compose-form">
+          <div className="rounded-card border-hairline border-grove-lime bg-grove-moss p-5" data-testid="feed-compose-form">
             <textarea aria-label="Share a plant update"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              placeholder="Share a plant update..."
+              placeholder="Share a plant update…"
               data-testid="feed-caption-input"
-              className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] p-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
+              className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset p-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
             />
             <div className="flex items-center justify-between mt-3">
               <select aria-label="Tag a plant (optional)"
                 value={selectedPlantId}
                 onChange={(e) => setSelectedPlantId(e.target.value)}
-                className="bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-xs font-ui text-grove-cream"
+                className="bg-grove-forest border-hairline border-grove-moss rounded-inset px-3 py-2 text-xs font-ui text-grove-cream"
               >
                 <option value="">Tag a plant (optional)</option>
                 {plants.map(p => (
@@ -249,20 +249,18 @@ export default function FeedPage() {
                 onClick={handlePost}
                 disabled={posting || !caption.trim()}
                 data-testid="feed-submit-post"
-                className="rounded-[12px] font-ui text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50 flex items-center gap-1.5"
+                className={cn(buttonVariants(), "disabled:opacity-50 flex items-center gap-1.5")}
               >
                 <Send className="h-3.5 w-3.5" />
-                {posting ? 'Posting...' : 'Post'}
+                {posting ? 'Posting…' : 'Post'}
               </button>
             </div>
           </div>
         )}
 
         {/* Feed */}
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-lime border-t-transparent rounded-full animate-spin" />
-          </div>
+        {loadError && !loading ? (<LoadError what="community" onRetry={retryLoad} />) : loading ? (
+          <LoadingList label="Loading the feed" />
         ) : posts.length === 0 ? (
           <EmptyState config={EMPTY_STATES.feed_no_grove} />
         ) : (
@@ -274,7 +272,7 @@ export default function FeedPage() {
               <div
                 key={post.id}
                 data-testid="feed-post"
-                className={`rounded-[14px] border-[0.5px] overflow-hidden ${
+                className={`rounded-card border-hairline overflow-hidden ${
                   isBouquet ? 'border-grove-bloom/30 bg-grove-bloom/15' : 'border-grove-moss bg-grove-moss'
                 }`}
               >
@@ -287,7 +285,7 @@ export default function FeedPage() {
                   className={`block w-full aspect-[4/3] ${photoSrc ? 'cursor-zoom-in' : 'cursor-default'}`}
                 >
                   {photoSrc ? (
-                    <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={photoSrc} alt={post.caption || 'Post photo'} className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
+                    <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={photoSrc} alt="" className="max-w-full max-h-full w-auto h-auto object-contain" /></div>
                   ) : (
                     <BotanicalFallback tone={tone} />
                   )}
@@ -295,8 +293,8 @@ export default function FeedPage() {
 
                 {/* Post header */}
                 <div className="px-4 pt-3 pb-1 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-grove-moss flex items-center justify-center border-[0.5px] border-grove-moss">
-                    <span className="font-plant text-grove-sprout text-xs">
+                  <div className="w-8 h-8 rounded-full bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
+                    <span className="font-ui text-grove-sprout text-xs font-medium">
                       {(post.display_name || post.username || 'G')[0].toUpperCase()}
                     </span>
                   </div>
@@ -308,9 +306,9 @@ export default function FeedPage() {
                     <p className="font-latin text-xs text-grove-cream">{formatTime(post.created_at)} ago</p>
                   </div>
                   {post.plant_name && (
-                    <div className="flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-forest px-2 py-0.5">
+                    <div className="flex items-center gap-1 min-h-6 rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1">
                       <Leaf className="h-3 w-3 text-grove-sprout" />
-                      <span className="font-plant text-xs text-grove-cream truncate max-w-[100px]">{post.plant_name}</span>
+                      <span className="font-ui text-xs font-medium text-grove-cream truncate max-w-chipLabel">{post.plant_name}</span>
                     </div>
                   )}
                 </div>
@@ -324,12 +322,12 @@ export default function FeedPage() {
                   )}
 
                   {/* Actions: 3 reactions (leaf / light / cutting) + comments */}
-                  <div className="flex items-center gap-3 mt-3 pt-2 border-t-[0.5px] border-grove-moss/40 flex-wrap" data-testid="feed-reactions-row">
+                  <div className="flex items-center gap-3 mt-3 pt-2 border-t-hairline border-grove-moss/40 flex-wrap" data-testid="feed-reactions-row">
                     {[
-                      { type: 'leaf', label: 'Leaf', Icon: Leaf, activeColor: '#3B6D11' },
-                      { type: 'light', label: 'Light', Icon: Sun, activeColor: '#C18A2A' },
-                      { type: 'cutting', label: 'Cutting', Icon: Scissors, activeColor: '#E57A9C' },
-                    ].map(({ type, label, Icon, activeColor }) => {
+                      { type: 'leaf', label: 'Leaf', Icon: Leaf, activeClass: 'bg-grove-lime text-grove-root' },
+                      { type: 'light', label: 'Light', Icon: Sun, activeClass: 'bg-grove-sun text-grove-root' },
+                      { type: 'cutting', label: 'Cutting', Icon: Scissors, activeClass: 'bg-grove-bloom text-grove-root' },
+                    ].map(({ type, label, Icon, activeClass }) => {
                       const count = post.reactions?.[type] || 0;
                       const active = (post.user_reactions || []).includes(type);
                       return (
@@ -338,15 +336,14 @@ export default function FeedPage() {
                           onClick={() => handleReaction(post, type)}
                           data-testid={`feed-reaction-${type}`}
                           aria-pressed={active}
-                          className={`min-h-[44px] flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-[20px] border-[0.5px] transition-colors duration-150 ${
+                          className={`min-h-touch flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-round border-hairline transition-colors duration-150 ${
                             active
-                              ? 'border-transparent text-grove-cream'
+                              ? `border-transparent ${activeClass}`
                               : 'border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine'
                           }`}
-                          style={active ? { backgroundColor: activeColor } : undefined}
                         >
                           <Icon className="h-3.5 w-3.5" fill={active ? 'currentColor' : 'none'} />
-                          <span className="font-plant text-xs">{label}</span>
+                          <span className="font-ui text-xs font-medium">{label}</span>
                           {count > 0 && <span className="font-latin text-xs">{count}</span>}
                         </button>
                       );
@@ -354,7 +351,7 @@ export default function FeedPage() {
                     <button
                       onClick={() => toggleComments(post.id)}
                       data-testid="feed-comments-button"
-                      className="min-h-[44px] flex items-center gap-1.5 text-xs font-ui text-grove-cream hover:text-grove-sprout transition-colors duration-150 ml-auto px-2"
+                      className="min-h-touch flex items-center gap-1.5 text-xs font-ui text-grove-cream hover:text-grove-sprout transition-colors duration-150 ml-auto px-2"
                     >
                       <MessageCircle className="h-4 w-4" />
                       {post.comment_count || 0}
@@ -365,11 +362,11 @@ export default function FeedPage() {
                   {expandedComments.has(post.id) && (
                     <div className="mt-3" data-testid="feed-comments-panel">
                       {/* Sticky conversation header */}
-                      <div className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-grove-forest/95 backdrop-blur border-y-[0.5px] border-grove-moss/60 flex items-center justify-between">
-                        <p className="font-plant text-xs text-grove-cream">
+                      <div className="sticky top-0 z-raised -mx-4 px-4 py-2 bg-grove-forest/95 backdrop-blur border-y-hairline border-grove-moss/60 flex items-center justify-between">
+                        <p className="font-ui text-xs font-medium text-grove-cream">
                           Conversation · {post.comment_count || 0}
                         </p>
-                        <p className="font-latin text-xs text-grove-cream truncate max-w-[60%]">
+                        <p className="font-latin text-xs text-grove-cream truncate max-w-2/3">
                           on {post.display_name || post.username}'s post
                         </p>
                       </div>
@@ -378,7 +375,7 @@ export default function FeedPage() {
                         {(commentsData[post.id] || []).map(c => (
                           <div key={c.id} className="flex items-start gap-2">
                             <div className="w-6 h-6 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
-                              <span className="text-xs font-plant text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
+                              <span className="text-xs font-ui font-medium text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs"><span className="font-medium text-grove-cream">{c.username}</span> <span className="text-grove-cream">{c.body}</span></p>
@@ -387,9 +384,9 @@ export default function FeedPage() {
                                   type="button"
                                   onClick={() => setLightboxSrc(getFileUrl(c.photo_url))}
                                   data-testid="feed-comment-photo"
-                                  className="mt-1.5 block rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss w-32 h-32 cursor-zoom-in"
+                                  className="mt-1.5 block rounded-inset overflow-hidden border-hairline border-grove-moss w-32 h-32 cursor-zoom-in"
                                 >
-                                  <img src={getFileUrl(c.photo_url)} alt="Comment photo" className="w-full h-full object-cover" />
+                                  <img src={getFileUrl(c.photo_url)} alt="Attached to this comment" className="w-full h-full object-cover" />
                                 </button>
                               )}
                             </div>
@@ -401,15 +398,15 @@ export default function FeedPage() {
                             value={commentTexts[post.id] || ''}
                             onChange={(e) => setCommentTexts(prev => ({ ...prev, [post.id]: e.target.value }))}
                             onKeyDown={(e) => e.key === 'Enter' && handleComment(post.id)}
-                            placeholder="Write a comment..."
+                            placeholder="Write a comment…"
                             data-testid="feed-comment-input"
-                            className="flex-1 bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-1.5 text-xs font-ui placeholder:text-grove-sage focus:outline-none focus:ring-1 focus:ring-grove-lime"
+                            className="flex-1 bg-grove-forest border-hairline border-grove-moss rounded-inset px-3 py-1.5 text-xs font-ui placeholder:text-grove-sage focus:outline-none focus:ring-1 focus:ring-grove-lime"
                           />
                           <button
                             onClick={() => handleComment(post.id)}
                             data-testid="feed-comment-submit"
                             aria-label="Post comment"
-                            className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout"
+                            className={cn(buttonVariants({ size: 'icon' }), "rounded-full")}
                           >
                             <Send className="h-3 w-3" />
                           </button>

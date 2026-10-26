@@ -1,5 +1,10 @@
+import { LoadErrorPage } from '../components/LoadError';
+import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
-import useDialogA11y from '../lib/useDialogA11y';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
+import SwitchRow from '../components/SwitchRow';
+import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI, statsAPI, zoneAPI, verificationAPI, badgeAPI } from '../lib/api';
@@ -7,7 +12,7 @@ import { useTooltips } from '../contexts/TooltipContext';
 import { PageHeader } from '../components/PageHeader';
 import { TUTORIAL_COPY } from '../components/SectionTutorial';
 import { toast } from 'sonner';
-import { LogOut, Sparkles, Leaf, Flame, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X, ChevronRight } from 'lucide-react';
+import { LogOut, Sparkles, Leaf, Droplets, HelpCircle, RefreshCw, Bell, Settings, Flower2, Trophy, RotateCcw, MapPin, Pencil, Check, ShieldCheck, BookOpen, X, ChevronRight } from 'lucide-react';
 import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
@@ -18,6 +23,7 @@ export default function ProfilePage() {
   const [stats, setStats] = useState(null);
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [generatingPersonality, setGeneratingPersonality] = useState(false);
   const [savingPref, setSavingPref] = useState(false);
 
@@ -55,6 +61,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoadError(false);
         const [statsRes, badgesRes] = await Promise.all([
           statsAPI.getStats(),
           userAPI.getBadges(),
@@ -62,7 +69,7 @@ export default function ProfilePage() {
         setStats(statsRes.data);
         setBadges(badgesRes.data);
       } catch (e) {
-        toast.error('Failed to load profile data');
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -86,16 +93,12 @@ export default function ProfilePage() {
   // The slides, the quiz, then the first lesson. Replays for any account.
   const handleReplayOnboarding = () => navigate('/first-run');
 
-  const badgeIcons = {
-    leaf: Leaf, flame: Flame, crown: Sparkles,
-    heart: Leaf, flower: Leaf,
-  };
-
+  if (loadError) {
+    return <LoadErrorPage title="Profile" onRetry={() => window.location.reload()} />;
+  }
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-      </div>
+      <Loading label="Loading your profile" />
     );
   }
 
@@ -103,23 +106,13 @@ export default function ProfilePage() {
     <div>
       <PageHeader
         title="Profile"
-        rightContent={
-          <button
-            onClick={logout}
-            data-testid="profile-logout-button"
-            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-blush hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1.5"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Sign Out
-          </button>
-        }
       />
 
-      <div className="max-w-[600px] mx-auto px-4 py-4 space-y-4">
+      <div className="max-w-column mx-auto px-4 py-4 space-y-4">
         {/* Identity card */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-identity-card">
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-identity-card">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-grove-moss flex items-center justify-center border-[0.5px] border-grove-moss">
+            <div className="w-16 h-16 rounded-full bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
               <span className="font-plant text-grove-sprout text-2xl">
                 {(user?.display_name || user?.username || 'G')[0].toUpperCase()}
               </span>
@@ -135,13 +128,13 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* At-a-glance: Plants + Streak only. Full stats live under Care > Growth. */}
+        {/* At-a-glance: Plants + Care logs only (no streaks). Full stats live under Care > Growth. */}
         <div className="grid grid-cols-2 gap-2" data-testid="profile-stats-card">
           {[
             { label: 'Plants', value: stats?.total_plants || 0, icon: Leaf },
-            { label: 'Streak', value: `${stats?.current_streak || 0}d`, icon: Flame },
+            { label: 'Care logs', value: stats?.total_care_logs || 0, icon: Droplets },
           ].map(({ label, value, icon: Icon }) => (
-            <div key={label} className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 text-center">
+            <div key={label} className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
               <p className="font-ui text-xs text-grove-cream">{label}</p>
@@ -150,23 +143,24 @@ export default function ProfilePage() {
         </div>
 
         {/* Personality card */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-fernLine/40 bg-grove-canopy p-4">
+        <div className="rounded-card border-hairline border-grove-fernLine/40 bg-grove-canopy p-5">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-plant text-grove-sprout text-sm">Plant Personality</h3>
+            <h3 className="font-plant text-grove-cream text-xl font-semibold ">Plant personality</h3>
             <button
               onClick={handleGeneratePersonality}
               disabled={generatingPersonality}
               data-testid="generate-personality-button"
-              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-lime text-grove-sprout hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1"
+              className={cn(buttonVariants({ variant: 'outline' }), "gap-1.5")}
             >
               <Sparkles className="h-3 w-3" />
-              {generatingPersonality ? 'Analyzing...' : user?.personality_title ? 'Refresh' : 'Generate'}
+              {generatingPersonality ? 'Analyzing…' : user?.personality_title ? 'Refresh' : 'Generate'}
             </button>
           </div>
           {user?.personality_title ? (
             <>
               <p className="font-plant text-grove-cream text-lg mb-1">{user.personality_title}</p>
               <p className="font-ui text-sm text-grove-sprout leading-relaxed">{user.personality_body}</p>
+              <p className="mt-2 font-ui text-xs text-grove-sage">Written by AI from your care history. It is a guess, not a measurement.</p>
             </>
           ) : (
             <p className="font-ui text-xs text-grove-sage">Generate your plant personality based on your care data.</p>
@@ -175,16 +169,16 @@ export default function ProfilePage() {
 
         {/* Badges — Phase 14C.3.b: 3-slot picker + link to full gallery */}
         <div
-          className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4"
+          className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
           data-testid="profile-badges"
         >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-plant text-grove-cream text-sm">Featured badges</h3>
+            <h3 className="font-plant text-grove-cream text-base font-semibold ">Featured badges</h3>
             <button
               type="button"
               onClick={() => navigate('/badges')}
               data-testid="profile-badges-view-all"
-              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className={cn(buttonVariants({ variant: 'outline' }))}
             >
               View all{badges.length > 0 ? ` (${badges.length})` : ''}
             </button>
@@ -193,13 +187,13 @@ export default function ProfilePage() {
         </div>
 
         {/* Quick links */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
-          <h3 className="font-plant text-grove-cream text-sm mb-3">Quick Links</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Quick Links</h3>
           <div className="grid grid-cols-1 gap-2">
             <button
               onClick={() => navigate('/bouquets')}
               data-testid="profile-bouquets-link"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-bloom transition-colors duration-150 flex items-center justify-start gap-2"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex justify-start")}
             >
               <Flower2 className="h-4 w-4 text-grove-blush" />
               Bouquets
@@ -208,7 +202,7 @@ export default function ProfilePage() {
                                     <button
               onClick={() => navigate('/challenges')}
               data-testid="profile-challenges-link"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex justify-start")}
             >
               <Trophy className="h-4 w-4 text-grove-sprout" />
               Challenges
@@ -217,7 +211,7 @@ export default function ProfilePage() {
             <button
               onClick={() => navigate('/settings/notifications')}
               data-testid="profile-notifications-button"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-start gap-2"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex justify-start")}
             >
               <Bell className="h-4 w-4" />
               Notification Settings
@@ -227,8 +221,8 @@ export default function ProfilePage() {
         </div>
 
         {/* Tier info */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
-          <h3 className="font-plant text-grove-cream text-sm mb-2">Your Tier</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Your Tier</h3>
           <p className="font-ui text-sm text-grove-cream capitalize">{user?.tier?.replace('_', ' ') || 'Free'}</p>
           {user?.tier === 'free' && (
             <p className="font-ui text-xs text-grove-cream mt-1">
@@ -238,43 +232,24 @@ export default function ProfilePage() {
         </div>
 
         {/* Preferences */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-preferences">
-          <h3 className="font-plant text-grove-cream text-sm mb-3">Plant identification</h3>
-          <button
-            type="button"
-            onClick={handleManualToggle}
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-preferences">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Plant identification</h3>
+          <SwitchRow
+            label="Skip AI identification"
+            help="Always open manual entry when adding a plant."
+            checked={!!user?.prefer_manual_plant_entry}
             disabled={savingPref}
-            data-testid="profile-prefer-manual-toggle"
-            className="w-full text-left flex items-start gap-3 group"
-            aria-pressed={user?.prefer_manual_plant_entry ? 'true' : 'false'}
-          >
-            <span className="flex-1 min-w-0">
-              <span className="font-plant text-grove-cream text-sm block">Skip AI identification</span>
-              <span className="font-ui text-xs text-grove-sage leading-snug block mt-0.5">
-                Always open manual entry when adding a plant.
-              </span>
-            </span>
-            <span
-              className={`relative w-10 h-6 rounded-full flex-shrink-0 transition-colors duration-150 ${
-                user?.prefer_manual_plant_entry ? 'bg-grove-lime border border-grove-lime' : 'bg-grove-moss border border-[#869A68]'
-              }`}
-              aria-hidden="true"
-            >
-              <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full shadow transition-transform duration-150 ${
-                  user?.prefer_manual_plant_entry ? 'translate-x-4 bg-grove-root' : 'bg-grove-sage'
-                }`}
-              />
-            </span>
-          </button>
-          <p className="italic font-plant text-xs text-grove-sage mt-3 leading-snug">
+            onChange={handleManualToggle}
+            testId="profile-prefer-manual-toggle"
+          />
+          <p className="italic font-ui text-xs font-medium text-grove-sage mt-3 leading-snug">
             For experienced growers who know their plants and prefer to enter details directly.
           </p>
         </div>
 
         {/* Pets at home: pet owners see pet safety on their plants */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-pets">
-          <h3 id="pets-heading" className="font-plant text-grove-cream text-sm">Pets at home</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-pets">
+          <h3 id="pets-heading" className="font-plant text-grove-cream text-base font-semibold ">Pets at home</h3>
           <p className="mt-1 font-ui text-xs text-grove-sage">If pets share your home, each plant shows whether it is safe for them.</p>
           <div role="group" aria-labelledby="pets-heading" className="mt-3 flex gap-2">
             {[[true, 'Yes, I have pets'], [false, 'No pets']].map(([value, label]) => {
@@ -287,9 +262,8 @@ export default function ProfilePage() {
                   disabled={savingPets}
                   onClick={() => savePets(value)}
                   data-testid={value ? 'profile-pets-yes' : 'profile-pets-no'}
-                  className={`min-h-[44px] rounded-full border-[0.5px] px-4 font-ui text-sm transition-colors duration-150 disabled:opacity-60 ${
-                    active ? 'border-grove-lime bg-grove-lime text-grove-root' : 'border-grove-fernLine bg-grove-canopy text-grove-cream hover:border-grove-lime'
-                  }`}
+                  className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={active}
                 >
                   {label}
                 </button>
@@ -299,55 +273,57 @@ export default function ProfilePage() {
         </div>
 
         {/* Hardiness zone — Phase 14C */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-zone">
-          <h3 className="font-plant text-grove-cream text-sm mb-3">Where you grow</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-zone">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Where you grow</h3>
           <HardinessZoneControls />
         </div>
 
         {/* Verification status — Phase 14C.3 */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-verification">
-          <h3 className="font-plant text-grove-cream text-sm mb-3">Verification status</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-verification">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Verification status</h3>
           <VerificationStatusCard />
         </div>
 
         {/* Tutorials and tips — Phase 14A.2 */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="profile-tutorials">
-          <h3 className="font-plant text-grove-cream text-sm mb-3">Tutorials and tips</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-tutorials">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Tutorials and tips</h3>
           <TutorialsAndTipsControls />
         </div>
 
         {/* About FloraGrove */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4">
-          <h3 className="font-plant text-grove-cream text-sm mb-2">About FloraGrove</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">About FloraGrove</h3>
           <p className="font-ui text-sm text-grove-cream leading-relaxed mb-3">{GROVE_BRAND.mission}</p>
           <div className="flex flex-col gap-2">
             <button
               onClick={() => navigate('/help')}
               data-testid="profile-help-button"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex")}
             >
               <HelpCircle className="h-4 w-4" />
               Help & Tutorial
             </button>
+            {user?.is_admin && (
             <button
-              onClick={handleReplayOnboarding}
-              data-testid="profile-replay-onboarding-button"
-              className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-fernLine hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Replay first-run
-            </button>
+                onClick={handleReplayOnboarding}
+                data-testid="profile-replay-onboarding-button"
+                className={cn(buttonVariants({ variant: 'outline' }), "flex")}
+              >
+                <RefreshCw className="h-4 w-4" />
+                Replay first-run
+              </button>
+            )}
           </div>
         </div>
 
         {/* Florist Pro (conditional) */}
         {(user?.tier === 'pro' || user?.tier === 'florist_pro') && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4">
-            <h3 className="font-plant text-grove-cream text-sm mb-3">Florist Pro</h3>
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
+            <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Florist Pro</h3>
             <button
               onClick={() => navigate('/florist')}
               data-testid="profile-florist-button"
-              className="w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-[#8A6A3D] text-grove-cream hover:bg-[#6B5230] transition-colors duration-150"
+              className="w-full rounded-control font-ui text-xs px-4 py-3 bg-grove-sun text-grove-root hover:bg-grove-sprout transition-colors duration-150"
             >
               Portfolio & Insights
             </button>
@@ -356,18 +332,28 @@ export default function ProfilePage() {
 
         {/* Admin Panel (conditional) */}
         {user?.is_admin && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-bloom bg-grove-bloom/15 p-4">
-            <h3 className="font-plant text-grove-blush text-sm mb-3">Admin</h3>
+          <div className="rounded-card border-hairline border-grove-bloom bg-grove-bloom/15 p-5">
+            <h3 className="font-plant text-grove-blush text-base font-semibold  mb-3">Admin</h3>
             <button
               onClick={() => navigate('/admin/demo')}
               data-testid="profile-admin-button"
-              className="w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-[#B42318] text-grove-cream hover:bg-[#912018] transition-colors duration-150 flex items-center justify-center gap-2"
+              className="w-full rounded-control font-ui text-xs px-4 py-3 bg-grove-bloom text-grove-root hover:bg-grove-blush transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <Settings className="h-4 w-4" />
               Demo Admin Panel
             </button>
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={logout}
+          data-testid="profile-logout-button"
+          className={cn(buttonVariants({ variant: 'outline' }), "w-full gap-2")}
+        >
+          <LogOut className="h-4 w-4" aria-hidden="true" />
+          Sign out
+        </button>
       </div>
     </div>
   );
@@ -419,41 +405,22 @@ function TutorialsAndTipsControls() {
   return (
     <>
       {/* Tooltips toggle */}
-      <button
-        type="button"
-        onClick={handleTooltipToggle}
+      <SwitchRow
+        label="Show tooltips"
+        help={tooltipsActive
+          ? `${daysRemaining} day${daysRemaining === 1 ? '' : 's'} of training-wheel hints left.`
+          : tooltipsOn
+            ? 'Auto-hidden after your first 30 days. Turn on to bring them back.'
+            : 'Turn on to see contextual hints again.'}
+        checked={!!tooltipsOn}
         disabled={savingTip}
-        data-testid="profile-tooltips-toggle"
-        className="w-full text-left flex items-start gap-3 group"
-        aria-pressed={tooltipsOn ? 'true' : 'false'}
-      >
-        <span className="flex-1 min-w-0">
-          <span className="font-plant text-grove-cream text-sm block">Show tooltips</span>
-          <span className="font-ui text-xs text-grove-sage leading-snug block mt-0.5">
-            {tooltipsActive
-              ? `On — ${daysRemaining} day${daysRemaining === 1 ? '' : 's'} of training-wheel hints left.`
-              : tooltipsOn
-                ? 'Auto-hidden after your first 30 days. Toggle on to bring them back.'
-                : 'Off. Toggle on to see contextual hints again.'}
-          </span>
-        </span>
-        <span
-          className={`relative w-10 h-6 rounded-full flex-shrink-0 transition-colors duration-150 ${
-            tooltipsOn ? 'bg-grove-lime border border-grove-lime' : 'bg-grove-moss border border-[#869A68]'
-          }`}
-          aria-hidden="true"
-        >
-          <span
-            className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full shadow transition-transform duration-150 ${
-              tooltipsOn ? 'translate-x-4 bg-grove-root' : 'bg-grove-sage'
-            }`}
-          />
-        </span>
-      </button>
+        onChange={handleTooltipToggle}
+        testId="profile-tooltips-toggle"
+      />
 
       {/* Section tutorials replay */}
-      <div className="mt-4 pt-4 border-t-[0.5px] border-grove-moss">
-        <p className="font-plant text-grove-cream text-xs mb-2">Replay a section tutorial</p>
+      <div className="mt-4 pt-4 border-t-hairline border-grove-moss">
+        <p className="font-ui text-grove-cream text-xs font-medium mb-2">Replay a section tutorial</p>
         <div className="space-y-1.5">
           {Object.keys(TUTORIAL_COPY).map((tid) => {
             const meta = TUTORIAL_COPY[tid];
@@ -466,16 +433,16 @@ function TutorialsAndTipsControls() {
                 onClick={() => handleReplay(tid)}
                 disabled={replayingId === tid}
                 data-testid={`profile-replay-${tid}`}
-                className="w-full flex items-center gap-3 rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-2.5 hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150"
+                className="w-full flex items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150"
               >
                 <span
-                  className="w-8 h-8 rounded-[8px] flex items-center justify-center flex-shrink-0"
+                  className="w-8 h-8 rounded-inset flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: `${meta.accent}20` }}
                 >
                   <Icon className="h-4 w-4" style={{ color: meta.accent }} />
                 </span>
                 <span className="flex-1 min-w-0 text-left">
-                  <span className="font-plant text-xs text-grove-cream block">{meta.title}</span>
+                  <span className="font-ui text-xs font-medium text-grove-cream block">{meta.title}</span>
                   <span className="font-ui text-xs text-grove-sage block">
                     {wasSeen ? 'Tap to replay' : 'Not seen yet'}
                   </span>
@@ -565,11 +532,11 @@ function HardinessZoneControls() {
   return (
     <>
       <div className="flex items-start gap-3 mb-3">
-        <span className="w-8 h-8 rounded-[8px] bg-grove-moss flex items-center justify-center flex-shrink-0">
+        <span className="w-8 h-8 rounded-inset bg-grove-moss flex items-center justify-center flex-shrink-0">
           <MapPin className="h-4 w-4 text-grove-sprout" />
         </span>
         <div className="flex-1 min-w-0">
-          <p className="font-plant text-grove-cream text-sm">
+          <p className="font-ui text-grove-cream text-sm font-medium">
             {zone ? (
               <>
                 {system === 'USDA' ? `USDA Zone ${zone}` : `RHS ${zone}`}
@@ -596,7 +563,7 @@ function HardinessZoneControls() {
             type="button"
             onClick={() => setEditing(true)}
             data-testid="zone-edit-location"
-            className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-1"
+            className={cn(buttonVariants({ variant: 'outline' }), "flex-1 flex gap-1")}
           >
             <Pencil className="h-3 w-3" />
             {zone ? 'Update location' : 'Add location'}
@@ -606,7 +573,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => setOverriding(true)}
               data-testid="zone-override"
-              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex-1")}
             >
               Override zone
             </button>
@@ -621,7 +588,7 @@ function HardinessZoneControls() {
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               data-testid="zone-country-select"
-              className="bg-grove-canopy border-[0.5px] border-grove-moss rounded-[6px] px-2 py-2 text-xs font-ui text-grove-cream"
+              className="bg-grove-canopy border-hairline border-grove-moss rounded-tag px-2 py-2 text-xs font-ui text-grove-cream"
             >
               <option value="US">United States</option>
               <option value="UK">United Kingdom</option>
@@ -632,13 +599,13 @@ function HardinessZoneControls() {
               onBlur={previewZone}
               placeholder={country === 'UK' ? 'e.g. SW1A 1AA' : 'e.g. 10001'}
               data-testid="zone-postcode-input"
-              className="flex-1 bg-grove-canopy border-[0.5px] border-grove-moss rounded-[6px] px-3 py-2 text-xs font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+              className="flex-1 bg-grove-canopy border-hairline border-grove-moss rounded-tag px-3 py-2 text-xs font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
             />
           </div>
-          {previewing && <p className="font-ui text-xs text-grove-sage">Looking up\u2026</p>}
+          {previewing && <p className="font-ui text-xs text-grove-sage">Looking up…</p>}
           {preview?.zone && (
-            <div className="rounded-[8px] bg-grove-moss border-[0.5px] border-grove-fernLine p-2">
-              <p className="font-plant text-xs text-grove-cream">
+            <div className="rounded-inset bg-grove-moss border-hairline border-grove-fernLine p-2">
+              <p className="font-ui text-xs font-medium text-grove-cream">
                 {preview.system === 'USDA' ? `USDA Zone ${preview.zone}` : `RHS ${preview.zone}`}
               </p>
               {preview.description && (
@@ -654,7 +621,7 @@ function HardinessZoneControls() {
               type="button"
               onClick={() => { setEditing(false); setPreview(null); }}
               data-testid="zone-edit-cancel"
-              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex-1")}
             >
               Cancel
             </button>
@@ -663,7 +630,7 @@ function HardinessZoneControls() {
               onClick={saveLocation}
               disabled={saving}
               data-testid="zone-edit-save"
-              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-1"
+              className={cn(buttonVariants(), "flex-1 disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-1")}
             >
               <Check className="h-3 w-3" />
               {saving ? 'Saving\u2026' : 'Save'}
@@ -682,14 +649,14 @@ function HardinessZoneControls() {
             onChange={(e) => setManualZone(e.target.value)}
             placeholder="e.g. 7b or H4"
             data-testid="zone-manual-input"
-            className="w-full bg-grove-canopy border-[0.5px] border-grove-moss rounded-[6px] px-3 py-2 text-xs font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+            className="w-full bg-grove-canopy border-hairline border-grove-moss rounded-tag px-3 py-2 text-xs font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
           />
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setOverriding(false)}
               data-testid="zone-override-cancel"
-              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex-1")}
             >
               Cancel
             </button>
@@ -698,7 +665,7 @@ function HardinessZoneControls() {
               onClick={saveOverride}
               disabled={saving || !manualZone.trim()}
               data-testid="zone-override-save"
-              className="flex-1 rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+              className={cn(buttonVariants(), "flex-1 disabled:opacity-50 transition-colors duration-150")}
             >
               {saving ? 'Saving\u2026' : 'Set manually'}
             </button>
@@ -741,14 +708,13 @@ function VerificationStatusCard() {
   }
 
   const isVerified = !!(v?.verified_user || v?.is_verified);
-  const onCurrentVersion = v?.verification_pact_version === PACT_VERSION;
   const needsRe = !!v?.needs_reverification;
 
   return (
     <>
       <div className="space-y-3" data-testid="verification-status-card">
         <div
-          className={`rounded-[10px] border-[0.5px] p-3 flex items-start gap-3 ${
+          className={`rounded-small border-hairline px-4 py-3 flex items-start gapx-4 py-3 ${
             isVerified && !needsRe
               ? 'bg-grove-moss border-grove-fernLine'
               : 'bg-grove-canopy border-grove-moss'
@@ -758,7 +724,7 @@ function VerificationStatusCard() {
           <div className="flex-1 min-w-0">
             {isVerified && !needsRe ? (
               <>
-                <p className="font-plant text-sm text-grove-cream" data-testid="verification-state-verified">
+                <p className="font-ui text-sm font-medium text-grove-cream" data-testid="verification-state-verified">
                   You're verified
                 </p>
                 <p className="font-ui text-xs text-grove-sage mt-0.5">
@@ -772,7 +738,7 @@ function VerificationStatusCard() {
               </>
             ) : needsRe ? (
               <>
-                <p className="font-plant text-sm text-grove-sun" data-testid="verification-state-needs-reverify">
+                <p className="font-ui text-sm font-medium text-grove-sun" data-testid="verification-state-needs-reverify">
                   Re-verification needed
                 </p>
                 <p className="font-ui text-xs text-grove-sage mt-0.5">
@@ -781,7 +747,7 @@ function VerificationStatusCard() {
               </>
             ) : (
               <>
-                <p className="font-plant text-sm text-grove-cream" data-testid="verification-state-unverified">
+                <p className="font-ui text-sm font-medium text-grove-cream" data-testid="verification-state-unverified">
                   Not yet verified
                 </p>
                 <p className="font-ui text-xs text-grove-sage mt-0.5">
@@ -798,7 +764,7 @@ function VerificationStatusCard() {
               type="button"
               onClick={() => navigate('/verify')}
               data-testid="verification-start-btn"
-              className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+              className={cn(buttonVariants())}
             >
               {needsRe ? 'Re-verify' : 'Start verification'}
             </button>
@@ -807,7 +773,7 @@ function VerificationStatusCard() {
             type="button"
             onClick={() => setReaderOpen(true)}
             data-testid="verification-read-pact-btn"
-            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 inline-flex items-center gap-1.5"
+            className={cn(buttonVariants({ variant: 'outline' }), "gap-1.5")}
           >
             <BookOpen className="h-3.5 w-3.5" />
             Read community guidelines
@@ -821,33 +787,17 @@ function VerificationStatusCard() {
 }
 
 function PactReaderModal({ onClose }) {
-  // Lock body scroll while open
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
-  }, []);
-
-  const dialogRef = React.useRef(null);
-  useDialogA11y(dialogRef, onClose);
   return (
-    <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[4px] focus:outline-none"
-      onClick={onClose}
-      data-testid="pact-reader-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Community pact"
-      ref={dialogRef}
-      tabIndex={-1}
-    >
-      <div
-        className="bg-grove-canopy rounded-[14px] border-[0.5px] border-grove-moss shadow-xl w-full max-w-[640px] max-h-[85vh] overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent
+        showClose={false}
+        aria-describedby={undefined}
+        data-testid="pact-reader-modal"
+        className="flex max-h-sheet max-w-sheet flex-col gap-0 overflow-hidden p-0"
       >
-        <div className="flex items-start justify-between p-5 border-b-[0.5px] border-grove-moss">
+        <div className="flex items-start justify-between p-5 border-b-hairline border-grove-moss">
           <div className="flex-1 min-w-0">
-            <h3 className="font-plant text-grove-cream text-lg">{PACT_INTRO.heading}</h3>
+            <DialogTitle className="text-lg">{PACT_INTRO.heading}</DialogTitle>
             <p className="font-latin italic text-xs text-grove-lichen mt-1">
               Pact v{PACT_VERSION} — read-only view
             </p>
@@ -856,7 +806,7 @@ function PactReaderModal({ onClose }) {
             type="button"
             onClick={onClose}
             data-testid="pact-reader-close"
-            className="flex-shrink-0 p-1.5 rounded-[6px] hover:bg-grove-moss text-grove-sage transition-colors duration-150"
+            className="flex-shrink-0 p-1.5 rounded-tag hover:bg-grove-moss text-grove-sage transition-colors duration-150"
             aria-label="Close"
           >
             <X className="h-4 w-4" />
@@ -864,15 +814,15 @@ function PactReaderModal({ onClose }) {
         </div>
 
         <div className="overflow-y-auto p-5 space-y-4">
-          <p className="font-ui text-[0.8125rem] text-grove-cream leading-relaxed">{PACT_INTRO.body}</p>
+          <p className="font-ui text-xs text-grove-cream leading-relaxed">{PACT_INTRO.body}</p>
 
           {PACT_SECTIONS.map((s) => (
-            <section key={s.number} className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-4">
-              <h4 className="font-plant text-sm text-grove-cream mb-2">
+            <section key={s.number} className="rounded-chip border-hairline border-grove-moss bg-grove-canopy p-4">
+              <h4 className="font-ui text-sm font-medium text-grove-cream mb-2">
                 {s.number}. {s.title}
               </h4>
               {s.bodyAsList ? (
-                <ul className="space-y-1.5 font-ui text-[0.8125rem] text-grove-cream leading-relaxed">
+                <ul className="space-y-1.5 font-ui text-xs text-grove-cream leading-relaxed">
                   {s.body.map((line, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="text-grove-sprout flex-shrink-0">•</span>
@@ -881,24 +831,24 @@ function PactReaderModal({ onClose }) {
                   ))}
                 </ul>
               ) : (
-                <div className="space-y-2 font-ui text-[0.8125rem] text-grove-cream leading-relaxed">
+                <div className="space-y-2 font-ui text-xs text-grove-cream leading-relaxed">
                   {s.body.map((p, i) => <p key={i}>{p}</p>)}
                 </div>
               )}
-              <p className="font-plant italic text-xs text-grove-sprout mt-3">
+              <p className="font-ui italic text-xs font-medium text-grove-sprout mt-3">
                 {s.acknowledgement}
               </p>
             </section>
           ))}
 
-          <blockquote className="rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-moss p-4">
-            <p className="font-plant italic text-[0.8125rem] text-grove-cream leading-relaxed">
+          <blockquote className="rounded-chip border-hairline border-grove-fernLine bg-grove-moss p-4">
+            <p className="font-ui italic text-xs font-medium text-grove-cream leading-relaxed">
               "{FINAL_COPY.oath}"
             </p>
           </blockquote>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -935,12 +885,12 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
         {allBadges.slice(0, 3).map(({ badge }) => (
           <div
             key={badge?.id}
-            className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-3 flex flex-col items-center text-center"
+            className="rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3 flex flex-col items-center text-center"
           >
             <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
               <BadgeIcon name={badge?.icon} className="h-5 w-5 text-grove-sprout" />
             </span>
-            <p className="font-plant text-xs text-grove-cream leading-tight">
+            <p className="font-ui text-xs font-medium text-grove-cream leading-tight">
               {badge?.name}
             </p>
           </div>
@@ -966,9 +916,9 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
         type="button"
         onClick={() => navigate('/badges')}
         data-testid="profile-badges-pick-cta"
-        className="w-full rounded-[10px] border-[0.5px] border-dashed border-grove-fernLine bg-grove-moss p-4 text-center hover:bg-grove-canopy transition-colors duration-150"
+        className="w-full rounded-chip border-hairline border-dashed border-grove-fernLine bg-grove-moss p-4 text-center hover:bg-grove-canopy transition-colors duration-150"
       >
-        <p className="font-plant text-grove-cream text-sm">Pick up to 3 to display</p>
+        <p className="font-ui text-grove-cream text-sm font-medium">Pick up to 3 to display</p>
         <p className="font-latin italic text-xs text-grove-sage mt-0.5">
           You've earned {catalog.earned_count} of {catalog.total} badges. Choose your favourites.
         </p>
@@ -981,17 +931,17 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
       {items.map((it) => (
         <div
           key={it.slug}
-          className="rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-canopy p-3 flex flex-col items-center text-center"
+          className="rounded-chip border-hairline border-grove-fernLine bg-grove-canopy p-3 flex flex-col items-center text-center"
           data-testid={`profile-featured-badge-${it.slug}`}
         >
           <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
             <BadgeIcon name={it.icon} className="h-5 w-5 text-grove-sprout" />
           </span>
-          <p className="font-plant text-xs text-grove-cream leading-tight">
+          <p className="font-ui text-xs font-medium text-grove-cream leading-tight">
             {it.name}
           </p>
           {it.tier && (
-            <span className="font-plant text-xs text-grove-sage mt-0.5">
+            <span className="font-ui text-xs font-medium text-grove-sage mt-0.5">
               {it.tier}
             </span>
           )}

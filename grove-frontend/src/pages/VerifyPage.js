@@ -1,9 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import { toast } from 'sonner';
 import { Mail, Phone, ShieldCheck, ChevronDown, ChevronUp, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { verificationAPI, userAPI } from '../lib/api';
+import { PageHeader } from '../components/PageHeader';
+import { verificationAPI } from '../lib/api';
 import {
   PACT_VERSION,
   WELCOME_COPY,
@@ -168,15 +172,20 @@ export default function VerifyPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]" data-testid="verify-loading">
-        <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-      </div>
+      <Loading label="Loading" className="min-h-panel" data-testid="verify-loading" />
     );
   }
 
+  // Back leaves the flow from the first step and otherwise steps back inside it. The finished screen has none.
+  const PREVIOUS_STEP = { identity: 'welcome', pact: 'identity', final: 'pact' };
+  const headerBack = step === 'success' ? undefined
+    : step === 'welcome' ? { testId: 'verify-header-back' }
+    : { onClick: () => setStep(PREVIOUS_STEP[step]), testId: 'verify-header-back' };
+
   return (
     <div className="min-h-screen bg-grove-forest pb-24" data-testid="verify-page">
-      <div className="max-w-[720px] mx-auto px-5 pt-10">
+      <PageHeader title="Verify" back={headerBack} />
+      <div className="max-w-reading mx-auto px-5 pt-10">
         <ProgressDots step={step} />
 
         {step === 'welcome' && (
@@ -252,7 +261,7 @@ function ProgressDots({ step }) {
 function StepCard({ children, testid }) {
   return (
     <div
-      className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-6 sm:p-8 shadow-[0_1px_2px_rgba(28,46,16,0.04)]"
+      className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 sm:p-5 shadow-rest"
       data-testid={testid}
     >
       {children}
@@ -266,9 +275,9 @@ function WelcomeStep({ onContinue, onCancel }) {
       <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/10 mb-4">
         <ShieldCheck className="h-6 w-6 text-grove-sprout" />
       </span>
-      <h1 className="font-plant text-grove-cream text-2xl leading-tight mb-4">
+      <h2 className="font-plant text-grove-cream text-2xl leading-tight mb-4">
         {WELCOME_COPY.heading}
-      </h1>
+      </h2>
       <div className="space-y-3 font-ui text-sm text-grove-cream leading-relaxed">
         {WELCOME_COPY.body.map((p, i) => (
           <p key={i}>{p}</p>
@@ -279,7 +288,7 @@ function WelcomeStep({ onContinue, onCancel }) {
           type="button"
           onClick={onContinue}
           data-testid="verify-welcome-continue"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+          className={cn(buttonVariants(), "transition-colors duration-150")}
         >
           {WELCOME_COPY.cta}
         </button>
@@ -287,7 +296,7 @@ function WelcomeStep({ onContinue, onCancel }) {
           type="button"
           onClick={onCancel}
           data-testid="verify-welcome-cancel"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className={cn(buttonVariants({ variant: 'outline' }))}
         >
           Cancel
         </button>
@@ -304,12 +313,12 @@ function IdentityStep({
   return (
     <StepCard testid="verify-step-identity">
       <h2 className="font-plant text-grove-cream text-xl mb-2">{IDENTITY_COPY.heading}</h2>
-      <p className="font-ui text-[0.8125rem] text-grove-sage mb-5">{IDENTITY_COPY.intro}</p>
+      <p className="font-ui text-xs text-grove-sage mb-5">{IDENTITY_COPY.intro}</p>
 
       <div className="space-y-3">
         {/* Email row */}
         <div
-          className={`rounded-[10px] border-[0.5px] p-4 ${
+          className={`rounded-chip border-hairline p-4 ${
             emailConfirmed ? 'bg-grove-moss border-grove-fernLine' : 'bg-grove-canopy border-grove-moss'
           }`}
           data-testid="verify-email-row"
@@ -317,15 +326,15 @@ function IdentityStep({
           <div className="flex items-start gap-3">
             <Mail className="h-4 w-4 text-grove-sprout mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="font-plant text-[0.8125rem] text-grove-cream">
+              <p className="font-ui text-xs font-medium text-grove-cream">
                 <strong>{IDENTITY_COPY.emailLabel}</strong> — {IDENTITY_COPY.emailDescription}
               </p>
               {user?.email && (
-                <p className="font-mono text-xs text-grove-sage mt-1 break-all">{user.email}</p>
+                <p className="font-ui text-xs text-grove-sage mt-1 break-all">{user.email}</p>
               )}
             </div>
             {emailConfirmed ? (
-              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-xs">
+              <span className="inline-flex items-center gap-1 text-grove-sprout font-ui text-xs font-medium">
                 <CheckCircle2 className="h-4 w-4" /> Confirmed
               </span>
             ) : (
@@ -334,7 +343,7 @@ function IdentityStep({
                 onClick={onConfirmEmail}
                 disabled={submitting}
                 data-testid="verify-confirm-email-btn"
-                className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+                className={cn(buttonVariants(), "transition-colors duration-150 disabled:opacity-50")}
               >
                 Verify email
               </button>
@@ -344,7 +353,7 @@ function IdentityStep({
 
         {/* Phone row */}
         <div
-          className={`rounded-[10px] border-[0.5px] p-4 ${
+          className={`rounded-chip border-hairline p-4 ${
             phoneSavedOrSkipped ? 'bg-grove-moss border-grove-fernLine' : 'bg-grove-canopy border-grove-moss'
           }`}
           data-testid="verify-phone-row"
@@ -352,14 +361,14 @@ function IdentityStep({
           <div className="flex items-start gap-3 mb-3">
             <Phone className="h-4 w-4 text-grove-sprout mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="font-plant text-[0.8125rem] text-grove-cream">
+              <p className="font-ui text-xs font-medium text-grove-cream">
                 <strong>{IDENTITY_COPY.phoneLabel}</strong>{' '}
                 <span className="font-latin italic text-grove-lichen">{IDENTITY_COPY.phoneOptional}</span>{' '}
                 — {IDENTITY_COPY.phoneDescription}
               </p>
             </div>
             {phoneSavedOrSkipped && (
-              <span className="inline-flex items-center gap-1 text-grove-sprout font-plant text-xs">
+              <span className="inline-flex items-center gap-1 text-grove-sprout font-ui text-xs font-medium">
                 <CheckCircle2 className="h-4 w-4" /> Done
               </span>
             )}
@@ -373,14 +382,14 @@ function IdentityStep({
                 placeholder="Phone number"
                 autoComplete="tel"
                 data-testid="verify-phone-input"
-                className="flex-1 rounded-[6px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[0.8125rem] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine"
+                className="flex-1 rounded-tag border-hairline border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-xs text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine"
               />
               <button
                 type="button"
                 onClick={onAddPhone}
                 disabled={submitting}
                 data-testid="verify-add-phone-btn"
-                className="rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:opacity-50"
+                className={cn(buttonVariants(), "transition-colors duration-150 disabled:opacity-50")}
               >
                 Add phone
               </button>
@@ -389,17 +398,17 @@ function IdentityStep({
                 onClick={onSkipPhone}
                 disabled={submitting}
                 data-testid="verify-skip-phone-btn"
-                className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 disabled:opacity-50"
+                className={cn(buttonVariants({ variant: 'outline' }))}
               >
                 Skip phone
               </button>
             </div>
           )}
           {phoneSavedOrSkipped && verification?.verification_phone && (
-            <p className="font-mono text-xs text-grove-sage ml-7">{verification.verification_phone}</p>
+            <p className="font-ui text-xs text-grove-sage ml-6">{verification.verification_phone}</p>
           )}
           {phoneSavedOrSkipped && verification?.verification_phone_skipped && !verification?.verification_phone && (
-            <p className="font-latin italic text-xs text-grove-lichen ml-7">Skipped — you can add this later from Profile.</p>
+            <p className="font-latin italic text-xs text-grove-lichen ml-6">Skipped — you can add this later from Profile.</p>
           )}
         </div>
       </div>
@@ -410,7 +419,7 @@ function IdentityStep({
           onClick={onContinue}
           disabled={!canContinue}
           data-testid="verify-identity-continue"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
+          className={cn(buttonVariants(), "transition-colors duration-150")}
         >
           Continue to pact
         </button>
@@ -418,7 +427,7 @@ function IdentityStep({
           type="button"
           onClick={onBack}
           data-testid="verify-identity-back"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className={cn(buttonVariants({ variant: 'outline' }))}
         >
           Back
         </button>
@@ -434,14 +443,14 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
   return (
     <StepCard testid="verify-step-pact">
       <h2 className="font-plant text-grove-cream text-xl mb-2">{PACT_INTRO.heading}</h2>
-      <p className="font-ui text-[0.8125rem] text-grove-sage mb-5">{PACT_INTRO.body}</p>
+      <p className="font-ui text-xs text-grove-sage mb-5">{PACT_INTRO.body}</p>
 
-      <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-moss p-3 mb-4 flex items-center gap-2">
-        <span className="font-plant text-xs text-grove-cream">
+      <div className="rounded-inset border-hairline border-grove-moss bg-grove-moss p-3 mb-4 flex items-center gap-2">
+        <span className="font-ui text-xs font-medium text-grove-cream">
           Acknowledged
         </span>
         <span
-          className="font-mono text-xs text-grove-cream"
+          className="font-ui text-xs text-grove-cream"
           data-testid="verify-pact-ack-count"
         >
           {ackedCount} of 8
@@ -458,7 +467,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
           return (
             <li
               key={s.number}
-              className={`rounded-[10px] border-[0.5px] overflow-hidden transition-colors duration-150 ${
+              className={`rounded-chip border-hairline overflow-hidden transition-colors duration-150 ${
                 isAcked ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-canopy'
               }`}
               data-testid={`pact-section-${s.number}`}
@@ -466,14 +475,14 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
               <button
                 type="button"
                 onClick={() => toggleSection(s.number)}
-                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-black/[0.02] transition-colors duration-150"
+                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-grove-night/[0.02] transition-colors duration-150"
                 aria-expanded={isOpen}
                 data-testid={`pact-section-${s.number}-toggle`}
               >
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-grove-lime/10 text-grove-sprout font-plant text-[0.8125rem] flex items-center justify-center">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-grove-lime/10 text-grove-sprout font-ui text-xs font-medium flex items-center justify-center">
                   {s.number}
                 </span>
-                <span className="flex-1 min-w-0 font-plant text-sm text-grove-cream">
+                <span className="flex-1 min-w-0 font-ui text-sm font-medium text-grove-cream">
                   {s.title}
                 </span>
                 {isAcked && (
@@ -486,9 +495,9 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
                 )}
               </button>
               {isOpen && (
-                <div className="px-4 pb-4 pt-1 border-t-[0.5px] border-grove-moss">
+                <div className="px-4 pb-4 pt-1 border-t-hairline border-grove-moss">
                   {s.bodyAsList ? (
-                    <ul className="space-y-1.5 font-ui text-[0.8125rem] text-grove-cream leading-relaxed mt-3 ml-1">
+                    <ul className="space-y-1.5 font-ui text-xs text-grove-cream leading-relaxed mt-3 ml-1">
                       {s.body.map((line, i) => (
                         <li key={i} className="flex gap-2">
                           <span className="text-grove-sprout flex-shrink-0">•</span>
@@ -497,14 +506,14 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
                       ))}
                     </ul>
                   ) : (
-                    <div className="space-y-2 font-ui text-[0.8125rem] text-grove-cream leading-relaxed mt-3">
+                    <div className="space-y-2 font-ui text-xs text-grove-cream leading-relaxed mt-3">
                       {s.body.map((p, i) => (
                         <p key={i}>{p}</p>
                       ))}
                     </div>
                   )}
                   <label
-                    className={`mt-4 flex items-start gap-3 cursor-pointer rounded-[8px] border-[0.5px] p-3 transition-colors duration-150 ${
+                    className={`mt-4 flex items-start gap-3 cursor-pointer rounded-inset border-hairline p-3 transition-colors duration-150 ${
                       isAcked ? 'border-grove-fernLine bg-grove-canopy' : 'border-grove-moss bg-grove-canopy hover:border-grove-fernLine'
                     }`}
                     data-testid={`pact-section-${s.number}-ack-label`}
@@ -516,7 +525,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
                       className="mt-0.5 h-4 w-4 accent-grove-lime cursor-pointer flex-shrink-0"
                       data-testid={`pact-section-${s.number}-checkbox`}
                     />
-                    <span className="font-plant italic text-[0.8125rem] text-grove-cream leading-snug">
+                    <span className="font-ui italic text-xs font-medium text-grove-cream leading-snug">
                       {s.acknowledgement}
                     </span>
                   </label>
@@ -564,7 +573,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
           onClick={onContinue}
           disabled={!allAcksTrue}
           data-testid="verify-pact-continue"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
+          className={cn(buttonVariants(), "transition-colors duration-150")}
         >
           {allAcksTrue ? 'Continue to final agreement' : `Acknowledge all 8 (${ackedCount}/8)`}
         </button>
@@ -572,7 +581,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
           type="button"
           onClick={onBack}
           data-testid="verify-pact-back"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className={cn(buttonVariants({ variant: 'outline' }))}
         >
           Back
         </button>
@@ -581,19 +590,19 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
   );
 }
 
-function FinalStep({ allAcksTrue, submitting, onAgree, onDecline, onBack }) {
+function FinalStep({ allAcksTrue, submitting, onAgree, onDecline }) {
   return (
     <StepCard testid="verify-step-final">
       <h2 className="font-plant text-grove-cream text-xl mb-2">{FINAL_COPY.heading}</h2>
-      <p className="font-ui text-[0.8125rem] text-grove-sage mb-4">{FINAL_COPY.intro}</p>
+      <p className="font-ui text-xs text-grove-sage mb-4">{FINAL_COPY.intro}</p>
 
-      <blockquote className="rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-moss p-5 my-4">
-        <p className="font-plant italic text-[0.9375rem] text-grove-cream leading-relaxed">
+      <blockquote className="rounded-chip border-hairline border-grove-fernLine bg-grove-moss p-5 my-4">
+        <p className="font-plant italic text-label text-grove-cream leading-relaxed">
           "{FINAL_COPY.oath}"
         </p>
       </blockquote>
 
-      <p className="font-ui text-[0.8125rem] text-grove-cream leading-relaxed">{FINAL_COPY.outro}</p>
+      <p className="font-ui text-xs text-grove-cream leading-relaxed">{FINAL_COPY.outro}</p>
 
       <div className="flex flex-col sm:flex-row gap-2 mt-8">
         <button
@@ -601,7 +610,7 @@ function FinalStep({ allAcksTrue, submitting, onAgree, onDecline, onBack }) {
           onClick={onAgree}
           disabled={!allAcksTrue || submitting}
           data-testid="verify-final-agree"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150 disabled:bg-grove-moss disabled:text-grove-lichen disabled:cursor-not-allowed"
+          className={cn(buttonVariants(), "transition-colors duration-150")}
         >
           {submitting ? 'Verifying…' : FINAL_COPY.ctaAgree}
         </button>
@@ -609,7 +618,7 @@ function FinalStep({ allAcksTrue, submitting, onAgree, onDecline, onBack }) {
           type="button"
           onClick={onDecline}
           data-testid="verify-final-decline"
-          className="rounded-[12px] font-ui text-xs px-5 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className={cn(buttonVariants({ variant: 'outline' }))}
         >
           {FINAL_COPY.ctaDecline}
         </button>
@@ -636,17 +645,17 @@ function SuccessStep({ onBrowseSwaps }) {
       <p className="font-ui text-sm text-grove-cream leading-relaxed mb-6">{SUCCESS_COPY.body}</p>
 
       <div
-        className="rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-moss p-4 flex items-center gap-3 mb-6"
+        className="rounded-chip border-hairline border-grove-fernLine bg-grove-moss p-4 flex items-center gap-3 mb-6"
         data-testid="verify-success-badge-card"
       >
         <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-grove-lime text-grove-root">
           <Sparkles className="h-5 w-5" />
         </span>
         <div className="min-w-0">
-          <p className="font-plant text-xs text-grove-sage">
+          <p className="font-ui text-xs font-medium text-grove-sage">
             {SUCCESS_COPY.badgeLabel}
           </p>
-          <p className="font-plant text-[0.9375rem] text-grove-cream">{SUCCESS_COPY.badgeName}</p>
+          <p className="font-plant text-label text-grove-cream">{SUCCESS_COPY.badgeName}</p>
         </div>
       </div>
 
@@ -654,7 +663,7 @@ function SuccessStep({ onBrowseSwaps }) {
         type="button"
         onClick={onBrowseSwaps}
         data-testid="verify-success-browse"
-        className="rounded-[12px] font-ui text-xs px-5 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout transition-colors duration-150"
+        className={cn(buttonVariants(), "transition-colors duration-150")}
       >
         {SUCCESS_COPY.cta}
       </button>

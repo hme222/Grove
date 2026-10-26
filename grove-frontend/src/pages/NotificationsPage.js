@@ -1,8 +1,10 @@
+import LoadError from '../components/LoadError';
+import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../lib/api';
-import { PageHeader } from '../components/PageHeader';
-import { Bell, Check, Trophy, Target, Droplets, Heart } from 'lucide-react';
+import { PageHeader, HeaderAction } from '../components/PageHeader';
+import { AppLink } from '../components/AppLink';
+import { Bell, Trophy, Droplets, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 
 const NOTIFICATION_ICONS = {
@@ -13,18 +15,19 @@ const NOTIFICATION_ICONS = {
 };
 
 export default function NotificationsPage() {
-  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchNotifications = async () => {
     try {
+      setLoadError(false);
       const res = await notificationAPI.getAll(50);
       setNotifications(res.data.notifications);
       setUnreadCount(res.data.unread_count);
     } catch (e) {
-      toast.error('Failed to load notifications');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -53,45 +56,40 @@ export default function NotificationsPage() {
     }
   };
 
+  // Where a notification leads, by entity type. Null when it only needs marking as read.
+  const notificationTarget = (notification) => {
+    if (!notification.entity_id) return null;
+    if (notification.entity_type === 'goal') return '/care/today';
+    if (notification.entity_type === 'swap') return `/swaps/${notification.entity_id}`;
+    if (notification.entity_type === 'plant') return `/plants/${notification.entity_id}`;
+    return null;
+  };
+
   const handleNotificationClick = (notification) => {
     if (!notification.is_read) {
       handleMarkRead(notification.id);
-    }
-    // Navigate based on entity type
-    if (notification.entity_type === 'goal' && notification.entity_id) {
-      navigate('/care/today');
-    } else if (notification.entity_type === 'swap' && notification.entity_id) {
-      navigate(`/swaps/${notification.entity_id}`);
-    } else if (notification.entity_type === 'plant' && notification.entity_id) {
-      navigate(`/plants/${notification.entity_id}`);
     }
   };
 
   return (
     <div>
-      <PageHeader
+      <PageHeader back
         title="Notifications"
-        count={unreadCount}
-        rightContent={
-          unreadCount > 0 && (
-            <button
-              onClick={handleMarkAllRead}
-              className="text-xs font-sans text-grove-sprout hover:text-grove-cream transition-colors"
-              data-testid="mark-all-read-button"
-            >
-              Mark all read
-            </button>
-          )
-        }
+        count={loadError || loading ? undefined : unreadCount}
       />
 
-      <div className="max-w-[1100px] mx-auto px-4 py-4">
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-page mx-auto px-4 py-4">
+        {!loadError && unreadCount > 0 && (
+          <div className="mb-3 flex items-center justify-end">
+            <HeaderAction onClick={handleMarkAllRead} data-testid="mark-all-read-button">
+              Mark all read
+            </HeaderAction>
           </div>
+        )}
+        {loadError && !loading ? (<LoadError what="notifications" onRetry={fetchNotifications} />) : loading ? (
+          <Loading label="Loading notifications" />
         ) : notifications.length === 0 ? (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
             <Bell className="h-12 w-12 text-grove-sage mx-auto mb-3" />
             <p className="text-sm text-grove-cream">No notifications yet</p>
             <p className="text-xs text-grove-cream mt-1">We'll let you know about care reminders and grove activity</p>
@@ -100,11 +98,15 @@ export default function NotificationsPage() {
           <div className="space-y-2">
             {notifications.map((notification) => {
               const IconComponent = NOTIFICATION_ICONS[notification.type] || NOTIFICATION_ICONS.default;
+              const target = notificationTarget(notification);
+              const Row = target ? AppLink : 'button';
+              const rowProps = target ? { to: target } : { type: 'button' };
               return (
-                <div
+                <Row
+                  {...rowProps}
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification)}
-                  className={`rounded-[14px] border-[0.5px] border-grove-moss p-4 cursor-pointer transition-all duration-150 ${
+                  className={`block w-full text-left rounded-card border-hairline border-grove-moss p-5 cursor-pointer transition-all duration-150 ${
                     notification.is_read
                       ? 'bg-grove-forest hover:bg-grove-moss'
                       : 'bg-grove-moss hover:bg-grove-canopy border-grove-fernLine'
@@ -121,7 +123,7 @@ export default function NotificationsPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-plant text-grove-cream text-sm">{notification.title}</h3>
+                        <h3 className="font-plant text-grove-cream text-base font-semibold ">{notification.title}</h3>
                         {!notification.is_read && (
                           <div className="w-2 h-2 rounded-full bg-grove-lime flex-shrink-0 mt-1" />
                         )}
@@ -137,7 +139,7 @@ export default function NotificationsPage() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </Row>
               );
             })}
           </div>

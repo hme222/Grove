@@ -1,17 +1,23 @@
+import LoadError from '../components/LoadError';
+import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { challengeAPI, goalAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { Target, Trophy, Calendar, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 
 export default function ChallengesPage() {
   const [templates, setTemplates] = useState([]);
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [starting, setStarting] = useState(null);
 
   const fetchData = async () => {
     try {
+      setLoadError(false);
       const [templatesRes, goalsRes] = await Promise.all([
         challengeAPI.getTemplates(),
         goalAPI.getAll('active'),
@@ -19,7 +25,7 @@ export default function ChallengesPage() {
       setTemplates(templatesRes.data);
       setGoals(goalsRes.data);
     } catch (e) {
-      toast.error('Failed to load challenges');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -62,29 +68,27 @@ export default function ChallengesPage() {
 
   return (
     <div>
-      <PageHeader
+      <PageHeader back
         title="Challenges"
-        count={activeChallenges.length}
+        count={loadError || loading ? undefined : activeChallenges.length}
       />
 
-      <div className="max-w-[1100px] mx-auto px-4 py-4 space-y-6">
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-          </div>
+      <div className="max-w-page mx-auto px-4 py-4 space-y-6">
+        {loadError && !loading ? (<LoadError what="challenges" onRetry={fetchData} />) : loading ? (
+          <Loading label="Loading challenges" />
         ) : (
           <>
             {/* Active Challenges */}
             {activeChallenges.length > 0 && (
               <div>
-                <h2 className="font-plant text-grove-cream text-sm mb-3">Your Active Challenges</h2>
+                <h2 className="font-plant text-grove-cream text-xl font-semibold  mb-3">Your Active Challenges</h2>
                 <div className="space-y-2">
                   {activeChallenges.map((goal) => {
                     const Icon = getChallengeIcon(goal.goal_type);
                     return (
                       <div
                         key={goal.id}
-                        className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4"
+                        className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
                         data-testid="active-challenge"
                       >
                         <div className="flex items-start gap-3">
@@ -92,12 +96,12 @@ export default function ChallengesPage() {
                             <Icon className="h-5 w-5 text-grove-cream" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-plant text-grove-cream text-base">{goal.title}</h3>
+                            <h3 className="font-plant text-grove-cream text-base font-semibold">{goal.title}</h3>
                             {goal.description && (
                               <p className="text-sm text-grove-cream mt-1">{goal.description}</p>
                             )}
                             <div className="mt-3">
-                              <div className="flex items-center justify-between text-xs font-mono mb-1">
+                              <div className="flex items-center justify-between text-xs font-ui mb-1">
                                 <span className="text-grove-cream">Progress</span>
                                 <span className="text-grove-sprout">
                                   {goal.current_value} / {goal.target_value}
@@ -121,7 +125,7 @@ export default function ChallengesPage() {
 
             {/* Available Challenges */}
             <div>
-              <h2 className="font-plant text-grove-cream text-sm mb-3">
+              <h2 className="font-plant text-grove-cream text-xl font-semibold  mb-3">
                 {activeChallenges.length > 0 ? 'More Challenges' : 'Available Challenges'}
               </h2>
               {templates.length === 0 && (
@@ -134,7 +138,7 @@ export default function ChallengesPage() {
                   return (
                     <div
                       key={template.slug}
-                      className={`rounded-[14px] border-[0.5px] border-grove-moss p-4 ${
+                      className={`rounded-card border-hairline border-grove-moss p-5 ${
                         isActive ? 'bg-grove-moss opacity-60' : 'bg-grove-moss'
                       }`}
                       data-testid="challenge-template"
@@ -148,12 +152,12 @@ export default function ChallengesPage() {
                           }`} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-plant text-grove-cream text-base">{template.title}</h3>
+                          <h3 className="font-plant text-grove-cream text-base font-semibold">{template.title}</h3>
                           <p className="text-sm text-grove-cream mt-1">{template.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="text-xs font-mono text-grove-cream">
+                        <div className="text-xs font-ui text-grove-cream">
                           Target: {template.target_value}
                           {template.duration_days && ` • ${template.duration_days} days`}
                         </div>
@@ -161,14 +165,14 @@ export default function ChallengesPage() {
                           <button
                             onClick={() => handleStart(template.slug)}
                             disabled={starting === template.slug}
-                            className="rounded-[12px] font-[Georgia] text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+                            className={cn(buttonVariants())}
                             data-testid="challenge-start-button"
                           >
-                            {starting === template.slug ? 'Starting...' : 'Start'}
+                            {starting === template.slug ? 'Starting…' : 'Start'}
                           </button>
                         )}
                         {isActive && (
-                          <span className="text-xs text-grove-sprout font-sans">
+                          <span className="text-xs text-grove-sprout font-ui">
                             Active
                           </span>
                         )}

@@ -1,26 +1,24 @@
+import LoadError from '../components/LoadError';
+import { LoadingList } from '../components/Loading';
+import { BULK_ACTIONS } from '../lib/careActions';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { plantAPI, careAPI, bouquetAPI } from '../lib/api';
 import PlantCard from '../components/PlantCard';
 import PlantImage from '../components/PlantImage';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import FirstSessionBanner from '../components/FirstSessionBanner';
 import SectionTutorial from '../components/SectionTutorial';
-import { Plus, Check, Leaf, Flower2, Droplets, Wind, Utensils, RotateCw, Scissors, ClipboardCheck, AlertTriangle } from 'lucide-react';
+import { Plus, Check, Leaf, Flower2, AlertTriangle, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AppLink } from '../components/AppLink';
 
 // Phase 14A.2 — bulk multi-action set. Matches the single-plant CareLogModal.
-const BULK_ACTIONS = [
-  { value: 'water', label: 'Water', icon: Droplets, color: '#3B6D11' },
-  { value: 'mist', label: 'Mist', icon: Wind, color: '#92B44B' },
-  { value: 'fertilize', label: 'Fertilize', icon: Utensils, color: '#639922' },
-  { value: 'rotate', label: 'Rotate', icon: RotateCw, color: '#BA7517' },
-  { value: 'prune', label: 'Prune', icon: Scissors, color: '#2D5016' },
-  { value: 'check', label: 'Check', icon: ClipboardCheck, color: '#185FA5' },
-];
 
 const BULK_WARN_THRESHOLD = 20;
 
@@ -34,6 +32,7 @@ export default function CollectionPage() {
   const [plants, setPlants] = useState([]);
   const [bouquets, setBouquets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selected, setSelected] = useState(new Set());
   const [bulkActions, setBulkActions] = useState(() => new Set());
@@ -49,8 +48,9 @@ export default function CollectionPage() {
       ]);
       setPlants(pRes.data.plants || []);
       setBouquets(Array.isArray(bRes.data) ? bRes.data : (bRes.data?.bouquets || []));
+      setLoadError(false);
     } catch (e) {
-      toast.error('Failed to load collection');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -136,47 +136,46 @@ export default function CollectionPage() {
     setSearchParams(next === 'bouquets' ? { view: 'bouquets' } : {});
   };
 
+  // Try again keeps the error card up (it says "Trying again…") until the request settles, so a retry
+  // can never flash an empty list or a zero.
+  const retryLoad = async () => {
+    await fetchAll();
+    document.getElementById('main-content')?.focus();
+  };
+
   return (
     <div>
       <SectionTutorial tutorialId="collection" />
       <FirstSessionBanner />
       <PageHeader
         title="Plants"
-        count={totalCount}
-        rightContent={
-          <div className="flex items-center gap-2">
-            {!showingBouquets && (
-            <button
-              onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
-              data-testid="collection-select-button"
-              className={`min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] transition-colors duration-150 ${
-                selectionMode
-                  ? 'border-grove-fernLine bg-grove-lime text-grove-root'
-                  : 'border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine'
-              }`}
-            >
-              {selectionMode ? 'Cancel' : 'Select'}
-            </button>
-            )}
-            <button
-              onClick={() => setShowTypePicker(true)}
-              data-testid="collection-add-button"
-              className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
-              aria-label="Add to collection"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
-          </div>
-        }
+        count={loadError || loading ? undefined : totalCount}
       />
 
-      <div className="max-w-[1100px] mx-auto px-4 py-4">
+      <div className="max-w-page mx-auto px-4 py-4">
+        {!loadError && (
+          <div className="mb-3 flex items-center justify-end gap-2" data-testid="collection-toolbar">
+            {!showingBouquets && (
+              <HeaderAction
+                onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
+                data-testid="collection-select-button"
+                pressed={selectionMode}
+              >
+                {selectionMode ? 'Cancel' : 'Select'}
+              </HeaderAction>
+            )}
+            <HeaderAction icon={Plus} onClick={() => setShowTypePicker(true)} data-testid="collection-add-button">
+              Add
+            </HeaderAction>
+          </div>
+        )}
         <nav aria-label="More ways to browse your plants" className="mb-3 flex flex-wrap gap-2" data-testid="plants-shortcuts">
           {[['Search', '/search'], ['Rooms', '/rooms'], ['Want list', '/wants']].map(([label, path]) => (
-            <button key={path} type="button" onClick={() => navigate(path)} data-testid={`plants-shortcut-${label.toLowerCase().replace(' ', '-')}`}
-              className="min-h-[44px] inline-flex items-center rounded-full border-[0.5px] border-grove-moss px-4 font-ui text-xs text-grove-cream hover:border-grove-fernLine transition-colors duration-150">
+            <AppLink key={path} to={path} data-testid={`plants-shortcut-${label.toLowerCase().replace(' ', '-')}`}
+              className="inline-flex min-h-touch items-center gap-0.5 rounded-control pl-1 pr-2 font-ui text-sm text-grove-cream underline-offset-4 hover:underline">
               {label}
-            </button>
+              <ChevronRight className="h-4 w-4 text-grove-sage" aria-hidden="true" />
+            </AppLink>
           ))}
         </nav>
         {showViewSwitch && (
@@ -184,7 +183,7 @@ export default function CollectionPage() {
             role="group"
             aria-label="Show plants or bouquets"
             data-testid="collection-view-switch"
-            className="mb-3 flex w-full max-w-sm flex-wrap rounded-[10px] border-[0.5px] border-grove-moss bg-grove-moss p-0.5"
+            className="mb-3 flex w-full max-w-sm flex-wrap rounded-chip border-hairline border-grove-moss bg-grove-moss p-0.5"
           >
             {[
               { value: 'plants', label: 'Plants', count: plants.length, Icon: Leaf },
@@ -198,13 +197,11 @@ export default function CollectionPage() {
                   aria-pressed={active}
                   onClick={() => setView(value)}
                   data-testid={`collection-view-${value}`}
-                  className={`min-h-[44px] inline-flex flex-1 items-center justify-center gap-1.5 rounded-[8px] px-3 py-1.5 font-ui text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-1 motion-safe:transition-colors motion-safe:duration-150 ${
-                    active ? 'bg-grove-lime text-grove-root' : 'text-grove-cream hover:bg-grove-forest'
-                  }`}
+                  className={cn(buttonVariants({ variant: 'chip' }), 'flex-1')}
                 >
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   {label}
-                  <span className={active ? 'text-grove-root' : 'text-grove-sage'}>{count}</span>
+                  <span>{count}</span>
                 </button>
               );
             })}
@@ -212,47 +209,44 @@ export default function CollectionPage() {
         )}
         {roomFilter && (
           <div className="flex items-center justify-between mb-3 px-1">
-            <span className="font-plant text-sm text-grove-cream">
+            <span className="font-ui text-sm font-medium text-grove-cream">
               Room: {roomFilter}
             </span>
             <button
               onClick={() => setSearchParams({})}
-              className="font-plant text-xs text-grove-sprout hover:text-grove-cream"
+              className="font-ui text-xs font-medium text-grove-sprout hover:text-grove-cream"
             >
               Show all
             </button>
           </div>
         )}
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-          </div>
+        {loadError && !loading ? (<LoadError what="plants" onRetry={retryLoad} />) : loading ? (
+          <LoadingList label="Loading your plants" />
         ) : isEmpty && roomFilter ? (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
             <p className="text-sm text-grove-cream">No plants in "{roomFilter}"</p>
             <button
               onClick={() => setSearchParams({})}
-              className="mt-2 font-plant text-xs text-grove-sprout hover:text-grove-cream"
+              className="mt-2 font-ui text-xs font-medium text-grove-sprout hover:text-grove-cream"
             >
               Show all plants
             </button>
           </div>
         ) : showingBouquets ? (
           isEmpty ? (
-            <div data-testid="collection-bouquets-empty" className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-6 text-center">
+            <div data-testid="collection-bouquets-empty" className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-center">
               <p className="font-ui text-sm text-grove-cream">No bouquets right now.</p>
-              <button
-                type="button"
-                onClick={() => navigate('/bouquets/new')}
-                className="mt-2 font-plant text-xs text-grove-sprout hover:text-grove-cream"
+              <AppLink
+                to="/bouquets/new"
+                className="mt-2 inline-flex min-h-touch items-center font-ui text-xs font-medium text-grove-sprout hover:text-grove-cream"
               >
-                Add a bouquet
-              </button>
+                Add bouquet
+              </AppLink>
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-2 sm:gap-3" data-testid="collection-bouquet-grid">
               {bouquets.map(b => (
-                <BouquetTile key={`b-${b.id}`} bouquet={b} onClick={() => navigate(`/bouquets/${b.id}`)} />
+                <BouquetTile key={`b-${b.id}`} bouquet={b} />
               ))}
             </div>
           )
@@ -275,8 +269,8 @@ export default function CollectionPage() {
 
       {/* Select-all helper row — appears in selection mode before any selection */}
       {selectionMode && filteredPlants.length > 0 && (
-        <div className="max-w-[1100px] mx-auto px-4 -mt-2 mb-1 flex items-center justify-between" data-testid="bulk-helper-row">
-          <span className="text-xs font-ui text-grove-cream opacity-70">
+        <div className="max-w-page mx-auto px-4 -mt-2 mb-1 flex items-center justify-between" data-testid="bulk-helper-row">
+          <span className="text-xs font-ui text-grove-sage">
             {selectedCount === 0
               ? 'Tap plants to select them.'
               : `${selectedCount} of ${filteredPlants.length} selected`}
@@ -306,11 +300,11 @@ export default function CollectionPage() {
 
       {/* Bulk action bar — Phase 14A.2 multi-action (water · mist · fertilize · rotate · prune · check) */}
       {selectionMode && selectedCount > 0 && (
-        <div className="fixed bottom-[calc(68px+env(safe-area-inset-bottom))] left-0 right-0 z-40 bg-grove-lime border-t-[0.5px] border-grove-moss" data-testid="bulk-action-bar">
-          <div className="max-w-[1100px] mx-auto px-4 pt-2 pb-3">
+        <div className="fixed bottom-nav left-0 right-0 z-sticky bg-grove-lime border-t-hairline border-grove-moss" data-testid="bulk-action-bar">
+          <div className="max-w-page mx-auto px-4 pt-2 pb-3">
             {showSoftWarning && (
               <div
-                className="flex items-start gap-2 px-3 py-2 mb-2 bg-[#3A2410] border-[0.5px] border-grove-moss rounded-[6px]"
+                className="flex items-start gap-2 px-3 py-2 mb-2 bg-grove-sun/15 border-hairline border-grove-moss rounded-tag"
                 data-testid="bulk-warning-banner"
               >
                 <AlertTriangle className="h-3.5 w-3.5 text-grove-sun flex-shrink-0 mt-0.5" />
@@ -330,15 +324,12 @@ export default function CollectionPage() {
                       onClick={() => toggleBulkAction(value)}
                       data-testid={`bulk-action-${value}`}
                       aria-pressed={isOn}
-                      className={`flex flex-col items-center gap-0.5 py-2 px-1 rounded-[6px] border-[0.5px] transition-colors duration-150 ${
-                        isOn
-                          ? 'border-grove-lime bg-grove-lime/15'
-                          : 'border-grove-forest/30 bg-transparent hover:border-grove-forest/60'
-                      }`}
+                      className={cn(buttonVariants({ variant: 'chip' }), "flex-col items-center gap-0.5")}
+                    aria-pressed={isOn}
                     >
                       <Icon
                         className="h-4 w-4"
-                        style={{ color: isOn ? '#C3D98A' : color }}
+                        style={{ color: isOn ? 'var(--grove-sprout)' : color }}
                         strokeWidth={isOn ? 2.2 : 1.75}
                       />
                       <span className={`text-xs font-ui ${isOn ? 'text-grove-cream font-semibold' : 'text-grove-cream/70'}`}>
@@ -360,7 +351,7 @@ export default function CollectionPage() {
                   )}
                 </p>
                 {bulkActions.size === 0 && (
-                  <p className="text-grove-cream/60 text-xs font-ui mt-0.5">Pick the actions you did.</p>
+                  <p className="text-grove-sage text-xs font-ui mt-0.5">Pick the actions you did.</p>
                 )}
               </div>
               {!bulkActionsOpen ? (
@@ -368,7 +359,7 @@ export default function CollectionPage() {
                   type="button"
                   onClick={() => setBulkActionsOpen(true)}
                   data-testid="bulk-open-actions"
-                  className="rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-2"
+                  className={cn(buttonVariants(), "flex")}
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Pick actions
@@ -379,7 +370,7 @@ export default function CollectionPage() {
                   onClick={handleBulkLog}
                   disabled={bulkRunning || bulkActions.size === 0}
                   data-testid="bulk-log-confirm"
-                  className="rounded-[12px] font-ui text-xs px-4 py-2.5 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-40 transition-colors duration-150 flex items-center gap-2"
+                  className={cn(buttonVariants(), "disabled:opacity-40 transition-colors duration-150 flex items-center gap-2")}
                 >
                   <Check className="h-3.5 w-3.5" />
                   {bulkRunning ? 'Logging…' : (bulkActions.size > 1 ? `Log ${bulkActions.size} actions` : 'Log care')}
@@ -392,7 +383,7 @@ export default function CollectionPage() {
 
       {/* Type picker — Phase 14 Part 5.1 */}
       <Dialog open={showTypePicker} onOpenChange={setShowTypePicker}>
-        <DialogContent className="bg-grove-canopy border-[0.5px] border-grove-moss rounded-[14px] max-w-sm" data-testid="add-type-picker">
+        <DialogContent className="bg-grove-canopy border-hairline border-grove-moss rounded-small max-w-sm" data-testid="add-type-picker">
           <DialogHeader>
             <DialogTitle className="font-plant text-grove-cream text-lg">What are you adding?</DialogTitle>
           </DialogHeader>
@@ -401,13 +392,13 @@ export default function CollectionPage() {
               type="button"
               onClick={() => { setShowTypePicker(false); navigate('/add-plant'); }}
               data-testid="add-type-plant"
-              className="w-full text-left rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-3.5 hover:border-grove-fernLine hover:bg-grove-forest flex items-center gap-3"
+              className="w-full text-left rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 hover:border-grove-fernLine hover:bg-grove-forest flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-[10px] bg-grove-moss flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-chip bg-grove-moss flex items-center justify-center flex-shrink-0">
                 <Leaf className="h-5 w-5 text-grove-sprout" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-plant text-grove-cream text-sm">A plant</p>
+                <p className="font-ui text-grove-cream text-sm font-medium">A plant</p>
                 <p className="font-ui text-xs text-grove-sage mt-0.5">Tracks care, growth and health over time.</p>
               </div>
             </button>
@@ -415,13 +406,13 @@ export default function CollectionPage() {
               type="button"
               onClick={() => { setShowTypePicker(false); navigate('/bouquets/new'); }}
               data-testid="add-type-bouquet"
-              className="w-full text-left rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-3.5 hover:border-grove-fernLine hover:bg-grove-forest flex items-center gap-3"
+              className="w-full text-left rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 hover:border-grove-fernLine hover:bg-grove-forest flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-[10px] bg-grove-bloom/15 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-chip bg-grove-bloom/15 flex items-center justify-center flex-shrink-0">
                 <Flower2 className="h-5 w-5 text-grove-blush" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-plant text-grove-cream text-sm">A bouquet</p>
+                <p className="font-ui text-grove-cream text-sm font-medium">A bouquet</p>
                 <p className="font-ui text-xs text-grove-sage mt-0.5">Vase life, flower ID and care plan.</p>
               </div>
             </button>
@@ -438,28 +429,27 @@ function daysUntilExpiry(bouquet) {
   return Math.ceil(d / (1000 * 60 * 60 * 24));
 }
 
-function BouquetTile({ bouquet, onClick }) {
+function BouquetTile({ bouquet }) {
   const days = daysUntilExpiry(bouquet);
   const vaseLabel = days == null ? '—' : days < 0 ? 'Past vase life' : days === 0 ? 'Ends today' : `${days}d vase life`;
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <AppLink
+      to={`/bouquets/${bouquet.id}`}
       data-testid="collection-grid-bouquet-tile"
-      className="relative aspect-square rounded-[12px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-bloom/15 hover:border-grove-fernLine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
+      className="relative block aspect-square rounded-control overflow-hidden border-hairline border-grove-moss bg-grove-bloom/15 hover:border-grove-fernLine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
     >
       <PlantImage src={bouquet.photo_url} tone="bouquet" rounded="none" className="absolute inset-0 w-full h-full" />
       <span
         aria-hidden="true"
-        className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-grove-canopy border-[0.5px] border-grove-moss flex items-center justify-center"
+        className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-grove-canopy border-hairline border-grove-moss flex items-center justify-center"
         title="Bouquet"
       >
         <Flower2 className="h-3 w-3 text-grove-blush" />
       </span>
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(28,46,16,0.85)] to-transparent p-1.5">
-        <p className="font-plant text-xs leading-tight text-grove-cream truncate">{bouquet.name || 'Bouquet'}</p>
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-grove-root/85 to-transparent p-1.5">
+        <p className="font-ui text-xs font-medium leading-tight text-grove-cream truncate">{bouquet.name || 'Bouquet'}</p>
         <p className="font-latin text-xs text-grove-sprout">{vaseLabel}</p>
       </div>
-    </button>
+    </AppLink>
   );
 }

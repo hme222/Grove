@@ -1,7 +1,13 @@
+import LoadError from '../components/LoadError';
+import { LoadingList } from '../components/Loading';
+import AppLink from '../components/AppLink';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { careAPI, waterAPI, plantAPI, userAPI, getFileUrl } from '../lib/api';
-import { PageHeader, FilterChips } from '../components/PageHeader';
+import { PageHeader, FilterChips, HeaderAction } from '../components/PageHeader';
+import { CareTabs } from '../components/CareTabs';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
@@ -14,9 +20,13 @@ import SectionTutorial from '../components/SectionTutorial';
 import WorkingTowardSection from '../components/WorkingTowardSection';
 import DailyTriviaCard from '../components/DailyTriviaCard';
 import { notificationsAPI } from '../lib/api';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '../components/ui/alert-dialog';
 import { Droplets, Check, Leaf, X, Sparkles, Search } from 'lucide-react';
 import { toast } from 'sonner';
-import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
+import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
 import CareTextToggle from '../components/CareTextToggle';
@@ -25,7 +35,7 @@ import UndoSnackbar from '../components/UndoSnackbar';
 const FILTERS = [
   { value: 'all', label: 'All due' },
   { value: 'urgent', label: 'Needs a check' },
-  { value: 'needs_water', label: 'Water today' },
+  { value: 'needs_water', label: 'Due today' },
 ];
 
 // Urgency visual tokens (kept on-brand, no raw reds/greens/blues).
@@ -36,28 +46,28 @@ const URGENCY_STYLES = {
     bg: 'bg-grove-canopy',
     dot: 'bg-grove-bloom',
     label: 'text-grove-sage',
-    accent: '#E57A9C',
+    accent: 'var(--grove-bloom)',
   },
   needs_water: {
     border: 'border-grove-sun/30',
     bg: 'bg-grove-canopy',
     dot: 'bg-grove-sun',
     label: 'text-grove-sage',
-    accent: '#E8D77A',
+    accent: 'var(--grove-sun)',
   },
   healthy: {
     border: 'border-grove-fernLine/30',
     bg: 'bg-grove-moss',
     dot: 'bg-grove-lime',
     label: 'text-grove-sprout',
-    accent: '#92B44B',
+    accent: 'var(--grove-lime)',
   },
   propagating: {
     border: 'border-grove-lime/40',
     bg: 'bg-grove-lime/10',
     dot: 'bg-grove-lime',
     label: 'text-grove-sprout',
-    accent: '#C3D98A',
+    accent: 'var(--grove-sprout)',
   },
 };
 
@@ -71,8 +81,11 @@ export default function CarePage() {
   const [plants, setPlants] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [careModalPlant, setCareModalPlant] = useState(null);
   const [wateringAll, setWateringAll] = useState(false);
+  const [confirmWaterAll, setConfirmWaterAll] = useState(false);
+  const waterAllRef = React.useRef(null);
   const [exiting, setExiting] = useState(new Set()); // plant ids currently animating out
   const [sessionCount, setSessionCount] = useState(0); // session = plants logged this visit
   const [showFirstCare, setShowFirstCare] = useState(false);
@@ -102,8 +115,9 @@ export default function CarePage() {
     try {
       const res = await careAPI.getDueToday();
       setPlants(res.data);
+      setLoadError(false);
     } catch (e) {
-      toast.error('Failed to load care tasks');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -129,11 +143,22 @@ export default function CarePage() {
     }
   };
 
+  const filteredPlants = useMemo(() => (
+    filter === 'all' ? plants
+      : plants.filter(p => p.status === filter)
+  ), [filter, plants]);
+
+  // A chip that would show the same plants as All due (or none) is not a choice, so it is not offered.
+  const filterChips = FILTERS
+    .map((f) => ({ ...f, n: f.value === 'all' ? plants.length : plants.filter((p) => p.status === f.value).length }))
+    .filter((f) => f.value === 'all' || (f.n > 0 && f.n < plants.length) || f.value === filter)
+    .map((f) => ({ value: f.value, label: `${f.label} · ${f.n}` }));
+
   const handleWaterAll = async (e) => {
     setWateringAll(true);
     impactMedium(e?.currentTarget);
     try {
-      const res = await waterAPI.logRound();
+      const res = await waterAPI.logRound(filteredPlants.map((p) => p.id));
       const watered = res.data.watered || 0;
       // The Water All button disappears with the list, so the Undo bar takes focus.
       if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered });
@@ -142,7 +167,7 @@ export default function CarePage() {
       maybeCelebrateFirstCare(res.data.first_care_pending);
       window.dispatchEvent(new Event('grove:mission-refresh'));
       // Animate everything out
-      setExiting(new Set(plants.map(p => p.id)));
+      setExiting(new Set(filteredPlants.map(p => p.id)));
       setTimeout(() => {
         setExiting(new Set());
         fetchDue();
@@ -151,6 +176,19 @@ export default function CarePage() {
       toast.error('Water round failed');
     } finally {
       setWateringAll(false);
+    }
+  };
+
+  // One plant, same path as Water all, so it gets the same Undo and the same honest failure.
+  const handleWateredOne = async (plant, el) => {
+    impactMedium(el);
+    try {
+      const res = await waterAPI.logRound([plant.id]);
+      const watered = res.data.watered || 0;
+      if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered });
+      handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending });
+    } catch {
+      toast.error("Couldn't save that. Check your connection and try again.");
     }
   };
 
@@ -192,53 +230,69 @@ export default function CarePage() {
     }, 320);
   };
 
-  const filteredPlants = useMemo(() => (
-    filter === 'all' ? plants : plants.filter(p => p.status === filter)
-  ), [filter, plants]);
-
   const sessionActive = sessionCount > 0;
+
+  // Try again keeps the error card up (it says "Trying again…") until the request settles, so a retry
+  // can never flash an empty list or a zero.
+  const retryLoad = async () => {
+    await fetchDue();
+    document.getElementById('main-content')?.focus();
+  };
 
   return (
     <div className="pb-24">
       <SectionTutorial tutorialId="care" />
       <PageHeader
         title="Today"
-        count={plants.length}
-        rightContent={
-          plants.length > 0 ? (
-            <button
-              onClick={handleWaterAll}
-              disabled={wateringAll}
-              data-testid="water-all-button"
-              className="min-h-[44px] rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
-            >
-              <Droplets className="h-3.5 w-3.5" />
-              {wateringAll ? 'Watering...' : 'Water All'}
-            </button>
-          ) : null
-        }
+        count={loading || loadError ? undefined : plants.length}
+        countLabel="plants due"
       >
-        <FilterChips filters={FILTERS} active={filter} onChange={setFilter} />
+        <CareTabs />
       </PageHeader>
 
-      <div className="max-w-[900px] mx-auto px-4 pt-4 pb-4 space-y-3">
+      <div className="max-w-content mx-auto px-4 pt-4 pb-4 space-y-3">
+        {!loadError && filterChips.length > 1 && (
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <FilterChips filters={filterChips} active={filter} onChange={setFilter} />
+          </div>
+        )}
+        {!loading && !loadError && plants.length > 0 && (
+          <div className="flex items-center justify-between gap-2">
+            <p role="status" className="font-ui text-sm text-grove-sage" data-testid="care-filter-status">
+              {filteredPlants.length} {filteredPlants.length === 1 ? 'plant' : 'plants'} shown
+            </p>
+            {filteredPlants.length > 0 && (
+              <HeaderAction
+                ref={waterAllRef}
+                icon={Droplets}
+                onClick={() => setConfirmWaterAll(true)}
+                disabled={wateringAll}
+                data-testid="water-all-button"
+              >
+                {wateringAll ? 'Watering…' : 'Water all'}
+              </HeaderAction>
+            )}
+          </div>
+        )}
         <button
           type="button"
           onClick={() => navigate('/search')}
           data-testid="today-search"
-          className="flex min-h-[44px] w-full items-center gap-2 rounded-[12px] border-[0.5px] border-grove-fernLine bg-grove-canopy px-4 text-left font-ui text-sm text-grove-sage hover:border-grove-lime"
+          className="flex min-h-touch w-full items-center gap-2 rounded-control border-hairline border-grove-inputOutline bg-grove-canopy px-4 text-left font-ui text-sm text-grove-sage hover:border-grove-lime"
         >
           <Search className="h-4 w-4" aria-hidden="true" />
           Search plants, guides and lessons
         </button>
-        <ScheduleReviewBanner />
-        {!loading && plants.length > 0 && <SetupNote />}
       </div>
 
-      <div className="max-w-[900px] mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {loading ? (
-          <div className="col-span-full flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-content mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {loadError && !loading ? (<div className="col-span-full"><LoadError what="your plants for today" onRetry={retryLoad} /></div>) : loading ? (
+          <LoadingList label="Loading today’s care" className="col-span-full" />
+        ) : filteredPlants.length === 0 && plants.length > 0 ? (
+          <div className="col-span-full rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-center" data-testid="care-filter-empty">
+            <p className="font-plant text-base text-grove-cream">No plants match this filter.</p>
+            <p className="mt-1 font-ui text-sm text-grove-sage">{plants.length} {plants.length === 1 ? 'plant is' : 'plants are'} due in all.</p>
+            <button type="button" onClick={() => setFilter('all')} className={cn(buttonVariants({ variant: 'outline' }), "mt-3")}>Show all due</button>
           </div>
         ) : filteredPlants.length === 0 ? (
           <div className="col-span-full">
@@ -254,7 +308,7 @@ export default function CarePage() {
                 key={plant.id}
                 data-testid="care-card"
                 data-status={status}
-                className={`relative overflow-hidden rounded-[16px] border-[0.5px] ${style.border} ${style.bg} transform transition-all duration-[280ms] ease-out ${
+                className={`relative overflow-hidden rounded-small border-hairline ${style.border} ${style.bg} transform transition-all duration-settle ease-out ${
                   isExiting ? 'translate-x-full opacity-0 scale-95' : 'translate-x-0 opacity-100 scale-100'
                 }`}
               >
@@ -264,10 +318,10 @@ export default function CarePage() {
                   className={`absolute left-0 top-0 bottom-0 w-1 ${style.dot}`}
                 />
 
-                <div className="flex gap-3 p-3 pl-4">
-                  <button
-                    onClick={() => navigate(`/plants/${plant.id}`)}
-                    className="flex-shrink-0 w-20 h-20 rounded-[12px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-moss flex items-center justify-center"
+                <div className="flex gap-3 px-4 py-3">
+                  <AppLink
+                    to={`/plants/${plant.id}`}
+                    className="flex-shrink-0 w-20 h-20 rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss flex items-center justify-center"
                     aria-label={`Open ${plant.nickname || plant.common_name}`}
                   >
                     {plant.photo_url ? (
@@ -277,13 +331,13 @@ export default function CarePage() {
                         <Leaf className="h-7 w-7 text-grove-sprout opacity-40" />
                       </div>
                     )}
-                  </button>
+                  </AppLink>
 
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className={`inline-block w-2 h-2 rounded-full ${style.dot}`} aria-hidden="true" />
-                        <h2 className="font-plant text-grove-cream text-base truncate">
+                        <h2 className="font-plant text-grove-cream text-base font-semibold truncate">
                           {plant.nickname || plant.common_name}
                         </h2>
                       </div>
@@ -295,7 +349,7 @@ export default function CarePage() {
                       )}
                       {(status === 'urgent' || status === 'needs_water') && (
                         <p data-testid="care-card-step" className="font-ui text-xs text-grove-cream mt-0.5 leading-snug">
-                          {careStep(plant)}
+                          {plant.care_tip || careStep(plant)}
                         </p>
                       )}
                       {textMode === 'detailed' && plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
@@ -312,31 +366,24 @@ export default function CarePage() {
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
                       <button
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
-                        className="relative overflow-hidden flex-1 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root hover:bg-grove-sprout font-plant text-xs px-3 py-2 min-h-[44px] flex items-center justify-center gap-1.5 transition-colors duration-150"
+                        aria-label={`Log care for ${plant.nickname || plant.common_name}`}
+                        className={cn(buttonVariants(), "relative flex-1 overflow-hidden")}
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
                       </button>
                       <button
-                        onClick={async (e) => {
-                          impactMedium(e.currentTarget);
-                          try {
-                            const res = await careAPI.createLog(plant.id, { action: 'water' });
-                            const meta = res.data?._meta;
-                            handlePlantLogged(plant.id, meta);
-                          } catch {
-                            handlePlantLogged(plant.id);
-                          }
-                        }}
-                        aria-label="Mark done"
+                        onClick={(e) => handleWateredOne(plant, e.currentTarget)}
+                        aria-label={`Mark ${plant.nickname || plant.common_name} watered`}
                         data-testid="care-mark-done"
-                        className="relative overflow-hidden w-11 h-11 rounded-full border-[0.5px] border-grove-fernLine bg-grove-moss text-grove-sprout hover:bg-grove-sprout hover:text-grove-cream flex items-center justify-center transition-colors duration-150"
+                        className={cn(buttonVariants({ variant: 'outline' }), "relative shrink-0 overflow-hidden")}
                       >
-                        <Check className="h-4 w-4" />
+                        <Check className="h-4 w-4" aria-hidden="true" />
+                        Watered
                       </button>
                     </div>
                   </div>
@@ -347,24 +394,29 @@ export default function CarePage() {
         )}
       </div>
 
+      <div className="max-w-content mx-auto px-4 pb-4 space-y-3">
+        <ScheduleReviewBanner />
+        {!loading && plants.length > 0 && <SetupNote />}
+      </div>
+
       {/* Phase 14C.4 — Daily plant trivia (Supplement v1 Part D.7).
           Positioned below the care queue so the urgent count + plant grid
           remain the primary above-the-fold focus. */}
-      <div className="max-w-[900px] mx-auto px-4 pb-4">
+      <div className="max-w-content mx-auto px-4 pb-4">
         <button
           type="button"
           onClick={() => navigate('/help-my-plant')}
           data-testid="help-my-plant-entry"
-          className="block w-full rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-4 text-left hover:border-grove-fernLine"
+          className="block w-full rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-left hover:border-grove-fernLine"
         >
-          <p className="font-plant text-lg text-grove-cream">Something look off?</p>
+          <p className="font-plant text-base font-semibold text-grove-cream">Something look off?</p>
           <p className="mt-0.5 font-ui text-sm text-grove-sage">Yellow leaves, drooping, bugs. Get quick checks to try first.</p>
         </button>
       </div>
 
-      <section aria-labelledby="pip-heading" className="max-w-[900px] mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
-        <h2 id="pip-heading" className="font-plant text-xl text-grove-cream pt-2">From Pip</h2>
-        <div className="divide-y divide-grove-fernLine/30 rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
+      <section aria-labelledby="pip-heading" className="max-w-content mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
+        <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
+        <div className="divide-y-hairline divide-grove-fernLine/30 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <DailyMissionCard embedded />
           <NextLessonCard embedded />
           <DailyTriviaCard embedded />
@@ -375,18 +427,33 @@ export default function CarePage() {
         </div>
       </section>
 
+      <AlertDialog open={confirmWaterAll} onOpenChange={setConfirmWaterAll}>
+        <AlertDialogContent data-testid="water-all-dialog" onCloseAutoFocus={(e) => { e.preventDefault(); waterAllRef.current?.focus(); }}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Water {filteredPlants.length === 1 ? 'this plant' : `all ${filteredPlants.length} plants`}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This logs a watering for {filteredPlants.length === 1 ? 'the plant' : 'every plant'} on the list you are looking at, including ones you have not checked. You can undo it right after.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction data-testid="water-all-confirm" onClick={(e) => handleWaterAll(e)}>Water all</AlertDialogAction>
+            <AlertDialogCancel data-testid="water-all-cancel">Not yet</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Sticky in-progress session bar (above bottom nav) */}
       {sessionActive && (
         <div
           data-testid="care-session-bar"
-          className="fixed left-0 right-0 bottom-[calc(84px+env(safe-area-inset-bottom))] z-40 mx-auto max-w-[600px] px-3"
+          className="fixed left-0 right-0 bottom-nav z-nav mx-auto max-w-column px-3"
         >
-          <div className="rounded-[14px] border-[0.5px] border-grove-fernLine bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
+          <div className="rounded-small border-hairline border-grove-fernLine bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
               <Sparkles className="h-4 w-4 text-grove-sprout" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-plant text-xs text-grove-sprout">Watering session in progress</p>
+              <p className="font-ui text-xs font-medium text-grove-sprout">Watering session in progress</p>
               <p className="font-ui text-sm truncate">
                 {sessionCount} {sessionCount === 1 ? 'plant' : 'plants'} tended so far. Keep going.
               </p>
@@ -395,7 +462,7 @@ export default function CarePage() {
               onClick={() => setSessionCount(0)}
               aria-label="End session"
               data-testid="care-session-end"
-              className="w-8 h-8 rounded-full border-[0.5px] border-grove-lime/40 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
+              className="w-8 h-8 rounded-full border-hairline border-grove-lime/40 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
             >
               <X className="h-4 w-4" />
             </button>
@@ -404,13 +471,13 @@ export default function CarePage() {
       )}
 
       {lastRound && (
-        <div className={`fixed left-0 right-0 z-50 mx-auto max-w-[600px] px-3 ${sessionActive ? 'bottom-[calc(156px+env(safe-area-inset-bottom))]' : 'bottom-[calc(84px+env(safe-area-inset-bottom))]'}`}>
+        <div className={`fixed left-0 right-0 z-nav mx-auto max-w-column px-3 ${sessionActive ? 'bottom-nav-stack' : 'bottom-nav'}`}>
           <UndoSnackbar
             message={`Watered ${lastRound.count} ${lastRound.count === 1 ? 'plant' : 'plants'}`}
             onUndo={handleUndoRound}
             onDismiss={dismissUndo}
             busy={undoing}
-            autoFocus
+            focusOnShow
           />
         </div>
       )}
@@ -460,7 +527,7 @@ function NamedPlantEmptyState({ plants }) {
   return (
     <div
       data-testid="care-empty-named"
-      className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-6 text-center max-w-md mx-auto"
+      className="rounded-small border-hairline border-grove-moss bg-grove-canopy p-5 text-center max-w-md mx-auto"
     >
       <div className="w-12 h-12 mx-auto rounded-full bg-grove-moss flex items-center justify-center mb-3">
         <Sparkles className="h-5 w-5 text-grove-sprout" />
@@ -500,14 +567,14 @@ function ScheduleReviewBanner() {
 
   return (
     <div
-      className="mt-3 rounded-[12px] border-[0.5px] border-grove-moss bg-grove-sun/15 p-3 flex items-start gap-3"
+      className="mt-3 rounded-control border-hairline border-grove-moss bg-grove-sun/15 p-3 flex items-start gap-3"
       data-testid="schedule-review-banner"
     >
-      <span className="w-8 h-8 rounded-full bg-[#BA7517]/20 flex items-center justify-center flex-shrink-0">
+      <span className="w-8 h-8 rounded-full bg-grove-sun/20 flex items-center justify-center flex-shrink-0">
         <Sparkles className="h-4 w-4 text-grove-sun" />
       </span>
       <div className="flex-1 min-w-0">
-        <p className="font-plant text-sm text-grove-cream leading-tight">
+        <p className="font-ui text-sm font-medium text-grove-cream leading-tight">
           Time to review your AI schedule
         </p>
         <p className="font-ui text-xs text-grove-sage mt-0.5 leading-snug">
@@ -519,7 +586,7 @@ function ScheduleReviewBanner() {
         type="button"
         onClick={() => navigate(`/plants/${first.plant_id}`)}
         data-testid="schedule-review-cta"
-        className="flex-shrink-0 rounded-[12px] font-ui text-xs px-3 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
+        className={cn(buttonVariants(), "flex-shrink-0")}
       >
         Review
       </button>

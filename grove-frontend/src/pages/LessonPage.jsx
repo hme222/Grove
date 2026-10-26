@@ -1,3 +1,4 @@
+import NotFoundPage from '../pages/NotFoundPage';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { lessonAPI } from '../lib/api';
@@ -32,16 +33,7 @@ export default function LessonPage() {
   }, []);
 
   if (!cards || !LESSON_META[lessonId]) {
-    return (
-      <div className="min-h-screen bg-grove-forest flex items-center justify-center px-4">
-        <div className="text-center">
-          <p className="font-plant text-grove-cream text-xl mb-2">That lesson isn&apos;t here</p>
-          <button type="button" onClick={() => navigate('/lessons')} className="text-sm underline text-grove-sprout">
-            Back to lessons
-          </button>
-        </div>
-      </div>
-    );
+    return <NotFoundPage title="Lesson not found" heading="That lesson isn't here" message="It may have been renamed or removed." to="/lessons" toLabel="Back to lessons" />;
   }
 
   const finish = async () => {
@@ -67,7 +59,7 @@ export default function LessonPage() {
         <MarkDoneStep onDone={finish} onNotYet={() => navigate('/lessons')} />
       )}
       {error && (
-        <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="lesson-error">
+        <p role="alert" className="mt-2 text-xs font-ui text-destructive" data-testid="lesson-error">
           {error}
         </p>
       )}

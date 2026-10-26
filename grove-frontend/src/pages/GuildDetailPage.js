@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { tint, guildAccent } from '../lib/color';
+import Loading from '../components/Loading';
+import ToxicityBadge from '../components/ToxicityBadge';
+import NotFoundPage from './NotFoundPage';
+import { guildIcon } from '../lib/guildIcon';
+import React, { useState, useEffect, useCallback } from 'react';
+import { LoadErrorPage } from '../components/LoadError';
+import { PageHeader } from '../components/PageHeader';
+import { useParams } from 'react-router-dom';
+import AppLink from '../components/AppLink';
 import { guildAPI } from '../lib/api';
-import { ChevronLeft, Leaf, Droplets, Sun, Layers } from 'lucide-react';
-import { toast } from 'sonner';
+import { Leaf, Droplets, Sun } from 'lucide-react';
 
 const LIGHT_LABEL = {
   low: 'Low',
@@ -13,74 +20,60 @@ const LIGHT_LABEL = {
 
 export default function GuildDetailPage() {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const [guild, setGuild] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const res = await guildAPI.get(slug);
-        setGuild(res.data);
-      } catch (_e) {
-        toast.error('Guild not found');
-        navigate('/greenhouse');
-      } finally {
-        setLoading(false);
+  const run = useCallback(async () => {
+    setLoadError(false);
+    try {
+      const res = await guildAPI.get(slug);
+      setGuild(res.data);
+    } catch (e) {
+      if (e?.response?.status === 404) {
+        setNotFound(true);
+      } else {
+        setLoadError(true);
       }
-    };
-    run();
-  }, [slug, navigate]);
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => { run(); }, [run]);
+
+  if (notFound) return <NotFoundPage title="Guild not found" heading="We can't find that guild" message="It may have been renamed or removed." to="/greenhouse" toLabel="Back to Learn" />;
+  if (loadError) {
+    return <LoadErrorPage title="Guild" what="this guild" back={{ to: '/greenhouse', where: 'Learn' }} onRetry={run} />;
+  }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
-        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-      </div>
+      <Loading label="Loading this guild" className="min-h-screen bg-grove-forest" />
     );
   }
   if (!guild) return null;
-  const accent = guild.accent_color || '#3B6D11';
+  const accent = guildAccent(guild);
   const paragraphs = (guild.description || '').split('\n\n').filter(Boolean);
 
   return (
     <div className="min-h-screen bg-grove-forest pb-6" data-testid="guild-detail">
-      <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss px-4 py-3">
-        <div className="flex items-center gap-3 max-w-[1100px] mx-auto">
-          <button
-            onClick={() => navigate('/greenhouse')}
-            className="text-grove-cream hover:text-grove-sprout transition-colors"
-            data-testid="guild-back-button"
-            aria-label="Back to Learn"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <h1 className="font-plant text-xl text-grove-cream">Guild</h1>
-        </div>
-      </div>
+      <PageHeader title={guild.name} back={{ to: '/greenhouse', where: 'Learn', testId: 'guild-back-button' }} />
 
-      <div className="max-w-[1100px] mx-auto px-4 pt-6 space-y-4">
+      <div className="max-w-page mx-auto px-4 pt-6 space-y-4">
         {/* Hero */}
         <div
-          className="rounded-[14px] border-[0.5px] p-5 relative overflow-hidden"
-          style={{
-            backgroundColor: `${accent}10`,
-            borderColor: `${accent}40`,
-          }}
+          className="rounded-card border-hairline bg-grove-canopy p-5 relative overflow-hidden"
+          style={{ borderColor: tint(accent, 25) }}
         >
           <div
-            className="w-12 h-12 rounded-[12px] flex items-center justify-center mb-3"
-            style={{ backgroundColor: `${accent}25` }}
+            className="w-12 h-12 rounded-control flex items-center justify-center mb-3"
+            style={{ backgroundColor: tint(accent, 15) }}
           >
-            <Layers className="h-6 w-6" style={{ color: accent }} />
+            <GuildGlyph guild={guild} className="h-6 w-6" style={{ color: accent }} />
           </div>
-          <h2
-            className="font-plant text-2xl leading-tight mb-1"
-            style={{ color: '#1C2E10' }}
-            data-testid="guild-name"
-          >
-            {guild.name}
-          </h2>
+          <p className="sr-only" data-testid="guild-name">{guild.name}</p>
           {guild.subtitle && (
             <p className="font-latin italic text-sm text-grove-cream">{guild.subtitle}</p>
           )}
@@ -89,7 +82,7 @@ export default function GuildDetailPage() {
               {guild.tags.map((t) => (
                 <span
                   key={t}
-                  className="px-2 py-0.5 rounded-[20px] bg-grove-canopy border-[0.5px] border-grove-moss text-xs font-ui text-grove-sage"
+                  className="inline-flex items-center px-2.5 py-1 rounded-round bg-grove-canopy border-hairline border-grove-moss text-xs font-ui text-grove-sage min-h-6"
                 >
                   {t}
                 </span>
@@ -99,7 +92,7 @@ export default function GuildDetailPage() {
         </div>
 
         {/* Description */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5" data-testid="guild-description">
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="guild-description">
           {paragraphs.map((p, i) => (
             <p key={i} className={`font-ui text-sm leading-relaxed text-grove-cream ${i > 0 ? 'mt-3' : ''}`}>
               {p}
@@ -110,35 +103,35 @@ export default function GuildDetailPage() {
         {/* Design notes */}
         {guild.design_notes && (
           <div
-            className="rounded-[14px] border-[0.5px] p-4"
-            style={{ borderColor: `${accent}40`, backgroundColor: `${accent}08` }}
+            className="rounded-card border-hairline bg-grove-canopy p-5"
+            style={{ borderColor: tint(accent, 25) }}
             data-testid="guild-design-notes"
           >
-            <p className="font-plant text-xs text-grove-cream mb-1.5">
+            <h2 className="font-plant text-xl font-semibold  text-grove-cream mb-1.5">
               Design notes
-            </p>
+            </h2>
             <p className="font-ui text-xs leading-relaxed text-grove-cream">{guild.design_notes}</p>
           </div>
         )}
 
         {/* Species */}
         <div data-testid="guild-species-list">
-          <h3 className="font-plant text-grove-cream text-sm mb-2">
+          <h2 className="font-plant text-grove-cream text-xl font-semibold  mb-2">
             The {guild.species.length} species in this guild
-          </h3>
+          </h2>
           <ul className="space-y-2">
             {guild.species.map((s) => (
               <li key={s.id}>
-                <button
-                  type="button"
-                  onClick={() => navigate(`/greenhouse/${s.id}`)}
+                <AppLink
+                  to={`/greenhouse/${s.id}`}
                   data-testid={`guild-species-${s.slug}`}
-                  className="w-full text-left rounded-[12px] border-[0.5px] border-grove-moss bg-grove-canopy p-3 hover:border-grove-fernLine transition-colors duration-150"
+                  className="block w-full text-left rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
                   <div className="flex items-baseline justify-between gap-2 mb-1">
                     <span className="font-plant text-base text-grove-cream">{s.common_name}</span>
                     <span className="font-latin italic text-xs text-grove-cream">{s.latin_name}</span>
                   </div>
+                  {s.toxicity && <ToxicityBadge toxicity={s.toxicity} size="sm" className="mb-1.5" />}
                   <div className="flex flex-wrap gap-3 mt-1.5 text-xs font-ui text-grove-sage">
                     <span className="inline-flex items-center gap-1">
                       <Sun className="h-3 w-3" /> {LIGHT_LABEL[s.default_light_level] || s.default_light_level || '—'}
@@ -152,7 +145,7 @@ export default function GuildDetailPage() {
                       </span>
                     )}
                   </div>
-                </button>
+                </AppLink>
               </li>
             ))}
           </ul>
@@ -160,4 +153,9 @@ export default function GuildDetailPage() {
       </div>
     </div>
   );
+}
+
+function GuildGlyph({ guild, ...props }) {
+  const Icon = guildIcon(guild);
+  return <Icon aria-hidden="true" {...props} />;
 }

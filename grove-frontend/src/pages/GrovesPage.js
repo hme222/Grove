@@ -1,16 +1,21 @@
+import LoadError from '../components/LoadError';
+import { LoadingList } from '../components/Loading';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
+
+import { AppLink } from '../components/AppLink';
 import { groveAPI } from '../lib/api';
-import { PageHeader, EmptyState } from '../components/PageHeader';
+import { PageHeader, HeaderAction, EmptyState } from '../components/PageHeader';
 import { toast } from 'sonner';
 import { Plus, Users, ChevronRight, Globe, Lock } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function GrovesPage() {
-  const navigate = useNavigate();
   const [myGroves, setMyGroves] = useState([]);
   const [discoverGroves, setDiscoverGroves] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [newGrove, setNewGrove] = useState({ name: '', description: '', is_private: false });
   const [creating, setCreating] = useState(false);
@@ -23,8 +28,9 @@ export default function GrovesPage() {
       ]);
       setMyGroves(myRes.data);
       setDiscoverGroves(discoverRes.data);
+      setLoadError(false);
     } catch (e) {
-      toast.error('Failed to load groves');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -37,7 +43,7 @@ export default function GrovesPage() {
     setCreating(true);
     try {
       await groveAPI.create(newGrove);
-      toast.success(`${newGrove.name} created!`);
+      toast.success(`${newGrove.name} created`);
       setShowCreate(false);
       setNewGrove({ name: '', description: '', is_private: false });
       fetchGroves();
@@ -51,40 +57,42 @@ export default function GrovesPage() {
   const handleJoin = async (groveId) => {
     try {
       await groveAPI.join(groveId);
-      toast.success('Joined grove!');
+      toast.success('Joined grove');
       fetchGroves();
     } catch (e) {
       toast.error(e.response?.data?.detail || 'Failed to join');
     }
   };
 
+  // Try again keeps the error card up (it says "Trying again…") until the request settles, so a retry
+  // can never flash an empty list or a zero.
+  const retryLoad = async () => {
+    await fetchGroves();
+    document.getElementById('main-content')?.focus();
+  };
+
   return (
     <div>
-      <PageHeader
+      <PageHeader back
         title="Groves"
-        count={myGroves.length}
-        rightContent={
-          <button
-            onClick={() => setShowCreate(true)}
-            data-testid="create-grove-button"
-            aria-label="Create a grove"
-            className="rounded-full w-11 h-11 bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout transition-colors duration-150"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
-        }
+        count={loadError || loading ? undefined : myGroves.length}
       />
 
-      <div className="max-w-[600px] mx-auto px-4 py-4 space-y-6">
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-lime border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-column mx-auto px-4 py-4 space-y-6">
+        {!loadError && (
+          <div className="flex items-center justify-end">
+            <HeaderAction icon={Plus} onClick={() => setShowCreate(true)} data-testid="create-grove-button">
+              Create grove
+            </HeaderAction>
           </div>
+        )}
+        {loadError && !loading ? (<LoadError what="groves" onRetry={retryLoad} />) : loading ? (
+          <LoadingList label="Loading groves" />
         ) : (
           <>
             {/* My Groves */}
             <div>
-              <h2 className="font-plant text-grove-cream text-base mb-3">My Groves</h2>
+              <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">My groves</h2>
               {myGroves.length === 0 ? (
                 <EmptyState
                   title="No groves yet"
@@ -93,18 +101,18 @@ export default function GrovesPage() {
               ) : (
                 <div className="space-y-2">
                   {myGroves.map(grove => (
-                    <button
+                    <AppLink
                       key={grove.id}
-                      onClick={() => navigate(`/groves/${grove.id}`)}
+                      to={`/groves/${grove.id}`}
                       data-testid="grove-card"
-                      className="w-full flex items-center gap-3 rounded-[14px] border-[0.5px] border-grove-lime/30 bg-grove-moss px-4 py-3 text-left hover:border-grove-lime transition-colors duration-150"
+                      className="w-full flex items-center gap-3 rounded-small border-hairline border-grove-lime/30 bg-grove-moss px-4 py-3 text-left hover:border-grove-lime transition-colors duration-150"
                     >
-                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 border-[0.5px] border-grove-lime/30">
+                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 border-hairline border-grove-lime/30">
                         <Users className="h-5 w-5 text-grove-sprout" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
+                          <p className="font-ui text-grove-cream text-sm font-medium truncate">{grove.name}</p>
                           {grove.is_private && <Lock className="h-3 w-3 text-grove-sage" />}
                         </div>
                         <p className="font-ui text-xs text-grove-cream">
@@ -113,7 +121,7 @@ export default function GrovesPage() {
                         </p>
                       </div>
                       <ChevronRight className="h-4 w-4 text-grove-sage flex-shrink-0" />
-                    </button>
+                    </AppLink>
                   ))}
                 </div>
               )}
@@ -122,18 +130,18 @@ export default function GrovesPage() {
             {/* Discover */}
             {discoverGroves.length > 0 && (
               <div>
-                <h2 className="font-plant text-grove-cream text-base mb-3">Discover Groves</h2>
+                <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">Discover groves</h2>
                 <div className="space-y-2">
                   {discoverGroves.map(grove => (
                     <div
                       key={grove.id}
-                      className="flex items-center gap-3 rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss px-4 py-3"
+                      className="flex items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-moss px-4 py-3"
                     >
                       <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
                         <Globe className="h-5 w-5 text-grove-sprout" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-plant text-grove-cream text-sm truncate">{grove.name}</p>
+                        <p className="font-ui text-grove-cream text-sm font-medium truncate">{grove.name}</p>
                         <p className="font-ui text-xs text-grove-cream">{grove.member_count} {grove.member_count === 1 ? 'member' : 'members'}</p>
                         {grove.description && (
                           <p className="font-ui text-xs text-grove-sage truncate mt-0.5">{grove.description}</p>
@@ -142,7 +150,7 @@ export default function GrovesPage() {
                       <button
                         onClick={() => handleJoin(grove.id)}
                         data-testid="grove-join-button"
-                        className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-lime hover:bg-grove-sprout flex-shrink-0"
+                        className={cn(buttonVariants(), "flex-shrink-0")}
                       >
                         Join
                       </button>
@@ -157,28 +165,28 @@ export default function GrovesPage() {
 
       {/* Create Grove Dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="bg-grove-moss border-[0.5px] border-grove-moss rounded-[14px] max-w-md">
+        <DialogContent className="bg-grove-moss border-hairline border-grove-moss rounded-small max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-plant text-grove-cream text-lg">Create a Grove</DialogTitle>
+            <DialogTitle className="font-plant text-grove-cream text-lg">Create a grove</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Name</label>
-              <input aria-label="Name"
+              <label htmlFor="groves-name" className="font-ui text-xs text-grove-cream block mb-1.5">Name</label>
+              <input id="groves-name" aria-label="Name"
                 type="text"
                 value={newGrove.name}
                 onChange={(e) => setNewGrove(prev => ({...prev, name: e.target.value}))}
                 data-testid="grove-name-input"
-                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                 placeholder="e.g., Portland Plant People"
               />
             </div>
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Description</label>
-              <textarea aria-label="Description"
+              <label htmlFor="groves-description" className="font-ui text-xs text-grove-cream block mb-1.5">Description</label>
+              <textarea id="groves-description" aria-label="Description"
                 value={newGrove.description}
                 onChange={(e) => setNewGrove(prev => ({...prev, description: e.target.value}))}
-                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
+                className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
                 placeholder="What's your grove about?"
               />
             </div>
@@ -195,9 +203,9 @@ export default function GrovesPage() {
               onClick={handleCreate}
               disabled={creating || !newGrove.name.trim()}
               data-testid="grove-create-submit"
-              className="w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-lime hover:bg-grove-sprout disabled:opacity-50"
+              className={cn(buttonVariants(), "w-full disabled:opacity-50")}
             >
-              {creating ? 'Creating...' : 'Create Grove'}
+              {creating ? 'Creating…' : 'Create grove'}
             </button>
           </div>
         </DialogContent>

@@ -1,11 +1,17 @@
+import { LoadErrorPage } from '../components/LoadError';
+import Loading from '../components/Loading';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { buttonVariants } from '../components/ui/button';
+import BackButton from '../components/BackButton';
 import { useParams, useNavigate } from 'react-router-dom';
-import { swapsAPI, getFileUrl } from '../lib/api';
+import { swapsAPI } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { PageHeader } from '../components/PageHeader';
-import { Send, Leaf, CheckCircle2, XCircle, ChevronLeft, AlertCircle } from 'lucide-react';
+import { Send, Leaf, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 import VerifiedProBadge from '../components/VerifiedProBadge';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { toast } from 'sonner';
+import { cn } from '../lib/utils';
 
 const POLL_INTERVAL_MS = 5000;
 
@@ -17,19 +23,26 @@ export default function SwapChatPage() {
   const [otherUser, setOtherUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [body, setBody] = useState('');
   const [sending, setSending] = useState(false);
+  const [pending, setPending] = useState(null); // true while the cancel-swap question is open
   const endRef = useRef(null);
   const scrollerRef = useRef(null);
 
   const loadSwap = useCallback(async () => {
     try {
+      setLoadError(false);
+      setNotFound(false);
       const res = await swapsAPI.getSwap(swapId);
       setSwap(res.data.swap);
       setOtherUser(res.data.other_user);
       setMessages(res.data.messages || []);
     } catch (e) {
-      toast.error('Could not load swap');
+      // A swap that is gone is not a network problem: say so, instead of offering a retry that cannot work.
+      if (e?.response?.status === 404) setNotFound(true);
+      else setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -96,8 +109,9 @@ export default function SwapChatPage() {
     }
   };
 
-  const handleCancel = async () => {
-    if (!window.confirm('Cancel this swap? The other grower will be notified.')) return;
+  const handleCancel = () => setPending(true);
+
+  const performCancel = async () => {
     try {
       await swapsAPI.cancel(swapId);
       toast('Swap cancelled');
@@ -107,24 +121,33 @@ export default function SwapChatPage() {
     }
   };
 
+  if (loadError) {
+    return <LoadErrorPage back title="Swap" onRetry={loadSwap} />;
+  }
   if (loading) {
     return (
       <div>
-        <PageHeader title="Swap" />
-        <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-        </div>
+        <PageHeader back title="Swap" />
+        <Loading label="Loading the chat" />
       </div>
     );
   }
 
-  if (!swap) {
+  if (notFound || !swap) {
     return (
       <div>
-        <PageHeader title="Swap" />
-        <div className="text-center py-16">
-          <AlertCircle className="h-8 w-8 text-grove-sun mx-auto mb-3" />
-          <p className="font-plant text-grove-cream">Swap not found</p>
+        <PageHeader back title="Swap" />
+        <div className="mx-auto max-w-form px-4 py-16 text-center" data-testid="swap-not-found">
+          <AlertCircle className="mx-auto mb-3 h-8 w-8 text-grove-sun" aria-hidden="true" />
+          <h2 className="font-plant text-xl text-grove-cream">That swap isn&rsquo;t here</h2>
+          <p className="mt-2 font-ui text-sm text-grove-sage">It may have been cancelled or the link may be old.</p>
+          <button
+            type="button"
+            onClick={() => navigate('/swaps')}
+            className={cn(buttonVariants(), "mt-5")}
+          >
+            Back to swaps
+          </button>
         </div>
       </div>
     );
@@ -135,20 +158,14 @@ export default function SwapChatPage() {
   const myConfirmed = swap.user_a === user?.id ? swap.confirmed_a : swap.confirmed_b;
 
   return (
-    <div className="flex flex-col" style={{ height: 'calc(100vh - 84px)' }}>
+    <div className="flex flex-col" style={{ height: 'calc(100dvh - var(--nav-height) - env(safe-area-inset-bottom))' }}>
       {/* Header */}
-      <div className="flex-shrink-0 border-b-[0.5px] border-grove-moss bg-grove-canopy px-4 py-3">
+      <div className="flex-shrink-0 border-b-hairline border-grove-moss bg-grove-canopy px-4 py-3">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/swaps/matches')}
-            className="flex-shrink-0 p-1 rounded-[6px] hover:bg-grove-moss"
-            aria-label="Back to matches"
-          >
-            <ChevronLeft className="h-5 w-5 text-grove-cream" />
-          </button>
+          <BackButton to="/swaps/matches" where="matches" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="font-plant text-grove-cream text-sm truncate">
+              <p className="font-ui text-grove-cream text-sm font-medium truncate">
                 @{otherUser?.username || 'grower'}
               </p>
               {otherUser && (
@@ -173,7 +190,7 @@ export default function SwapChatPage() {
       >
         {/* Match announcement */}
         <div className="flex justify-center my-2">
-          <span className="inline-flex items-center gap-1.5 rounded-[20px] bg-grove-moss border-[0.5px] border-grove-fernLine px-3 py-1.5 font-plant text-xs text-grove-sprout">
+          <span className="inline-flex items-center gap-1.5 rounded-round bg-grove-moss border-hairline border-grove-fernLine px-2.5 py-1.5 font-ui text-xs font-medium text-grove-sprout min-h-6">
             <Leaf className="h-3 w-3" /> You matched — introduce yourself
           </span>
         </div>
@@ -190,21 +207,21 @@ export default function SwapChatPage() {
                   isOwn ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout'
                 }`}
               >
-                <span className="font-plant text-xs">
+                <span className="font-ui text-xs font-medium">
                   {isOwn
                     ? (user?.display_name?.[0] || 'Y').toUpperCase()
                     : (otherUser?.display_name?.[0] || 'G').toUpperCase()}
                 </span>
               </div>
-              <div className={`max-w-[78%] flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
+              <div className={`max-w-4/5 flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
                 <div
-                  className={`rounded-[12px] px-3 py-2 ${
+                  className={`rounded-control px-3 py-2 ${
                     isOwn
-                      ? 'bg-grove-lime text-grove-root rounded-tr-[2px]'
-                      : 'bg-grove-canopy border-[0.5px] border-grove-moss text-grove-cream rounded-tl-[2px]'
+                      ? 'bg-grove-lime text-grove-root rounded-tr-hairline'
+                      : 'bg-grove-canopy border-hairline border-grove-moss text-grove-cream rounded-tl-hairline'
                   }`}
                 >
-                  <p className="font-ui text-[0.8125rem] leading-snug whitespace-pre-wrap break-words">
+                  <p className="font-ui text-xs leading-snug whitespace-pre-wrap break-words">
                     {msg.body}
                   </p>
                 </div>
@@ -220,15 +237,15 @@ export default function SwapChatPage() {
 
       {/* Completed/Cancelled banner */}
       {isCompleted && (
-        <div className="flex-shrink-0 bg-grove-moss border-t-[0.5px] border-grove-fernLine px-4 py-3 text-center">
-          <p className="font-plant text-sm text-grove-sprout flex items-center justify-center gap-1.5">
+        <div className="flex-shrink-0 bg-grove-moss border-t-hairline border-grove-fernLine px-4 py-3 text-center">
+          <p className="font-ui text-sm font-medium text-grove-sprout flex items-center justify-center gap-1.5">
             <CheckCircle2 className="h-4 w-4" /> Swap completed — happy growing!
           </p>
         </div>
       )}
       {isCancelled && (
-        <div className="flex-shrink-0 bg-grove-sun/15 border-t-[0.5px] border-grove-moss px-4 py-3 text-center">
-          <p className="font-plant text-sm text-grove-sun flex items-center justify-center gap-1.5">
+        <div className="flex-shrink-0 bg-grove-sun/15 border-t-hairline border-grove-moss px-4 py-3 text-center">
+          <p className="font-ui text-sm font-medium text-grove-sun flex items-center justify-center gap-1.5">
             <XCircle className="h-4 w-4" /> This swap was cancelled
           </p>
         </div>
@@ -236,17 +253,17 @@ export default function SwapChatPage() {
 
       {/* Actions bar */}
       {!isCompleted && !isCancelled && (
-        <div className="flex-shrink-0 border-t-[0.5px] border-grove-moss bg-grove-canopy">
+        <div className="flex-shrink-0 border-t-hairline border-grove-moss bg-grove-canopy">
           {/* Confirm/Cancel buttons */}
-          <div className="flex items-center gap-2 px-4 py-2 border-b-[0.5px] border-grove-moss">
+          <div className="flex items-center gap-2 px-4 py-2 border-b-hairline border-grove-moss">
             {myConfirmed ? (
-              <span className="flex items-center gap-1 font-plant text-xs text-grove-sprout">
+              <span className="flex items-center gap-1 font-ui text-xs font-medium text-grove-sprout">
                 <CheckCircle2 className="h-3.5 w-3.5" /> You confirmed — waiting on them
               </span>
             ) : (
               <button
                 onClick={handleConfirm}
-                className="rounded-[12px] font-ui text-xs px-3 py-1.5 bg-grove-lime text-grove-root hover:bg-grove-sprout"
+                className={buttonVariants()}
               >
                 Confirm swap
               </button>
@@ -254,7 +271,7 @@ export default function SwapChatPage() {
             <div className="flex-1" />
             <button
               onClick={handleCancel}
-              className="rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-moss text-grove-sage hover:border-grove-moss hover:text-[#BA1818]"
+              className="rounded-control font-ui text-xs px-3 py-1.5 border-hairline border-grove-moss text-grove-sage hover:border-grove-moss hover:text-destructive"
             >
               Cancel
             </button>
@@ -273,13 +290,13 @@ export default function SwapChatPage() {
               }}
               placeholder="Message about the swap…"
               rows={1}
-              className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[0.8125rem] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
+              className="flex-1 resize-none rounded-chip border-hairline border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-xs text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
             />
             <button
               type="button"
               onClick={handleSend}
               disabled={sending || !body.trim()}
-              className="flex-shrink-0 w-9 h-9 rounded-full bg-grove-lime text-grove-root hover:bg-grove-sprout disabled:opacity-40 flex items-center justify-center"
+              className={cn(buttonVariants({ size: 'icon' }), "rounded-full flex-shrink-0")}
               aria-label="Send"
             >
               <Send className="h-4 w-4" />
@@ -287,6 +304,16 @@ export default function SwapChatPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog
+        open={pending != null}
+        onOpenChange={(o) => { if (!o) setPending(null); }}
+        title="Cancel this swap?"
+        description="The swap ends and the other grower is notified. This can't be undone."
+        confirmLabel="Cancel swap"
+        cancelLabel="Keep swap"
+        testId="swap-cancel-confirm"
+        onConfirm={() => { const t = pending; setPending(null); performCancel(t); }}
+      />
     </div>
   );
 }

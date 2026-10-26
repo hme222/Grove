@@ -1,29 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import LoadError from '../components/LoadError';
 import { Check } from 'lucide-react';
+import { buttonVariants } from '../components/ui/button';
+import { AppLink } from '../components/AppLink';
 import { PageHeader } from '../components/PageHeader';
 import { lessonAPI } from '../lib/api';
 import { LESSON_META, lessonPath } from '../lessons/lessonMeta';
 
 export default function LessonsPage() {
-  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [failed, setFailed] = useState(false);
 
-  useEffect(() => {
-    let alive = true;
+  const load = () => {
+    setFailed(false);
     lessonAPI
       .queue()
-      .then((res) => {
-        if (alive) setData(res.data);
-      })
-      .catch(() => {
-        if (alive) setFailed(true);
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
+      .then((res) => setData(res.data))
+      .catch(() => setFailed(true));
+  };
+
+  useEffect(() => { load(); }, []);
 
   const completed = new Set(data?.completed || []);
   const next = data?.queue?.[0];
@@ -31,27 +27,24 @@ export default function LessonsPage() {
 
   return (
     <div>
-      <PageHeader title="Lessons" />
-      <div className="max-w-[640px] mx-auto px-4 py-4 space-y-4">
+      <PageHeader back title="Lessons" />
+      <div className="max-w-sheet mx-auto px-4 py-4 space-y-4">
         {failed && (
-          <p role="alert" className="text-sm font-ui text-red-700">
-            Could not load your lessons. Try again in a moment.
-          </p>
+          <LoadError compact what="your lesson progress" note="The lessons themselves are fine." onRetry={load} testId="lessons-progress-failed" />
         )}
 
         {next && (
-          <section className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="lessons-up-next">
+          <section className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="lessons-up-next">
             <p className="text-xs font-ui text-grove-cream">Up next</p>
             <p className="font-plant text-grove-cream text-xl">{LESSON_META[next].title}</p>
             <p className="text-sm text-grove-cream mb-3">{LESSON_META[next].blurb}</p>
-            <button
-              type="button"
-              onClick={() => navigate(lessonPath(next))}
-              className="rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+            <AppLink
+              to={lessonPath(next)}
+              className={buttonVariants()}
               data-testid="lessons-start"
             >
               Start lesson
-            </button>
+            </AppLink>
           </section>
         )}
 
@@ -68,14 +61,14 @@ export default function LessonsPage() {
         )}
 
         <section>
-          <h2 className="font-plant text-grove-cream text-lg mb-2">All lessons</h2>
+          <h2 className="font-plant text-grove-cream text-xl font-semibold mb-2">All lessons</h2>
           <ul className="space-y-2">
             {(data?.library || Object.keys(LESSON_META)).map((id) => (
               <li key={id}>
-                <button
-                  type="button"
-                  onClick={() => navigate(lessonPath(id))}
-                  className="w-full flex items-center justify-between gap-3 rounded-[8px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-3 text-left hover:border-grove-fernLine"
+                <AppLink
+                 
+                  to={lessonPath(id)}
+                  className="w-full flex items-center justify-between gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 text-left hover:border-grove-fernLine"
                   data-testid={`lesson-row-${id}`}
                 >
                   <span>
@@ -87,7 +80,7 @@ export default function LessonsPage() {
                       <Check className="h-4 w-4" aria-hidden="true" /> Done
                     </span>
                   )}
-                </button>
+                </AppLink>
               </li>
             ))}
           </ul>

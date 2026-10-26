@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
@@ -36,7 +38,7 @@ export default function RegisterPage() {
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-grove-lime items-center justify-center">
         <div className="text-center px-12">
-          <h1 className="mb-4"><FloraGroveWordmark size={48} color="#0B0F08" leafColor="#202D14" /></h1>
+          <h1 className="mb-4"><FloraGroveWordmark size={48} color="var(--grove-night)" leafColor="var(--grove-forest)" /></h1>
           <p className="font-ui text-grove-sprout text-lg">Grow together</p>
           <p className="font-ui text-grove-sage text-sm mt-2">Know your plants. Really know them.</p>
         </div>
@@ -49,56 +51,56 @@ export default function RegisterPage() {
             <h1><FloraGroveWordmark size={30} /></h1>
           </div>
 
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
             <h2 className="font-plant text-grove-cream text-2xl mb-1">Join FloraGrove</h2>
             <p className="font-ui text-grove-cream text-sm mb-6">Start growing your collection</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="font-ui text-xs text-grove-cream block mb-1.5">Username</label>
-                <input aria-label="Username"
+                <label htmlFor="register-username" className="font-ui text-xs text-grove-cream block mb-1.5">Username</label>
+                <input id="register-username" aria-label="Username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                   data-testid="auth-register-username"
-                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                  className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   placeholder="plantlover42"
                 />
               </div>
               <div>
-                <label className="font-ui text-xs text-grove-cream block mb-1.5">Display Name</label>
-                <input aria-label="Display name"
+                <label htmlFor="register-display-name" className="font-ui text-xs text-grove-cream block mb-1.5">Display Name</label>
+                <input id="register-display-name" aria-label="Display name"
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   data-testid="auth-register-displayname"
-                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                  className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   placeholder="Jane the Grower"
                 />
               </div>
               <div>
-                <label className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
-                <input aria-label="Email"
+                <label htmlFor="register-email" className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
+                <input id="register-email" aria-label="Email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   data-testid="auth-register-email"
-                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                  className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   placeholder="you@example.com"
                 />
               </div>
               <div>
-                <label className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
-                <input aria-label="Password"
+                <label htmlFor="register-password" className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
+                <input id="register-password" aria-label="Password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
                   data-testid="auth-register-password"
-                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                  className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   placeholder="At least 6 characters"
                 />
               </div>
@@ -106,9 +108,9 @@ export default function RegisterPage() {
                 type="submit"
                 disabled={loading}
                 data-testid="auth-register-submit-button"
-                className="w-full rounded-[12px] font-ui text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+                className={cn(buttonVariants(), "w-full disabled:opacity-50 transition-colors duration-150")}
               >
-                {loading ? 'Creating account...' : 'Create Account'}
+                {loading ? 'Creating account…' : 'Create account'}
               </button>
             </form>
 

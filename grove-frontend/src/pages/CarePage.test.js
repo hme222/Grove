@@ -23,8 +23,21 @@ jest.mock('react-router-dom', () => ({ useNavigate: () => jest.fn() }), { virtua
 jest.mock('@/constants/emptyStates', () => ({ EMPTY_STATES: {} }), { virtual: true });
 jest.mock('../components/PageHeader', () => ({
   PageHeader: ({ rightContent, children }) => <header>{rightContent}{children}</header>,
+  HeaderAction: ({ children, icon: _icon, pressed: _pressed, ...p }) => <button type="button" {...p}>{children}</button>,
   FilterChips: ({ filters }) => <div data-testid="filters">{filters.map((f) => f.label).join('|')}</div>,
 }));
+jest.mock('../components/CareTabs', () => ({ CareTabs: () => null }));
+// Radix needs the `@/` alias; a plain stand-in is enough to test the confirm step.
+jest.mock('../components/ui/alert-dialog', () => {
+  const Pass = ({ children }) => <div>{children}</div>;
+  return {
+    AlertDialog: ({ open, children }) => (open ? <div>{children}</div> : null),
+    AlertDialogContent: ({ children, ...p }) => <div {...p}>{children}</div>,
+    AlertDialogHeader: Pass, AlertDialogFooter: Pass, AlertDialogTitle: Pass, AlertDialogDescription: Pass,
+    AlertDialogAction: ({ children, ...p }) => <button type="button" {...p}>{children}</button>,
+    AlertDialogCancel: ({ children, ...p }) => <button type="button" {...p}>{children}</button>,
+  };
+});
 jest.mock('../components/EmptyState', () => ({ EmptyState: () => <div data-testid="empty-state" /> }));
 jest.mock('../components/CareLogModal', () => () => null);
 jest.mock('../components/DailyMissionCard', () => () => null);
@@ -50,7 +63,7 @@ const DUE = [
 
 let container;
 let root;
-const q = (id) => container.querySelector(`[data-testid="${id}"]`);
+const q = (id) => container.querySelector(`[data-testid="${id}"]`) || document.body.querySelector(`[data-testid="${id}"]`);
 const mount = async () => {
   await act(async () => { root.render(<CarePage />); });
 };
@@ -80,9 +93,19 @@ describe('gentle wording', () => {
     expect(card.textContent).not.toMatch(/overdue|urgent/i);
   });
 
-  test('the filter says Needs a check, not Urgent', async () => {
+  test('no filter chips when there is nothing to choose between', async () => {
     await mount();
-    expect(q('filters').textContent).toBe('All due|Needs a check|Water today');
+    // With one plant, "Needs a check" would show the same list as All due, so no choice is offered at all.
+    expect(q('filters')).toBeNull();
+  });
+});
+
+describe('filter chips', () => {
+  test('with a mix of statuses each chip is a real choice', async () => {
+    const mixed = [DUE[0], { ...DUE[0], id: 'p2', status: 'needs_water', nickname: 'Fern' }];
+    careAPI.getDueToday.mockResolvedValue({ data: mixed });
+    await mount();
+    expect(q('filters').textContent).toBe('All due · 2|Needs a check · 1|Due today · 1');
   });
 });
 
@@ -118,12 +141,43 @@ describe('Simple / Detailed care tips', () => {
   });
 });
 
+describe('Water All asks first', () => {
+  test('opening it does not water anything until confirmed, and Not yet cancels', async () => {
+    await mount();
+    await act(async () => { q('water-all-button').click(); });
+    expect(q('water-all-dialog').textContent).toContain('Water all');
+    expect(waterAPI.logRound).not.toHaveBeenCalled();
+    await act(async () => { q('water-all-cancel').click(); });
+    expect(waterAPI.logRound).not.toHaveBeenCalled();
+  });
+});
+
+describe('one plant', () => {
+  test('Watered waters only that plant and offers Undo', async () => {
+    waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r9' } });
+    await mount();
+    await act(async () => { q('care-mark-done').click(); });
+    expect(waterAPI.logRound).toHaveBeenCalledWith([DUE[0].id]);
+    expect(q('undo-snackbar').textContent).toContain('Watered 1 plant');
+  });
+
+  test('a failed save says so and keeps the card', async () => {
+    waterAPI.logRound.mockRejectedValue(new Error('network'));
+    await mount();
+    await act(async () => { q('care-mark-done').click(); });
+    expect(toast.error).toHaveBeenCalled();
+    expect(q('care-card')).not.toBeNull();
+    expect(q('undo-snackbar')).toBeNull();
+  });
+});
+
 describe('Undo on Water All', () => {
   test('after Water All, Undo reverts the round', async () => {
     waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r1', first_care_pending: false } });
     waterAPI.undoRound.mockResolvedValue({ data: { undone: 1 } });
     await mount();
     await act(async () => { q('water-all-button').click(); });
+    await act(async () => { q('water-all-confirm').click(); });
     expect(q('undo-snackbar').textContent).toContain('Watered 1 plant');
     expect(document.activeElement).toBe(q('undo-snackbar-undo'));
     await act(async () => { q('undo-snackbar-undo').click(); });
@@ -137,6 +191,7 @@ describe('Undo on Water All', () => {
     waterAPI.undoRound.mockRejectedValue({ response: { data: { detail: 'Too late to undo that round.' } } });
     await mount();
     await act(async () => { q('water-all-button').click(); });
+    await act(async () => { q('water-all-confirm').click(); });
     await act(async () => { q('undo-snackbar-undo').click(); });
     expect(toast.error).toHaveBeenCalledWith('Too late to undo that round.');
     expect(q('undo-snackbar')).toBeNull();

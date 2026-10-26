@@ -89,8 +89,8 @@ describe('LessonPage', () => {
     mockParams = { lessonId: 'not-a-lesson' };
     await mount(<LessonPage />);
     expect(container.textContent).toContain("That lesson isn't here");
-    await click(container.querySelector('button'));
-    expect(mockNavigate).toHaveBeenCalledWith('/lessons');
+    await click(container.querySelector('[data-testid="not-found-home"]'));
+    expect(mockNavigate).toHaveBeenCalledWith('/lessons', { replace: true });
   });
 
   test('a lesson without a soil test ends in mark done, which saves and returns to the list', async () => {
@@ -212,7 +212,7 @@ describe('LessonsPage', () => {
   test('if lessons cannot be loaded it says so and still lists the five lessons', async () => {
     lessonAPI.queue.mockRejectedValue(new Error('network'));
     await mount(<LessonsPage />);
-    expect(container.querySelector('[role="alert"]').textContent).toContain('Could not load your lessons');
+    expect(container.querySelector('[role="alert"]').textContent).toContain('lesson progress');
     expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(5);
   });
 });

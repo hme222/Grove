@@ -1,8 +1,10 @@
+import LoadError from '../components/LoadError';
+import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { bouquetAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import { Plus, Flower2, Calendar, Lock } from 'lucide-react';
@@ -13,10 +15,12 @@ export default function BouquetsPage() {
   const [bouquets, setBouquets] = useState([]);
   const [limits, setLimits] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
       try {
+        setLoadError(false);
         const [listRes, limitRes] = await Promise.all([
           bouquetAPI.getAll(),
           bouquetAPI.getLimits().catch(() => ({ data: null })),
@@ -24,7 +28,7 @@ export default function BouquetsPage() {
         setBouquets(listRes.data);
         setLimits(limitRes.data);
       } catch (e) {
-        toast.error('Failed to load bouquets');
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -53,67 +57,55 @@ export default function BouquetsPage() {
     <div>
       <PageHeader
         title="Bouquets"
-        count={bouquets.length}
-        rightContent={
-          <button
-            onClick={handleAddClick}
-            data-testid="add-bouquet-button"
-            aria-label={atLimit ? 'Bouquet limit reached' : 'Add bouquet'}
-            disabled={atLimit}
-            className={`rounded-full w-9 h-9 flex items-center justify-center transition-colors duration-150 ${
-              atLimit
-                ? 'bg-grove-moss text-grove-root cursor-not-allowed'
-                : 'bg-grove-bloom text-grove-root hover:bg-grove-sprout'
-            }`}
-          >
-            {atLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          </button>
-        }
+        back
+        count={loadError || loading ? undefined : bouquets.length}
       />
 
-      <div className="max-w-[1100px] mx-auto px-4 py-4">
+      <div className="max-w-page mx-auto px-4 py-4">
+        {!loadError && (
+          <div className="mb-3 flex items-center justify-end gap-2" data-testid="bouquets-toolbar">
+            <HeaderAction
+              icon={atLimit ? Lock : Plus}
+              onClick={handleAddClick}
+              data-testid="add-bouquet-button"
+              disabled={atLimit}
+            >
+              {atLimit ? 'Limit reached' : 'Add bouquet'}
+            </HeaderAction>
+          </div>
+        )}
         {/* Free-tier limit banner / counter */}
         {isFree && limits && (
           <div
             data-testid="bouquet-limit-banner"
-            className={`mb-4 rounded-[14px] border-[0.5px] px-4 py-3 flex items-center justify-between ${
-              atLimit
-                ? 'border-grove-bloom/40 bg-grove-bloom/15'
-                : 'border-grove-moss bg-grove-moss'
-            }`}
+            className="mb-4 flex items-center justify-between gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3"
           >
             <div className="flex items-center gap-2.5">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${atLimit ? 'bg-grove-bloom/15' : 'bg-grove-forest'}`}>
-                <Flower2 className={`h-4 w-4 ${atLimit ? 'text-grove-blush' : 'text-grove-sprout'}`} />
+              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-grove-forest">
+                <Flower2 className={`h-4 w-4 ${atLimit ? 'text-grove-bloom' : 'text-grove-sprout'}`} />
               </div>
               <div>
-                <p className="font-plant text-grove-cream text-sm">
+                <p className="font-ui text-grove-cream text-sm font-medium">
                   {limits.active_count}/{limits.max_active} active bouquets
                 </p>
                 <p className="font-ui text-xs text-grove-cream leading-snug">
                   {atLimit
-                    ? 'Free tier is full. Archive one to add another, or upgrade for unlimited arrangements.'
-                    : 'Bouquet tracking is free — keep up to 2 active at a time.'}
+                    ? 'The free tier is full. Archive one to add another, or upgrade for unlimited bouquets.'
+                    : 'Bouquet tracking is free. Keep up to 2 active at a time.'}
                 </p>
               </div>
             </div>
             <span
               data-testid="bouquet-limit-counter"
-              className={`font-plant text-xs px-2 py-1 rounded-[4px] border-[0.5px] ${
-                atLimit
-                  ? 'border-grove-bloom/40 text-grove-blush bg-grove-root'
-                  : 'border-grove-moss text-grove-sprout bg-grove-forest'
-              }`}
+              className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 font-ui text-xs text-grove-cream min-h-6"
             >
               {atLimit ? 'Full' : 'Free'}
             </span>
           </div>
         )}
 
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-bloom border-t-transparent rounded-full animate-spin" />
-          </div>
+        {loadError && !loading ? (<LoadError what="bouquets" onRetry={() => window.location.reload()} />) : loading ? (
+          <Loading label="Loading your bouquets" />
         ) : bouquets.length === 0 ? (
           <EmptyState config={EMPTY_STATES.bouquet_none} />
         ) : (
@@ -123,28 +115,28 @@ export default function BouquetsPage() {
                 key={b.id}
                 onClick={() => navigate(`/bouquets/${b.id}`)}
                 data-testid="bouquet-card"
-                className="rounded-[14px] border-[0.5px] border-grove-bloom/30 bg-grove-bloom/15 overflow-hidden text-left hover:border-grove-bloom transition-colors duration-150"
+                className="rounded-card border-hairline border-grove-moss bg-grove-canopy overflow-hidden text-left hover:border-grove-fernLine transition-colors duration-150"
               >
-                <div className="aspect-square bg-grove-bloom/15 flex items-center justify-center">
+                <div className="aspect-square bg-grove-forest flex items-center justify-center">
                   {b.photo_url ? (
-                    <div className="w-full h-full bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="w-full h-full object-cover" /></div>
+                    <div className="w-full h-full flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="w-full h-full object-cover" /></div>
                   ) : (
-                    <Flower2 className="h-10 w-10 text-grove-blush opacity-30" />
+                    <Flower2 className="h-10 w-10 text-grove-bloom opacity-60" aria-hidden="true" />
                   )}
                 </div>
                 <div className="px-3 py-2.5">
-                  <p className="font-plant text-grove-cream text-sm truncate">{b.name || 'Bouquet'}</p>
+                  <p className="font-ui text-grove-cream text-sm font-medium truncate">{b.name || 'Bouquet'}</p>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <Calendar className="h-3 w-3 text-grove-blush" />
-                    <span className="font-latin text-xs text-grove-blush">{formatDate(b.received_date)}</span>
-                    {b.vase_life_expected && (
-                      <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/30 bg-grove-root px-1.5 py-0.5 text-xs font-ui text-grove-blush">
-                        {b.vase_life_expected}d life
+                    <Calendar className="h-3 w-3 text-grove-sage" aria-hidden="true" />
+                    <span className="font-ui text-xs text-grove-sage">{formatDate(b.received_date)}</span>
+                    {Number(b.vase_life_expected) > 0 && (
+                      <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
+                        About {b.vase_life_expected} days
                       </span>
                     )}
                   </div>
                   {b.occasion && (
-                    <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-bloom/20 bg-grove-root px-2 py-0.5 text-xs font-ui text-grove-blush mt-1.5 capitalize">
+                    <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream mt-1.5 capitalize min-h-6">
                       {b.occasion}
                     </span>
                   )}

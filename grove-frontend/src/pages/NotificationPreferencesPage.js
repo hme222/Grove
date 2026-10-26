@@ -1,9 +1,11 @@
+import LoadError from '../components/LoadError';
+import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import SwitchRow from '../components/SwitchRow';
 import { notificationAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
-import { ChevronLeft, Bell, Mail, Moon, Gauge } from 'lucide-react';
+import { Bell, Mail, Moon, Gauge } from 'lucide-react';
 
 export const CARE_CAP_CHOICES = [1, 2, 3];
 
@@ -38,18 +40,19 @@ const TOGGLE_GROUPS = [
 ];
 
 export default function NotificationPreferencesPage() {
-  const navigate = useNavigate();
   const [prefs, setPrefs] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [saving, setSaving] = useState(null);
 
   useEffect(() => {
     const fetch = async () => {
       try {
+        setLoadError(false);
         const res = await notificationAPI.getPreferences();
         setPrefs(res.data);
       } catch (e) {
-        toast.error('Failed to load preferences');
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -73,73 +76,40 @@ export default function NotificationPreferencesPage() {
     }
   };
 
-  const Toggle = ({ k, label, help }) => {
-    const on = !!prefs?.[k];
-    const isSaving = saving === k;
-    return (
-      <div
-        className="flex items-start justify-between gap-3 py-3 border-b-[0.5px] border-grove-moss/50 last:border-b-0"
-        data-testid={`pref-row-${k}`}
-      >
-        <div className="min-w-0 flex-1">
-          <p className="font-ui text-sm text-grove-cream">{label}</p>
-          <p className="font-ui text-xs text-grove-cream leading-snug mt-0.5">{help}</p>
-        </div>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={on}
-          aria-label={label}
-          data-testid={`pref-toggle-${k}`}
-          disabled={isSaving}
-          onClick={() => update({ [k]: !on })}
-          className={`shrink-0 w-11 h-6 rounded-full relative motion-safe:transition-colors motion-safe:duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime focus-visible:ring-offset-2 focus-visible:ring-offset-grove-forest disabled:opacity-60 ${
-            on ? 'bg-grove-lime border border-grove-lime' : 'bg-grove-moss border border-[#869A68]'
-          }`}
-        >
-          <span
-            className={`absolute left-0 top-px h-5 w-5 rounded-full motion-safe:transition-transform motion-safe:duration-200 ${
-              on ? 'translate-x-[20px] bg-grove-root' : 'translate-x-px bg-grove-sage'
-            }`}
-          />
-        </button>
-      </div>
-    );
-  };
+  const Toggle = ({ k, label, help }) => (
+    <SwitchRow
+      label={label}
+      help={help}
+      checked={!!prefs?.[k]}
+      disabled={saving === k}
+      onChange={(next) => update({ [k]: next })}
+      rowTestId={`pref-row-${k}`}
+      testId={`pref-toggle-${k}`}
+      className="border-b-hairline border-grove-moss/50 last:border-b-0"
+    />
+  );
 
   return (
     <div>
       <PageHeader
-        title="Notifications"
-        rightContent={
-          <button
-            onClick={() => navigate('/profile')}
-            data-testid="prefs-back"
-            aria-label="Back to Profile"
-            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine flex items-center gap-1.5"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-            Back
-          </button>
-        }
+        title="Notification settings"
+        back={{ to: '/profile', where: 'Profile', testId: 'prefs-back' }}
       />
 
-      <div className="max-w-[600px] mx-auto px-4 py-4 space-y-4">
-        {loading || !prefs ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-          </div>
+      <div className="max-w-column mx-auto px-4 py-4 space-y-4">
+        {loadError && !loading ? (<LoadError what="your notification settings" onRetry={() => window.location.reload()} />) : loading || !prefs ? (
+          <Loading label="Loading your settings" />
         ) : (
           <>
             {TOGGLE_GROUPS.map(({ title, icon: Icon, desc, keys }) => (
               <div
                 key={title}
                 data-testid={`pref-group-${title.toLowerCase().replace(/\s+/g,'-')}`}
-                className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4"
+                className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
               >
                 <div className="flex items-center gap-2 mb-1">
                   <Icon className="h-4 w-4 text-grove-sprout" />
-                  <h3 className="font-plant text-grove-cream text-sm">{title}</h3>
+                  <h3 className="font-plant text-grove-cream text-base font-semibold ">{title}</h3>
                 </div>
                 <p className="font-ui text-xs text-grove-cream mb-3">{desc}</p>
                 <div>
@@ -152,12 +122,12 @@ export default function NotificationPreferencesPage() {
             <fieldset
               data-testid="pref-group-daily-limit"
               aria-describedby="care-cap-desc"
-              className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4"
+              className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
             >
               <legend className="sr-only">Daily limit</legend>
               <div className="flex items-center gap-2 mb-1" aria-hidden="true">
                 <Gauge className="h-4 w-4 text-grove-sprout" />
-                <h3 className="font-plant text-grove-cream text-sm">Daily limit</h3>
+                <h3 className="font-plant text-grove-cream text-base font-semibold ">Daily limit</h3>
               </div>
               <p id="care-cap-desc" className="font-ui text-xs text-grove-cream mb-3">
                 The most care messages FloraGrove sends in a day. Extra plants wait for the next check.
@@ -178,7 +148,7 @@ export default function NotificationPreferencesPage() {
                         className="peer sr-only"
                       />
                       <span
-                        className={`block text-center rounded-[8px] border-[0.5px] px-3 py-2 text-sm font-ui cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-grove-lime peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-grove-forest peer-disabled:opacity-60 ${
+                        className={`flex min-h-touch items-center justify-center rounded-inset border-hairline px-3 text-sm font-ui cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-grove-lime peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-grove-forest peer-disabled:opacity-60 ${
                           active ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine'
                         }`}
                       >
@@ -193,11 +163,11 @@ export default function NotificationPreferencesPage() {
             {/* Quiet hours */}
             <div
               data-testid="pref-group-quiet-hours"
-              className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4"
+              className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
             >
               <div className="flex items-center gap-2 mb-1">
                 <Moon className="h-4 w-4 text-grove-sprout" />
-                <h3 className="font-plant text-grove-cream text-sm">Quiet hours</h3>
+                <h3 className="font-plant text-grove-cream text-base font-semibold ">Quiet hours</h3>
               </div>
               <p className="font-ui text-xs text-grove-cream mb-3">
                 Hold non-urgent notifications and deliver them when quiet hours end. Nothing is ever permanently suppressed.
@@ -219,7 +189,7 @@ export default function NotificationPreferencesPage() {
                         value={prefs[k]}
                         onChange={(e) => update({ [k]: e.target.value })}
                         data-testid={`pref-${k}`}
-                        className="mt-1 w-full rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest px-3 py-2 text-sm font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                        className="mt-1 w-full rounded-inset border-hairline border-grove-moss bg-grove-forest px-3 py-2 text-sm font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
                       />
                     </label>
                   ))}

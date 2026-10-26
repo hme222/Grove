@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Spinner } from '../components/Loading';
+import LoadError from '../components/LoadError';
 import { useNavigate } from 'react-router-dom';
-import { plantAPI, speciesAPI } from '../lib/api';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
+import { plantAPI, speciesAPI, encyclopediaAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
-import { ArrowLeft, Search, Camera, Home, Edit3 } from 'lucide-react';
+import { Search, Camera } from 'lucide-react';
 import PhotoRequirement from '../components/PhotoRequirement';
 import ToxicityBadge from '../components/ToxicityBadge';
 import PlantIdentifyScreen from './PlantIdentifyScreen';
@@ -28,22 +32,23 @@ const SOURCES = [
 // ---- Outer page: dispatches between modes ----
 export default function AddPlantPage() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   // mode: 'chooser' | 'identify' | 'room' | 'manual'
-  const initialMode = user?.prefer_manual_plant_entry ? 'manual' : 'chooser';
+  // Arriving from a species page ('Add to my plants') goes straight to the form with that species chosen.
+  const speciesFromLink = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('species') : null;
+  const initialMode = speciesFromLink || user?.prefer_manual_plant_entry ? 'manual' : 'chooser';
   const [mode, setMode] = useState(initialMode);
 
   if (mode === 'identify') {
     return <PlantIdentifyScreen onSwitchToManual={() => setMode('manual')} />;
   }
   if (mode === 'manual') {
-    return <ManualEntryFlow onBack={() => setMode('chooser')} />;
+    return <ManualEntryFlow onBack={() => setMode('chooser')} presetSpeciesId={speciesFromLink} />;
   }
   // Chooser
   const opts = [
     {
       key: 'manual',
-      icon: Edit3,
+      icon: Search,
       title: 'Search by name',
       desc: 'Pick your plant from our guide and we fill in the care for you.',
       testId: 'add-option-manual',
@@ -59,16 +64,10 @@ export default function AddPlantPage() {
     },
   ];
   return (
-    <div className="max-w-[520px] mx-auto px-4 py-4">
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="mb-3 inline-flex items-center gap-1 font-plant text-xs text-grove-cream hover:text-grove-sprout"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" /> Back
-      </button>
-      <h1 className="font-plant text-grove-cream text-xl mb-1">Add to your collection</h1>
-      <p className="font-plant italic text-grove-sage text-xs mb-5">Start with a name or a photo.</p>
+    <div>
+      <PageHeader title="Add a plant" back />
+      <div className="max-w-form mx-auto px-4 py-4">
+      <p className="font-ui italic text-grove-sage text-xs font-medium mb-5">Start with a name or a photo.</p>
       <div className="space-y-2">
         {opts.map(({ key, icon: Icon, title, desc, testId, onClick }) => (
           <button
@@ -76,9 +75,9 @@ export default function AddPlantPage() {
             type="button"
             onClick={(e) => { impactLight(e.currentTarget); onClick(); }}
             data-testid={testId}
-            className="w-full text-left rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy px-3.5 py-4 hover:border-grove-fernLine hover:bg-grove-forest flex items-start gap-3 transition-colors duration-150"
+            className="w-full text-left rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 hover:border-grove-fernLine hover:bg-grove-forest flex items-start gap-3 transition-colors duration-150"
           >
-            <div className="w-10 h-10 rounded-[10px] bg-grove-moss flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-chip bg-grove-moss flex items-center justify-center flex-shrink-0">
               <Icon className="h-5 w-5 text-grove-sprout" />
             </div>
             <div className="flex-1 min-w-0">
@@ -88,12 +87,13 @@ export default function AddPlantPage() {
           </button>
         ))}
       </div>
+      </div>
     </div>
   );
 }
 
 // ---- Manual entry flow (legacy two-step preserved verbatim) ----
-function ManualEntryFlow({ onBack }) {
+function ManualEntryFlow({ onBack, presetSpeciesId }) {
   const navigate = useNavigate();
   const [species, setSpecies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -107,16 +107,34 @@ function ManualEntryFlow({ onBack }) {
   });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const search = async () => {
-      try {
-        const res = await speciesAPI.search(searchQuery);
-        setSpecies(res.data);
-      } catch (e) { /* ignore */ }
-    };
-    const timer = setTimeout(search, 300);
-    return () => clearTimeout(timer);
+  const [searchFailed, setSearchFailed] = useState(false);
+  const runSearch = useCallback(async () => {
+    try {
+      const res = await speciesAPI.search(searchQuery);
+      setSpecies(res.data);
+      setSearchFailed(false);
+    } catch (e) {
+      // Only say so once the person has typed something; the empty-query load runs on its own.
+      setSearchFailed(searchQuery.trim().length > 0);
+    }
   }, [searchQuery]);
+  useEffect(() => {
+    const timer = setTimeout(runSearch, 300);
+    return () => clearTimeout(timer);
+  }, [runSearch]);
+
+  // A species chosen on its own page is looked up once and applied as if it had been picked from search.
+  const [presetFailed, setPresetFailed] = useState(false);
+  const loadPreset = useCallback(async () => {
+    if (!presetSpeciesId) return;
+    try {
+      const res = await encyclopediaAPI.getSpeciesDetail(presetSpeciesId);
+      if (res?.data) { selectSpecies(res.data); setPresetFailed(false); }
+    } catch {
+      setPresetFailed(true);
+    }
+  }, [presetSpeciesId]);
+  useEffect(() => { loadPreset(); }, [loadPreset]);
 
   const selectSpecies = (sp) => {
     setSelectedSpecies(sp);
@@ -136,6 +154,8 @@ function ManualEntryFlow({ onBack }) {
       return;
     }
     setStep('photo');
+    window.scrollTo(0, 0);
+    document.getElementById('main-content')?.focus({ preventScroll: true });
   };
 
   const handlePhotoReady = async (photoPath) => {
@@ -144,7 +164,8 @@ function ManualEntryFlow({ onBack }) {
       await plantAPI.create({
         ...formData,
         species_id: selectedSpecies?.id || null,
-        photo_url: photoPath,
+        photo_url: photoPath || null,
+        photo_deferred: !photoPath,
       });
       toast.success(`${formData.nickname || formData.common_name} added to your collection`);
       navigate('/plants');
@@ -159,58 +180,61 @@ function ManualEntryFlow({ onBack }) {
     <div>
       <PageHeader
         title={step === 'photo' ? 'Add a photo' : 'Add a plant'}
-        rightContent={
-          <button
-            onClick={() => step === 'photo' ? setStep('details') : onBack()}
-            className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
-          >
-            {step === 'photo' ? 'Back' : 'Cancel'}
-          </button>
-        }
+        back={{ onClick: () => (step === 'photo' ? setStep('details') : onBack()), testId: 'add-plant-back' }}
       />
       {step === 'photo' ? (
         <div>
           <PhotoRequirement
             plantName={formData.nickname || formData.common_name}
-            onBack={() => setStep('details')}
             onPhotoReady={handlePhotoReady}
+            onSkip={() => handlePhotoReady(null)}
           />
           {saving && (
-            <div className="fixed inset-0 bg-grove-lime/50 z-50 flex items-center justify-center">
-              <div className="bg-grove-forest rounded-[14px] p-5 text-center">
-                <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                <p className="font-plant text-grove-cream text-sm">Adding to your grove\u2026</p>
+            <div className="fixed inset-0 bg-grove-lime/50 z-sheet flex items-center justify-center">
+              <div className="bg-grove-forest rounded-small p-5 text-center" role="status">
+                <Spinner className="mx-auto mb-2 block h-6 w-6" />
+                <p className="font-ui text-grove-cream text-sm font-medium">Adding to your grove…</p>
               </div>
             </div>
           )}
         </div>
       ) : (
-      <div className="max-w-[600px] mx-auto px-4 py-4">
+      <div className="max-w-column mx-auto px-4 py-4">
+        {presetFailed && (
+          <div className="mb-4">
+            <LoadError compact what="the plant you chose" note="You can still search for it below." onRetry={loadPreset} testId="preset-failed" />
+          </div>
+        )}
+        {showSearch && searchFailed && !presetFailed && (
+          <div className="mb-4">
+            <LoadError compact what="the plant search" note="You can still add a custom plant below." onRetry={runSearch} testId="search-failed" />
+          </div>
+        )}
         {showSearch ? (
           <div>
             <div className="mb-4">
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Search Species</label>
+              <label htmlFor="addplant-search-species" className="font-ui text-xs text-grove-cream block mb-1.5">Search species</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-sage" />
-                <input aria-label="Search by common or Latin name"
+                <input id="addplant-search-species" 
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   data-testid="species-search-input"
-                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] pl-10 pr-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
-                  placeholder="Search by common or latin name..."
+                  className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset pl-10 pr-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                  placeholder="Search by common or latin name…"
                 />
               </div>
             </div>
-            <div className="space-y-1 max-h-[400px] overflow-y-auto">
+            <div className="space-y-1 max-h-96 overflow-y-auto">
               {species.map(sp => (
                 <button
                   key={sp.id}
                   onClick={() => selectSpecies(sp)}
                   data-testid="species-option"
-                  className="w-full text-left rounded-[8px] border-[0.5px] border-grove-moss bg-grove-moss px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
+                  className="w-full text-left rounded-inset border-hairline border-grove-moss bg-grove-moss px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
-                  <p className="font-plant text-grove-cream text-sm">{sp.common_name}</p>
+                  <p className="font-ui text-grove-cream text-sm font-medium">{sp.common_name}</p>
                   <p className="font-latin text-xs text-grove-cream">{sp.latin_name}</p>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
                     <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" />
@@ -221,7 +245,7 @@ function ManualEntryFlow({ onBack }) {
             </div>
             <button
               onClick={() => setShowSearch(false)}
-              className="w-full mt-4 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+              className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-4")}
             >
               Or add custom plant
             </button>
@@ -229,9 +253,9 @@ function ManualEntryFlow({ onBack }) {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {selectedSpecies && (
-              <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-3 flex items-center justify-between">
+              <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 flex items-center justify-between">
                 <div>
-                  <p className="font-plant text-grove-cream text-sm">{selectedSpecies.common_name}</p>
+                  <p className="font-ui text-grove-cream text-sm font-medium">{selectedSpecies.common_name}</p>
                   <p className="font-latin text-xs text-grove-cream">{selectedSpecies.latin_name}</p>
                 </div>
                 <button
@@ -244,113 +268,117 @@ function ManualEntryFlow({ onBack }) {
             {!selectedSpecies && (
               <>
                 <div>
-                  <label className="font-ui text-xs text-grove-cream block mb-1.5">Plant Name *</label>
-                  <input aria-label="Plant name"
+                  <label htmlFor="addplant-plant-name" className="font-ui text-xs text-grove-cream block mb-1.5">Plant Name *</label>
+                  <input id="addplant-plant-name" aria-label="Plant name"
                     type="text"
                     value={formData.common_name}
                     onChange={(e) => setFormData(prev => ({...prev, common_name: e.target.value}))}
                     required
                     data-testid="plant-name-input"
-                    className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                    className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                     placeholder="e.g., Monstera Deliciosa"
                   />
                 </div>
                 <div>
-                  <label className="font-ui text-xs text-grove-cream block mb-1.5">Latin Name</label>
-                  <input aria-label="Latin name"
+                  <label htmlFor="addplant-latin-name" className="font-ui text-xs text-grove-cream block mb-1.5">Latin Name</label>
+                  <input id="addplant-latin-name" aria-label="Latin name"
                     type="text"
                     value={formData.latin_name}
                     onChange={(e) => setFormData(prev => ({...prev, latin_name: e.target.value}))}
-                    className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-latin text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                    className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-latin text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                     placeholder="e.g., Monstera deliciosa"
                   />
                 </div>
               </>
             )}
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Nickname</label>
-              <input aria-label="Nickname"
+              <label htmlFor="addplant-nickname" className="font-ui text-xs text-grove-cream block mb-1.5">Nickname</label>
+              <input id="addplant-nickname" aria-label="Nickname"
                 type="text"
                 value={formData.nickname}
                 onChange={(e) => setFormData(prev => ({...prev, nickname: e.target.value}))}
                 data-testid="plant-nickname-input"
-                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                 placeholder="Give your plant a name"
               />
             </div>
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Room</label>
-              <div className="flex flex-wrap gap-1.5">
+              <p id="addplant-room-label" className="font-ui text-xs text-grove-cream block mb-1.5">Room</p>
+              <div role="group" aria-labelledby="addplant-room-label" className="flex flex-wrap gap-1.5">
                 {ROOMS.map(room => (
                   <button
                     key={room}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, room: prev.room === room ? '' : room}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.room === room ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
+                    className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={formData.room === room}
                   >{room}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Grow Medium</label>
-              <div className="flex flex-wrap gap-1.5">
+              <p id="addplant-grow-medium-label" className="font-ui text-xs text-grove-cream block mb-1.5">Grow Medium</p>
+              <div role="group" aria-labelledby="addplant-grow-medium-label" className="flex flex-wrap gap-1.5">
                 {MEDIUMS.map(m => (
                   <button
                     key={m.value}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, grow_medium: m.value}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.grow_medium === m.value ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
+                    className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={formData.grow_medium === m.value}
                   >{m.label}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Acquired From</label>
-              <div className="flex flex-wrap gap-1.5">
+              <p id="addplant-acquired-from-label" className="font-ui text-xs text-grove-cream block mb-1.5">Acquired From</p>
+              <div role="group" aria-labelledby="addplant-acquired-from-label" className="flex flex-wrap gap-1.5">
                 {SOURCES.map(s => (
                   <button
                     key={s.value}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, acquired_from: prev.acquired_from === s.value ? '' : s.value}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.acquired_from === s.value ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
+                    className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={formData.acquired_from === s.value}
                   >{s.label}</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">
-                Watering Frequency
+              <p id="addplant-watering-label" className="font-ui text-xs text-grove-cream block mb-1.5">
+                Watering frequency
                 {formData.watering_frequency_days && (
-                  <span className="text-[#639922] normal-case"> \u00B7 Every {formData.watering_frequency_days} days</span>
+                  <span className="text-grove-sprout normal-case"> · Every {formData.watering_frequency_days} days</span>
                 )}
-              </label>
-              <div className="flex gap-1.5">
+              </p>
+              <div role="group" aria-labelledby="addplant-watering-label" className="flex flex-wrap gap-1.5">
                 {[3, 5, 7, 10, 14, 21].map(days => (
                   <button
                     key={days}
                     type="button"
                     onClick={() => setFormData(prev => ({...prev, watering_frequency_days: days}))}
-                    className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${formData.watering_frequency_days === days ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'}`}
-                  >{days}d</button>
+                    className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={formData.watering_frequency_days === days}
+                  >{days} days</button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="font-ui text-xs text-grove-cream block mb-1.5">Notes</label>
-              <textarea aria-label="Notes"
+              <label htmlFor="addplant-notes" className="font-ui text-xs text-grove-cream block mb-1.5">Notes</label>
+              <textarea id="addplant-notes" aria-label="Notes"
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
-                className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-24"
-                placeholder="Any notes about your plant..."
+                className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-24"
+                placeholder="Any notes about your plant…"
               />
             </div>
             <button
               type="submit"
               disabled={saving}
               data-testid="add-plant-submit"
-              className="w-full rounded-[12px] font-ui text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+              className={cn(buttonVariants(), "w-full disabled:opacity-50 transition-colors duration-150")}
             >
-              {saving ? 'Adding plant...' : 'Next \u2014 add a photo'}
+              {saving ? 'Adding plant…' : 'Next \u2014 add a photo'}
             </button>
           </form>
         )}

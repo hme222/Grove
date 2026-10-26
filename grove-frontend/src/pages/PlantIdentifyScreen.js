@@ -1,20 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { Spinner } from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Image as ImageIcon, RotateCcw, Sparkles, Edit3, Check, ArrowLeft } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
+import BackButton from '../components/BackButton';
+import { Camera, Image as ImageIcon, RotateCcw, Sparkles, Edit3, Check } from 'lucide-react';
 import { toast } from 'sonner';
-import { plantAPI, getFileUrl } from '../lib/api';
+import { plantAPI } from '../lib/api';
 import PlantImage from '../components/PlantImage';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { confidenceText, identifyWhy } from '../lib/aiTrust';
 import { impactLight, impactMedium, success } from '../lib/haptics';
-import { useAuth } from '../contexts/AuthContext';
 
 const FREQ_CHIPS = [3, 5, 7, 10, 14, 21];
 const ROOMS = ['Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Office', 'Balcony', 'Patio', 'Greenhouse', 'Hallway', 'Dining Room'];
 
+// Focus a field the moment the user opens it for editing.
+const focusOnMount = (el) => { if (el) el.focus(); };
+
 export default function PlantIdentifyScreen({ onSwitchToManual }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const cameraRef = useRef(null);
   const galleryRef = useRef(null);
   // step: 'capture' | 'scanning' | 'review' | 'low_confidence' | 'failed'
@@ -33,14 +38,28 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const up = await plantAPI.upload(fd);
-      const path = up.data.path;
+      let path;
+      try {
+        const up = await plantAPI.upload(fd);
+        path = up.data.path;
+      } catch (uploadErr) {
+        toast.error("The photo didn't upload. Check your connection and choose it again.");
+        setStep('capture');
+        return;
+      }
       setPhotoPath(path);
       // Animate progress dots while waiting on Claude
       setTimeout(() => setScanProgress(p => ({ ...p, species: true })), 600);
       setTimeout(() => setScanProgress(p => ({ ...p, health: true })), 1200);
       setTimeout(() => setScanProgress(p => ({ ...p, nickname: true })), 1800);
-      const res = await plantAPI.identify({ path });
+      let res;
+      try {
+        res = await plantAPI.identify({ path });
+      } catch (identifyErr) {
+        // The photo is safe on the server; keep it and offer retry or manual entry.
+        setStep('failed');
+        return;
+      }
       const data = res.data;
       if (!data || data.error) {
         setStep('failed');
@@ -64,8 +83,29 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         success();
       }
     } catch (e) {
-      toast.error('Photo upload failed');
-      setStep('capture');
+      setStep('failed');
+    }
+  };
+
+  const retryIdentify = async () => {
+    if (!photoPath) { setStep('capture'); return; }
+    setStep('scanning');
+    try {
+      const res = await plantAPI.identify({ path: photoPath });
+      const data = res.data;
+      if (!data || data.error) { setStep('failed'); return; }
+      setIdentified(data);
+      setForm({
+        common_name: data.commonName || '',
+        latin_name: data.latinName || '',
+        nickname: '',
+        room: '',
+        watering_frequency_days: data.wateringFrequencyDays || 7,
+        grow_medium: data.growMedium && data.growMedium !== 'unknown' ? data.growMedium : 'soil',
+      });
+      setStep(!data.identified || (data.confidence || 0) < 0.7 ? 'low_confidence' : 'review');
+    } catch (e) {
+      setStep('failed');
     }
   };
 
@@ -110,17 +150,11 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
 
   if (step === 'capture') {
     return (
-      <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="identify-capture">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="mb-4 inline-flex items-center gap-1 font-plant text-xs text-grove-cream hover:text-grove-sprout"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" /> Back
-        </button>
+      <div className="max-w-form mx-auto px-4 py-4" data-testid="identify-capture">
+        <BackButton />
         <header className="mb-4">
-          <h1 className="font-plant text-grove-cream text-[1.0625rem]">Photograph your plant</h1>
-          <p className="font-plant italic text-grove-sage text-xs mt-1">FloraGrove will identify it for you.</p>
+          <h1 className="font-plant text-grove-cream text-lead">Photograph your plant</h1>
+          <p className="font-ui italic text-grove-sage text-xs font-medium mt-1">FloraGrove will identify it for you.</p>
         </header>
         <PlantImage
           src={null}
@@ -139,7 +173,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             type="button"
             onClick={(e) => { impactLight(e.currentTarget); cameraRef.current?.click(); }}
             data-testid="identify-take-photo"
-            className="relative overflow-hidden rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center justify-center gap-1.5"
+            className={cn(buttonVariants(), "relative overflow-hidden flex gap-1.5")}
           >
             <Camera className="h-4 w-4" /> Take photo
           </button>
@@ -147,7 +181,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             type="button"
             onClick={(e) => { impactLight(e.currentTarget); galleryRef.current?.click(); }}
             data-testid="identify-choose-existing"
-            className="relative overflow-hidden rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
+            className="relative overflow-hidden rounded-control font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-hairline border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
           >
             <ImageIcon className="h-4 w-4" /> Choose existing
           </button>
@@ -173,12 +207,12 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       { key: 'nickname', label: 'Nickname suggestion' },
     ];
     return (
-      <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="identify-scanning">
-        <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-[170px] mb-3" />
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy px-4 py-4">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-            <p className="font-plant text-grove-cream text-sm">Identifying your plant…</p>
+      <div className="max-w-form mx-auto px-4 py-4" data-testid="identify-scanning">
+        <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-photoFrame mb-3" />
+        <div className="rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-4">
+          <div className="flex items-center gap-2 mb-3" role="status">
+            <Spinner />
+            <p className="font-ui text-grove-cream text-sm font-medium">Identifying your plant…</p>
           </div>
           <p className="font-ui text-xs text-grove-lichen mb-2">Checking</p>
           <ul className="space-y-1.5">
@@ -198,18 +232,18 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
 
   if (step === 'failed') {
     return (
-      <div className="max-w-[520px] mx-auto px-4 py-4" data-testid="identify-failed">
-        <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-[200px] mb-3" />
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4">
-          <p className="font-plant text-grove-cream text-sm mb-1">Identification unavailable</p>
+      <div className="max-w-form mx-auto px-4 py-4" data-testid="identify-failed">
+        <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-photoFrame mb-3" />
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
+          <p className="font-ui text-grove-cream text-sm font-medium mb-1">Identification unavailable</p>
           <p className="font-ui text-xs text-grove-sage leading-snug">
-            FloraGrove couldn't identify this plant right now. You can try again or enter the details yourself.
+            The photo is saved. The identify service didn't answer, so this isn't a problem with your photo. Try again, or enter the details yourself.
           </p>
           <div className="grid grid-cols-2 gap-2 mt-4">
-            <button onClick={reset} data-testid="identify-retry" className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root hover:bg-grove-sprout flex items-center justify-center gap-1.5">
+            <button onClick={retryIdentify} data-testid="identify-retry" className={cn(buttonVariants(), "flex items-center justify-center gap-1.5")}>
               <RotateCcw className="h-3.5 w-3.5" /> Try again
             </button>
-            <button onClick={onSwitchToManual} data-testid="identify-go-manual" className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine">
+            <button onClick={onSwitchToManual} data-testid="identify-go-manual" className={cn(buttonVariants({ variant: 'outline' }))}>
               Enter manually
             </button>
           </div>
@@ -224,15 +258,15 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
   const speciesEdited = (form.common_name || '') !== (identified?.commonName || '');
 
   return (
-    <div className="max-w-[520px] mx-auto px-4 py-4 pb-24" data-testid={lowConf ? 'identify-low-conf' : 'identify-review'}>
-      <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-[180px] mb-3" />
+    <div className="max-w-form mx-auto px-4 py-4 pb-24" data-testid={lowConf ? 'identify-low-conf' : 'identify-review'}>
+      <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-photoFrame mb-3" />
       <div className="mb-3">
         <p className="font-ui text-xs text-grove-lichen">{lowConf ? 'We think this might be…' : 'Identified'}</p>
         <h1 className="font-plant text-grove-cream text-lg leading-tight">{identified?.commonName || 'Plant'}</h1>
-        {identified?.latinName && <p className="font-latin text-xs text-[#639922]">{identified.latinName}</p>}
+        {identified?.latinName && <p className="font-latin text-xs text-grove-sprout">{identified.latinName}</p>}
         <p
           data-testid="identify-confidence"
-          className={`font-ui text-xs mt-1 ${lowConf ? 'text-[#8A5A0F]' : 'text-grove-sage'}`}
+          className={`font-ui text-xs mt-1 ${lowConf ? 'text-grove-sun' : 'text-grove-sage'}`}
         >
           {confidenceText(identified?.confidence) || `Confidence: ${confidencePct}%`}
         </p>
@@ -241,7 +275,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           {identifyWhy(identified)}
         </p>
         {lowConf && identified?.message && (
-          <p className="italic font-plant text-xs text-grove-sage mt-2">"{identified.message}"</p>
+          <p className="italic font-ui text-xs font-medium text-grove-sage mt-2">"{identified.message}"</p>
         )}
         {/* Pet safety is from FloraGrove's species library. If the user renames the
             species, the library match no longer applies, so it reads as unknown. */}
@@ -255,20 +289,20 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
 
       <FieldRow label="Species" testId="field-species" editing={editing.species} onEditToggle={() => toggleEdit('species')} display={form.common_name}>
         <input aria-label="Species"
-          autoFocus
+          ref={focusOnMount}
           value={form.common_name}
           onChange={(e) => setField('common_name', e.target.value)}
-          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-sm font-ui"
+          className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-3 py-2 text-sm font-ui"
         />
       </FieldRow>
 
       <FieldRow label="Nickname" testId="field-nickname" editing={editing.nickname} onEditToggle={() => toggleEdit('nickname')} display={form.nickname || '—'}>
         <input aria-label="Nickname"
-          autoFocus
+          ref={focusOnMount}
           value={form.nickname}
           onChange={(e) => setField('nickname', e.target.value)}
           placeholder="Give your plant a name"
-          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-sm font-ui"
+          className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-3 py-2 text-sm font-ui"
         />
       </FieldRow>
 
@@ -279,7 +313,8 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
               key={r}
               type="button"
               onClick={() => { setField('room', r); toggleEdit('room'); }}
-              className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui ${form.room === r ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
+              className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={form.room === r}
             >{r}</button>
           ))}
         </div>
@@ -292,7 +327,8 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
               key={d}
               type="button"
               onClick={() => { setField('watering_frequency_days', d); toggleEdit('watering'); }}
-              className={`rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui ${form.watering_frequency_days === d ? 'border-grove-fernLine bg-grove-lime text-grove-root' : 'border-grove-moss bg-grove-moss text-grove-cream'}`}
+              className={buttonVariants({ variant: 'chip' })}
+                    aria-pressed={form.watering_frequency_days === d}
             >{d}d</button>
           ))}
         </div>
@@ -305,12 +341,12 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           <div className="flex-1 h-2 bg-grove-moss rounded-full overflow-hidden">
             <div className="h-full bg-grove-lime" style={{ width: `${identified?.healthScore || 80}%` }} />
           </div>
-          <span className="font-plant text-grove-cream text-sm">{identified?.healthScore || 80}</span>
+          <span className="font-ui text-grove-cream text-sm font-medium">{identified?.healthScore || 80}</span>
         </div>
         {identified?.healthSummary && (
-          <p className="italic font-plant text-xs text-grove-sage mt-1.5 leading-snug">"{identified.healthSummary}"</p>
+          <p className="italic font-ui text-xs font-medium text-grove-sage mt-1.5 leading-snug">"{identified.healthSummary}"</p>
         )}
-        <p className="font-plant italic text-xs text-grove-lichen mt-1">
+        <p className="font-ui italic text-xs font-medium text-grove-lichen mt-1">
           Based on your photo today. This score improves as FloraGrove learns your plant's real patterns over time.
         </p>
       </div>
@@ -321,7 +357,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           type="button"
           onClick={reset}
           data-testid="identify-rescan"
-          className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
+          className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
         >
           <RotateCcw className="h-3.5 w-3.5" /> Looks wrong? Re-scan
         </button>
@@ -330,7 +366,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           onClick={handleSave}
           disabled={saving || !form.common_name}
           data-testid="identify-add-plant"
-          className="relative overflow-hidden rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className={cn(buttonVariants(), "relative overflow-hidden disabled:opacity-50 flex items-center justify-center gap-1.5")}
         >
           <Sparkles className="h-3.5 w-3.5" />
           {saving ? 'Adding…' : 'Add to grove'}
@@ -350,7 +386,7 @@ function FieldRow({ label, display, children, editing, onEditToggle, testId }) {
           <button
             type="button"
             onClick={onEditToggle}
-            className="font-plant text-xs text-grove-sprout hover:text-grove-sprout inline-flex items-center gap-1"
+            className="font-ui text-xs font-medium text-grove-sprout hover:text-grove-sprout inline-flex items-center gap-1"
           >
             <Check className="h-3 w-3" /> Done
           </button>
@@ -360,7 +396,7 @@ function FieldRow({ label, display, children, editing, onEditToggle, testId }) {
           type="button"
           onClick={onEditToggle}
           data-testid={`${testId}-edit`}
-          className="w-full text-left rounded-[8px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 hover:border-grove-fernLine flex items-center justify-between"
+          className="w-full text-left rounded-inset border-hairline border-grove-moss bg-grove-canopy px-3 py-2 hover:border-grove-fernLine flex items-center justify-between"
         >
           <span className="font-ui text-sm text-grove-cream truncate">{display}</span>
           <Edit3 className="h-3.5 w-3.5 text-grove-sprout flex-shrink-0" />

@@ -1,11 +1,14 @@
+import { LoadErrorPage } from '../components/LoadError';
+import Loading, { Spinner } from '../components/Loading';
+import { buttonVariants } from '../components/ui/button';
+import { cn } from '../lib/utils';
+import AppLink from '../components/AppLink';
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import NotFoundPage from './NotFoundPage';
+import { PageHeader } from '../components/PageHeader';
+import { useParams } from 'react-router-dom';
 import { encyclopediaAPI, wantsAPI } from '../lib/api';
-import {
-  ChevronLeft, Leaf, Droplets, Sun, Sprout, Bug, BookOpen,
-  ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Users, Loader2,
-  Bookmark, BookmarkCheck, Camera,
-} from 'lucide-react';
+import { Leaf, Droplets, Sun, Sprout, Bug, BookOpen, ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Bookmark, BookmarkCheck, Camera } from 'lucide-react';
 import SectionTutorial from '../components/SectionTutorial';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { toast } from 'sonner';
@@ -45,9 +48,9 @@ const BADGE_TONES = {
 
 export default function SpeciesDetailPage() {
   const { speciesId } = useParams();
-  const navigate = useNavigate();
   const [species, setSpecies] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showLighting, setShowLighting] = useState(false);
   // Phase 14B.2 — community performance + narrative (lazy-loaded)
   const [performance, setPerformance] = useState(null);
@@ -91,20 +94,23 @@ export default function SpeciesDetailPage() {
     }
   };
 
+  const [notFound, setNotFound] = useState(false);
+
   useEffect(() => {
     const fetchSpecies = async () => {
       try {
+        setLoadError(false);
         const res = await encyclopediaAPI.getSpeciesDetail(speciesId);
         setSpecies(res.data);
       } catch (e) {
-        toast.error('Failed to load species');
-        navigate('/greenhouse');
+        if (e?.response?.status === 404) setNotFound(true);
+        else setLoadError(true);
       } finally {
         setLoading(false);
       }
     };
     fetchSpecies();
-  }, [speciesId, navigate]);
+  }, [speciesId]);
 
   // Phase 14B.2 — fetch performance + narrative in parallel after species
   // loads, but make them non-blocking so the main page renders immediately.
@@ -132,11 +138,13 @@ export default function SpeciesDetailPage() {
 
   const badges = useMemo(() => (species ? buildBadges(species) : []), [species]);
 
+  if (notFound) return <NotFoundPage title="Plant not found" heading="We can't find that plant" message="It may have been renamed or removed from the guide." to="/greenhouse" toLabel="Back to Learn" />;
+  if (loadError) {
+    return <LoadErrorPage back title="Species" onRetry={() => window.location.reload()} />;
+  }
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
-        <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-      </div>
+      <Loading label="Loading this plant" className="min-h-screen bg-grove-forest" />
     );
   }
   if (!species) return null;
@@ -150,26 +158,14 @@ export default function SpeciesDetailPage() {
         <SectionTutorial tutorialId="lighting" autoShow={true} />
       )}
 
-      <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss px-4 py-3">
-        <div className="flex items-center gap-3 max-w-[1100px] mx-auto">
-          <button
-            onClick={() => navigate('/greenhouse')}
-            className="text-grove-cream hover:text-grove-sprout transition-colors"
-            data-testid="species-back-button"
-            aria-label="Go back"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <h1 className="font-plant text-xl text-grove-cream">{species.common_name}</h1>
-        </div>
-      </div>
+      <PageHeader title={species.common_name} back={{ to: '/greenhouse', where: 'Learn', testId: 'species-back-button' }} />
 
-      <div className="max-w-[1100px] mx-auto px-4 pt-6 space-y-4" data-testid="species-detail">
+      <div className="max-w-page mx-auto px-4 pt-6 space-y-4" data-testid="species-detail">
         {/* Header card */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5">
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
           {/* Botanical illustration hero */}
           {(species.botanical_illustration || species.bhl_primary_illustration) && (
-            <div className="rounded-[12px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-canopy mb-4">
+            <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy mb-4">
               <img
                 src={species.botanical_illustration || species.bhl_primary_illustration}
                 alt={`Botanical illustration of ${species.common_name}`}
@@ -183,37 +179,32 @@ export default function SpeciesDetailPage() {
           )}
 
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 overflow-hidden">
-              {(species.botanical_illustration_thumb || species.bhl_primary_thumbnail || species.wiki_thumbnail || species.wiki_image) ? (
-                <img src={species.botanical_illustration_thumb || species.bhl_primary_thumbnail || species.wiki_thumbnail || species.wiki_image} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <Leaf className="h-8 w-8 text-grove-sprout" />
-              )}
-            </div>
+            
             <div className="flex-1 min-w-0">
-              <h2 className="font-plant text-2xl text-grove-cream">{species.common_name}</h2>
-              <p className="font-latin text-base italic text-grove-cream mt-1">{species.latin_name}</p>
+              <p className="font-latin text-lg italic text-grove-cream">{species.latin_name}</p>
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                <span className="px-2 py-1 rounded-[20px] bg-grove-moss text-grove-cream text-xs font-ui">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-round bg-grove-canopy text-grove-cream text-xs font-ui min-h-6 border-hairline border-grove-moss">
                   {species.family}
                 </span>
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
               </div>
             </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2" data-testid="species-actions">
+            <AppLink to={`/add-plant?species=${species.id}`} className={buttonVariants()} data-testid="species-add-plant">
+              Add to my plants
+            </AppLink>
             <button
               type="button"
               onClick={toggleWant}
               disabled={wantBusy}
               data-testid="species-want-toggle"
               aria-pressed={wanted}
-              title={wanted ? 'On your want list' : 'Add to your want list'}
-              className={`flex-shrink-0 w-10 h-10 rounded-full border-[0.5px] flex items-center justify-center transition-colors duration-150 ${
-                wanted
-                  ? 'bg-grove-lime border-grove-fernLine text-grove-root'
-                  : 'bg-grove-canopy border-grove-moss text-grove-cream hover:border-grove-fernLine'
-              }`}
+              className={cn(buttonVariants({ variant: 'outline' }), 'gap-1.5')}
             >
-              {wanted ? <BookmarkCheck className="h-5 w-5" /> : <Bookmark className="h-5 w-5" />}
+              {wanted ? <BookmarkCheck className="h-4 w-4" aria-hidden="true" /> : <Bookmark className="h-4 w-4" aria-hidden="true" />}
+              {wanted ? 'On your want list' : 'Add to want list'}
             </button>
           </div>
 
@@ -226,7 +217,7 @@ export default function SpeciesDetailPage() {
                   <span
                     key={b.key}
                     data-testid={`species-badge-${b.key}`}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[20px] border-[0.5px] text-xs font-ui ${BADGE_TONES[b.tone]}`}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-round border-hairline text-xs font-ui ${BADGE_TONES[b.tone]}`}
                   >
                     <Icon className="h-3 w-3" />
                     {b.label}
@@ -239,10 +230,10 @@ export default function SpeciesDetailPage() {
           {/* Invasive native alternatives */}
           {nativeAlts.length > 0 && (
             <div
-              className="mb-4 rounded-[10px] border-[0.5px] border-grove-fernLine bg-grove-moss p-3"
+              className="mb-4 rounded-chip border-hairline border-grove-fernLine bg-grove-moss p-3"
               data-testid="species-native-alternatives"
             >
-              <p className="font-plant text-grove-cream text-xs mb-1">Try these natives instead:</p>
+              <p className="font-ui text-grove-cream text-xs font-medium mb-1">Try these natives instead:</p>
               <ul className="font-ui text-xs text-grove-cream list-disc pl-4 space-y-0.5">
                 {nativeAlts.map((alt) => (<li key={alt}><em>{alt}</em></li>))}
               </ul>
@@ -256,10 +247,10 @@ export default function SpeciesDetailPage() {
 
         {/* Care info grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-watering-card">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-watering-card">
             <div className="flex items-center gap-2 mb-2">
               <Droplets className="h-5 w-5 text-grove-sprout" />
-              <h3 className="font-ui text-xs text-grove-cream">Watering</h3>
+              <h2 className="font-plant text-xl font-semibold text-grove-cream">Watering</h2>
             </div>
             <p className="font-ui text-sm text-grove-cream">Every {species.default_watering_days} days</p>
             <p className="font-latin text-xs text-grove-cream mt-1 capitalize">Medium: {species.default_grow_medium || 'soil'}</p>
@@ -269,21 +260,21 @@ export default function SpeciesDetailPage() {
             type="button"
             onClick={() => setShowLighting(true)}
             data-testid="species-lighting-card"
-            className="text-left rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 hover:border-grove-fernLine transition-colors duration-150"
+            className="text-left rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 hover:border-grove-fernLine transition-colors duration-150"
           >
             <div className="flex items-center gap-2 mb-2">
               <Sun className="h-5 w-5 text-grove-sun" />
-              <h3 className="font-ui text-xs text-grove-cream">Light</h3>
+              <h2 className="font-plant text-xl font-semibold text-grove-cream">Light</h2>
             </div>
             <p className="font-ui text-sm text-grove-cream">{lightCopy}</p>
             <p className="font-latin text-xs text-grove-cream mt-1 underline">Tap for a primer on light</p>
           </button>
 
           {(species.native_range || species.native_habitat) && (
-            <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-origin-card">
+            <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-origin-card">
               <div className="flex items-center gap-2 mb-2">
                 <Leaf className="h-5 w-5 text-grove-sprout" />
-                <h3 className="font-ui text-xs text-grove-cream">Origin</h3>
+                <h2 className="font-plant text-xl font-semibold text-grove-cream">Origin</h2>
               </div>
               <p className="font-ui text-sm text-grove-cream">{species.native_range || species.native_habitat}</p>
             </div>
@@ -292,48 +283,46 @@ export default function SpeciesDetailPage() {
 
         {/* Photo gallery — real photographs from Wikipedia / Wikimedia Commons */}
         {species.wiki_image && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-photo-gallery">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-photo-gallery">
             <div className="flex items-center gap-2 mb-3">
               <Camera className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs text-grove-cream">Photo</h3>
+              <h2 className="font-plant text-xl font-semibold text-grove-cream">Photo</h2>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              <div className="rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-canopy">
+              <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy">
                 <img
                   src={species.wiki_image}
-                  alt={`Photo of ${species.common_name}`}
+                  alt={`${species.common_name} in the wild`}
                   className="w-full aspect-[16/9] object-cover"
                   loading="lazy"
                 />
               </div>
             </div>
             <p className="font-latin italic text-xs text-grove-lichen mt-2">
-              Photo from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="underline">Wikimedia Commons</a> — CC / Public Domain
+              Photo from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">Wikimedia Commons<span className="sr-only"> (opens in a new tab)</span></a> — CC / Public Domain
             </p>
           </div>
         )}
 
         {/* Companions — Phase 14B.2 */}
         {Array.isArray(species.companions) && species.companions.length > 0 && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-companions">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-companions">
             <div className="flex items-center gap-2 mb-3">
               <Sprout className="h-4 w-4 text-grove-sprout" />
-              <h3 className="font-ui text-xs text-grove-cream">Pairs well with</h3>
+              <h2 className="font-plant text-xl font-semibold text-grove-cream">Pairs well with</h2>
             </div>
             <ul className="space-y-2">
               {species.companions.map((c) => (
                 <li key={c.id} data-testid={`species-companion-${c.slug}`}>
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/greenhouse/${c.id}`)}
-                    className="w-full text-left rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-3 hover:border-grove-fernLine transition-colors duration-150"
+                  <AppLink to={`/greenhouse/${c.id}`}
+                                        className="w-full text-left rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3 hover:border-grove-fernLine transition-colors duration-150"
                   >
                     <div className="flex items-baseline justify-between gap-2 mb-1">
-                      <span className="font-plant text-sm text-grove-cream">{c.common_name}</span>
+                      <span className="font-ui text-sm font-medium text-grove-cream">{c.common_name}</span>
                       <span className="font-latin italic text-xs text-grove-cream">{c.latin_name}</span>
                     </div>
                     <p className="font-ui text-xs text-grove-cream leading-snug">{c.reasoning}</p>
-                  </button>
+                  </AppLink>
                 </li>
               ))}
             </ul>
@@ -350,10 +339,10 @@ export default function SpeciesDetailPage() {
         {/* Citations */}
         {/* BHL illustration gallery */}
         {Array.isArray(species.bhl_illustrations) && species.bhl_illustrations.length > 1 && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-bhl-gallery">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-bhl-gallery">
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs text-grove-cream">Historical illustrations</h3>
+              <h2 className="font-plant text-xl font-semibold text-grove-cream">Historical illustrations</h2>
               <span className="font-latin italic text-xs text-grove-lichen">{species.bhl_illustrations.length} from BHL</span>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -363,7 +352,7 @@ export default function SpeciesDetailPage() {
                   href={ill.page_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-[8px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-canopy hover:border-grove-fernLine transition-colors duration-150 block"
+                  className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy hover:border-grove-fernLine transition-colors duration-150 block"
                 >
                   <img
                     src={ill.thumbnail_url}
@@ -380,16 +369,16 @@ export default function SpeciesDetailPage() {
               ))}
             </div>
             <p className="font-latin italic text-xs text-grove-lichen mt-2">
-              From the <a href="https://www.biodiversitylibrary.org" target="_blank" rel="noopener noreferrer" className="underline">Biodiversity Heritage Library</a> — public domain botanical archives.
+              From the <a href="https://www.biodiversitylibrary.org" target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">Biodiversity Heritage Library<span className="sr-only"> (opens in a new tab)</span></a> — public domain botanical archives.
             </p>
           </div>
         )}
 
         {Array.isArray(species.citations) && species.citations.length > 0 && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy p-4" data-testid="species-citations">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-citations">
             <div className="flex items-center gap-2 mb-2">
               <BookOpen className="h-4 w-4 text-grove-sage" />
-              <h3 className="font-ui text-xs text-grove-cream">Sources</h3>
+              <h2 className="font-plant text-xl font-semibold text-grove-cream">Sources</h2>
             </div>
             <ul className="space-y-1.5">
               {species.citations.map((c, i) => (
@@ -399,9 +388,9 @@ export default function SpeciesDetailPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-testid={`species-citation-${i}`}
-                    className="font-ui text-xs text-grove-sprout hover:text-grove-cream underline underline-offset-2 inline-flex items-center gap-1"
+                    className="inline-flex min-h-touch items-center gap-1 font-ui text-sm text-grove-sprout hover:text-grove-cream underline underline-offset-2"
                   >
-                    {c.label}
+                    {c.label}<span className="sr-only"> (opens in a new tab)</span>
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
@@ -414,8 +403,8 @@ export default function SpeciesDetailPage() {
         )}
 
         {/* Community count */}
-        {species.in_collections_count !== undefined && (
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 text-center" data-testid="species-community-card">
+        {species.in_collections_count > 0 && (
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-center" data-testid="species-community-card">
             <p className="font-ui text-sm text-grove-cream">
               <strong className="text-grove-cream">{species.in_collections_count}</strong> {species.in_collections_count === 1 ? 'grower has' : 'growers have'} this plant in Grove.
             </p>
@@ -431,6 +420,8 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
   if (!performance && !narrative && !loading) return null;
   const sample = performance?.sample;
   const empty = performance && performance.sample.total_plants === 0;
+  // Nothing to show yet: say nothing rather than an empty block of zeros.
+  if (empty && !loading) return null;
   const confidenceLabel = {
     low: 'Early data',
     emerging: 'Emerging dataset',
@@ -438,11 +429,11 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
   }[sample?.confidence || 'low'];
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="species-performance">
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5" data-testid="species-performance">
       <div className="flex items-center gap-2 mb-3">
         <BarChart3 className="h-4 w-4 text-grove-cream" />
-        <h3 className="font-ui text-xs text-grove-cream">How growers fare</h3>
-        {sample && (
+        <h2 className="font-plant text-xl font-semibold text-grove-cream">How growers fare</h2>
+        {sample && sample.total_plants > 0 && (
           <span
             data-testid="species-performance-confidence"
             className="ml-auto text-xs font-ui text-grove-sage"
@@ -453,17 +444,12 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
       </div>
 
       {loading && !performance && (
-        <div className="flex items-center gap-2 py-4 text-grove-sage">
-          <Loader2 className="h-4 w-4 animate-spin" />
+        <div className="flex items-center gap-2 py-4 text-grove-sage" role="status">
+          <Spinner className="h-4 w-4" />
           <span className="font-ui text-xs">Computing community averages…</span>
         </div>
       )}
 
-      {empty && (
-        <p className="font-ui text-xs text-grove-sage leading-snug">
-          No one on FloraGrove has added this plant yet. Stats will appear here as growers add it to their collections.
-        </p>
-      )}
 
       {performance && !empty && (
         <div className="grid grid-cols-2 gap-2 mb-3" data-testid="species-performance-stats">
@@ -513,12 +499,12 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
       {/* AI-generated narrative */}
       {narrative?.narrative && !empty && (
         <div
-          className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-3"
+          className="rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3"
           data-testid="species-performance-narrative"
         >
           <div className="flex items-center gap-1.5 mb-2">
             <Sparkles className="h-3 w-3 text-grove-sun" />
-            <span className="font-plant text-xs text-grove-sage">
+            <span className="font-ui text-xs font-medium text-grove-sage">
               Editorial summary
             </span>
           </div>
@@ -538,11 +524,11 @@ function CommunityPerformanceSection({ loading, performance, narrative }) {
 function PerfStat({ label, value, sub, testid }) {
   return (
     <div
-      className="rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy p-2.5"
+      className="rounded-chip border-hairline border-grove-moss bg-grove-canopy p-2.5"
       data-testid={testid}
     >
       <p className="font-ui text-xs text-grove-sage">{label}</p>
-      <p className="font-plant text-sm text-grove-cream mt-0.5 leading-tight">{value}</p>
+      <p className="font-ui text-sm font-medium text-grove-cream mt-0.5 leading-tight">{value}</p>
       {sub && <p className="font-latin text-xs text-grove-lichen mt-0.5">{sub}</p>}
     </div>
   );

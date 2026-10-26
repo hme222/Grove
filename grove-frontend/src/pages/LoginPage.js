@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
@@ -32,7 +34,7 @@ export default function LoginPage() {
       {/* Left panel - decorative (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 bg-grove-lime items-center justify-center relative overflow-hidden">
         <div className="text-center px-12">
-          <h1 className="mb-4"><FloraGroveWordmark size={48} color="#0B0F08" leafColor="#202D14" /></h1>
+          <h1 className="mb-4"><FloraGroveWordmark size={48} color="var(--grove-night)" leafColor="var(--grove-forest)" /></h1>
           <p className="font-ui text-grove-sprout text-lg">Grow together</p>
           <p className="font-ui text-grove-sage text-sm mt-2">Know your plants. Really know them.</p>
         </div>
@@ -47,33 +49,33 @@ export default function LoginPage() {
             <p className="font-ui text-grove-cream text-sm mt-1">Grow together</p>
           </div>
 
-          <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6">
+          <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
             <h2 className="font-plant text-grove-cream text-2xl mb-1">Welcome back</h2>
             <p className="font-ui text-grove-cream text-sm mb-6">Sign in to your garden</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
-                <input aria-label="Email"
+                <label htmlFor="login-email" className="font-ui text-xs text-grove-cream block mb-1.5">Email</label>
+                <input id="login-email" aria-label="Email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   data-testid="auth-login-email"
-                  className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                  className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   placeholder="you@example.com"
                 />
               </div>
               <div>
-                <label className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
+                <label htmlFor="login-password" className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
                 <div className="relative">
-                  <input aria-label="Password"
+                  <input id="login-password" aria-label="Password"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     data-testid="auth-login-password"
-                    className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-4 py-3 pr-11 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                    className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 pr-10 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
                     placeholder="Your password"
                   />
                   <button
@@ -90,9 +92,9 @@ export default function LoginPage() {
                 type="submit"
                 disabled={loading}
                 data-testid="auth-login-submit-button"
-                className="w-full rounded-[12px] font-ui text-xs px-4 py-3.5 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150"
+                className={cn(buttonVariants(), "w-full disabled:opacity-50 transition-colors duration-150")}
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? 'Signing in…' : 'Sign in'}
               </button>
             </form>
 

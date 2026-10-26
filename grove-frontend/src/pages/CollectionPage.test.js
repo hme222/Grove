@@ -35,6 +35,7 @@ jest.mock('../components/PageHeader', () => ({
       {rightContent}
     </header>
   ),
+  HeaderAction: ({ children, icon: _icon, pressed: _pressed, ...p }) => <button type="button" {...p}>{children}</button>,
 }));
 jest.mock('../components/EmptyState', () => ({ EmptyState: () => <div data-testid="empty-state" /> }));
 jest.mock('../components/FirstSessionBanner', () => () => null);

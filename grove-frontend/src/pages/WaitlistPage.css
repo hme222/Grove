@@ -1,71 +1,71 @@
 /* Studio 12 waitlist page. Tokens: design/grove-tokens.css v0.3. */
 .wl {
   min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden;
-  background: #0B0F08; color: #F4F1E6; font-family: 'Alegreya Sans', Optima, Candara, sans-serif;
+  background: var(--grove-night); color: var(--grove-cream); font-family: var(--font-ui);
 }
 .wl-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px clamp(20px, 4vw, 40px); }
-.wl-brand { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
-.wl-brand:focus-visible { outline: 2px solid #C3D98A; outline-offset: 4px; border-radius: 4px; }
+.wl-brand { display: flex; align-items: center; gap: 8px; min-height: var(--touch-min); color: inherit; text-decoration: none; }
+.wl-brand:focus-visible { outline: 2px solid var(--grove-sprout); outline-offset: 4px; border-radius: var(--radius-hairline); }
 .wl-meta {
   display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
-  border: 1px solid #64793F; border-radius: 999px; font-size: 14px; color: #E6E7D6; white-space: nowrap;
+  border: 1px solid var(--grove-fern-line); border-radius: var(--radius-pill); font-size: var(--text-sm); color: var(--grove-cream); white-space: nowrap;
 }
 .wl-meta svg { flex: 0 0 auto; }
-@media (max-width: 380px) { .wl-meta { padding: 6px 10px; font-size: 13px; } }
+@media (max-width: 380px) { .wl-meta { padding: 6px 10px; font-size: var(--text-xs); } }
 
 .wl-hero { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 24px 40px; text-align: center; }
-.wl-headline { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.22; max-width: 24ch; text-wrap: balance; }
-.wl-sub { margin: -8px 0 0; max-width: 46ch; font-size: 18px; line-height: 1.45; color: #C9CFBA; text-wrap: balance; }
+.wl-headline { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.22; max-width: 24ch; text-wrap: balance; }
+.wl-sub { margin: -8px 0 0; max-width: 46ch; font-size: var(--text-lg); line-height: 1.45; color: var(--grove-sage); text-wrap: balance; }
 .wl-form-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
 .wl-form {
   display: flex; align-items: center; width: 100%; max-width: 400px; box-sizing: border-box;
-  padding: 4px 4px 4px 18px; border-radius: 16px; background: #1C2416; border: 1px solid #64793F;
+  padding: 4px 4px 4px 18px; border-radius: var(--radius-field); background: var(--grove-well); border: 1px solid var(--grove-fern-line);
 }
-.wl-form:focus-within { box-shadow: 0 0 0 2px #92B44B; }
-.wl-form-error { border-color: #E57A9C; animation: wl-shake 0.5s cubic-bezier(.36,.07,.19,.97); }
-.wl-form input { flex: 1 1 auto; min-width: 0; height: 48px; border: 0; background: transparent; color: #F4F1E6; font-family: inherit; font-size: 16px; }
-.wl-form input::placeholder { color: #8E9878; }
+.wl-form:focus-within { box-shadow: 0 0 0 2px var(--grove-lime); }
+.wl-form-error { border-color: var(--grove-bloom); animation: wl-shake 0.5s cubic-bezier(.36,.07,.19,.97); }
+.wl-form input { flex: 1 1 auto; min-width: 0; height: var(--touch-button); border: 0; background: transparent; color: var(--grove-cream); font-family: inherit; font-size: var(--text-base); }
+.wl-form input::placeholder { color: var(--grove-lichen); }
 .wl-form input:focus { outline: none; }
 .wl-form button {
-  flex: 0 0 auto; height: 48px; padding: 0 20px; border: 0; border-radius: 12px;
-  background: #F4F1E6; color: #0B0F08; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+  flex: 0 0 auto; height: var(--touch-button); padding: 0 20px; border: 0; border-radius: var(--radius-control);
+  background: var(--grove-cream); color: var(--grove-night); font-family: inherit; font-size: var(--text-base); font-weight: 700; cursor: pointer;
 }
 .wl-form button:disabled { opacity: 0.75; cursor: default; }
-.wl-form button:focus-visible, .wl-beta:focus-visible { outline: 2px solid #C3D98A; outline-offset: 3px; }
-.wl-error { font-size: 15px; color: #E57A9C; }
-.wl-done { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; line-height: 1.45; animation: wl-in 0.7s cubic-bezier(.22,.61,.36,1) both; }
+.wl-form button:focus-visible, .wl-beta:focus-visible { outline: 2px solid var(--grove-sprout); outline-offset: 3px; }
+.wl-error { font-size: var(--text-label); color: var(--grove-bloom); }
+.wl-done { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: var(--text-lg); line-height: 1.45; animation: wl-in 0.7s cubic-bezier(.22,.61,.36,1) both; }
 .wl-done strong { font-weight: 700; }
 .wl-beta {
-  min-height: 44px; padding: 0; border: 0; background: transparent; color: #C3D98A; font-family: inherit; font-size: 16px;
+  min-height: var(--touch-min); padding: 0; border: 0; background: transparent; color: var(--grove-sprout); font-family: inherit; font-size: var(--text-base);
   text-decoration: underline; text-underline-offset: 4px; cursor: pointer;
 }
-.wl-proof { font-size: 14px; color: #A9B09A; }
+.wl-proof { font-size: var(--text-sm); color: var(--grove-lichen); }
 .wl-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Phone: real iPhone Pro Max proportions, peeks up from the fold. */
 .wl-stage { flex: 1 1 auto; display: flex; justify-content: center; align-items: flex-start; min-height: 360px; position: relative; }
 .wl-glow {
   position: absolute; left: 50%; top: 40px; width: 760px; height: 560px; margin-left: -380px; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(146,180,75,0.20) 0%, rgba(146,180,75,0.06) 40%, rgba(11,15,8,0) 70%);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--grove-lime) 20%, transparent) 0%, color-mix(in srgb, var(--grove-lime) 6%, transparent) 40%, transparent 70%);
   pointer-events: none; animation: wl-glow-in 2.2s ease-out 0.4s both, wl-breathe 8s ease-in-out 2.6s infinite;
 }
 .wl-tilt { position: absolute; top: 0; width: 364px; height: 763px; will-change: transform; }
 .wl-phone {
-  position: relative; width: 364px; height: 763px; box-sizing: border-box; padding: 11px; border-radius: 56px;
-  background: #050604; box-shadow: 0 0 0 1px #3A4A26, inset 0 0 0 1px #1A2112, 0 -20px 80px rgba(146,180,75,0.12);
+  position: relative; width: 364px; height: 763px; box-sizing: border-box; padding: 11px; border-radius: var(--radius-phone);
+  background: var(--grove-night); box-shadow: 0 0 0 1px var(--grove-input-line), inset 0 0 0 1px var(--grove-understory), 0 -20px 80px color-mix(in srgb, var(--grove-lime) 12%, transparent);
   animation: wl-rise 1.9s cubic-bezier(.16,1,.3,1) 0.45s both, wl-float 7.2s ease-in-out 3.6s infinite;
 }
-.wl-btn { position: absolute; width: 4px; background: #2A3320; }
+.wl-btn { position: absolute; width: 4px; background: var(--grove-canopy); }
 .wl-btn-action { left: -4px; top: 134px; height: 31px; border-radius: 2px 0 0 2px; }
 .wl-btn-up { left: -4px; top: 188px; height: 57px; border-radius: 2px 0 0 2px; }
 .wl-btn-down { left: -4px; top: 258px; height: 57px; border-radius: 2px 0 0 2px; }
 .wl-btn-power { right: -4px; top: 214px; height: 90px; border-radius: 0 2px 2px 0; }
-.wl-screen { position: relative; width: 342px; height: 741px; border-radius: 45px; overflow: hidden; background: #202D14; }
+.wl-screen { position: relative; width: 342px; height: 741px; border-radius: var(--radius-phone-screen); overflow: hidden; background: var(--grove-forest); }
 .wl-stage-scale { position: absolute; left: 0; top: 0; width: 430px; height: 932px; transform: scale(0.795349); transform-origin: 0 0; }
-.wl-island { left: 152px; top: 11px; width: 126px; height: 37px; border-radius: 20px; background: #000; z-index: 5; }
+.wl-island { left: 152px; top: 11px; width: 126px; height: 37px; border-radius: 20px; background: var(--grove-night); z-index: 5; }
 .wl-sheen {
   position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; pointer-events: none; opacity: 0;
-  background: linear-gradient(100deg, rgba(244,241,230,0) 0%, rgba(244,241,230,0.10) 50%, rgba(244,241,230,0) 100%);
+  background: linear-gradient(100deg, transparent 0%, color-mix(in srgb, var(--grove-cream) 10%, transparent) 50%, transparent 100%);
   animation: wl-sheen 1.4s ease-in-out 2.2s both;
 }
 

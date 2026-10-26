@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { swapsAPI } from '../lib/api';
+import { LoadErrorPage } from '../components/LoadError';
 import { PageHeader } from '../components/PageHeader';
 import { Repeat, Lock, CheckCircle2, Circle, Calendar, Crown, Shield } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 
 /**
  * Phase 14C — Swaps page.
@@ -20,25 +24,28 @@ export default function SwapsPage() {
   const navigate = useNavigate();
   const [eligibility, setEligibility] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        const res = await swapsAPI.eligibility();
-        if (alive) setEligibility(res.data);
-      } finally {
-        if (alive) setLoading(false);
-      }
-    })();
-    return () => { alive = false; };
-  }, []);
+  const load = async () => {
+    setLoadError(false);
+    try {
+      const res = await swapsAPI.eligibility();
+      setEligibility(res.data);
+    } catch (e) {
+      setLoadError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => { load(); }, []);
+
+  if (loadError) {
+    return <LoadErrorPage back title="Swaps" what="swaps" onRetry={load} />;
+  }
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-      </div>
+      <Loading label="Loading swaps" className="min-h-panel" />
     );
   }
 
@@ -50,20 +57,20 @@ export default function SwapsPage() {
 
   return (
     <div className="pb-24" data-testid="swaps-page">
-      <PageHeader title="Swaps" subtitle="Trade cuttings, divisions, and seeds with growers nearby" />
+      <PageHeader title="Swaps" back />
 
-      <div className="max-w-[1100px] mx-auto px-4 pt-4 space-y-4">
+      <div className="max-w-page mx-auto px-4 pt-4 space-y-4">
         {!eligible && (
           <div
-            className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-sun/15 p-5"
+            className="rounded-card border-hairline border-grove-moss bg-grove-sun/15 p-5"
             data-testid="swaps-locked-card"
           >
             <div className="flex items-start gap-3 mb-3">
-              <span className="w-10 h-10 rounded-full bg-[#BA7517]/20 flex items-center justify-center flex-shrink-0">
+              <span className="w-10 h-10 rounded-full bg-grove-sun/20 flex items-center justify-center flex-shrink-0">
                 <Lock className="h-5 w-5 text-grove-sun" />
               </span>
               <div className="flex-1">
-                <h2 className="font-plant text-grove-cream text-lg leading-tight">
+                <h2 className="font-plant text-grove-cream text-xl font-semibold leading-tight">
                   Swaps unlock at 3 months on FloraGrove with a Pro subscription, after a one-time verification.
                 </h2>
                 <p className="font-ui text-xs text-grove-sage leading-relaxed mt-2">
@@ -110,22 +117,30 @@ export default function SwapsPage() {
 
         {eligible && (
           <div
-            className="rounded-[14px] border-[0.5px] border-grove-fernLine bg-grove-moss p-5 text-center"
+            className="rounded-card border-hairline border-grove-fernLine bg-grove-moss p-5 text-center"
             data-testid="swaps-eligible-card"
           >
             <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/15 mb-3">
               <Repeat className="h-6 w-6 text-grove-sprout" />
             </span>
-            <h2 className="font-plant text-grove-cream text-lg">You're cleared to swap</h2>
+            <h2 className="font-plant text-grove-cream text-xl font-semibold">You're cleared to swap</h2>
             <p className="font-ui text-xs text-grove-sage mt-1 leading-relaxed">
               Swap listings ship next — for now this is your verified-grower lounge. Browse, want-list, and stay tuned.
             </p>
+            <button
+              type="button"
+              onClick={() => navigate('/swap')}
+              data-testid="swaps-offer-button"
+              className={cn(buttonVariants(), "mt-4")}
+            >
+              Browse swaps
+            </button>
           </div>
         )}
 
         {/* Discovery surface — visible to everyone, transactable only by eligible users */}
-        <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-5">
-          <h3 className="font-plant text-grove-cream text-sm">What you'll trade</h3>
+        <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
+          <h3 className="font-plant text-grove-cream text-base font-semibold ">What you'll trade</h3>
           <ul className="mt-2 space-y-1.5 font-ui text-xs text-grove-cream leading-relaxed">
             <li>• Cuttings from your established plants — Pothos, Monstera, String of Pearls.</li>
             <li>• Divisions of clumping perennials — Snake Plant pups, Spider Plant runners.</li>
@@ -145,7 +160,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
   return (
     <li
       data-testid={testid}
-      className={`rounded-[10px] border-[0.5px] p-3 flex items-start gap-3 ${
+      className={`rounded-small border-hairline px-4 py-3 flex items-start gapx-4 py-3 ${
         done ? 'bg-grove-moss border-grove-fernLine' : 'bg-grove-canopy border-grove-moss'
       }`}
     >
@@ -157,7 +172,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
         )}
       </span>
       <span className="flex-1 min-w-0">
-        <p className="font-plant text-xs text-grove-cream flex items-center gap-1.5">
+        <p className="font-ui text-xs font-medium text-grove-cream flex items-center gap-1.5">
           <Icon className="h-3 w-3" />
           {title}
         </p>
@@ -167,7 +182,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
         <button
           type="button"
           onClick={cta.onClick}
-          className="flex-shrink-0 rounded-[12px] font-ui text-xs px-3 py-1.5 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+          className={cn(buttonVariants({ variant: 'outline' }), "flex-shrink-0")}
         >
           {cta.label}
         </button>
