@@ -5,14 +5,14 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #202D14;
+  background: var(--grove-forest);
 }
 ::-webkit-scrollbar-thumb {
-  background: #3C4D26;
-  border-radius: 3px;
+  background: var(--grove-moss);
+  border-radius: var(--radius-hairline);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64793F;
+  background: var(--grove-fern-line);
 }
 
 /* Smooth scrolling */

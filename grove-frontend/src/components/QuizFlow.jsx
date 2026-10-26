@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { lessonAPI } from '../lib/api';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 import { QUIZ_OPTIONS } from '../lessons/lessonMeta';
 
 // One screen, multi-select. It only picks the first lesson, and says so.
@@ -44,7 +46,7 @@ export default function QuizFlow({ onDone }) {
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-grove-forest px-4"
+      className="fixed inset-0 z-celebration flex items-center justify-center bg-grove-forest px-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="quiz-title"
@@ -68,7 +70,7 @@ export default function QuizFlow({ onDone }) {
                 role="checkbox"
                 aria-checked={on}
                 onClick={() => toggle(option.id)}
-                className={`w-full text-left rounded-[8px] border-[0.5px] px-4 py-3 text-sm font-ui text-grove-cream ${
+                className={`w-full text-left rounded-inset border-hairline px-4 py-3 text-sm font-ui text-grove-cream ${
                   on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/20' : 'border-grove-moss bg-grove-canopy hover:border-grove-fernLine'
                 }`}
                 data-testid={`quiz-option-${option.id}`}
@@ -80,7 +82,7 @@ export default function QuizFlow({ onDone }) {
         </div>
 
         {error && (
-          <p role="alert" className="mt-3 text-xs font-ui text-red-700" data-testid="quiz-error">
+          <p role="alert" className="mt-3 text-xs font-ui text-destructive" data-testid="quiz-error">
             {error}
           </p>
         )}
@@ -89,7 +91,7 @@ export default function QuizFlow({ onDone }) {
           type="button"
           onClick={start}
           aria-busy={saving}
-          className="mt-4 w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
+          className={cn(buttonVariants(), "mt-4 w-full")}
           data-testid="quiz-start"
         >
           {saving ? 'Saving…' : 'Start my first lesson'}

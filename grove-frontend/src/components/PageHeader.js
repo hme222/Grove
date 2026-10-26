@@ -1,58 +1,87 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
 import NotificationBell from './NotificationBell';
+import BackButton from './BackButton';
 
-export function PageHeader({ title, count, rightContent, children, hideBell, hideProfile }) {
+// One header for every screen: [Back] Title ... [page action] [bell] [profile].
+// `back` is true (step back in history) or { to, where } (go to a named place).
+export function PageHeader({ title, count, rightContent, children, hideBell, hideProfile, back, countLabel }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const onProfile = pathname === '/profile';
+
+  // One title per screen for the tab strip and screen-reader history (WCAG 2.4.2).
+  React.useEffect(() => {
+    if (typeof title === 'string' && title) document.title = `${title} · FloraGrove`;
+  }, [title]);
   return (
-    <div className="sticky top-0 z-40 bg-grove-forest border-b-[0.5px] border-grove-moss">
-      <div className="max-w-[1100px] mx-auto px-4 py-3">
+    <header className="sticky top-0 z-sticky bg-grove-forest border-b-hairline border-grove-moss">
+      <div className="max-w-page mx-auto px-4 py-3">
         {/* Wraps instead of running off the edge when the reader's text is large. */}
-        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
           <div className="flex min-w-0 flex-1 basis-28 items-center gap-2">
-            <h1 className="font-plant text-grove-cream text-xl truncate">{title}</h1>
+            {back && <BackButton {...(back === true ? {} : back)} />}
+            <h1 id="page-title" className="flex min-h-touch items-center font-plant text-grove-cream text-xl leading-tight break-words"><span className="line-clamp-2 overflow-hidden">{title}</span></h1>
             {count !== undefined && (
-              <span className="inline-flex items-center rounded-[20px] border-[0.5px] border-grove-moss bg-grove-moss px-2.5 py-0.5 text-xs font-ui text-grove-cream">
+              <span className="inline-flex items-center rounded-round border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
                 {count}
+                {countLabel && <span className="sr-only"> {countLabel}</span>}
               </span>
             )}
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}
             {!hideBell && <NotificationBell />}
-            {!hideProfile && (
+            {!hideProfile && !onProfile && (
               <button
                 type="button"
                 onClick={() => navigate('/profile')}
-                aria-label="Open profile"
+                aria-label="Profile"
                 data-testid="header-profile-button"
-                className="w-11 h-11 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center"
+                className="w-touch h-touch rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center"
               >
                 <User className="h-4 w-4" />
               </button>
             )}
+            {onProfile && !hideProfile && <span aria-hidden="true" className="h-touch w-touch" />}
           </div>
         </div>
         {children}
       </div>
-    </div>
+    </header>
   );
 }
 
-export function FilterChips({ filters, active, onChange }) {
+// The one page action in a header: outline, 44px, with an optional leading icon. A filled
+// (lime) button is reserved for the main action inside the page body, never the header.
+export const HeaderAction = React.forwardRef(function HeaderAction({ icon: Icon, children, pressed, className = '', ...props }, ref) {
   return (
-    <div className="mt-3 flex flex-wrap gap-2 pb-1">
+    <button
+      ref={ref}
+      type="button"
+      aria-pressed={pressed}
+      className={cn(buttonVariants({ variant: pressed ? 'default' : 'outline' }), 'flex gap-1.5', className)}
+      {...props}
+    >
+      {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
+      {children}
+    </button>
+  );
+});
+
+export function FilterChips({ filters, active, onChange, className = '' }) {
+  return (
+    <div className={`flex flex-wrap gap-2 ${className}`}>
       {filters.map(({ value, label }) => (
         <button
           key={value}
           onClick={() => onChange(value)}
+          aria-pressed={active === value}
           data-testid={`filter-chip-${value}`}
-          className={`inline-flex min-h-[44px] items-center whitespace-nowrap rounded-[20px] border-[0.5px] px-3 py-1.5 text-xs font-ui transition-colors duration-150 ${
-            active === value
-              ? 'border-grove-fernLine bg-grove-lime text-grove-root'
-              : 'border-grove-moss bg-grove-moss text-grove-cream hover:border-grove-fernLine'
-          }`}
+          className={cn(buttonVariants({ variant: 'chip' }))}
         >
           {label}
         </button>
@@ -63,7 +92,7 @@ export function FilterChips({ filters, active, onChange }) {
 
 export function EmptyState({ title, description, action }) {
   return (
-    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center my-8 mx-4">
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center my-8 mx-4">
       <p className="font-plant text-grove-cream text-lg mb-1">{title}</p>
       <p className="text-sm font-ui text-grove-cream mb-4">{description}</p>
       {action}

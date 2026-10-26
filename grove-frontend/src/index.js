@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./styles/tokens.generated.css";
 import "@/index.css";
 import App from "@/App";
 import PhonePreviewShell from "./components/PhonePreviewShell";

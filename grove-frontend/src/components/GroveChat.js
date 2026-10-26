@@ -1,5 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Loading, { Spinner } from './Loading';
 import { toast } from 'sonner';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
+import ConfirmDialog from './ConfirmDialog';
 import { Send, X, Edit2, Trash2, Image as ImageIcon, Check, AlertCircle } from 'lucide-react';
 import { groveChatAPI, uploadAPI, getFileUrl } from '../lib/api';
 
@@ -37,6 +41,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
   // Edit state
   const [editingId, setEditingId] = useState(null);
   const [editBody, setEditBody] = useState('');
+  const [pending, setPending] = useState(null); // message awaiting delete confirmation
 
   // Auto-scroll
   const endRef = useRef(null);
@@ -52,7 +57,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
     } catch (e) {
       const status = e?.response?.status;
       if (status === 403) {
-        setError('You must be a member of this Grove to read chat.');
+        setError('You must be a member of this grove to read chat.');
       } else if (status === 404) {
         setError('Grove not found.');
       } else {
@@ -212,8 +217,9 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
     }
   };
 
-  const handleDelete = async (msg) => {
-    if (!window.confirm('Delete this message?')) return;
+  const handleDelete = (msg) => setPending(msg);
+
+  const performDelete = async (msg) => {
     try {
       await groveChatAPI.remove(groveId, msg.id);
       // Optimistic update — the next poll will reaffirm the tombstone state
@@ -229,15 +235,15 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
 
   if (error) {
     return (
-      <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-6 text-center" data-testid="grove-chat-error">
+      <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center" data-testid="grove-chat-error">
         <AlertCircle className="h-5 w-5 text-grove-sun mx-auto mb-2" />
-        <p className="font-plant text-sm text-grove-cream">{error}</p>
+        <p className="font-ui text-sm font-medium text-grove-cream">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy flex flex-col overflow-hidden" data-testid="grove-chat" style={{ height: 'min(70vh, 640px)' }}>
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy flex flex-col overflow-hidden" data-testid="grove-chat" style={{ height: 'min(70vh, 640px)' }}>
       {/* Messages list */}
       <div
         ref={scrollerRef}
@@ -246,12 +252,10 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
         data-testid="grove-chat-messages"
       >
         {initialLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-          </div>
+          <Loading label="Loading messages" className="h-full" />
         ) : messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6">
-            <p className="font-plant text-grove-cream text-sm">No messages yet</p>
+            <p className="font-ui text-grove-cream text-sm font-medium">No messages yet</p>
             <p className="font-latin italic text-xs text-grove-lichen mt-1">
               Be the first to say hello.
             </p>
@@ -279,20 +283,20 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
       </div>
 
       {/* Composer */}
-      <div className="border-t-[0.5px] border-grove-moss p-3 bg-grove-canopy" data-testid="grove-chat-composer">
+      <div className="border-t-hairline border-grove-moss p-3 bg-grove-canopy" data-testid="grove-chat-composer">
         {photoPath && (
-          <div className="mb-2 flex items-center gap-2 rounded-[8px] border-[0.5px] border-grove-fernLine bg-grove-moss px-3 py-2">
+          <div className="mb-2 flex items-center gap-2 rounded-inset border-hairline border-grove-fernLine bg-grove-moss px-3 py-2">
             <img
               src={getFileUrl(photoPath)}
               alt="attachment preview"
-              className="w-10 h-10 rounded-[6px] object-cover"
+              className="w-10 h-10 rounded-tag object-cover"
             />
             <span className="font-ui text-xs text-grove-sage flex-1 truncate">Photo attached</span>
             <button
               type="button"
               onClick={() => setPhotoPath(null)}
               data-testid="grove-chat-remove-photo"
-              className="p-1 rounded-[6px] hover:bg-grove-canopy text-grove-sage"
+              className="p-1 rounded-tag hover:bg-grove-canopy text-grove-sage"
               aria-label="Remove photo"
             >
               <X className="h-3.5 w-3.5" />
@@ -313,16 +317,16 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             onClick={() => fileInputRef.current?.click()}
             disabled={photoUploading || !!photoPath}
             data-testid="grove-chat-attach-btn"
-            className="flex-shrink-0 w-9 h-9 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-sprout hover:border-grove-fernLine disabled:opacity-40 flex items-center justify-center"
+            className="flex-shrink-0 w-9 h-9 rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-sprout hover:border-grove-fernLine disabled:opacity-40 flex items-center justify-center"
             aria-label="Attach photo"
           >
             {photoUploading ? (
-              <div className="w-3.5 h-3.5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
+              <Spinner className="h-3.5 w-3.5" />
             ) : (
               <ImageIcon className="h-4 w-4" />
             )}
           </button>
-          <textarea aria-label="Message your Grove"
+          <textarea aria-label="Message your grove"
             value={body}
             onChange={(e) => setBody(e.target.value)}
             onKeyDown={(e) => {
@@ -334,14 +338,14 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             placeholder="Say something to your Grove…"
             rows={1}
             data-testid="grove-chat-input"
-            className="flex-1 resize-none rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-[0.8125rem] text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
+            className="flex-1 resize-none rounded-chip border-hairline border-grove-moss bg-grove-canopy px-3 py-2 font-ui text-xs text-grove-cream placeholder:text-grove-lichen focus:outline-none focus:border-grove-fernLine max-h-32"
           />
           <button
             type="button"
             onClick={handleSend}
             disabled={sending || (!body.trim() && !photoPath)}
             data-testid="grove-chat-send-btn"
-            className="flex-shrink-0 w-9 h-9 rounded-full bg-grove-lime text-grove-root hover:bg-grove-sprout disabled:opacity-40 flex items-center justify-center"
+            className={cn(buttonVariants({ size: 'icon' }), "rounded-full flex-shrink-0")}
             aria-label="Send"
           >
             <Send className="h-4 w-4" />
@@ -356,6 +360,15 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
           </p>
         </div>
       </div>
+      <ConfirmDialog
+        open={pending != null}
+        onOpenChange={(o) => { if (!o) setPending(null); }}
+        title="Delete this message?"
+        description="The message is removed for everyone in this grove and replaced with a note that it was deleted. This can't be undone."
+        confirmLabel="Delete message"
+        testId="grove-chat-delete-confirm"
+        onConfirm={() => { const t = pending; setPending(null); performDelete(t); }}
+      />
     </div>
   );
 }
@@ -387,7 +400,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
   if (msg.is_deleted) {
     return (
       <div className="flex justify-center my-1" data-testid={`chat-msg-${msg.id}`} data-deleted="true">
-        <span className="font-latin italic text-xs text-grove-sage px-3 py-1 rounded-[12px] bg-grove-moss">
+        <span className="font-latin italic text-xs text-grove-sage px-3 py-1 rounded-control bg-grove-moss">
           Message deleted
         </span>
       </div>
@@ -406,19 +419,19 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
         }`}
         title={msg.author_display_name || msg.author_username || ''}
       >
-        <span className="font-plant text-xs">{initial}</span>
+        <span className="font-ui text-xs font-medium">{initial}</span>
       </div>
-      <div className={`max-w-[78%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
+      <div className={`max-w-4/5 ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
         {!isOwn && (
-          <p className="font-plant text-xs text-grove-sage mb-0.5 ml-1">
+          <p className="font-ui text-xs font-medium text-grove-sage mb-0.5 ml-1">
             {msg.author_display_name || msg.author_username || ''}
           </p>
         )}
         <div
-          className={`rounded-[12px] px-3 py-2 ${
+          className={`rounded-control px-3 py-2 ${
             isOwn
-              ? 'bg-grove-lime text-grove-root rounded-tr-[2px]'
-              : 'bg-grove-canopy border-[0.5px] border-grove-moss text-grove-cream rounded-tl-[2px]'
+              ? 'bg-grove-lime text-grove-root rounded-tr-hairline'
+              : 'bg-grove-canopy border-hairline border-grove-moss text-grove-cream rounded-tl-hairline'
           }`}
         >
           {msg.photo_path && (
@@ -432,7 +445,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
               <img
                 src={getFileUrl(msg.photo_path)}
                 alt="message attachment"
-                className="max-w-full rounded-[8px] max-h-72 object-cover"
+                className="max-w-full rounded-inset max-h-72 object-cover"
                 loading="lazy"
               />
             </a>
@@ -444,14 +457,14 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                 onChange={(e) => setEditBody(e.target.value)}
                 rows={2}
                 data-testid={`chat-msg-${msg.id}-edit-input`}
-                className="w-full resize-none rounded-[6px] border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream px-2 py-1 font-ui text-[0.8125rem] focus:outline-none focus:border-grove-fernLine"
+                className="w-full resize-none rounded-tag border-hairline border-grove-moss bg-grove-canopy text-grove-cream px-2 py-1 font-ui text-xs focus:outline-none focus:border-grove-fernLine"
               />
               <div className="flex items-center gap-1.5 justify-end">
                 <button
                   type="button"
                   onClick={onEditCancel}
                   data-testid={`chat-msg-${msg.id}-edit-cancel`}
-                  className="rounded-[12px] font-ui text-xs px-2 py-1 border-[0.5px] border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
+                  className="rounded-control font-ui text-xs px-2 py-1 border-hairline border-grove-moss text-grove-cream bg-grove-canopy hover:border-grove-fernLine"
                 >
                   Cancel
                 </button>
@@ -459,7 +472,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                   type="button"
                   onClick={onEditSave}
                   data-testid={`chat-msg-${msg.id}-edit-save`}
-                  className="rounded-[12px] font-ui text-xs px-2 py-1 bg-grove-lime text-grove-root hover:bg-grove-sprout inline-flex items-center gap-1"
+                  className={cn(buttonVariants(), "inline-flex items-center gap-1")}
                 >
                   <Check className="h-3 w-3" /> Save
                 </button>
@@ -467,7 +480,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
             </div>
           ) : (
             msg.body && (
-              <p className="font-ui text-[0.8125rem] leading-snug whitespace-pre-wrap break-words">
+              <p className="font-ui text-xs leading-snug whitespace-pre-wrap break-words">
                 {msg.body}
               </p>
             )
@@ -495,7 +508,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
                 type="button"
                 onClick={onDelete}
                 data-testid={`chat-msg-${msg.id}-delete-btn`}
-                className="text-grove-lichen hover:text-[#BA1818]"
+                className="text-grove-lichen hover:text-destructive"
                 aria-label="Delete"
               >
                 <Trash2 className="h-3 w-3" />

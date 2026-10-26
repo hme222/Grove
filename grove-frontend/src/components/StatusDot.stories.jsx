@@ -16,7 +16,7 @@ export const Playground = {};
 
 export const AllStatusesWithLabels = {
   render: (args) => (
-    <div style={{ display: "grid", gap: 12 }}>
+    <div className="grid gap-3">
       {STATUSES.map((status) => (
         <StatusDot key={status} {...args} status={status} showLabel />
       ))}
@@ -28,7 +28,7 @@ export const AllStatusesWithLabels = {
 // so it should always sit next to text that names the status.
 export const DotsOnly = {
   render: (args) => (
-    <div style={{ display: "flex", gap: 12 }}>
+    <div className="flex gap-3">
       {STATUSES.map((status) => (
         <StatusDot key={status} {...args} status={status} showLabel={false} />
       ))}

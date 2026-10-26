@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Loading from './Loading';
 import { plantAPI, getFileUrl } from '../lib/api';
 import PlantImage from './PlantImage';
+import ConfirmDialog from './ConfirmDialog';
 import { toast } from 'sonner';
 import { Upload, Trash2, Star, Calendar, X, Check, Pencil } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 
 /**
  * Phase 14A.2 — Photo gallery for a plant.
@@ -19,6 +23,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
   const [cap, setCap] = useState(10);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [pending, setPending] = useState(null); // photo id awaiting delete confirmation
   const [editing, setEditing] = useState(null); // photo being edited
   const fileInputRef = useRef(null);
   const [pendingTakenAt, setPendingTakenAt] = useState('');
@@ -68,8 +73,9 @@ export default function PhotoGallery({ plantId, onChanged }) {
     }
   };
 
-  const handleDelete = async (photoId) => {
-    if (!window.confirm('Delete this photo?')) return;
+  const handleDelete = (photoId) => setPending(photoId);
+
+  const performDelete = async (photoId) => {
     try {
       await plantAPI.deletePhoto(plantId, photoId);
       toast.success('Photo deleted');
@@ -119,10 +125,10 @@ export default function PhotoGallery({ plantId, onChanged }) {
   };
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="photo-gallery">
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="photo-gallery">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="font-plant text-grove-cream text-sm">Photos</h3>
+          <h3 className="font-plant text-grove-cream text-base font-semibold ">Photos</h3>
           <p className="font-latin text-xs text-grove-sage mt-0.5">
             {count} of {cap} · each photo feeds the growth timeline.
           </p>
@@ -132,7 +138,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
           onClick={handleAddClick}
           disabled={uploading || count >= cap}
           data-testid="photo-gallery-add"
-          className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150 flex items-center gap-1.5"
+          className={cn(buttonVariants(), "flex gap-1.5")}
         >
           <Upload className="h-3 w-3" />
           {uploading ? 'Uploading…' : 'Add photo'}
@@ -148,15 +154,13 @@ export default function PhotoGallery({ plantId, onChanged }) {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-        </div>
+        <Loading label="Loading photos" className="py-8" />
       ) : photos.length === 0 ? (
         <div
-          className="rounded-[10px] border border-dashed border-grove-moss bg-grove-forest p-6 text-center"
+          className="rounded-chip border-hairline border-dashed border-grove-fernLine bg-grove-forest p-5 text-center"
           data-testid="photo-gallery-empty"
         >
-          <p className="font-plant text-grove-cream text-sm">No photos yet</p>
+          <p className="font-ui text-grove-cream text-sm font-medium">No photos yet</p>
           <p className="font-ui text-xs text-grove-sage mt-1 leading-snug">
             Add a photo every few weeks — the timeline turns them into a visible story of growth.
           </p>
@@ -165,7 +169,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
         <div className="grid grid-cols-3 gap-2" data-testid="photo-gallery-grid">
           {photos.map((p) => (
             <div key={p.id} className="relative group" data-testid={`photo-tile-${p.id}`}>
-              <div className="aspect-square rounded-[10px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-moss">
+              <div className="aspect-square rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss">
                 <PlantImage src={p.path} tone="plant" rounded="none" className="w-full h-full" />
               </div>
               {p.is_cover && (
@@ -221,7 +225,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
               onClick={handleAddClick}
               disabled={uploading}
               data-testid="photo-gallery-add-tile"
-              className="aspect-square rounded-[10px] border border-dashed border-grove-moss bg-grove-forest flex flex-col items-center justify-center text-grove-sage hover:border-grove-fernLine hover:text-grove-cream transition-colors duration-150"
+              className="aspect-square rounded-chip border-hairline border-dashed border-grove-fernLine bg-grove-forest flex flex-col items-center justify-center text-grove-sage hover:border-grove-fernLine hover:text-grove-cream transition-colors duration-150"
             >
               <Upload className="h-4 w-4 mb-1" />
               <span className="text-xs font-ui">Add</span>
@@ -232,7 +236,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
 
       {/* Edit photo modal (caption + taken_at) */}
       <Dialog open={!!editing} onOpenChange={(o) => { if (!o) setEditing(null); }}>
-        <DialogContent className="bg-grove-canopy border-[0.5px] border-grove-moss rounded-[14px] max-w-sm" data-testid="photo-edit-modal">
+        <DialogContent className="bg-grove-canopy border-hairline border-grove-moss rounded-small max-w-sm" data-testid="photo-edit-modal">
           <DialogHeader>
             <DialogTitle className="font-plant text-grove-cream text-lg">Edit photo</DialogTitle>
           </DialogHeader>
@@ -246,6 +250,15 @@ export default function PhotoGallery({ plantId, onChanged }) {
           )}
         </DialogContent>
       </Dialog>
+      <ConfirmDialog
+        open={pending != null}
+        onOpenChange={(o) => { if (!o) setPending(null); }}
+        title="Delete this photo?"
+        description="The photo is removed from this plant's journal. This can't be undone."
+        confirmLabel="Delete photo"
+        testId="photo-delete-confirm"
+        onConfirm={() => { const t = pending; setPending(null); performDelete(t); }}
+      />
     </div>
   );
 }
@@ -255,7 +268,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
   const [takenAt, setTakenAt] = useState(isoToDateInput(photo.taken_at));
   return (
     <div className="space-y-3">
-      <div className="rounded-[10px] overflow-hidden border-[0.5px] border-grove-moss bg-grove-moss">
+      <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss">
         <img
           src={getFileUrl(photo.path)}
           alt=""
@@ -263,29 +276,29 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
         />
       </div>
       <div>
-        <label className="block font-ui text-xs text-grove-cream mb-1">
+        <label htmlFor="photo-edit-takenat-input" className="block font-ui text-xs text-grove-cream mb-1">
           Taken on
         </label>
-        <input aria-label="Taken on"
+        <input id="photo-edit-takenat-input"
           type="date"
           value={takenAt}
           onChange={(e) => setTakenAt(e.target.value)}
           data-testid="photo-edit-takenat"
-          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] px-3 py-2 text-sm font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
+          className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-3 py-2 text-sm font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
           max={new Date().toISOString().slice(0, 10)}
         />
         <p className="font-latin text-xs text-grove-lichen mt-1">Used to sort photos chronologically in the growth timeline.</p>
       </div>
       <div>
-        <label className="block font-ui text-xs text-grove-cream mb-1">
+        <label htmlFor="photo-edit-caption-input" className="block font-ui text-xs text-grove-cream mb-1">
           Caption
         </label>
-        <textarea aria-label="Caption"
+        <textarea id="photo-edit-caption-input"
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           placeholder="What&#39;s happening in this photo?"
           data-testid="photo-edit-caption"
-          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] p-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
+          className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset p-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
           maxLength={280}
         />
       </div>
@@ -294,7 +307,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
           type="button"
           onClick={onCancel}
           data-testid="photo-edit-cancel"
-          className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150 flex items-center justify-center gap-2"
+          className={cn(buttonVariants({ variant: 'outline' }), "flex-1 flex")}
         >
           <X className="h-3.5 w-3.5" />
           Cancel
@@ -310,7 +323,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
             onSave(patch);
           }}
           data-testid="photo-edit-save"
-          className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150 flex items-center justify-center gap-2"
+          className={cn(buttonVariants(), "flex-1 flex")}
         >
           <Check className="h-3.5 w-3.5" />
           Save

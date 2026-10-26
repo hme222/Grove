@@ -1,8 +1,8 @@
-import { CARDS as SOIL_CARDS } from '../pages/SoilFingerTestVariation';
-import { CARDS as HABIT_CARDS } from '../pages/HabitStackingVariations';
-import { CARDS as ER_CARDS } from '../pages/PlantERVariations';
-import { CARDS as WINDOW_CARDS } from '../pages/WindowBlueprintVariations';
-import { LESSONS as RESET_CARDS } from '../pages/ResetCourseVariation';
+import { CARDS as SOIL_CARDS } from './cards/soilFingerTest';
+import { CARDS as HABIT_CARDS } from './cards/habitStacking';
+import { CARDS as ER_CARDS } from './cards/plantEr';
+import { CARDS as WINDOW_CARDS } from './cards/windowBlueprint';
+import { CARDS as RESET_CARDS } from './cards/plantParentReset';
 
 // Lesson id to card list. The text lives in the lesson pages and is used as written.
 export const LESSON_CARDS = {

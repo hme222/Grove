@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import useDialogA11y from '../lib/useDialogA11y';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI } from '../lib/api';
 import { Leaf, Droplets, Users, BookOpen, Sun, X } from 'lucide-react';
@@ -21,31 +23,31 @@ export const TUTORIAL_COPY = {
     title: 'Welcome to Plants',
     icon: Leaf,
     body: "Every plant you grow lives here. Tap a tile to open its full record — care, photos, growth. Long press a tile, or tap Select, to log care across many plants at once.",
-    accent: '#3B6D11',
+    accent: 'var(--grove-lime)',
   },
   care: {
     title: 'Welcome to Today',
     icon: Droplets,
     body: "This is your daily rhythm. To do shows what's due now and the badges you're working toward. Progress tracks change over time. Each tap is a small act of attention.",
-    accent: '#92B44B',
+    accent: 'var(--grove-lime)',
   },
   grove: {
     title: 'Welcome to Community',
     icon: Users,
-    body: "The community feed, your Groves, and plant swaps live here. Share photos, ask questions, swap cuttings. Grove unlocks gradually as your collection deepens.",
-    accent: '#D4537E',
+    body: "The community feed, your groves, and plant swaps live here. Share photos, ask questions, swap cuttings. The rest unlocks gradually as your collection deepens.",
+    accent: 'var(--grove-bloom)',
   },
   greenhouse: {
     title: 'Welcome to Learn',
     icon: BookOpen,
     body: "Your library of plant knowledge. Hand-curated species with native ranges, citations, and care guides. Browse to learn — or tap a species in your Collection to jump straight to its entry.",
-    accent: '#BA7517',
+    accent: 'var(--grove-sun)',
   },
   lighting: {
     title: 'A note on light',
     icon: Sun,
     body: "Light is the single biggest variable in plant care. Bright indirect means near a window without direct sun. Medium is several feet back. Low is a hallway or a north-facing room. Match your plant to your reality, not the other way around.",
-    accent: '#E8A857',
+    accent: 'var(--grove-sun)',
   },
 };
 
@@ -77,59 +79,49 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
     }
   }, [tutorialId, user, refreshUser]);
 
-  const dialogRef = React.useRef(null);
-  useDialogA11y(dialogRef, dismiss, !!(open && copy));
   if (!open || !copy) return null;
   const Icon = copy.icon;
 
   return (
-    <div
-      ref={dialogRef}
-      tabIndex={-1}
-      aria-label="Tip"
-      className="fixed inset-0 z-[300] bg-grove-night/85 flex items-end sm:items-center justify-center p-4 animate-in fade-in duration-200 focus:outline-none"
-      data-testid={`section-tutorial-${tutorialId}`}
-      role="dialog"
-      aria-modal="true"
-      onClick={dismiss}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[440px] rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy shadow-2xl overflow-hidden"
+    <Dialog open onOpenChange={(next) => { if (!next) dismiss(); }}>
+      <DialogContent
+        showClose={false}
+        data-testid={`section-tutorial-${tutorialId}`}
+        className="max-w-dialog gap-0 overflow-hidden rounded-small p-0"
       >
         <button
           type="button"
           onClick={dismiss}
           aria-label="Close tutorial"
           data-testid={`section-tutorial-close-${tutorialId}`}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-grove-forest text-grove-cream flex items-center justify-center hover:bg-grove-moss z-10"
+          className="absolute right-3 top-3 z-raised flex h-8 w-8 items-center justify-center rounded-round bg-grove-forest text-grove-cream hover:bg-grove-moss"
         >
           <X className="h-4 w-4" />
         </button>
         <div className="p-6">
           <div
-            className="w-12 h-12 rounded-[12px] flex items-center justify-center mb-4"
-            style={{ backgroundColor: `${copy.accent}20` }}
+            className="w-12 h-12 rounded-control flex items-center justify-center mb-4"
+            style={{ backgroundColor: `color-mix(in srgb, ${copy.accent} 20%, transparent)` }}
           >
             <Icon className="h-6 w-6" style={{ color: copy.accent }} />
           </div>
-          <h2 className="font-plant text-grove-cream text-xl mb-3 leading-tight">
+          <DialogTitle className="mb-3 text-xl leading-tight">
             {copy.title}
-          </h2>
-          <p className="font-ui text-sm leading-relaxed text-grove-cream">
+          </DialogTitle>
+          <DialogDescription className="font-ui text-sm leading-relaxed text-grove-cream">
             {copy.body}
-          </p>
+          </DialogDescription>
           <button
             type="button"
             onClick={dismiss}
             data-testid={`section-tutorial-cta-${tutorialId}`}
-            className="mt-5 w-full rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout transition-colors duration-150"
+            className={cn(buttonVariants(), "mt-5 w-full transition-colors duration-150")}
           >
             Got it
           </button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -154,7 +146,7 @@ export function ReplayTutorialButton({ tutorialId, label, className }) {
       onClick={handle}
       disabled={busy}
       data-testid={`replay-tutorial-${tutorialId}`}
-      className={className || 'rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
+      className={className || 'rounded-control font-ui text-xs px-3 py-2 border-hairline border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine disabled:opacity-50 transition-colors duration-150'}
     >
       {busy ? 'Resetting…' : (label || 'Replay')}
     </button>

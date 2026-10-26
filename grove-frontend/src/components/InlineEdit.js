@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Pencil, Check, X, Plus, Minus, ChevronDown } from 'lucide-react';
+import { Pencil, Check, Plus, Minus, ChevronDown } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 
 /**
  * Phase 14A.2 — Inline editing primitives.
@@ -54,7 +56,7 @@ export function InlineText({
         type="button"
         onClick={() => setEditing(true)}
         data-testid={`${testid}-display`}
-        className={`group inline-flex items-center gap-1.5 hover:bg-grove-moss rounded-[6px] px-1 -mx-1 transition-colors duration-150 ${className}`}
+        className={`group inline-flex items-center gap-1.5 hover:bg-grove-moss rounded-tag px-1 -mx-1 transition-colors duration-150 ${className}`}
       >
         <span>{value || <span className="text-grove-lichen">{placeholder}</span>}</span>
         <Pencil className="h-3 w-3 text-grove-sage opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
@@ -76,7 +78,7 @@ export function InlineText({
           if (e.key === 'Escape') { e.preventDefault(); cancel(); }
         }}
         data-testid={`${testid}-input`}
-        className={`bg-grove-canopy border-[0.5px] border-grove-fernLine rounded-[6px] px-2 py-0.5 outline-none focus:ring-2 focus:ring-grove-lime ${inputClassName}`}
+        className={`bg-grove-canopy border-hairline border-grove-fernLine rounded-tag px-2 py-0.5 outline-none focus:ring-2 focus:ring-grove-lime ${inputClassName}`}
       />
     </div>
   );
@@ -87,6 +89,8 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState('');
   const wrapRef = useRef(null);
+  const createRef = useRef(null);
+  useEffect(() => { if (creating) createRef.current?.focus(); }, [creating]);
 
   useEffect(() => {
     if (!open) return;
@@ -112,12 +116,19 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
   };
 
   return (
-    <span ref={wrapRef} className="relative inline-flex">
+    <span
+      ref={wrapRef}
+      role="presentation"
+      className="relative inline-flex"
+      onKeyDown={(e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); setOpen(false); wrapRef.current?.querySelector('button')?.focus(); } }}
+    >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-haspopup="true"
+        aria-expanded={open}
         data-testid={`${testid}-trigger`}
-        className="inline-flex items-center gap-1 rounded-[20px] border-[0.5px] border-grove-moss bg-grove-moss px-2.5 py-0.5 text-xs font-ui text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
+        className="inline-flex items-center gap-1 rounded-round border-hairline border-grove-fernLine bg-grove-moss px-2.5 py-1 text-xs font-ui text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
       >
         <span>{value || 'Add room'}</span>
         <ChevronDown className="h-2.5 w-2.5" />
@@ -125,7 +136,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
       {open && (
         <div
           data-testid={`${testid}-menu`}
-          className="absolute top-full left-0 mt-1 z-50 min-w-[180px] rounded-[10px] border-[0.5px] border-grove-moss bg-grove-canopy shadow-lg overflow-hidden"
+          className="absolute top-full left-0 mt-1 z-popover min-w-44 rounded-chip border-hairline border-grove-moss bg-grove-canopy shadow-lift overflow-hidden"
         >
           <ul className="py-1 max-h-60 overflow-auto">
             {options.length === 0 && !creating && (
@@ -136,6 +147,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                 <button
                   type="button"
                   onClick={() => pick(r)}
+                  aria-current={r === value ? 'true' : undefined}
                   data-testid={`${testid}-option`}
                   className={`w-full text-left px-3 py-1.5 text-xs font-ui ${
                     r === value
@@ -143,15 +155,15 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                       : 'text-grove-cream hover:bg-grove-forest'
                   }`}
                 >
-                  {r}
+                  {r === value && <Check className="mr-1.5 inline h-3 w-3" aria-hidden="true" />}{r}
                 </button>
               </li>
             ))}
-            <li className="border-t-[0.5px] border-grove-moss mt-1 pt-1">
+            <li className="border-t-hairline border-grove-moss mt-1 pt-1">
               {creating ? (
                 <div className="flex items-center gap-1 px-2 py-1">
                   <input aria-label="Room name"
-                    autoFocus
+                    ref={createRef}
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     onKeyDown={(e) => {
@@ -160,14 +172,14 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                     }}
                     placeholder="Room name"
                     data-testid={`${testid}-create-input`}
-                    className="flex-1 min-w-0 bg-grove-forest border-[0.5px] border-grove-moss rounded-[6px] px-2 py-1 text-xs font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
+                    className="flex-1 min-w-0 bg-grove-forest border-hairline border-grove-moss rounded-tag px-2 py-1 text-xs font-ui text-grove-cream focus:outline-none focus:ring-2 focus:ring-grove-lime"
                   />
                   <button
                     type="button"
                     onClick={commitNew}
                     aria-label="Create room"
                     data-testid={`${testid}-create-confirm`}
-                    className="w-6 h-6 rounded-[4px] bg-grove-lime text-grove-root flex items-center justify-center hover:bg-grove-sprout"
+                    className={cn(buttonVariants(), "w-6 flex items-center justify-center")}
                   >
                     <Check className="h-3 w-3" />
                   </button>
@@ -220,11 +232,11 @@ export function InlineStepper({
         disabled={busy || draft <= min}
         aria-label="Decrease"
         data-testid={`${testid}-decrement`}
-        className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
+        className="w-7 h-7 rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
       >
         <Minus className="h-3 w-3" />
       </button>
-      <span className="font-ui text-sm text-grove-cream min-w-[64px] text-center" data-testid={`${testid}-value`}>
+      <span className="font-ui text-sm text-grove-cream min-w-tab text-center" data-testid={`${testid}-value`}>
         Every {draft} {unit}
       </span>
       <button
@@ -233,7 +245,7 @@ export function InlineStepper({
         disabled={busy || draft >= max}
         aria-label="Increase"
         data-testid={`${testid}-increment`}
-        className="w-7 h-7 rounded-full border-[0.5px] border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
+        className="w-7 h-7 rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
       >
         <Plus className="h-3 w-3" />
       </button>

@@ -31,7 +31,6 @@ function daysSinceSignup(user) {
 
 function Tooltip({ tooltip, targetRect, onDismiss }) {
   const position = tooltip.position || 'top';
-  const MAX_WIDTH = 220;
   const tipRef = React.useRef(null);
 
   // Dismiss on any tap/keypress anywhere (except inside the tooltip itself).
@@ -49,7 +48,7 @@ function Tooltip({ tooltip, targetRect, onDismiss }) {
     };
   }, [onDismiss]);
 
-  let style = { position: 'fixed', zIndex: 9999, maxWidth: `${MAX_WIDTH}px` };
+  let style = { position: 'fixed' };
   const viewportW = typeof window !== 'undefined' ? window.innerWidth : 0;
 
   if (position === 'top') {
@@ -65,20 +64,20 @@ function Tooltip({ tooltip, targetRect, onDismiss }) {
   return (
     <div
       ref={tipRef}
-      className="rounded-[10px] border-[0.5px] border-[#2D5016] bg-[#1C2E10] p-3"
+      className="z-tip max-w-tip rounded-chip border-hairline border-grove-moss bg-grove-root p-3"
       style={style}
       data-testid={`tooltip-${tooltip.id}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1 flex-1 min-w-0">
-          <h4 className="font-plant text-[0.8125rem] leading-tight text-[#EAF3DE] font-medium">
+          <h4 className="font-ui text-xs font-medium leading-tight text-grove-cream font-medium">
             {tooltip.title}
           </h4>
-          <p className="font-ui text-xs leading-[1.5] text-[#9FE1CB]">{tooltip.body}</p>
+          <p className="font-ui text-xs leading-normal text-grove-sprout">{tooltip.body}</p>
         </div>
         <button
           onClick={onDismiss}
-          className="text-[#9FE1CB] hover:text-[#EAF3DE] transition-colors shrink-0 -mt-0.5"
+          className="text-grove-sprout hover:text-grove-cream transition-colors shrink-0 -mt-0.5"
           data-testid={`tooltip-dismiss-${tooltip.id}`}
           aria-label="Dismiss tooltip"
         >

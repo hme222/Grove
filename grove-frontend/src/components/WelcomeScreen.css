@@ -7,9 +7,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #202D14;
-  color: #F4F1E6;
-  font-family: 'Alegreya Sans', Optima, Candara, sans-serif;
+  background: var(--grove-forest);
+  color: var(--grove-cream);
+  font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
 }
 .gw-stage-wrap { position: relative; flex: 0 0 auto; }
@@ -18,29 +18,37 @@
 
 .gw-skip {
   position: absolute; top: 16px; right: 16px; z-index: 2;
-  min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;
-  border: 0; border-radius: 999px; background: transparent; color: #A9B09A; cursor: pointer;
+  min-width: var(--touch-min); min-height: var(--touch-min); display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--grove-lichen); cursor: pointer;
 }
-.gw-skip:hover { color: #F4F1E6; }
-.gw-skip:focus-visible, .gw-cta:focus-visible { outline: 2px solid #C3D98A; outline-offset: 3px; }
+.gw-skip:hover { color: var(--grove-cream); }
+.gw-skip:focus-visible, .gw-cta:focus-visible { outline: 2px solid var(--grove-sprout); outline-offset: 3px; }
 
 .gw-welcome { white-space: nowrap; line-height: 1; font-weight: normal; }
 .gw-welcome-to { font-weight: 300; font-size: 26px; }
-.gw-welcome-grove { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 29px; }
+.gw-welcome-grove { font-family: var(--font-display); font-weight: 700; font-size: 29px; }
 .gw-def, .gw-safe, .gw-tools { font-size: 17px; line-height: 20px; }
 .gw-safe { white-space: nowrap; }
 .gw-safe b { font-weight: 700; }
 .gw-tools { font-style: italic; font-weight: 300; }
-.gw-serif-bold { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 18px; }
+.gw-serif-bold { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
 .gw-forest { display: block; }
 .gw-lines { left: 0; top: 0; overflow: visible; pointer-events: none; }
 .gw-cta {
   display: flex; align-items: center; justify-content: center;
-  border: 0; border-radius: 10px; background: #92B44B; color: #34461C;
+  border: 0; border-radius: var(--radius-chip); background: var(--grove-lime); color: var(--grove-root);
   font-family: inherit; font-size: 17px; cursor: pointer;
 }
+/* The stage is one picture drawn in 430pt units and scaled by --stage-scale (set on .gw), so a
+   46pt button lands at about 35 CSS px. Grow the hit area so it is never under --touch-min on
+   screen, keeping the button's centre where the artwork puts it. */
+.gw-stage > .gw-cta {
+  --cta-h: max(46px, calc(var(--touch-min) / var(--stage-scale, 1)));
+  min-height: var(--cta-h);
+  margin-top: calc((46px - var(--cta-h)) / 2);
+}
 .gw-cta:disabled { cursor: default; opacity: 0.8; }
-.gw-cta-ring { position: absolute; left: 18px; top: 14px; }
+.gw-cta-ring { position: absolute; left: 18px; top: 50%; margin-top: -9px; }
 
 /* ---------- Motion ---------- */
 @keyframes gw-fade-up { from { opacity: 0; transform: translateY(10px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
@@ -119,8 +127,8 @@
 }
 
 .gw-screen {
-  position: relative; width: 100%; height: 100%; overflow: hidden; background: #202D14; color: #F4F1E6;
-  font-family: 'Alegreya Sans', Optima, Candara, sans-serif; -webkit-font-smoothing: antialiased;
+  position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--grove-forest); color: var(--grove-cream);
+  font-family: var(--font-ui); -webkit-font-smoothing: antialiased;
   --gw-pen: cubic-bezier(0.42, 0.08, 0.5, 0.96); --gw-out: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .gw-loop .gw-brand   { animation: gwl-brand 15.5s infinite; }

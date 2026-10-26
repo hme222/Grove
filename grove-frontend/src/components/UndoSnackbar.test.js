@@ -23,7 +23,7 @@ afterEach(() => {
 const render = (props) => act(() => root.render(<UndoSnackbar message="Watered 3 plants" duration={8000} {...props} />));
 
 test('announces politely and focuses Undo when asked', () => {
-  render({ onUndo: jest.fn(), onDismiss: jest.fn(), autoFocus: true });
+  render({ onUndo: jest.fn(), onDismiss: jest.fn(), focusOnShow: true });
   expect(q('undo-snackbar').getAttribute('role')).toBe('status');
   expect(document.activeElement).toBe(q('undo-snackbar-undo'));
 });
@@ -39,7 +39,7 @@ test('dismisses itself after the duration when left alone', () => {
 
 test('the timer pauses while it has focus, so keyboard users are not timed out', () => {
   const onDismiss = jest.fn();
-  render({ onUndo: jest.fn(), onDismiss, autoFocus: true });
+  render({ onUndo: jest.fn(), onDismiss, focusOnShow: true });
   act(() => { jest.advanceTimersByTime(60000); });
   expect(onDismiss).not.toHaveBeenCalled();
 });
@@ -47,7 +47,7 @@ test('the timer pauses while it has focus, so keyboard users are not timed out',
 test('Undo button calls onUndo; Escape dismisses', () => {
   const onUndo = jest.fn();
   const onDismiss = jest.fn();
-  render({ onUndo, onDismiss, autoFocus: true });
+  render({ onUndo, onDismiss, focusOnShow: true });
   act(() => { q('undo-snackbar-undo').click(); });
   expect(onUndo).toHaveBeenCalled();
   act(() => { q('undo-snackbar').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });

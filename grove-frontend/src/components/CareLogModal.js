@@ -1,32 +1,23 @@
+import { CARE_ACTIONS } from '../lib/careActions';
 import React, { useState, useRef, useMemo } from 'react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { careAPI } from '../lib/api';
 import { toast } from 'sonner';
-import { Droplets, Wind, Utensils, Scissors, FlowerIcon, SproutIcon, Camera, FileText, RotateCw, ClipboardCheck, Hand } from 'lucide-react';
 import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics';
 
 // Phase 14A.2 — multi-action care log. Users can select several actions in a
 // single sweep (e.g. water + mist + rotate). All selected actions are sent as
 // one request and grouped server-side via `group_id`.
-const CARE_ACTIONS = [
-  { value: 'water', label: 'Water', icon: Droplets, color: '#3B6D11' },
-  { value: 'mist', label: 'Mist', icon: Wind, color: '#92B44B' },
-  { value: 'fertilize', label: 'Fertilize', icon: Utensils, color: '#639922' },
-  { value: 'rotate', label: 'Rotate', icon: RotateCw, color: '#BA7517' },
-  { value: 'prune', label: 'Prune', icon: Scissors, color: '#2D5016' },
-  { value: 'check', label: 'Check', icon: ClipboardCheck, color: '#185FA5' },
-  { value: 'soil_check', label: 'Soil test', icon: Hand, color: '#BA7517' },
-  { value: 'repot', label: 'Repot', icon: FlowerIcon, color: '#BA7517' },
-  { value: 'propagate', label: 'Propagate', icon: SproutIcon, color: '#185FA5' },
-  { value: 'photo', label: 'Photo', icon: Camera, color: '#E57A9C' },
-  { value: 'note', label: 'Note', icon: FileText, color: '#8A8778' },
-];
 
 // Heavier-feedback actions get medium impact; lighter ones get a light tap.
 const HEAVY_ACTIONS = new Set(['fertilize', 'repot', 'propagate', 'prune']);
 
 export default function CareLogModal({ open, onClose, plantId, plantName, onLogged }) {
   const [selected, setSelected] = useState(() => new Set());
+  const [hint, setHint] = useState(null);
+  const openerRef = React.useRef(null);
   const [notes, setNotes] = useState('');
   const [logging, setLogging] = useState(false);
   const [soilOutcome, setSoilOutcome] = useState('');
@@ -107,12 +98,15 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) { handleReset(); onClose(); } }}>
-      <DialogContent className="bg-grove-moss border-[0.5px] border-grove-moss rounded-[14px] max-w-md" data-testid="care-log-modal">
+      <DialogContent className="max-w-dialog" data-testid="care-log-modal"
+        onOpenAutoFocus={(e) => { e.preventDefault(); openerRef.current = openerRef.current || document.activeElement; document.getElementById('care-log-title')?.focus(); }}
+        onCloseAutoFocus={(e) => { e.preventDefault(); const el = openerRef.current; openerRef.current = null; if (el && el.focus && document.contains(el)) el.focus(); }}
+      >
         <DialogHeader>
-          <DialogTitle className="font-plant text-grove-cream text-lg">
+          <DialogTitle id="care-log-title" tabIndex={-1} className="font-plant text-grove-cream text-xl focus:outline-none">
             Log care for {plantName}
           </DialogTitle>
-          <p className="text-xs font-ui text-grove-cream opacity-70 mt-1">
+          <p className="mt-1 text-sm font-ui text-grove-sage">
             Tap every action you just did — they&apos;ll log together as one sweep.
           </p>
         </DialogHeader>
@@ -123,12 +117,13 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             return (
               <button
                 key={value}
-                onClick={(e) => toggleAction(e, value)}
+                onClick={(e) => { setHint(value); toggleAction(e, value); }}
+                onFocus={() => setHint(value)}
                 data-testid={`care-action-${value}`}
                 aria-pressed={isOn}
-                className={`relative overflow-hidden flex flex-col items-center gap-1 p-3 rounded-[8px] border-[0.5px] transition-colors duration-150 ${
+                className={`relative overflow-hidden flex min-h-touch flex-col items-center gap-1 p-3 rounded-control border-hairline transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-cream focus-visible:ring-offset-2 focus-visible:ring-offset-grove-moss ${
                   isOn
-                    ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/20'
+                    ? 'border-grove-lime bg-grove-canopy'
                     : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
                 }`}
               >
@@ -138,9 +133,12 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             );
           })}
         </div>
+        <p id="care-action-hint-text" aria-live="polite" data-testid="care-action-hint" className="font-ui text-sm text-grove-sage">
+          {count === 0 ? 'Pick at least one action to log. Tap one to see what it means.' : ''}{count === 0 && hint ? ' ' : ''}{hint ? `${CARE_ACTIONS.find((a) => a.value === hint)?.label}: ${CARE_ACTIONS.find((a) => a.value === hint)?.hint}` : ''}
+        </p>
 
         {selected.has('soil_check') && (
-          <div className="mb-3 p-3 bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px]" data-testid="care-soil-fields">
+          <div className="mb-3 p-3 bg-grove-forest border-hairline border-grove-moss rounded-control" data-testid="care-soil-fields">
             <p className="text-xs font-ui text-grove-cream mb-2">Press a finger 2 inches into the soil. What did you feel?</p>
             <div className="flex gap-2 mb-2">
               {[['dry', 'Dry and dusty'], ['damp', 'Damp and cool']].map(([value, label]) => (
@@ -149,7 +147,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
                   type="button"
                   aria-pressed={soilOutcome === value}
                   onClick={() => setSoilOutcome(value)}
-                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-xs font-ui text-grove-cream ${
+                  className={`flex-1 rounded-control border-hairline px-2 py-2 text-xs font-ui text-grove-cream ${
                     soilOutcome === value ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-canopy'
                   }`}
                   data-testid={`care-soil-outcome-${value}`}
@@ -166,7 +164,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
                   type="button"
                   aria-pressed={soilDecision === value}
                   onClick={() => setSoilDecision(soilDecision === value ? '' : value)}
-                  className={`flex-1 rounded-[8px] border-[0.5px] px-2 py-2 text-xs font-ui text-grove-cream ${
+                  className={`flex-1 rounded-control border-hairline px-2 py-2 text-xs font-ui text-grove-cream ${
                     soilDecision === value ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-canopy'
                   }`}
                   data-testid={`care-soil-decision-${value}`}
@@ -176,7 +174,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
               ))}
             </div>
             {soilError && (
-              <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="care-soil-error">
+              <p role="alert" className="mt-2 text-xs font-ui text-destructive" data-testid="care-soil-error">
                 {soilError}
               </p>
             )}
@@ -185,7 +183,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
         {count > 0 && (
           <div
-            className="flex items-center justify-between px-3 py-2 mb-2 bg-grove-moss border-[0.5px] border-grove-fernLine/30 rounded-[6px]"
+            className="flex items-center justify-between px-3 py-2 mb-2 bg-grove-moss border-hairline border-grove-fernLine/30 rounded-tag"
             data-testid="care-multi-summary"
           >
             <span className="text-xs font-ui text-grove-cream">
@@ -205,26 +203,27 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Add a note (optional)"
-          className="w-full bg-grove-forest border-[0.5px] border-grove-moss rounded-[8px] p-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
+          className="w-full bg-grove-forest border-hairline border-grove-moss rounded-control p-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
           data-testid="care-log-notes"
         />
 
-        <div className="flex gap-2 mt-2">
-          <button
-            onClick={() => { handleReset(); onClose(); }}
-            className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss bg-transparent text-grove-cream hover:border-grove-fernLine transition-colors duration-150"
-            data-testid="care-log-cancel"
-          >
-            Cancel
-          </button>
+        <div className="mt-2 flex flex-col gap-2">
           <button
             ref={submitBtnRef}
             onClick={handleLog}
             disabled={count === 0 || logging}
             data-testid="care-log-submit"
-            className="relative overflow-hidden flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout disabled:opacity-50 transition-colors duration-150"
+            aria-describedby="care-action-hint-text"
+            className={cn(buttonVariants(), "relative overflow-hidden disabled:border-transparent disabled:bg-grove-moss disabled:text-grove-sage disabled:opacity-100 transition-colors duration-150")}
           >
-            {logging ? 'Logging…' : (count > 1 ? `Log ${count} actions` : 'Log Care')}
+            {logging ? 'Logging…' : (count > 1 ? `Log ${count} actions` : 'Log care')}
+          </button>
+          <button
+            onClick={() => { handleReset(); onClose(); }}
+            className={cn(buttonVariants({ variant: 'outline' }))}
+            data-testid="care-log-cancel"
+          >
+            Cancel
           </button>
         </div>
       </DialogContent>

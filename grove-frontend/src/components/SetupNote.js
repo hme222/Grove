@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { buttonVariants } from './ui/button';
 import { notificationAPI, userAPI } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -41,15 +42,14 @@ export default function SetupNote() {
   };
   const skipPets = () => { write(PETS_NOTE_KEY); setPetsSkipped(true); };
 
-  const btn = 'min-h-[44px] rounded-[12px] border-[0.5px] px-4 font-ui text-sm disabled:opacity-60';
-  const primary = `${btn} border-grove-lime bg-grove-lime text-grove-root`;
-  const equal = `${btn} border-grove-fernLine text-grove-cream hover:border-grove-lime`;
-  const quiet = `${btn} border-transparent text-grove-sage underline underline-offset-2`;
+  const primary = buttonVariants({ variant: 'outline' });
+  const equal = buttonVariants({ variant: 'outline' });
+  const quiet = buttonVariants({ variant: 'link' });
 
   if (!remindersDone && remindersOn) {
     return (
-      <section aria-label="Reminders" data-testid="reminder-note" className="rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-4">
-        <p className="font-plant text-lg text-grove-cream">One reminder a day, only when needed</p>
+      <section aria-label="Reminders" data-testid="reminder-note" className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
+        <p className="font-plant text-base font-semibold text-grove-cream">One reminder a day, only when needed</p>
         <p className="mt-1 font-ui text-sm text-grove-sage">We send a single message when plants need a check. You can turn it off any time.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" onClick={doneReminders} data-testid="reminder-keep" className={primary}>Sounds good</button>
@@ -63,8 +63,8 @@ export default function SetupNote() {
   const askPets = user && (user.has_pets === undefined || user.has_pets === null) && !petsSkipped && (remindersDone || !remindersOn);
   if (askPets) {
     return (
-      <section aria-label="Pets" data-testid="pets-note" className="rounded-[22px] border-[0.5px] border-grove-moss bg-grove-canopy px-5 py-4">
-        <p className="font-plant text-lg text-grove-cream">Do you have pets at home?</p>
+      <section aria-label="Pets" data-testid="pets-note" className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
+        <p className="font-plant text-base font-semibold text-grove-cream">Do you have pets at home?</p>
         <p className="mt-1 font-ui text-sm text-grove-sage">If you do, we will show whether each of your plants is safe for them.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" disabled={saving} onClick={() => answerPets(true)} data-testid="pets-yes" className={primary}>Yes</button>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 import { Droplet, Camera, Leaf, Sparkles, Check, ArrowRight } from 'lucide-react';
 import { missionAPI } from '../lib/api';
 import { impactLight, success, spawnRipple } from '../lib/haptics';
@@ -71,7 +73,7 @@ export default function DailyMissionCard({ onCompleted, embedded = false }) {
       data-mission-completed={completed ? 'true' : 'false'}
       className={embedded
         ? 'relative py-4'
-        : `relative overflow-hidden rounded-[16px] border-[0.5px] px-4 py-3 mb-3 ${
+        : `relative overflow-hidden rounded-card border-hairline px-4 py-3 mb-3 ${
           completed
             ? 'border-grove-fernLine/40 bg-grove-moss'
             : 'border-grove-moss bg-grove-canopy'
@@ -86,13 +88,13 @@ export default function DailyMissionCard({ onCompleted, embedded = false }) {
         >
           {completed ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
         </div>
-        <div className="min-w-[9rem] flex-1">
-          <p className="font-plant text-xs text-grove-sage">
+        <div className="min-w-36 flex-1">
+          <p className="font-ui text-xs font-medium text-grove-sage">
             Today's mission
           </p>
           <h3
             data-testid="daily-mission-title"
-            className="font-plant text-grove-cream text-base leading-snug truncate"
+            className="font-plant text-grove-cream text-base font-semibold leading-snug truncate"
           >
             {completed ? 'Mission complete' : mission.title}
           </h3>
@@ -108,7 +110,7 @@ export default function DailyMissionCard({ onCompleted, embedded = false }) {
               type="button"
               onClick={handleCta}
               data-testid="daily-mission-cta"
-              className="relative overflow-hidden rounded-[8px] bg-grove-lime text-grove-root font-plant text-xs px-3 py-2 hover:bg-grove-sprout transition-colors duration-150 flex items-center gap-1"
+              className={cn(buttonVariants({ variant: 'outline' }), "relative overflow-hidden transition-colors duration-150 flex items-center gap-1")}
             >
               {mission.cta || 'Begin'}
               <ArrowRight className="h-3 w-3" />
@@ -120,7 +122,7 @@ export default function DailyMissionCard({ onCompleted, embedded = false }) {
                 data-testid="daily-mission-manual-complete"
                 className="text-xs font-ui text-grove-sage underline-offset-2 hover:underline"
               >
-                {completing ? 'Logging...' : 'Mark as done'}
+                {completing ? 'Logging…' : 'Mark done'}
               </button>
             )}
           </div>

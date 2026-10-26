@@ -13,7 +13,7 @@ const plant = (overrides) => ({
 export default {
   title: "Grove/PlantCard",
   component: PlantCard,
-  decorators: [(Story) => <div style={{ maxWidth: 220 }}><Story /></div>],
+  decorators: [(Story) => <div className="max-w-tip"><Story /></div>],
 };
 
 export const Healthy = { args: { plant: plant() } };

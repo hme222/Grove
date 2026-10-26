@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import AppLink from './AppLink';
 import { Leaf, Sun, Users, BookOpen } from 'lucide-react';
 
 const tabs = [
@@ -10,28 +11,28 @@ const tabs = [
 ];
 
 export default function BottomNav() {
-  const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <nav aria-label="Main" className="fixed bottom-0 left-0 right-0 z-50 bg-grove-forest border-t-[0.5px] border-grove-moss pb-[env(safe-area-inset-bottom)]" data-testid="bottom-nav">
-      <div className="mx-auto max-w-[1100px] px-4">
-        <div className="flex items-center justify-around">
+    <nav id="main-nav" tabIndex={-1} aria-label="Main" className="fixed bottom-0 left-0 right-0 z-nav box-border min-h-nav bg-grove-forest border-t-hairline border-grove-moss pb-safe" data-testid="bottom-nav">
+      <div className="mx-auto max-w-page px-4">
+        <div className="grid grid-cols-4">
           {tabs.map(({ path, match, icon: Icon, label, testid }) => {
             const isActive = match(location.pathname);
             return (
-              <button
+              <AppLink
                 key={path}
-                onClick={() => navigate(path)}
+                to={path}
                 data-testid={testid}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex flex-col items-center justify-center gap-1 py-3 px-4 text-xs font-ui min-w-[64px] min-h-[56px] transition-colors duration-150 ${
-                  isActive ? 'text-grove-cream' : 'text-grove-cream opacity-60'
+                className={`relative flex min-h-row flex-col items-center justify-center gap-1 px-2 py-3 font-ui text-xs transition-colors duration-150 ${
+                  isActive ? 'text-grove-cream' : 'text-grove-sage'
                 }`}
               >
-                <Icon className="h-5 w-5" strokeWidth={isActive ? 2.2 : 1.5} />
-                <span className={isActive ? 'font-medium' : ''}>{label}</span>
-              </button>
+                {isActive && <span aria-hidden="true" className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-grove-lime" />}
+                <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.5} />
+                <span className={`text-center leading-tight ${isActive ? 'font-bold' : ''}`}>{label}</span>
+              </AppLink>
             );
           })}
         </div>

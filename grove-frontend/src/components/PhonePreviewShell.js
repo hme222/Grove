@@ -12,8 +12,8 @@ function StatusBar() {
   }, []);
   return (
     <div className="relative flex items-end justify-between px-8 pb-2 text-grove-cream" style={{ height: PHONE.statusBar }} aria-hidden="true">
-      <span className="font-ui text-[17px] font-semibold leading-none tracking-tight">{now}</span>
-      <span className="absolute left-1/2 top-[11px] h-[34px] w-[122px] -translate-x-1/2 rounded-full bg-black" />
+      <span className="font-ui text-lead font-semibold leading-none tracking-tight">{now}</span>
+      <span className="absolute left-1/2 top-[11px] h-[34px] w-[122px] -translate-x-1/2 rounded-full bg-grove-night" />
       <span className="flex items-center gap-1.5">
         <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="0.8" /><rect x="5" y="5.5" width="3" height="6.5" rx="0.8" /><rect x="10" y="3" width="3" height="9" rx="0.8" /><rect x="15" y="0" width="3" height="12" rx="0.8" /></svg>
         <svg width="17" height="12" viewBox="0 0 17 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M1.5 4.2a10 10 0 0 1 14 0" /><path d="M4.2 7a6 6 0 0 1 8.6 0" /><circle cx="8.5" cy="10" r="1" fill="currentColor" stroke="none" /></svg>
@@ -53,7 +53,7 @@ export default function PhonePreviewShell({ children }) {
     return () => window.removeEventListener('message', onMessage);
   }, [framed]);
 
-  const initialSrc = useMemo(() => `${window.location.pathname}${window.location.search.replace(/[?&]frame=(on|off)/, '')}${window.location.hash}`, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const initialSrc = useMemo(() => `${window.location.pathname}${window.location.search.replace(/[?&]frame=(on|off)/, '')}${window.location.hash}`, []);
 
   if (!framed) return children;
 
@@ -67,17 +67,17 @@ export default function PhonePreviewShell({ children }) {
     <div className="flex min-h-screen flex-col items-center justify-center bg-grove-night px-4 py-8" data-testid="phone-preview">
       <div style={{ width: PHONE.width * scale + 28 * scale, height: deviceH * scale }}>
         <div style={{ width: PHONE.width + 28, height: deviceH, transform: `scale(${scale})`, transformOrigin: 'top left' }}
-          className="rounded-[62px] border border-[#2c3a1c] bg-black p-[14px] shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
-          <div className="overflow-hidden rounded-[48px] bg-grove-forest" style={{ width: PHONE.width, height: PHONE.height }}>
+          className="rounded-phone border-strong border-grove-moss bg-grove-night p-3 shadow-dialog">
+          <div className="overflow-hidden rounded-phoneScreen bg-grove-forest" style={{ width: PHONE.width, height: PHONE.height }}>
             <StatusBar />
-            <iframe title="FloraGrove app preview" src={initialSrc} style={{ width: PHONE.width, height: screenH, border: 0, display: 'block', background: '#202D14' }} />
+            <iframe title="FloraGrove app preview" src={initialSrc} style={{ width: PHONE.width, height: screenH, border: 0, display: 'block', background: 'var(--grove-forest)' }} />
             <div className="flex items-center justify-center bg-grove-forest" style={{ height: PHONE.homeBar }} aria-hidden="true">
               <span className="h-[5px] w-[134px] rounded-full bg-grove-cream/70" />
             </div>
           </div>
         </div>
       </div>
-      <p className="mt-4 text-center font-ui text-[13px] text-grove-sage">
+      <p className="mt-4 text-center font-ui text-xs text-grove-sage">
         iPhone preview. Open FloraGrove on your phone for the real thing.{' '}
         <button type="button" onClick={hide} className="underline underline-offset-2 hover:text-grove-cream" data-testid="phone-preview-hide">Hide the phone frame</button>
       </p>

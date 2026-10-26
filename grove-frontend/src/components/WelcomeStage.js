@@ -53,14 +53,14 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
       <svg className="gw-lines" viewBox={`0 0 ${STAGE_W} ${STAGE_H}`} width={STAGE_W} height={STAGE_H} aria-hidden="true">
         <defs>
           <linearGradient id="gw-wipe-1" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#fff" />
-            <stop offset={1 - 14 / WIPE_1.h} stopColor="#fff" />
-            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0" stopColor="white" />
+            <stop offset={1 - 14 / WIPE_1.h} stopColor="white" />
+            <stop offset="1" stopColor="white" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="gw-wipe-2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#fff" />
-            <stop offset={1 - 14 / WIPE_2.h} stopColor="#fff" />
-            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0" stopColor="white" />
+            <stop offset={1 - 14 / WIPE_2.h} stopColor="white" />
+            <stop offset="1" stopColor="white" stopOpacity="0" />
           </linearGradient>
           <mask id="gw-mask-1" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
             <rect className="gw-wipe gw-wipe-1" x="0" y={WIPE_1.top} width={STAGE_W} height={WIPE_1.h} fill="url(#gw-wipe-1)" style={{ '--gw-from': `-${WIPE_1.h}px` }} />
@@ -69,16 +69,16 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
             <rect className="gw-wipe gw-wipe-2" x="0" y={WIPE_2.top} width={STAGE_W} height={WIPE_2.h} fill="url(#gw-wipe-2)" style={{ '--gw-from': `-${WIPE_2.h}px` }} />
           </mask>
         </defs>
-        <g fill="#92B44B">
+        <g fill="var(--grove-lime)">
           <path className="gw-line" mask="url(#gw-mask-1)" d={LINE_1} />
           <path className="gw-line" mask="url(#gw-mask-2)" d={LINE_2} />
           <path className="gw-a gw-lower" d={LINE_3} />
         </g>
-        <g fill="none" stroke="#92B44B" strokeLinecap="round" strokeLinejoin="round">
+        <g fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round">
           <path className="gw-a gw-lower" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
           <path className="gw-a gw-lower" strokeWidth="1.3" strokeOpacity="0.5" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
         </g>
-        <g className="gw-a gw-stars" fill="#E8E66A">
+        <g className="gw-a gw-stars" fill="var(--grove-sun)">
           <Sparkle cx={277} cy={133} r={5.5} i={1} />
           <Sparkle cx={270.5} cy={136} r={4.5} i={2} />
           <Sparkle cx={279} cy={140} r={4.5} i={3} />
@@ -88,7 +88,7 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
       {decorative ? (
         <div className="gw-a gw-lower gw-cta" aria-hidden="true" style={{ left: 20, top: 804, width: 390, height: 46 }}>
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" className="gw-cta-ring">
-            <circle cx="9" cy="9" r="7" fill="none" stroke="#487840" strokeWidth="1.8" />
+            <circle cx="9" cy="9" r="7" fill="none" stroke="var(--grove-fern-line)" strokeWidth="1.8" />
           </svg>
           Continue
         </div>
@@ -102,7 +102,7 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
           style={{ left: 20, top: 804, width: 390, height: 46 }}
         >
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" className="gw-cta-ring">
-            <circle cx="9" cy="9" r="7" fill="none" stroke="#487840" strokeWidth="1.8" />
+            <circle cx="9" cy="9" r="7" fill="none" stroke="var(--grove-fern-line)" strokeWidth="1.8" />
           </svg>
           {disabled ? 'Loading…' : 'Continue'}
         </button>

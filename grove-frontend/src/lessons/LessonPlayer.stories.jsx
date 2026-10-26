@@ -11,8 +11,8 @@ const SAMPLE_CARDS = [
     body: 'Most plants don’t die from a lack of love — they die from <strong>drowning</strong>.',
     cta: 'I’m ready',
     icon: Heart,
-    accent: 'from-rose-100 via-amber-50 to-emerald-50',
-    ring: 'text-rose-600',
+    accent: 'from-grove-bloom/20 via-grove-sun/10 to-grove-lime/10',
+    ring: 'text-grove-bloom',
   },
   {
     n: 2,
@@ -21,8 +21,8 @@ const SAMPLE_CARDS = [
     body: 'Push your index finger <strong>2 inches deep</strong> into the soil.',
     cta: 'Got it &mdash; finger as probe',
     icon: Hand,
-    accent: 'from-amber-100 via-orange-50 to-emerald-50',
-    ring: 'text-amber-700',
+    accent: 'from-grove-sun/20 via-grove-bloom/10 to-grove-lime/10',
+    ring: 'text-grove-sun',
   },
   {
     n: 3,
@@ -31,8 +31,8 @@ const SAMPLE_CARDS = [
     body: 'Go to your nearest plant right now.',
     cta: 'Log my first soil test',
     icon: Timer,
-    accent: 'from-lime-100 via-emerald-50 to-emerald-100',
-    ring: 'text-emerald-700',
+    accent: 'from-grove-lime/20 via-grove-sprout/10 to-grove-lime/20',
+    ring: 'text-grove-sprout',
     interactive: true,
   },
 ];
@@ -59,7 +59,7 @@ export const WithFinalCard = {
     cards: SAMPLE_CARDS,
     onExit: () => {},
     renderFinalCard: () => (
-      <button type="button" className="w-full rounded-[2px] bg-[#1C2E10] text-[#F5F0E8] px-4 py-3 text-xs">
+      <button type="button" className="w-full rounded-control bg-grove-lime text-grove-root px-4 py-3 text-xs">
         Your turn goes here
       </button>
     ),

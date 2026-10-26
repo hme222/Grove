@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Spinner } from './Loading';
 import { Camera, Image as ImageIcon, ChevronDown, ChevronUp, RotateCcw, Check } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 import { toast } from 'sonner';
 import { plantAPI, getFileUrl } from '../lib/api';
 import PhotoGuideCards from './PhotoGuideCards';
@@ -14,14 +17,13 @@ const GUIDE_OPEN_KEY = 'grove_photo_guide_seen';
  *  - onPhotoReady     Fired with the uploaded storage path when the user is happy
  *  - onBack           Fired when user taps Back
  */
-export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
+export default function PhotoRequirement({ plantName, onPhotoReady, onSkip }) {
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
   const [uploadingSource, setUploadingSource] = useState(null); // 'camera' | 'gallery' | null
   const [uploadedPath, setUploadedPath] = useState(null);
   const [validation, setValidation] = useState(null); // null | {...}
   const [validating, setValidating] = useState(false);
-  const [sourceUsed, setSourceUsed] = useState(null);
 
   // Guide open-by-default on first add; collapsed afterwards.
   const guideAlreadySeen = typeof window !== 'undefined' && localStorage.getItem(GUIDE_OPEN_KEY) === '1';
@@ -42,7 +44,6 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
       const up = await plantAPI.upload(form);
       const path = up.data.path;
       setUploadedPath(path);
-      setSourceUsed(source);
       // Skip AI validation for gallery picks (assume intentional), run for camera
       if (source === 'camera') {
         setValidating(true);
@@ -80,18 +81,9 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
     : null;
 
   return (
-    <div className="max-w-[520px] mx-auto px-4 py-4 space-y-4" data-testid="photo-requirement-screen">
-      <button
-        type="button"
-        onClick={onBack}
-        data-testid="photo-back"
-        className="rounded-[12px] font-ui text-xs px-3 py-2 border-[0.5px] border-grove-moss text-grove-cream hover:border-grove-fernLine"
-      >
-        ← Back
-      </button>
-
+    <div className="max-w-form mx-auto px-4 py-4 space-y-4" data-testid="photo-requirement-screen">
       <header>
-        <h2 className="font-plant text-grove-cream text-[1.0625rem] leading-tight">
+        <h2 className="font-plant text-grove-cream text-lead leading-tight">
           Add a photo of {plantName || 'your plant'}
         </h2>
         <p className="font-ui italic text-grove-sage text-xs mt-1">
@@ -99,9 +91,20 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
         </p>
       </header>
 
+      {onSkip && (
+        <button
+          type="button"
+          onClick={onSkip}
+          data-testid="photo-skip"
+          className={cn(buttonVariants({ variant: 'outline' }), 'w-full')}
+        >
+          Add without a photo for now
+        </button>
+      )}
+
       {/* Viewfinder / preview */}
       <div
-        className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss overflow-hidden"
+        className="rounded-card border-hairline border-grove-moss bg-grove-moss overflow-hidden"
         data-testid="photo-viewfinder"
       >
         {uploadedPath ? (
@@ -113,9 +116,9 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             />
             {validating && (
               <div className="absolute inset-0 bg-grove-lime/60 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-6 h-6 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                  <p className="font-plant text-grove-sprout text-xs">Checking your photo…</p>
+                <div className="text-center" role="status">
+                  <Spinner className="mx-auto mb-2 block h-6 w-6" />
+                  <p className="font-ui text-grove-sprout text-xs font-medium">Checking your photo…</p>
                 </div>
               </div>
             )}
@@ -123,7 +126,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
         ) : (
           <div className="aspect-[4/3] flex flex-col items-center justify-center text-center px-6">
             <Camera className="h-8 w-8 text-grove-sprout mb-2" />
-            <p className="font-plant text-grove-cream text-sm">Tap a button below</p>
+            <p className="font-ui text-grove-cream text-sm font-medium">Tap a button below</p>
             <p className="font-ui text-xs text-grove-sage mt-1">
               Camera opens your device — Library picks an existing photo.
             </p>
@@ -134,17 +137,17 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
       {/* Rejection feedback */}
       {photoFeedback && (
         <div
-          className="rounded-[12px] border-[0.5px] border-grove-bloom/40 bg-grove-bloom/15 p-3"
+          className="rounded-control border-hairline border-grove-bloom/40 bg-grove-bloom/15 p-3"
           data-testid="photo-validation-feedback"
         >
-          <p className="font-plant text-grove-cream text-sm">We couldn't quite see the plant clearly</p>
+          <p className="font-ui text-grove-cream text-sm font-medium">We couldn't quite see the plant clearly</p>
           <p className="italic font-ui text-xs text-grove-sage mt-1">"{photoFeedback}"</p>
           <div className="mt-3 flex items-center gap-2">
             <button
               type="button"
               onClick={handleRetry}
               data-testid="photo-try-again"
-              className="rounded-[12px] font-ui text-xs px-4 py-2 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center gap-1.5"
+              className={cn(buttonVariants(), "flex items-center gap-1.5")}
             >
               <RotateCcw className="h-3.5 w-3.5" /> Try again
             </button>
@@ -152,7 +155,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
               type="button"
               onClick={handleAccept}
               data-testid="photo-use-anyway"
-              className="rounded-[12px] font-ui text-xs px-4 py-2 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine"
+              className={cn(buttonVariants({ variant: 'outline' }))}
             >
               Use anyway
             </button>
@@ -183,7 +186,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             onClick={() => cameraInputRef.current?.click()}
             disabled={!!uploadingSource}
             data-testid="photo-take"
-            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout disabled:opacity-60 flex items-center justify-center gap-1.5"
+            className={cn(buttonVariants(), "flex gap-1.5")}
           >
             <Camera className="h-4 w-4" />
             {uploadingSource === 'camera' ? 'Uploading…' : 'Take photo'}
@@ -193,7 +196,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             onClick={() => galleryInputRef.current?.click()}
             disabled={!!uploadingSource}
             data-testid="photo-library"
-            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine disabled:opacity-60 flex items-center justify-center gap-1.5"
+            className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
           >
             <ImageIcon className="h-4 w-4" />
             {uploadingSource === 'gallery' ? 'Uploading…' : 'Choose existing'}
@@ -208,7 +211,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             type="button"
             onClick={handleRetry}
             data-testid="photo-retake"
-            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-transparent text-grove-cream border-[0.5px] border-grove-moss hover:border-grove-fernLine flex items-center justify-center gap-1.5"
+            className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
           >
             <RotateCcw className="h-4 w-4" /> Retake
           </button>
@@ -216,7 +219,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
             type="button"
             onClick={handleAccept}
             data-testid="photo-use-this"
-            className="rounded-[12px] font-ui text-xs px-4 py-3 bg-grove-lime text-grove-root border-[0.5px] border-grove-fernLine hover:bg-grove-sprout flex items-center justify-center gap-1.5"
+            className={cn(buttonVariants(), "flex items-center justify-center gap-1.5")}
           >
             <Check className="h-4 w-4" /> Use this photo
           </button>
@@ -225,7 +228,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
 
       {/* Photo guide (accordion) */}
       <div
-        className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-canopy overflow-hidden"
+        className="rounded-card border-hairline border-grove-moss bg-grove-canopy overflow-hidden"
         data-testid="photo-guide-accordion"
       >
         <button
@@ -237,12 +240,12 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onBack }) {
         >
           <span className="flex items-center gap-2">
             <Camera className="h-4 w-4 text-grove-sprout" />
-            <span className="font-plant text-grove-cream text-sm">How to take a great plant photo</span>
+            <span className="font-ui text-grove-cream text-sm font-medium">How to take a great plant photo</span>
           </span>
           {guideOpen ? <ChevronUp className="h-4 w-4 text-grove-cream" /> : <ChevronDown className="h-4 w-4 text-grove-cream" />}
         </button>
         {guideOpen && (
-          <div className="px-3 pb-3 border-t-[0.5px] border-grove-moss/50 pt-3">
+          <div className="px-3 pb-3 border-t-hairline border-grove-moss/50 pt-3">
             <PhotoGuideCards />
           </div>
         )}

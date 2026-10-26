@@ -65,7 +65,7 @@ export default function DailyTriviaCard({ embedded = false }) {
 
   return (
     <article
-      className={embedded ? 'relative py-4' : 'rounded-[14px] border-[0.5px] border-grove-fernLine/40 bg-grove-canopy p-4 mb-3 relative'}
+      className={embedded ? 'relative py-4' : 'rounded-card border-hairline border-grove-fernLine/40 bg-grove-canopy p-5 mb-3 relative'}
       data-testid="daily-trivia-card"
       data-category={card.category}
     >
@@ -74,7 +74,7 @@ export default function DailyTriviaCard({ embedded = false }) {
         onClick={handleDismiss}
         data-testid="daily-trivia-dismiss"
         aria-label="Dismiss for today"
-        className={`absolute right-0 flex h-11 w-11 items-center justify-center rounded-[6px] text-grove-lichen hover:bg-grove-moss hover:text-grove-cream transition-colors duration-150 ${embedded ? 'top-1' : 'top-2'}`}
+        className={`absolute right-0 flex h-touch w-touch items-center justify-center rounded-tag text-grove-lichen hover:bg-grove-moss hover:text-grove-cream transition-colors duration-150 ${embedded ? 'top-1' : 'top-2'}`}
       >
         <X className="h-4 w-4" />
       </button>
@@ -84,11 +84,11 @@ export default function DailyTriviaCard({ embedded = false }) {
           <Sparkles className="h-4 w-4 text-grove-sprout" />
         </span>
         <div className="flex-1 min-w-0 pr-6">
-          <p className="font-plant text-xs text-grove-sprout mb-1">
+          <p className="font-ui text-xs font-medium text-grove-sprout mb-1">
             Daily {CATEGORY_LABELS[card.category] || 'plant fact'}
           </p>
           <h4
-            className="font-plant text-sm text-grove-cream leading-snug mb-1"
+            className="font-ui text-sm font-medium text-grove-cream leading-snug mb-1"
             data-testid="daily-trivia-headline"
           >
             {card.headline}
@@ -103,7 +103,7 @@ export default function DailyTriviaCard({ embedded = false }) {
             type="button"
             onClick={handleReadMore}
             data-testid="daily-trivia-read-more"
-            className="mt-2 inline-flex items-center gap-1 font-plant text-xs text-grove-sprout hover:text-grove-sprout"
+            className="mt-2 inline-flex items-center gap-1 font-ui text-xs font-medium text-grove-sprout hover:text-grove-sprout"
           >
             <BookOpen className="h-3 w-3" />
             {linked

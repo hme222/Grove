@@ -4,6 +4,8 @@ import { ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { lessonAPI } from '../lib/api';
 import { LESSON_META, lessonPath } from '../lessons/lessonMeta';
+import { cn } from '../lib/utils';
+import { buttonVariants } from './ui/button';
 
 // Care Today's way into the lessons. With a saved track it shows the next
 // unfinished lesson. Everyone else, and anyone whose lesson cannot be shown,
@@ -41,7 +43,7 @@ export default function NextLessonCard({ embedded = false }) {
         <button
           type="button"
           onClick={() => navigate('/lessons')}
-          className="flex min-h-[44px] w-full items-center justify-between gap-3 py-4 text-left"
+          className="flex min-h-touch w-full items-center justify-between gap-3 py-4 text-left"
           data-testid="lessons-link"
         >
           <span>
@@ -68,7 +70,7 @@ export default function NextLessonCard({ embedded = false }) {
 
   return (
     <section
-      className={embedded ? 'flex items-center justify-between gap-3 py-4' : 'rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 flex items-center justify-between gap-3'}
+      className={embedded ? 'flex items-center justify-between gap-3 py-4' : 'rounded-card border-hairline border-grove-moss bg-grove-moss p-5 flex items-center justify-between gap-3'}
       data-testid="next-lesson-card"
     >
       <div>
@@ -87,7 +89,7 @@ export default function NextLessonCard({ embedded = false }) {
       <button
         type="button"
         onClick={() => navigate(lessonPath(state.lessonId))}
-        className="shrink-0 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+        className={cn(buttonVariants(), "shrink-0")}
         data-testid="next-lesson-start"
       >
         Start

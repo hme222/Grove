@@ -10,25 +10,25 @@ export const TOXICITY_LEVELS = {
     level: 'non_toxic',
     label: 'Pet-safe',
     icon: 'safe',
-    className: 'text-grove-sprout bg-grove-lime/15 border-grove-lime/40',
+    className: 'text-grove-sprout bg-grove-canopy border-grove-lime',
   },
   mild: {
     level: 'mild',
     label: 'Mildly toxic',
     icon: 'caution',
-    className: 'text-grove-sun bg-grove-sun/10 border-grove-sun/40',
+    className: 'text-grove-sun bg-grove-canopy border-grove-sun',
   },
   toxic: {
     level: 'toxic',
     label: 'Toxic if ingested',
     icon: 'danger',
-    className: 'text-grove-blush bg-grove-bloom/15 border-grove-bloom/40',
+    className: 'text-grove-blush bg-grove-canopy border-grove-bloom',
   },
   unknown: {
     level: 'unknown',
     label: 'Pet safety unknown — check before bringing it home',
     icon: 'unknown',
-    className: 'text-grove-sage bg-grove-moss border-grove-fernLine',
+    className: 'text-grove-sage bg-grove-canopy border-grove-fernLine',
   },
 };
 

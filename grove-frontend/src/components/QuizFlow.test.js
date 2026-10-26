@@ -146,5 +146,5 @@ test('is a labelled modal dialog that takes focus and sits above the bottom nav'
   expect(heading.id).not.toBe('');
   expect(dialog.getAttribute('aria-labelledby')).toBe(heading.id);
   expect(document.activeElement).toBe(heading);
-  expect(dialog.className).toContain('z-[80]');
+  expect(dialog.className).toContain('z-celebration');
 });

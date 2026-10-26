@@ -32,9 +32,12 @@ api.interceptors.response.use(
           error.config.headers.Authorization = `Bearer ${res.data.access_token}`;
           return api(error.config);
         } catch (e) {
-          localStorage.removeItem('grove_access_token');
-          localStorage.removeItem('grove_refresh_token');
-          window.location.href = '/login';
+          // Only a refusal ends the session; an unreachable server does not.
+          if (e.response && e.response.status < 500) {
+            localStorage.removeItem('grove_access_token');
+            localStorage.removeItem('grove_refresh_token');
+            window.location.href = '/login';
+          }
         }
       }
     }
@@ -106,6 +109,7 @@ export const plantAPI = {
   getOne: (id) => api.get(`/plants/${id}`),
   update: (id, data) => api.patch(`/plants/${id}`, data),
   delete: (id) => api.delete(`/plants/${id}`),
+  restore: (id) => api.post(`/plants/${id}/restore`),
   getAISchedule: (id) => api.post(`/plants/${id}/ai-schedule`),
   getTimeline: (id) => api.get(`/plants/${id}/timeline`),
   getBiography: (id) => api.get(`/plants/${id}/biography`),
@@ -141,7 +145,7 @@ export const careAPI = {
 // Water Round
 export const waterAPI = {
   getRound: () => api.get('/plants/water-round'),
-  logRound: () => api.post('/plants/water-round/log'),
+  logRound: (plantIds) => api.post('/plants/water-round/log', plantIds ? { plant_ids: plantIds } : undefined),
   undoRound: (roundId) => api.post(`/plants/water-round/${roundId}/undo`),
 };
 
@@ -218,7 +222,12 @@ export const groveAPI = {
 // catalog and progress surfaces on the Care/Today tab. The legacy /goals
 // CRUD endpoints are no longer used.
 export const goalAPI = {
+  // Pinned badge goals (Working toward)
   list: () => api.get('/users/me/goals'),
+  // The older personal goals and challenge goals
+  getAll: (status) => api.get('/goals', { params: status ? { status } : {} }),
+  create: (data) => api.post('/goals', data),
+  complete: (id) => api.post(`/goals/${id}/complete`),
   pin: (slug) => api.post(`/users/me/goals/${slug}`),
   unpin: (slug) => api.delete(`/users/me/goals/${slug}`),
 };

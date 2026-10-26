@@ -2,10 +2,13 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { authAPI, userAPI } from '../lib/api';
 
 const AuthContext = createContext(null);
+const USER_CACHE = 'grove_user_cache';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  // True when we could not reach the server and have no saved copy of the profile to show.
+  const [bootError, setBootError] = useState(false);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -14,12 +17,25 @@ export function AuthProvider({ children }) {
         setLoading(false);
         return;
       }
+      setBootError(false);
       const res = await userAPI.getMe();
       setUser(res.data);
+      try { localStorage.setItem(USER_CACHE, JSON.stringify(res.data)); } catch { /* storage can be blocked */ }
     } catch (e) {
-      localStorage.removeItem('grove_access_token');
-      localStorage.removeItem('grove_refresh_token');
-      setUser(null);
+      const refused = e?.response && e.response.status < 500;
+      if (refused) {
+        // The server answered and said this session is not valid: that is a real sign-out.
+        localStorage.removeItem('grove_access_token');
+        localStorage.removeItem('grove_refresh_token');
+        try { localStorage.removeItem(USER_CACHE); } catch { /* ignore */ }
+        setUser(null);
+      } else {
+        // The server could not be reached (offline, or down). The person is still signed in, so
+        // keep them signed in and let each screen say it could not load.
+        let cached = null;
+        try { cached = JSON.parse(localStorage.getItem(USER_CACHE) || 'null'); } catch { /* ignore */ }
+        if (cached) setUser(cached); else setBootError(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -46,6 +62,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    try { localStorage.removeItem(USER_CACHE); } catch { /* ignore */ }
     localStorage.removeItem('grove_access_token');
     localStorage.removeItem('grove_refresh_token');
     setUser(null);
@@ -56,7 +73,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, fetchUser, refreshUser: fetchUser }}>
+    <AuthContext.Provider value={{ user, loading, bootError, login, register, logout, updateUser, fetchUser, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

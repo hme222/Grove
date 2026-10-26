@@ -1,24 +1,24 @@
-import { useTheme } from "next-themes"
 import { Toaster as Sonner, toast } from "sonner"
 
+// The app is dark-only, so the toast theme is fixed (no next-themes) and the surface, border and action
+// button come from tokens. font-ui keeps toast text in the UI face instead of the system font.
 const Toaster = ({
   ...props
 }) => {
-  const { theme = "system" } = useTheme()
-
   return (
     <Sonner
-      theme={theme}
-      className="toaster group"
+      theme="dark"
+      className="toaster group font-ui"
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
+            "group toast font-ui text-sm !border-hairline group-[.toaster]:bg-grove-canopy group-[.toaster]:text-grove-cream group-[.toaster]:border-grove-moss group-[.toaster]:shadow-dialog",
+          title: "font-ui",
+          description: "font-ui group-[.toast]:text-grove-sage",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+            "font-ui group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+            "font-ui group-[.toast]:bg-grove-moss group-[.toast]:text-grove-cream",
         },
       }}
       {...props} />

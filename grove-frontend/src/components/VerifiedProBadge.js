@@ -33,6 +33,7 @@ export default function VerifiedProBadge({
   if (!vu || !va) return null;
 
   return (
+    <span role="presentation" className="inline-flex" onClick={(e) => e.stopPropagation()}>
     <TooltipProvider delayDuration={150}>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -41,7 +42,6 @@ export default function VerifiedProBadge({
             aria-label="Verified Pro"
             data-testid="verified-pro-badge"
             className={`inline-flex items-center justify-center text-grove-sprout flex-shrink-0 ${className}`}
-            onClick={(e) => e.stopPropagation()}
           >
             <BadgeCheck
               style={{ width: size, height: size }}
@@ -53,11 +53,12 @@ export default function VerifiedProBadge({
         <TooltipContent
           side="top"
           align="center"
-          className="bg-grove-lime text-grove-root text-xs font-ui px-2 py-1 rounded-[4px] border-0"
+          className="bg-grove-lime text-grove-root text-xs font-ui px-2 py-1 rounded-hairline border-0"
         >
           Verified Pro — manually verified by FloraGrove
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+    </span>
   );
 }

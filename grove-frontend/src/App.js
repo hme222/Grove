@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Spinner } from './components/Loading';
 import "@/App.css";
 import "@/lib/microAnimations.css";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TooltipProvider } from "./contexts/TooltipContext";
 import { Toaster } from "@/components/ui/sonner";
@@ -46,24 +47,15 @@ import SwapMatchesPage from "./pages/SwapMatchesPage";
 import SwapChatPage from "./pages/SwapChatPage";
 import WishlistPage from "./pages/WishlistPage";
 import NotificationPreferencesPage from "./pages/NotificationPreferencesPage";
-import LandingVariations from "./pages/LandingVariations";
 import WaitlistPage from "./pages/WaitlistPage";
-import PostOnboarding from "./pages/PostOnboarding";
-import QuickWinVariations from "./pages/QuickWinVariations";
-import ResetCourseVariation from "./pages/ResetCourseVariation";
-import WindowBlueprintVariations from "./pages/WindowBlueprintVariations";
-import SoilFingerTestVariation from "./pages/SoilFingerTestVariation";
-import PlantERVariations from "./pages/PlantERVariations";
-import HabitStackingVariations from "./pages/HabitStackingVariations";
-import PlantClusterVariations from "./pages/PlantClusterVariation";
-import ChunkyAroidMixVariations from "./pages/ChunkyAroidMixVariations";
-import DualPathLandingVariations from "./pages/DualPathLandingVariations";
-import CozyRoomPlannerVariations from "./pages/CozyRoomPlannerVariations";
-import BehavioralChangeWidgets from "./pages/BehavioralChangeWidgets";
 import BottomNav from "./components/BottomNav";
 import HelpMyPlantPage from "./pages/HelpMyPlantPage";
 import SearchPage from "./pages/SearchPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import CareLayout from "./components/CareLayout";
+import LoadError from "./components/LoadError";
+import { Analytics } from "@vercel/analytics/react";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // The free server sleeps when quiet, so the first open can take about a minute. Say so.
 function SlowStartNote() {
@@ -76,42 +68,86 @@ function SlowStartNote() {
   return <p className="mt-2 font-ui text-sm text-grove-sage" data-testid="slow-start">Waking up. The first open after a quiet spell can take about a minute.</p>;
 }
 
-function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="font-plant text-grove-cream text-lg">Loading FloraGrove...</p>
-          <SlowStartNote />
-        </div>
-      </div>
-    );
-  }
-  if (!user) return <Navigate to="/login" replace />;
-  return children;
-}
-
-function AppLayout({ children }) {
+function LoadingScreen() {
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-grove-forest pb-[calc(84px+env(safe-area-inset-bottom))]">
-      <main id="main-content">{children}</main>
-      <BottomNav />
+    <div className="flex items-center justify-center min-h-screen bg-grove-forest">
+      <div className="text-center" role="status">
+        <Spinner className="mx-auto mb-3 block h-8 w-8" />
+        <p className="font-plant text-grove-cream text-lg">Loading FloraGrove…</p>
+        <SlowStartNote />
+      </div>
     </div>
   );
 }
 
-function CareWrapper({ children }) {
+// Signed-in only. Everyone else goes to /login.
+function RequireUser({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <LoadingScreen />;
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+// After a route change, move focus to the page so keyboard and screen-reader users start at its top.
+// Both layouts use it, so moving between them keeps focus managed too; only the very first load is skipped.
+let focusHookSeen = false;
+function useFocusMainOnRoute() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (!focusHookSeen) { focusHookSeen = true; return; }
+    document.getElementById('main-content')?.focus({ preventScroll: true });
+  }, [pathname]);
+}
+
+// Signed-in screens that fill the whole viewport and carry their own chrome (no tab bar).
+function ProtectedFullScreen() {
+  useFocusMainOnRoute();
   return (
-    <AppLayout>
-      <CareLayout>{children}</CareLayout>
-    </AppLayout>
+    <RequireUser>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
+      >
+        Skip to content
+      </a>
+      <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none"><ErrorBoundary><Outlet /></ErrorBoundary></main>
+    </RequireUser>
   );
 }
 
+// The one shell: a layout route, so the tab bar and the page frame stay mounted while the
+// route inside changes, instead of remounting on every navigation.
+function ProtectedShell() {
+  useFocusMainOnRoute();
+  return (
+    <RequireUser>
+      <div className="min-h-screen bg-grove-forest pb-nav">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
+        >
+          Skip to content
+        </a>
+        <a
+          href="#main-nav"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-16 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
+        >
+          Skip to navigation
+        </a>
+        <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none"><Outlet /></main>
+        <BottomNav />
+      </div>
+    </RequireUser>
+  );
+}
+
+// Care's two views share one layout (first-visit tooltip for the active sub-tab).
+function CareShell() {
+  return <CareLayout><Outlet /></CareLayout>;
+}
+
 function AppRoutes() {
-  const { user, loading, updateUser } = useAuth();
+  const { user, loading, bootError, fetchUser, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -142,8 +178,14 @@ function AppRoutes() {
     }
   }, [user, loading]);
 
-  const handleOnboardingComplete = () => {
+  const handleOnboardingComplete = (choice) => {
     setShowOnboarding(false);
+    // Someone who said what they came for goes there; the quiz can wait for a later visit.
+    if (choice?.to) {
+      setQuizDone(true);
+      setReplayFirstRun(false);
+      navigate(choice.to);
+    }
     // Onboarding saved this on the server; mirror it so the quiz can follow right away.
     updateUser({ onboarding_complete: true });
   };
@@ -158,14 +200,12 @@ function AppRoutes() {
     if (first) navigate(lessonPath(first));
   };
 
-  if (loading) {
+  if (loading) return <LoadingScreen />;
+
+  if (bootError && !user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-grove-forest">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="font-plant text-grove-cream text-lg">Loading FloraGrove...</p>
-          <SlowStartNote />
-        </div>
+      <div className="flex min-h-screen items-center justify-center bg-grove-forest px-4">
+        <LoadError what="FloraGrove" onRetry={fetchUser} />
       </div>
     );
   }
@@ -175,204 +215,67 @@ function AppRoutes() {
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
       {showQuiz && <QuizFlow onDone={handleQuizDone} />}
       <Routes>
+        {/* Outside every shell: signed-out pages, the public bouquet and the first-run replay. */}
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
         <Route path="/first-run" element={user ? null : <Navigate to="/login" replace />} />
-        <Route path="/landing" element={<LandingVariations />} />
         <Route path="/waitlist" element={<WaitlistPage />} />
-        <Route path="/post-onboarding" element={<PostOnboarding />} />
-        <Route path="/quick-wins" element={<QuickWinVariations />} />
-        <Route path="/reset-course" element={<ResetCourseVariation />} />
-        <Route path="/window-blueprint" element={<WindowBlueprintVariations />} />
-        <Route path="/soil-finger-test" element={<SoilFingerTestVariation />} />
-        <Route path="/plant-er" element={<PlantERVariations />} />
-        <Route path="/habit-stacking" element={<HabitStackingVariations />} />
-        <Route path="/plant-cluster" element={<PlantClusterVariations />} />
-        <Route path="/chunky-aroid-mix" element={<ChunkyAroidMixVariations />} />
-        <Route path="/dual-path-landing" element={<DualPathLandingVariations />} />
-        <Route path="/cozy-room-planner" element={<CozyRoomPlannerVariations />} />
-        <Route path="/behavioral-change-widgets" element={<BehavioralChangeWidgets />} />
-        <Route path="/help-my-plant" element={
-          <ProtectedRoute>
-            <AppLayout><HelpMyPlantPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/search" element={
-          <ProtectedRoute>
-            <AppLayout><SearchPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/lessons" element={
-          <ProtectedRoute>
-            <AppLayout><LessonsPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/lessons/:lessonId" element={
-          <ProtectedRoute>
-            <LessonPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/help" element={
-          <ProtectedRoute>
-            <HelpPage />
-          </ProtectedRoute>
-        } />
+
+        {/* Signed in, full screen with no tab bar (see Deliberate departures in design/README.md). */}
+        <Route element={<ProtectedFullScreen />}>
+          <Route path="/lessons/:lessonId" element={<LessonPage />} />
+          <Route path="/greenhouse/:speciesId" element={<SpeciesDetailPage />} />
+          <Route path="/guilds/:slug" element={<GuildDetailPage />} />
+          <Route path="/verify" element={<VerifyPage />} />
+          <Route path="/admin/demo" element={<AdminDemoPage />} />
+        </Route>
+
+        {/* Signed in, inside the shell (tab bar and page frame). */}
+        <Route element={<ProtectedShell />}>
+          <Route path="/help-my-plant" element={<HelpMyPlantPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/lessons" element={<LessonsPage />} />
+          <Route path="/help" element={<HelpPage />} />
+          <Route path="/plants" element={<CollectionPage />} />
+          <Route element={<CareShell />}>
+            <Route path="/care/today" element={<CarePage />} />
+            <Route path="/care/growth" element={<CareGrowthPage />} />
+          </Route>
+          <Route path="/greenhouse" element={<EncyclopediaPage />} />
+          <Route path="/wants" element={<WantListPage />} />
+          <Route path="/swaps" element={<SwapsPage />} />
+          <Route path="/badges" element={<BadgesPage />} />
+          <Route path="/rooms" element={<RoomPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/plants/:plantId" element={<PlantDetailPage />} />
+          <Route path="/add-plant" element={<AddPlantPage />} />
+          <Route path="/bouquets" element={<BouquetsPage />} />
+          <Route path="/bouquets/new" element={<AddBouquetPage />} />
+          <Route path="/bouquets/:bouquetId" element={<BouquetDetailPage />} />
+          <Route path="/groves" element={<GrovesPage />} />
+          <Route path="/groves/:groveId" element={<GroveDetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/challenges" element={<ChallengesPage />} />
+          <Route path="/florist" element={<FloristDashboard />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/swap" element={<SwapPage />} />
+          <Route path="/swaps/matches" element={<SwapMatchesPage />} />
+          <Route path="/swaps/:swapId" element={<SwapChatPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/settings/notifications" element={<NotificationPreferencesPage />} />
+          {/* Anything else that signed-in people type or follow lands here, with a way home. */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+
+        {/* Redirects. Goals, Challenges and the Encyclopedia moved; Today is home. */}
         <Route path="/" element={<Navigate to="/care/today" replace />} />
-        <Route path="/plants" element={
-          <ProtectedRoute>
-            <AppLayout><CollectionPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        {/* Care sub-routes (nested) */}
         <Route path="/care" element={<Navigate to="/care/today" replace />} />
-        <Route path="/care/today" element={
-          <ProtectedRoute>
-            <CareWrapper><CarePage /></CareWrapper>
-          </ProtectedRoute>
-        } />
-        <Route path="/care/growth" element={
-          <ProtectedRoute>
-            <CareWrapper><CareGrowthPage /></CareWrapper>
-          </ProtectedRoute>
-        } />
         <Route path="/care/goals" element={<Navigate to="/care/today" replace />} />
         <Route path="/care/fieldnotes" element={<Navigate to="/greenhouse" replace />} />
-        <Route path="/greenhouse" element={
-          <ProtectedRoute>
-            <AppLayout><EncyclopediaPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/greenhouse/:speciesId" element={
-          <ProtectedRoute>
-            <SpeciesDetailPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/guilds/:slug" element={
-          <ProtectedRoute>
-            <GuildDetailPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/wants" element={
-          <ProtectedRoute>
-            <AppLayout><WantListPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/swaps" element={
-          <ProtectedRoute>
-            <AppLayout><SwapsPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/verify" element={
-          <ProtectedRoute>
-            <VerifyPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/badges" element={
-          <ProtectedRoute>
-            <AppLayout><BadgesPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/rooms" element={
-          <ProtectedRoute>
-            <AppLayout><RoomPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/feed" element={
-          <ProtectedRoute>
-            <AppLayout><FeedPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/plants/:plantId" element={
-          <ProtectedRoute>
-            <AppLayout><PlantDetailPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/add-plant" element={
-          <ProtectedRoute>
-            <AppLayout><AddPlantPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/bouquets" element={
-          <ProtectedRoute>
-            <AppLayout><BouquetsPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/bouquets/new" element={
-          <ProtectedRoute>
-            <AppLayout><AddBouquetPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/bouquets/:bouquetId" element={
-          <ProtectedRoute>
-            <AppLayout><BouquetDetailPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/groves" element={
-          <ProtectedRoute>
-            <AppLayout><GrovesPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/groves/:groveId" element={
-          <ProtectedRoute>
-            <AppLayout><GroveDetailPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <AppLayout><ProfilePage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        {/* Legacy redirects: Goals, Challenges, Encyclopedia moved under /care */}
         <Route path="/goals" element={<Navigate to="/care/goals" replace />} />
-        <Route path="/challenges" element={
-          <ProtectedRoute>
-            <AppLayout><ChallengesPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/florist" element={
-          <ProtectedRoute>
-            <AppLayout><FloristDashboard /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/notifications" element={
-          <ProtectedRoute>
-            <AppLayout><NotificationsPage /></AppLayout>
-          </ProtectedRoute>
-        } />
         <Route path="/encyclopedia" element={<Navigate to="/greenhouse" replace />} />
         <Route path="/encyclopedia/:speciesId" element={<Navigate to="/greenhouse" replace />} />
-        <Route path="/admin/demo" element={
-          <ProtectedRoute>
-            <AdminDemoPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/swap" element={
-          <ProtectedRoute>
-            <AppLayout><SwapPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/swaps/matches" element={
-          <ProtectedRoute>
-            <AppLayout><SwapMatchesPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/swaps/:swapId" element={
-          <ProtectedRoute>
-            <AppLayout><SwapChatPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/wishlist" element={
-          <ProtectedRoute>
-            <AppLayout><WishlistPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/settings/notifications" element={
-          <ProtectedRoute>
-            <AppLayout><NotificationPreferencesPage /></AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
@@ -385,6 +288,7 @@ function App() {
         <TooltipProvider>
           <AppRoutes />
           <Toaster position="top-center" />
+          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, Sprout } from 'lucide-react';
 
 function factorColor(score) {
   if (score >= 85) return { dot: 'bg-grove-lime', text: 'text-grove-sprout' };
-  if (score >= 65) return { dot: 'bg-[#C18A2A]', text: 'text-[#8A6A3D]' };
+  if (score >= 65) return { dot: 'bg-grove-sun', text: 'text-grove-sun' };
   if (score >= 40) return { dot: 'bg-grove-bloom', text: 'text-grove-blush' };
   return { dot: 'bg-grove-bloom', text: 'text-grove-blush' };
 }
@@ -25,7 +25,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
   return (
     <div
       data-testid="plant-health-panel"
-      className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss overflow-hidden"
+      className="rounded-card border-hairline border-grove-moss bg-grove-moss overflow-hidden"
     >
       <button
         type="button"
@@ -34,11 +34,11 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
         aria-expanded={expanded}
         className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-grove-canopy transition-colors duration-150"
       >
-        <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center border-[0.5px] border-grove-moss">
+        <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
           <Sprout className="h-5 w-5 text-grove-sprout" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-plant text-grove-cream text-sm">Plant Health</p>
+          <p className="font-ui text-grove-cream text-sm font-medium">Plant Health</p>
           <p className="font-latin text-xs text-grove-cream">
             6-factor breakdown · tap for details
           </p>
@@ -49,7 +49,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
           {isEarly && (
             <span
               data-testid="plant-health-early-reading"
-              className="inline-block mt-1 rounded-full px-1.5 py-[1px] bg-grove-forest text-grove-lichen font-mono text-xs tracking-[0.05em]"
+              className="inline-block mt-1 rounded-full px-1.5 py-px bg-grove-forest text-grove-lichen font-ui text-xs tracking-label"
             >
               Early reading
             </span>
@@ -63,7 +63,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-3 border-t-[0.5px] border-grove-moss/60 pt-3">
+        <div className="px-4 pb-4 space-y-3 border-t-hairline border-grove-moss/60 pt-3">
           {/* Factor list */}
           <div className="space-y-2" data-testid="plant-health-factors">
             {factors.map((f) => {
@@ -86,8 +86,8 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
 
           {/* How to reach 100 */}
           {(toImprove.length > 0 || tips.length > 0) && (
-            <div className="rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest p-3" data-testid="plant-health-tips">
-              <p className="font-plant text-xs text-grove-cream mb-1.5">
+            <div className="rounded-inset border-hairline border-grove-moss bg-grove-forest p-3" data-testid="plant-health-tips">
+              <p className="font-ui text-xs font-medium text-grove-cream mb-1.5">
                 How to reach 100
               </p>
               <ul className="space-y-1.5">

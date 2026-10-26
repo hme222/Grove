@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Loading from './Loading';
 import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../lib/api';
-import { Bell, X, Check, Trash2, Leaf, Sun, Scissors, Flame, Sprout, Users, Heart, MessageCircle, Flower2 } from 'lucide-react';
+import { Bell, X, Trash2, Leaf, Flame, Sprout, Users, Heart, MessageCircle, Flower2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const UNREAD_POLL_MS = 45000;
@@ -141,13 +142,13 @@ export default function NotificationBell() {
         onClick={() => setOpen(o => !o)}
         data-testid="notification-bell"
         aria-label={`Notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
-        className="relative w-11 h-11 rounded-full border-[0.5px] border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
+        className="relative w-touch h-touch rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
       >
         <Bell className="h-4 w-4" />
         {unread > 0 && (
           <span
             data-testid="notification-badge"
-            className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-grove-bloom text-grove-root text-xs font-plant flex items-center justify-center px-1"
+            className="absolute -top-0.5 -right-0.5 min-w-5 h-5 rounded-full bg-grove-bloom text-grove-root text-xs font-ui font-medium flex items-center justify-center px-1"
           >
             {unread > 99 ? '99+' : unread}
           </span>
@@ -157,11 +158,11 @@ export default function NotificationBell() {
       {open && (
         <div
           data-testid="notification-center"
-          className="absolute right-0 top-[46px] z-[120] w-[330px] max-h-[70vh] overflow-hidden rounded-[14px] border-[0.5px] border-grove-moss bg-grove-forest shadow-[0_2px_0_0_#D3C9B8]"
+          className="absolute right-0 top-full z-popover mt-0.5 w-popover max-h-panel overflow-hidden rounded-card border-hairline border-grove-moss bg-grove-forest"
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b-[0.5px] border-grove-moss">
+          <div className="flex items-center justify-between px-4 py-3 border-b-hairline border-grove-moss">
             <div className="flex items-center gap-2">
-              <h3 className="font-plant text-grove-cream text-sm">Notifications</h3>
+              <h3 className="font-plant text-grove-cream text-base font-semibold ">Notifications</h3>
               {unread > 0 && (
                 <span className="font-latin text-xs text-grove-blush">{unread} new</span>
               )}
@@ -171,7 +172,7 @@ export default function NotificationBell() {
                 <button
                   onClick={handleMarkAll}
                   data-testid="notification-mark-all-read"
-                  className="font-plant text-xs text-grove-sprout hover:text-grove-sprout"
+                  className="font-ui text-xs font-medium text-grove-sprout hover:text-grove-sprout"
                 >
                   Mark all read
                 </button>
@@ -186,14 +187,12 @@ export default function NotificationBell() {
             </div>
           </div>
 
-          <div className="overflow-y-auto max-h-[calc(70vh-48px)]" data-testid="notification-list">
+          <div className="overflow-y-auto max-h-panel" data-testid="notification-list">
             {loading ? (
-              <div className="flex items-center justify-center py-10">
-                <div className="w-5 h-5 border-2 border-grove-fernLine border-t-transparent rounded-full animate-spin" />
-              </div>
+              <Loading label="Loading notifications" className="py-10" />
             ) : items.length === 0 ? (
               <div className="text-center py-10 px-4" data-testid="notification-empty">
-                <div className="w-10 h-10 mx-auto rounded-full bg-grove-moss border-[0.5px] border-grove-moss flex items-center justify-center mb-2">
+                <div className="w-10 h-10 mx-auto rounded-full bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-2">
                   <Bell className="h-4 w-4 text-grove-sprout" />
                 </div>
                 <p className="font-ui text-sm text-grove-cream">Nothing new right now.</p>
@@ -203,39 +202,44 @@ export default function NotificationBell() {
               items.map((n) => {
                 const Icon = iconForType(n.type);
                 return (
-                  <button
+                  <div
                     key={n.id}
-                    onClick={handleOpen(n)}
-                    data-testid="notification-item"
-                    data-unread={!n.is_read}
-                    className={`w-full text-left px-4 py-3 border-b-[0.5px] border-grove-moss/60 flex items-start gap-3 transition-colors duration-150 ${
+                    className={`w-full border-b-hairline border-grove-moss/60 flex items-start transition-colors duration-150 ${
                       !n.is_read
-                        ? 'bg-grove-moss border-l-[3px] border-l-[#3B6D11] hover:bg-[#dfe8d1]'
+                        ? 'bg-grove-moss border-l-accent border-l-grove-lime hover:bg-grove-moss'
                         : 'hover:bg-grove-moss'
                     }`}
                   >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      !n.is_read ? 'bg-grove-forest' : 'bg-grove-moss'
-                    }`}>
-                      <Icon className="h-4 w-4 text-grove-sprout" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-ui text-sm text-grove-cream truncate">{n.title}</p>
-                      {n.body && (
-                        <p className="font-ui text-xs text-grove-cream line-clamp-2 mt-0.5">{n.body}</p>
-                      )}
-                      <p className="font-latin text-xs text-grove-lichen mt-1">{relativeTime(n.created_at)}</p>
-                    </div>
-                    <span
+                    <button
+                      type="button"
+                      onClick={handleOpen(n)}
+                      data-testid="notification-item"
+                      data-unread={!n.is_read}
+                      className="flex-1 min-w-0 text-left pl-4 py-3 flex items-start gap-3"
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        !n.is_read ? 'bg-grove-forest' : 'bg-grove-moss'
+                      }`}>
+                        <Icon className="h-4 w-4 text-grove-sprout" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-ui text-sm text-grove-cream truncate">{n.title}</p>
+                        {n.body && (
+                          <p className="font-ui text-xs text-grove-cream line-clamp-2 mt-0.5">{n.body}</p>
+                        )}
+                        <p className="font-latin text-xs text-grove-lichen mt-1">{relativeTime(n.created_at)}</p>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleDelete(n.id)}
-                      role="button"
                       aria-label="Delete"
                       data-testid="notification-delete"
-                      className="text-grove-sage hover:text-grove-blush flex-shrink-0 p-1 cursor-pointer"
+                      className="text-grove-sage hover:text-grove-blush flex-shrink-0 min-h-touch min-w-touch flex items-center justify-center"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
-                    </span>
-                  </button>
+                    </button>
+                  </div>
                 );
               })
             )}

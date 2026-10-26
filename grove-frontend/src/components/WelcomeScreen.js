@@ -33,6 +33,7 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
   return (
     <div
       className={`gw ${done ? 'gw-done' : ''}`}
+      style={{ '--stage-scale': scale }}
       data-testid="onboarding-welcome"
       onPointerDown={() => setDone(true)}
     >

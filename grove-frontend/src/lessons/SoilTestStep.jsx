@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
 import { plantAPI, careAPI } from '../lib/api';
 import { NOTE_CHIPS } from './lessonMeta';
 
@@ -15,7 +17,7 @@ const DECISIONS = [
 const plantLabel = (p) => p.nickname || p.common_name || 'Unnamed plant';
 
 const choiceClass = (on) =>
-  `flex-1 rounded-[8px] border-[0.5px] px-3 py-3 text-sm font-ui text-grove-cream ${
+  `flex-1 rounded-inset border-hairline px-3 py-3 text-sm font-ui text-grove-cream ${
     on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/20' : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
   }`;
 
@@ -55,7 +57,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
 
   if (!hasPlant) {
     return (
-      <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="soil-step-no-plant">
+      <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="soil-step-no-plant">
         <p className="font-plant text-grove-cream text-lg mb-1">Save this for your first plant</p>
         <p className="text-sm text-grove-cream mb-3">
           When you add a plant, this lesson will be waiting. You&apos;ll press a finger into its soil and log what you find.
@@ -64,14 +66,14 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
           <button
             type="button"
             onClick={() => navigate('/lessons')}
-            className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] border-grove-moss text-grove-cream"
+            className={cn(buttonVariants({ variant: 'outline' }), "flex-1")}
           >
             Back to lessons
           </button>
           <button
             type="button"
             onClick={() => navigate('/add-plant')}
-            className="flex-1 rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+            className={cn(buttonVariants(), "flex-1")}
             data-testid="soil-step-add-plant"
           >
             Add a plant
@@ -83,13 +85,13 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
 
   if (saved) {
     return (
-      <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4" data-testid="soil-step-saved">
+      <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="soil-step-saved">
         <p className="font-plant text-grove-cream text-lg mb-1">Soil test logged</p>
         {saved.soil_coaching && <p className="text-sm text-grove-cream mb-3">{saved.soil_coaching}</p>}
         <button
           type="button"
           onClick={() => onLogged(saved)}
-          className="w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine"
+          className={cn(buttonVariants(), "w-full")}
           data-testid="soil-step-continue"
         >
           Finish lesson
@@ -132,14 +134,14 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
   };
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-grove-moss bg-grove-moss p-4 space-y-3" data-testid="soil-step">
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 space-y-3" data-testid="soil-step">
       {plants.length > 1 && (
         <label className="block text-xs font-ui text-grove-cream">
           Which plant?
           <select
             value={plantId}
             onChange={(e) => setPlantId(e.target.value)}
-            className="mt-1 w-full rounded-[8px] border-[0.5px] border-grove-moss bg-grove-forest px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-inset border-hairline border-grove-moss bg-grove-forest px-3 py-2 text-sm"
             data-testid="soil-step-plant"
           >
             {plants.map((p) => (
@@ -196,7 +198,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
               type="button"
               aria-pressed={chips.includes(chip)}
               onClick={() => toggleChip(chip)}
-              className={`rounded-[20px] border-[0.5px] px-3 py-1 text-xs font-ui ${
+              className={`rounded-round border-hairline px-3 py-1 text-xs font-ui ${
                 chips.includes(chip) ? 'border-grove-fernLine bg-grove-moss' : 'border-grove-moss bg-grove-forest'
               }`}
             >
@@ -207,7 +209,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       </fieldset>
 
       {error && (
-        <p role="alert" className="text-xs font-ui text-red-700" data-testid="soil-step-error">
+        <p role="alert" className="text-xs font-ui text-destructive" data-testid="soil-step-error">
           {error}
         </p>
       )}
@@ -216,7 +218,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
         type="button"
         onClick={submit}
         aria-busy={saving}
-        className="w-full rounded-[12px] font-ui text-xs px-4 py-3 border-[0.5px] bg-grove-lime text-grove-root border-grove-fernLine hover:bg-grove-sprout"
+        className={cn(buttonVariants(), "w-full")}
         data-testid="soil-step-submit"
       >
         {saving ? 'Saving…' : 'Log my soil test'}

@@ -1,29 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { AppLink } from './AppLink';
 import { StatusDot } from './StatusDot';
 import { getFileUrl } from '../lib/api';
 import { Leaf } from 'lucide-react';
 
 export default function PlantCard({ plant, selected, onSelect, selectionMode }) {
-  const navigate = useNavigate();
   const photoUrl = getFileUrl(plant.photo_url);
 
-  const handleClick = () => {
-    if (selectionMode && onSelect) {
-      onSelect(plant.id);
-    } else {
-      navigate(`/plants/${plant.id}`);
-    }
-  };
-
-  return (
-    <button
-      onClick={handleClick}
-      data-testid="collection-grid-plant-tile"
-      className={`relative rounded-[14px] border-[0.5px] border-grove-moss overflow-hidden aspect-square w-full text-left transition-colors duration-150 hover:border-grove-fernLine ${
+  const selecting = Boolean(selectionMode && onSelect);
+  const tileClass = `relative rounded-chip border-hairline border-grove-moss overflow-hidden aspect-square w-full text-left transition-colors duration-150 hover:border-grove-fernLine ${
         selected ? 'ring-2 ring-grove-lime' : ''
-      }`}
-    >
+      }`;
+  const content = (
+    <>
       {photoUrl ? (
         <div className="w-full h-full bg-grove-moss flex items-center justify-center">
           <img
@@ -43,19 +32,19 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
       
       {/* Status dot */}
       <div className="absolute top-2 left-2">
-        <StatusDot status={plant.status || 'healthy'} />
+        <StatusDot status={plant.status || 'healthy'} showLabel={(plant.status || 'healthy') !== 'healthy'} className="rounded-round bg-grove-night/80 py-0.5 pl-1 pr-2" />
       </div>
       
       {/* Selection check */}
       {selectionMode && selected && (
         <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-grove-lime flex items-center justify-center">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#1A2410" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="var(--grove-root)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
       )}
       
       {/* Name overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-grove-night/90 via-grove-night/60 to-transparent px-2.5 pb-2 pt-6">
-        <p className="font-plant text-grove-cream text-sm truncate">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-grove-night/95 via-grove-night/80 to-transparent px-2.5 pb-2 pt-10">
+        <p className="font-ui text-grove-cream text-sm font-medium truncate">
           {plant.nickname || plant.common_name}
         </p>
         {plant.latin_name && (
@@ -64,6 +53,13 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
           </p>
         )}
       </div>
-    </button>
+    </>
+  );
+
+  // Opening a plant is navigation (a link); picking one in selection mode is an action (a button).
+  return selecting ? (
+    <button type="button" onClick={() => onSelect(plant.id)} data-testid="collection-grid-plant-tile" className={tileClass}>{content}</button>
+  ) : (
+    <AppLink to={`/plants/${plant.id}`} data-testid="collection-grid-plant-tile" className={`block ${tileClass}`}>{content}</AppLink>
   );
 }

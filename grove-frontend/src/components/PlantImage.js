@@ -25,9 +25,9 @@ export default function PlantImage({
   const bg = tone === 'bouquet' ? 'bg-grove-bloom/15' : tone === 'paper' ? 'bg-grove-forest' : 'bg-grove-moss';
   const radius =
     rounded === 'none' ? 'rounded-none' :
-    rounded === 'sm'   ? 'rounded-[6px]' :
-    rounded === 'lg'   ? 'rounded-[14px]' :
-                          'rounded-[10px]';
+    rounded === 'sm'   ? 'rounded-tag' :
+    rounded === 'lg'   ? 'rounded-small' :
+                          'rounded-chip';
   const url = src ? (src.startsWith('http') ? src : getFileUrl(src)) : null;
   return (
     <div

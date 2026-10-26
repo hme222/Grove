@@ -2,55 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Grove design tokens v0.3 (design/tokens.json). Dark forest is the primary look.
-   The shadcn variables below are HSL triplets of the same palette, so components in
-   components/ui follow the theme. Hex tokens live in tailwind.config.js as `grove-*`. */
-@layer base {
-  :root {
-    --grove-forest: #202D14;
-    --grove-canopy: #2D3B1A;
-    --grove-moss: #3C4D26;
-    --grove-lime: #92B44B;
-    --grove-root: #1A2410;
-    --grove-cream: #F4F1E6;
-    --grove-sage: #B7C0A4;
-    --grove-bloom: #E57A9C;
+/* Design tokens are generated from design/tokens.json into styles/tokens.generated.css
+   (colours as --grove-*, radii as --radius-*, and the shadcn RGB variables). Dark forest is the primary look. */
 
-    --background: 91 38% 13%;
-    --foreground: 47 39% 93%;
-    --card: 85 39% 17%;
-    --card-foreground: 47 39% 93%;
-    --popover: 85 39% 17%;
-    --popover-foreground: 47 39% 93%;
-    --primary: 79 41% 50%;
-    --primary-foreground: 90 38% 10%;
-    --secondary: 86 34% 23%;
-    --secondary-foreground: 47 39% 93%;
-    --muted: 86 34% 23%;
-    --muted-foreground: 79 18% 70%;
-    --accent: 86 34% 23%;
-    --accent-foreground: 47 39% 93%;
-    --destructive: 341 67% 69%;
-    --destructive-foreground: 90 38% 10%;
-    --border: 86 34% 23%;
-    --input: 85 32% 29%;
-    --ring: 79 41% 50%;
-    --radius: 14px;
-    --chart-1: 79 41% 50%;
-    --chart-2: 77 51% 70%;
-    --chart-3: 86 34% 23%;
-    --chart-4: 341 67% 69%;
-    --chart-5: 79 18% 70%;
+@layer base {
+  html {
+    scrollbar-gutter: stable; /* reserve the scrollbar's width so header icons do not shift when it appears */
+    overflow-y: scroll; /* and always draw it, so short pages (Plants) line up with long ones */
   }
-}
-
-@layer base {
+  /* Radix locks scrolling by padding the body; the scrollbar is always drawn here, so nothing needs compensating. */
+  body[data-scroll-locked] {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+  }
   * {
     @apply border-grove-moss;
   }
   body {
     @apply bg-grove-forest text-grove-cream;
-    font-family: 'Alegreya Sans', Optima, Candara, system-ui, sans-serif;
+    font-family: var(--font-ui), system-ui, sans-serif;
     font-size: 1.0625rem; /* 17px at the default size. Alegreya Sans runs small; this matches a 16px system face's x-height, and scales with the reader's text size */
     -webkit-font-smoothing: antialiased;
     /* Behave like an installed app on a phone: no rubber-band bounce, no grey tap flash, clear the notch in landscape. */
@@ -63,10 +33,19 @@
   button, a, [role="button"] {
     touch-action: manipulation; /* removes the double-tap-to-zoom delay without blocking pinch zoom */
   }
+  /* Every control is at least 44 by 44 CSS px (WCAG 2.5.5). Radix switches and tabs are covered by their roles.
+     Inline text links are exempt under the spec; everything with a button role is not. */
+  button, [role="button"], [role="tab"], [role="switch"], [role="menuitem"], summary, select,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="color"]) {
+    min-height: var(--touch-min);
+  }
+  button, [role="button"], [role="tab"], [role="switch"] {
+    min-width: var(--touch-min);
+  }
   /* Form controls need a 3:1 outline to be identifiable (WCAG 1.4.11); the decorative moss border is about 1.5:1. */
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="color"]),
   select, textarea {
-    border-color: #869A68 !important;
+    border-color: var(--grove-input-outline) !important;
   }
   /* iOS Safari zooms the page when a field under 16px is focused. */
   @media (max-width: 768px) {
@@ -75,28 +54,28 @@
     }
   }
   ::selection {
-    background: #92B44B;
-    color: #1A2410;
+    background: var(--grove-lime);
+    color: var(--grove-root);
   }
   :focus-visible {
-    outline: 2px solid #C3D98A;
+    outline: 2px solid var(--grove-sprout);
     outline-offset: 2px;
   }
 }
 
 /* Display face: plant names and the occasional key word, never body copy. */
 .font-plant {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: 0.005em;
 }
 /* Scientific names: italic, as botanists set them. */
 .font-latin {
-  font-family: 'Alegreya Sans', Optima, Candara, sans-serif;
+  font-family: var(--font-ui);
   font-style: italic;
 }
 .font-ui {
-  font-family: 'Alegreya Sans', Optima, Candara, system-ui, sans-serif;
+  font-family: var(--font-ui), system-ui, sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {
