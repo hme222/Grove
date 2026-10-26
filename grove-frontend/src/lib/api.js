@@ -50,6 +50,12 @@ export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
   testLogin: () => api.post('/auth/test-login'),
+  // Which optional sign-up pieces the server has switched on.
+  config: () => api.get('/auth/config'),
+  sso: (provider, data) => api.post(`/auth/sso/${provider}`, data),
+  sendConfirmation: () => api.post('/auth/email/send'),
+  confirmEmail: (token) => api.post('/auth/email/confirm', { token }),
+  changeEmail: (email) => api.post('/auth/email/change', { email }),
 };
 
 // Users
@@ -91,7 +97,6 @@ export const groveChatAPI = {
 // Daily Missions (Phase 11)
 export const missionAPI = {
   getDaily: () => api.get('/missions/daily'),
-  completeDaily: () => api.post('/missions/daily/complete'),
   pingHealthCheck: () => api.post('/missions/health-check'),
 };
 
@@ -100,6 +105,8 @@ export const lessonAPI = {
   queue: () => api.get('/lessons/queue'),
   complete: (lessonId) => api.post(`/lessons/${lessonId}/complete`),
   submitQuiz: (answers) => api.post('/users/me/quiz', { answers }),
+  // First-run plan quiz: { q1: 'gift', ... }. A skipped question is left out.
+  submitPlan: (plan_answers) => api.post('/users/me/quiz', { plan_answers }),
 };
 
 // Plants

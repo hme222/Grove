@@ -8,7 +8,7 @@ import { TooltipProvider } from "./contexts/TooltipContext";
 import { Toaster } from "@/components/ui/sonner";
 import { Onboarding } from "./components/Onboarding";
 import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import ConfirmEmailPage from "./pages/ConfirmEmailPage";
 import CollectionPage from "./pages/CollectionPage";
 import CarePage from "./pages/CarePage";
 import CareGrowthPage from "./pages/CareGrowthPage";
@@ -80,11 +80,11 @@ function LoadingScreen() {
   );
 }
 
-// Signed-in only. Everyone else goes to /login.
+// Signed-in only. A signed-out visitor starts at the first-run welcome (/register), which links to sign in.
 function RequireUser({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <LoadingScreen />;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/register" replace />;
   return children;
 }
 
@@ -180,17 +180,21 @@ function AppRoutes() {
 
   const handleOnboardingComplete = (choice) => {
     setShowOnboarding(false);
-    // Someone who said what they came for goes there; the quiz can wait for a later visit.
-    if (choice?.to) {
+    // Someone who finished the first-run plan (or chose a place to go) is not asked the one-screen quiz too.
+    if (choice?.to || choice?.planned) {
       setQuizDone(true);
       setReplayFirstRun(false);
-      navigate(choice.to);
     }
+    if (choice?.to) navigate(choice.to);
     // Onboarding saved this on the server; mirror it so the quiz can follow right away.
     updateUser({ onboarding_complete: true });
   };
 
-  const showQuiz = !showOnboarding && !quizDone && (replayFirstRun || shouldShowQuiz(user));
+  // The first-run flow also covers sign-up: it is open at /register for a signed-out visitor, and it stays open
+  // (same place in the tree, so its state survives) when the account is made and the person becomes signed in.
+  const flowOpen = showOnboarding || (!!user && user.onboarding_complete === false) || (!user && location.pathname === '/register');
+
+  const showQuiz = !flowOpen && !quizDone && (replayFirstRun || shouldShowQuiz(user));
 
   const handleQuizDone = (data) => {
     updateUser({ primary_track: data.primary_track });
@@ -212,12 +216,13 @@ function AppRoutes() {
 
   return (
     <>
-      {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+      {flowOpen && <Onboarding onComplete={handleOnboardingComplete} replay={replayFirstRun} />}
       {showQuiz && <QuizFlow onDone={handleQuizDone} />}
       <Routes>
         {/* Outside every shell: signed-out pages, the public bouquet and the first-run replay. */}
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
-        <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
+        <Route path="/register" element={user ? <Navigate to="/" replace /> : null} />
+        <Route path="/confirm-email" element={<ConfirmEmailPage />} />
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
         <Route path="/first-run" element={user ? null : <Navigate to="/login" replace />} />
         <Route path="/waitlist" element={<WaitlistPage />} />

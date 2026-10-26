@@ -71,7 +71,7 @@ export default function QuizFlow({ onDone }) {
                 aria-checked={on}
                 onClick={() => toggle(option.id)}
                 className={`w-full text-left rounded-inset border-hairline px-4 py-3 text-sm font-ui text-grove-cream ${
-                  on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/20' : 'border-grove-moss bg-grove-canopy hover:border-grove-fernLine'
+                  on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/25' : 'border-grove-moss bg-grove-canopy hover:border-grove-fernLine'
                 }`}
                 data-testid={`quiz-option-${option.id}`}
               >

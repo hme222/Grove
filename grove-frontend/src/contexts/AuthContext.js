@@ -61,6 +61,14 @@ export function AuthProvider({ children }) {
     return res.data;
   };
 
+  // Sign in with a session the server already made (Apple or Google).
+  const acceptSession = (data) => {
+    localStorage.setItem('grove_access_token', data.access_token);
+    localStorage.setItem('grove_refresh_token', data.refresh_token);
+    setUser(data.user);
+    return data;
+  };
+
   const logout = () => {
     try { localStorage.removeItem(USER_CACHE); } catch { /* ignore */ }
     localStorage.removeItem('grove_access_token');
@@ -73,7 +81,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, bootError, login, register, logout, updateUser, fetchUser, refreshUser: fetchUser }}>
+    <AuthContext.Provider value={{ user, loading, bootError, login, register, acceptSession, logout, updateUser, fetchUser, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );
