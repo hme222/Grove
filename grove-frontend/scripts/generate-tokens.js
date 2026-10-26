@@ -23,6 +23,7 @@ function build() {
   const vars = [];
   for (const [name, hex] of Object.entries(tokens.color)) vars.push(`  --grove-${kebab(name)}: ${hex};`);
   for (const [name, px] of Object.entries(tokens.radius)) vars.push(`  --radius-${kebab(name)}: ${px}px;`);
+  for (const [name, width] of Object.entries(tokens.borderWidth)) vars.push(`  --border-${kebab(name)}-width: ${width};`);
   vars.push(`  --touch-min: ${tokens.touchTarget.min}px;`);
   vars.push(`  --touch-button: ${tokens.touchTarget.button}px;`);
   vars.push(`  --nav-height: ${tokens.navHeight};`);

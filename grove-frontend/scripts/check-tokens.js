@@ -16,6 +16,7 @@ const exceptions = JSON.parse(fs.readFileSync(path.join(__dirname, 'token-except
 
 const tokens = JSON.parse(fs.readFileSync(path.join(root, '..', 'design', 'tokens.json'), 'utf8'));
 const SPACE_PX = new Set([0, ...tokens.space]);
+const ALPHA = new Set(tokens.alpha.map(String));
 
 const SKIP = [/\.generated\./, /\.test\.jsx?$/];
 const FILES = /\.(js|jsx|css)$/;
@@ -51,6 +52,13 @@ const RULES = [
     jsOnly: true,
     within: /style=\{\{[\s\S]*?\}\}/g,
     why: 'numeric size in an inline style (use a token utility or var)',
+  },
+  {
+    // Tinted colours use the steps in tokens.json `alpha` (15 25 40 80). Gradient stops and bg-grove-night photo scrims are exempt.
+    id: 'off-scale-alpha',
+    re: /(?<![\w-])(?:bg|text|border(?:-[trblxy])?|ring|divide|shadow|fill|stroke|outline|decoration|placeholder)-(?:grove-[A-Za-z]+|primary|secondary|destructive|muted|accent|background|foreground|card|popover|input|ring|border)(?:-foreground)?\/(\d+)(?![\w.])/g,
+    filter: (m) => !ALPHA.has(m[1]) && !/^bg-grove-night\//.test(m[0]),
+    why: 'colour opacity step not in tokens.json alpha (use /15 /25 /40 /80)',
   },
   { id: 'stock-shadow', re: /(?<![\w-])shadow-(?:sm|md|lg|xl|2xl|inner)(?![\w-])/g, why: 'stock Tailwind shadow (use shadow-rest|lift|dialog)' },
   { id: 'stock-z', re: /(?<![\w-])-?z-(?:0|10|20|30|40|50)(?![\w-])/g, why: 'stock z-index (use z-raised|sticky|nav|sheet|... from tokens)' },

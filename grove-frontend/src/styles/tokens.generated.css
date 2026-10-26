@@ -32,6 +32,9 @@
   --radius-phone: 56px;
   --radius-phone-screen: 45px;
   --radius-pill: 999px;
+  --border-hairline-width: 0.5px;
+  --border-strong-width: 1.5px;
+  --border-accent-width: 3px;
   --touch-min: 44px;
   --touch-button: 48px;
   --nav-height: 72px;
