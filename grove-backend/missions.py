@@ -1,17 +1,24 @@
 """
-Daily Missions for Grove (Phase 11C)
+Daily Missions for Grove (Phase 11C), reworked for weekly check-ins.
 
-Smart-rotation across four mission types:
-  - water_streak     → Check at least 1 plant today (any care log completes it)
-  - photo_log        → Log a care action with a photo, OR upload a plant photo
-  - health_check     → Open a plant's health panel today (or trigger /missions/daily/complete)
-  - community_engage → React, comment, or post in the feed
+Mission types:
+  - plant_check_in   -> A 20-second soil check on one plant. Most days.
+                        Only a real soil check (or another "looked at it" log) completes it.
+                        Watering never does, so watering more earns nothing.
+  - photo_log        -> Log a care action with a photo, OR upload a plant photo
+  - health_check     -> Open a plant's health panel today
+  - community_engage -> React, comment, or post in the feed
+  - first_plant      -> For someone with no plants yet: add one
 
 Rules:
-- One mission per (user, mission_date) — date is the user's UTC day.
-- Deterministic: same user & date returns the same mission unless state precludes the chosen one.
-- Smart selection adapts to user state (zero-plant users skip plant-action missions, etc).
-- Completion is one-time per (user, mission_date) and awards XP idempotently.
+- One mission per (user, mission_date). The date is the user's UTC day.
+- Deterministic: same user and date returns the same mission unless state precludes the chosen one.
+- Every mission completes from something that really happened. There is no
+  self-attest "mark done".
+- No points or currency. Nothing is awarded for completing a mission; the card
+  just says "Nice work".
+- Old stored missions keep working: the retired id `water_streak` is read as
+  `plant_check_in`.
 """
 
 from __future__ import annotations
@@ -20,16 +27,19 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, Any, List
 
-# Order matters for fallback rotation; "primary" candidates considered first.
-MISSION_TYPES = ["water_streak", "photo_log", "health_check", "community_engage"]
+from check_ins import LOOKED_ACTIONS
+
+MISSION_TYPES = ["plant_check_in", "photo_log", "health_check", "community_engage"]
+
+# Before this rework the check-one-plant mission was stored as `water_streak`.
+LEGACY_MISSION_TYPES = {"water_streak": "plant_check_in"}
 
 MISSION_COPY: Dict[str, Dict[str, str]] = {
-    "water_streak": {
-        "title": "Check one plant",
-        "subtitle": "Press a finger into the soil, then decide whether to water or wait.",
-        "cta": "Open Care",
+    "plant_check_in": {
+        "title": "Plant check-in",
+        "subtitle": "A 20-second soil check on one plant. Press a finger into the soil, then decide whether to water or wait.",
+        "cta": "Check a plant",
         "cta_path": "/care",
-        "xp": 10,
         "icon": "droplet",
     },
     "photo_log": {
@@ -37,7 +47,6 @@ MISSION_COPY: Dict[str, Dict[str, str]] = {
         "subtitle": "Log a care action with a photo, or upload a fresh plant photo.",
         "cta": "Add a photo",
         "cta_path": "/collection",
-        "xp": 15,
         "icon": "camera",
     },
     "health_check": {
@@ -45,7 +54,6 @@ MISSION_COPY: Dict[str, Dict[str, str]] = {
         "subtitle": "Open one plant and look at its health panel today.",
         "cta": "Open a plant",
         "cta_path": "/collection",
-        "xp": 10,
         "icon": "leaf",
     },
     "community_engage": {
@@ -53,10 +61,26 @@ MISSION_COPY: Dict[str, Dict[str, str]] = {
         "subtitle": "React, comment, or share something in the feed.",
         "cta": "Open the feed",
         "cta_path": "/feed",
-        "xp": 10,
         "icon": "sparkles",
     },
+    "first_plant": {
+        "title": "Add your first plant",
+        "subtitle": "It takes under a minute. Photos can come later.",
+        "cta": "Add a plant",
+        "cta_path": "/add-plant",
+        "icon": "leaf",
+    },
 }
+
+# People with plants get the plant check-in on 7 of every 10 days. The rest
+# rotate through the other missions. Deterministic per (user, day).
+PLANT_OWNER_ROTATION = (
+    ["plant_check_in"] * 7 + ["photo_log", "health_check", "community_engage"]
+)
+
+
+def canonical_type(mission_type: Optional[str]) -> Optional[str]:
+    return LEGACY_MISSION_TYPES.get(mission_type, mission_type)
 
 
 def today_str() -> str:
@@ -94,9 +118,9 @@ async def _candidate_missions(db, user_id: str) -> List[str]:
     """Return mission types feasible given user state (in priority order)."""
     has_plants = await _has_any_plants(db, user_id)
     if not has_plants:
-        # Zero-plant users — push them toward simple wins
-        return ["community_engage", "photo_log", "health_check"]
-    return MISSION_TYPES[:]  # all four feasible
+        # Nothing to check yet, so the one honest mission is adding a plant.
+        return ["first_plant"]
+    return PLANT_OWNER_ROTATION[:]
 
 
 async def get_or_assign_daily_mission(db, user_id: str) -> Dict[str, Any]:
@@ -118,7 +142,6 @@ async def get_or_assign_daily_mission(db, user_id: str) -> Dict[str, Any]:
         "mission_type": chosen_type,
         "assigned_at": datetime.now(timezone.utc).isoformat(),
         "completed_at": None,
-        "xp_awarded": 0,
         "metadata": {},
     }
     await db.user_missions.insert_one(doc.copy())
@@ -126,7 +149,7 @@ async def get_or_assign_daily_mission(db, user_id: str) -> Dict[str, Any]:
 
 
 async def _enrich(db, user_id: str, doc: Dict[str, Any]) -> Dict[str, Any]:
-    mtype = doc.get("mission_type")
+    mtype = canonical_type(doc.get("mission_type"))
     copy = MISSION_COPY.get(mtype, {})
     out = {
         "id": doc.get("id"),
@@ -137,10 +160,8 @@ async def _enrich(db, user_id: str, doc: Dict[str, Any]) -> Dict[str, Any]:
         "cta": copy.get("cta", "Begin"),
         "cta_path": copy.get("cta_path", "/care"),
         "icon": copy.get("icon", "leaf"),
-        "xp": copy.get("xp", 10),
         "completed": bool(doc.get("completed_at")),
         "completed_at": doc.get("completed_at"),
-        "xp_awarded": doc.get("xp_awarded", 0),
     }
     return out
 
@@ -162,12 +183,10 @@ async def _complete(db, user_id: str, reason: str) -> Optional[Dict[str, Any]]:
     if existing.get("completed_at"):
         return await _enrich(db, user_id, existing)
 
-    xp = MISSION_COPY.get(existing.get("mission_type"), {}).get("xp", 10)
     await db.user_missions.update_one(
         {"id": existing["id"]},
         {"$set": {
             "completed_at": datetime.now(timezone.utc).isoformat(),
-            "xp_awarded": xp,
             "completion_reason": reason,
         }},
     )
@@ -177,8 +196,14 @@ async def _complete(db, user_id: str, reason: str) -> Optional[Dict[str, Any]]:
 
 # ----- event hooks (called from server.py after side-effects) -----
 
-async def on_care_log(db, user_id: str, log: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """Care log created — try to complete water_streak / photo_log."""
+async def on_care_log(db, user_id: str, log) -> Optional[Dict[str, Any]]:
+    """Care log(s) created. `log` is one log dict or a list of them.
+
+    The plant check-in completes only on a soil check (or another "looked at it"
+    action), never on watering. A photo mission completes on a log with a photo.
+    """
+    logs = log if isinstance(log, list) else [log]
+    logs = [entry or {} for entry in logs]
     mission_date = today_str()
     existing = await db.user_missions.find_one(
         {"user_id": user_id, "mission_date": mission_date}
@@ -190,11 +215,10 @@ async def on_care_log(db, user_id: str, log: Dict[str, Any]) -> Optional[Dict[st
         )
     if not existing or existing.get("completed_at"):
         return None
-    mtype = existing.get("mission_type")
-    if mtype == "water_streak":
-        # any care log counts; watering family explicit check is generous
-        return await _complete(db, user_id, "care_log")
-    if mtype == "photo_log" and (log or {}).get("photo_url"):
+    mtype = canonical_type(existing.get("mission_type"))
+    if mtype == "plant_check_in" and any(entry.get("action") in LOOKED_ACTIONS for entry in logs):
+        return await _complete(db, user_id, "soil_check")
+    if mtype == "photo_log" and any(entry.get("photo_url") for entry in logs):
         return await _complete(db, user_id, "care_log_with_photo")
     return None
 
@@ -226,6 +250,10 @@ async def on_health_check(db, user_id: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-async def manual_complete(db, user_id: str) -> Optional[Dict[str, Any]]:
-    """Force-complete today's mission (used by frontend explicit CTA)."""
-    return await _complete(db, user_id, "manual")
+async def on_plant_added(db, user_id: str) -> Optional[Dict[str, Any]]:
+    existing = await db.user_missions.find_one(
+        {"user_id": user_id, "mission_date": today_str()}
+    )
+    if existing and existing.get("mission_type") == "first_plant" and not existing.get("completed_at"):
+        return await _complete(db, user_id, "plant_added")
+    return None

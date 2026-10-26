@@ -12,9 +12,13 @@ Why these defaults (2026 concept survey, docs/research/findings):
   (`push_sitter_logged`).
 - `push_care_overdue` is off because overdue plants are folded into the one
   daily care check. A second "overdue" alert would break the daily cap.
-- Streaks, bloom hour, challenges, swaps and reactions are off. Grove does
-  not gamify care, and swap and reaction activity still lands in the
-  in-app notification center whatever these push toggles say.
+- Bloom hour, challenges, swaps and reactions are off. Grove does not
+  gamify care, and swap and reaction activity still lands in the in-app
+  notification center whatever these push toggles say.
+- Streak alerts are retired for good. Check-ins are weekly and gentle, with
+  no loss alerts, no "at risk" pushes and no milestone pushes. Old stored
+  `push_streak_*` values stay on the record, untouched, but are never
+  offered, returned or sent (see RETIRED_PREF_KEYS).
 - Quiet hours are on, 21:00 to 08:00 local time, and care is capped at one
   notification a day (adjustable to 3).
 """
@@ -47,8 +51,6 @@ LEGACY_DEFAULTS: Dict[str, Any] = {
 DEFAULT_NOTIFICATION_PREFS: Dict[str, Any] = {
     "push_care_due": True,
     "push_care_overdue": False,
-    "push_streak_at_risk": False,
-    "push_streak_milestone": False,
     "push_swap_match": False,
     "push_swap_message": False,
     "push_kudos_received": False,
@@ -66,6 +68,10 @@ DEFAULT_NOTIFICATION_PREFS: Dict[str, Any] = {
 }
 
 CARE_DAILY_CAP_CHOICES = (1, 2, 3)
+
+# Preferences that no longer do anything. Their stored values are kept (never
+# deleted) but they are left out of the effective preferences.
+RETIRED_PREF_KEYS = frozenset({"push_streak_at_risk", "push_streak_milestone"})
 
 # Notification type -> the push preference that controls it.
 CARE_TYPE_PREF_KEYS = {
@@ -98,7 +104,8 @@ def explicit_prefs(stored: Optional[Mapping[str, Any]]) -> Dict[str, Any]:
 
 def merge_prefs(stored: Optional[Mapping[str, Any]]) -> Dict[str, Any]:
     """Effective preferences: current defaults, overlaid with explicit choices."""
-    return {**DEFAULT_NOTIFICATION_PREFS, **explicit_prefs(stored)}
+    explicit = {k: v for k, v in explicit_prefs(stored).items() if k not in RETIRED_PREF_KEYS}
+    return {**DEFAULT_NOTIFICATION_PREFS, **explicit}
 
 
 def stored_after_update(stored: Optional[Mapping[str, Any]], updates: Mapping[str, Any]) -> Dict[str, Any]:

@@ -11,37 +11,37 @@ on which species is the focal point.
 COMPANIONS = {
     # 1. Monstera
     "monstera-deliciosa": [
-        {"slug": "epipremnum-aureum", "reasoning": "Both Araceae enjoy the same medium light and weekly water — Pothos drapes from the moss pole as Monstera climbs."},
-        {"slug": "spathiphyllum-wallisii", "reasoning": "Peace Lily fills the floor space below; both prefer evenly moist soil and the same indirect-light corner."},
-        {"slug": "ficus-elastica", "reasoning": "A Rubber Plant nearby gives vertical contrast and shares the bright-indirect zone without competing for water."},
+        {"slug": "epipremnum-aureum", "reasoning": "Both Araceae enjoy bright indirect light (Pothos copes with less) and a weekly check of the top inch — Pothos drapes from the moss pole as Monstera climbs."},
+        {"slug": "spathiphyllum-wallisii", "reasoning": "Peace Lily fills the floor space below and likes a little less light than Monstera, so the shade under its leaves suits it. Water them separately: Peace Lily wants even moisture, Monstera dries a little between waterings."},
+        {"slug": "ficus-elastica", "reasoning": "A Rubber Plant nearby gives vertical contrast and shares the bright-indirect zone; it dries a little deeper between waterings than Monstera."},
     ],
     # 2. Pothos
     "epipremnum-aureum": [
         {"slug": "monstera-deliciosa", "reasoning": "Climbing aroid pair — Monstera goes up the pole, Pothos trails down the planter edge."},
         {"slug": "dracaena-trifasciata", "reasoning": "Snake Plant and Pothos share the most forgiving low-light shelf in the house — a low-stress beginner cluster."},
-        {"slug": "zamioculcas-zamiifolia", "reasoning": "ZZ's structural upright form anchors the trailing Pothos; both tolerate erratic watering schedules."},
+        {"slug": "zamioculcas-zamiifolia", "reasoning": "ZZ's structural upright form anchors the trailing Pothos; both tolerate low light and missed waterings."},
     ],
     # 3. Snake Plant
     "dracaena-trifasciata": [
         {"slug": "zamioculcas-zamiifolia", "reasoning": "Two architectural low-water uprights — ideal for a forget-to-water hallway."},
         {"slug": "epipremnum-aureum", "reasoning": "Pothos trailing past Snake Plant's vertical sword-leaves is a low-light interior staple."},
-        {"slug": "crassula-ovata", "reasoning": "Both store water in their tissues and want the same dry-then-soak rhythm."},
+        {"slug": "crassula-ovata", "reasoning": "Both store water in their tissues and like to dry out between waterings, though Jade wants much more light."},
     ],
     # 4. Spider Plant
     "chlorophytum-comosum": [
         {"slug": "epipremnum-aureum", "reasoning": "Two prolific propagators that share light requirements — clip a baby of each into the same starter pot for a friend."},
-        {"slug": "nephrolepis-exaltata", "reasoning": "Boston Fern and Spider Plant make a hanging duo — both like indirect light and consistent moisture."},
+        {"slug": "nephrolepis-exaltata", "reasoning": "Boston Fern and Spider Plant make a hanging duo — both like indirect light, though the fern wants steadier moisture."},
     ],
     # 5. Aloe vera
     "aloe-vera": [
-        {"slug": "crassula-ovata", "reasoning": "Two desert succulents that share the brightest windowsill and a 14-day water rhythm."},
+        {"slug": "crassula-ovata", "reasoning": "Two dry-climate succulents that share the brightest windowsill and a 14-day check."},
         {"slug": "curio-rowleyanus", "reasoning": "Trailing String of Pearls beside upright Aloe makes a sun-loving succulent shelf."},
     ],
     # 6. Peace Lily
     "spathiphyllum-wallisii": [
         {"slug": "nephrolepis-exaltata", "reasoning": "Both crave the same humid, evenly-moist conditions — group them and they'll share a microclimate."},
         {"slug": "goeppertia-orbifolia", "reasoning": "Peace Lily and Calathea both want filtered light and consistently moist soil — they reinforce each other's humidity."},
-        {"slug": "monstera-deliciosa", "reasoning": "Peace Lily fills the lower canopy under a climbing Monstera in the same indirect-light zone."},
+        {"slug": "monstera-deliciosa", "reasoning": "Peace Lily fills the lower canopy under a climbing Monstera, but it wants even moisture while Monstera dries a little, so water each by its own check."},
     ],
     # 7. Pink Princess
     "philodendron-pink-princess": [
@@ -61,13 +61,13 @@ COMPANIONS = {
     ],
     # 10. Rubber Plant
     "ficus-elastica": [
-        {"slug": "ficus-lyrata", "reasoning": "Two Ficus trees that share the same bright-indirect spot; their leaf shapes contrast as living sculpture."},
-        {"slug": "strelitzia-reginae", "reasoning": "Rubber Plant + Bird of Paradise = a bold, statement-tree corner with shared bright-light needs."},
+        {"slug": "ficus-lyrata", "reasoning": "Two Ficus trees that share a bright-indirect spot; their leaf shapes contrast as living sculpture."},
+        {"slug": "strelitzia-reginae", "reasoning": "Rubber Plant + Bird of Paradise = a bold, statement-tree corner. Bird of Paradise wants more direct sun, so give it the spot nearest the window."},
     ],
     # 11. Fiddle-leaf Fig
     "ficus-lyrata": [
         {"slug": "ficus-elastica", "reasoning": "Sibling Ficus species that handle the same conditions — pair them and the gap when one sulks is filled by the other."},
-        {"slug": "strelitzia-reginae", "reasoning": "Both want bright direct light and a stable home; together they make a dramatic large-leaf trio."},
+        {"slug": "strelitzia-reginae", "reasoning": "Both are big-leaf trees that want a stable home; Bird of Paradise takes the sunniest spot and Fiddle-leaf Fig sits slightly back in bright indirect light."},
     ],
     # 12. Calathea Orbifolia
     "goeppertia-orbifolia": [
@@ -77,8 +77,8 @@ COMPANIONS = {
     ],
     # 13. Bird of Paradise
     "strelitzia-reginae": [
-        {"slug": "ficus-lyrata", "reasoning": "Both architectural large-leaf trees that want the brightest spot in the house."},
-        {"slug": "ficus-elastica", "reasoning": "Bold-leaved companions for a sun-drenched corner — same watering rhythm."},
+        {"slug": "ficus-lyrata", "reasoning": "Both architectural large-leaf trees that want bright light; Bird of Paradise can take the sunniest spot, Fiddle-leaf Fig a little back from it."},
+        {"slug": "ficus-elastica", "reasoning": "Bold-leaved companions for a bright corner. Bird of Paradise wants more sun and a little more water than the Rubber Plant."},
     ],
     # 14. Black-eyed Susan
     "rudbeckia-hirta": [
@@ -115,8 +115,8 @@ COMPANIONS = {
     ],
     # 21. Hoya
     "hoya-carnosa": [
-        {"slug": "curio-rowleyanus", "reasoning": "Two trailing succulents/semi-succulents — String of Pearls beside Hoya makes a layered hanging duo."},
-        {"slug": "epipremnum-aureum", "reasoning": "Hoya and Pothos share light needs and a relaxed watering schedule — both reward neglect."},
+        {"slug": "curio-rowleyanus", "reasoning": "Two trailing succulents/semi-succulents — String of Pearls beside Hoya makes a layered hanging duo; give the pearls the sunnier side."},
+        {"slug": "epipremnum-aureum", "reasoning": "Hoya and Pothos both grow well in bright indirect light and forgive a relaxed watering schedule."},
     ],
     # 22. String of Pearls
     "curio-rowleyanus": [

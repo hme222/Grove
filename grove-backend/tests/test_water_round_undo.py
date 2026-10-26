@@ -77,7 +77,6 @@ def setup(monkeypatch):
         {"id": "fine", "user_id": "u1", "watering_frequency_days": 7, "last_watered_at": _iso(1), "next_water_due": _iso(-6)},
     ]
     monkeypatch.setattr(server, "db", db)
-    monkeypatch.setattr(server, "update_streak", _noop)
     monkeypatch.setattr(server.missions_mod, "on_care_log", _noop)
     server.app.dependency_overrides[server.get_current_user] = lambda: {"user_id": "u1", "email": "a@b.c"}
     yield db, TestClient(server.app)

@@ -1,7 +1,7 @@
 """Endpoint tests for the soil test, quiz, and lesson routes.
 
 They run the real FastAPI app against an in-memory stand-in for the database,
-so no MongoDB and no network are used. Streak, badge, and mission side effects
+so no MongoDB and no network are used. Check-in, badge, and mission side effects
 are stubbed out because they are not what these tests are about.
 """
 import os
@@ -74,7 +74,13 @@ def make_client(monkeypatch):
         if with_plant:
             db.plants.docs.append({"id": "p1", "user_id": "u1", "watering_frequency_days": 7})
         monkeypatch.setattr(server, "db", db)
-        monkeypatch.setattr(server, "update_streak", _noop)
+        check_ins = []
+
+        async def _record(user_id, kind):
+            check_ins.append((user_id, kind))
+
+        monkeypatch.setattr(server, "record_check_in", _record)
+        db.check_ins_recorded = check_ins
         monkeypatch.setattr(server, "check_and_award_badges", _noop)
         monkeypatch.setattr(server.missions_mod, "on_care_log", _noop)
         server.app.dependency_overrides[server.get_current_user] = lambda: {"user_id": "u1", "email": "a@b.c"}
@@ -213,3 +219,18 @@ def test_the_soil_lesson_cannot_complete_without_a_plant(make_client):
 def test_other_lessons_complete_without_a_plant(make_client):
     _, client = make_client(with_plant=False)
     assert client.post("/api/lessons/plant-er/complete").status_code == 200
+
+
+# ---------- weekly check-ins ----------
+
+def test_finishing_a_lesson_counts_as_a_check_in(make_client):
+    db, client = make_client()
+    assert client.post("/api/lessons/plant-er/complete").status_code == 200
+    assert db.check_ins_recorded == [("u1", "lesson")]
+
+
+def test_a_refused_lesson_is_not_a_check_in(make_client):
+    db, client = make_client(with_plant=False)
+    assert client.post("/api/lessons/soil-finger-test/complete").status_code == 409
+    assert client.post("/api/lessons/not-a-lesson/complete").status_code == 404
+    assert db.check_ins_recorded == []

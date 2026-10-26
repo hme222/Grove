@@ -2,6 +2,7 @@ import os
 import json
 import re
 import logging
+from datetime import datetime, timezone
 from typing import Optional
 import anthropic
 
@@ -85,12 +86,55 @@ def parse_json_response(response: str) -> dict:
             return json.loads(json_match.group(1))
         raise ValueError(f"Could not parse JSON from response: {response[:200]}")
 
-async def suggest_watering_schedule(species_name: str, latin_name: str, grow_medium: str, location: str = "Unknown") -> dict:
+MIN_WATERING_DAYS = 3
+MAX_WATERING_DAYS = 28
+SCHEDULE_REASON = "Check the soil first; treat this as a reminder to check, not a command to water."
+
+_SOUTH = {"south", "southern"}
+
+
+def normalize_hemisphere(value) -> str:
+    """'north' or 'south'. Anything missing or unknown is north."""
+    return "south" if str(value or "").strip().lower() in _SOUTH else "north"
+
+
+def clamp_watering_days(value, default: int = 7) -> int:
+    """A whole number of days between 3 and 28, whatever the model returned."""
+    try:
+        days = int(round(float(value)))
+    except (TypeError, ValueError):
+        days = default
+    return max(MIN_WATERING_DAYS, min(MAX_WATERING_DAYS, days))
+
+
+def build_schedule_prompt(species_name: str, latin_name: str, grow_medium: str, location: str = "Unknown",
+                          hemisphere=None, now=None) -> str:
+    """The watering-schedule prompt, with the month and hemisphere so the season is real, not guessed."""
+    now = now or datetime.now(timezone.utc)
+    hemi = normalize_hemisphere(hemisphere)
+    month = now.strftime("%B")
+    return (
+        f"Suggest how often to check the soil of {species_name} ({latin_name}) grown in {grow_medium} in {location}. "
+        f"It is {month} in the {hemi}ern hemisphere, so allow for the season (plants usually need water less often in "
+        f"winter and more often in summer). Answer in whole days between {MIN_WATERING_DAYS} and {MAX_WATERING_DAYS}.\n"
+        'Return ONLY valid JSON: { "days": <number>, "reason": "<string max 100 words>", "confidence": "high"|"medium"|"low" }'
+    )
+
+
+def finish_schedule(result: dict) -> dict:
+    """Clamp the model's days and replace its reason with the fixed, non-commanding wording."""
+    data = dict(result or {})
+    data["days"] = clamp_watering_days(data.get("days"))
+    data["reason"] = SCHEDULE_REASON
+    return data
+
+
+async def suggest_watering_schedule(species_name: str, latin_name: str, grow_medium: str, location: str = "Unknown",
+                                    hemisphere=None) -> dict:
     system = "You are a botanical expert. Always respond with valid JSON only, no markdown formatting or code blocks."
-    prompt = f"""Suggest a watering frequency in days for {species_name} ({latin_name}) grown in {grow_medium} in {location} during the current season.
-Return ONLY valid JSON: {{ "days": <number>, "reason": "<string max 100 words>", "confidence": "high"|"medium"|"low" }}"""
+    prompt = build_schedule_prompt(species_name, latin_name, grow_medium, location, hemisphere)
     response = await call_claude(system, prompt)
-    return parse_json_response(response)
+    return finish_schedule(parse_json_response(response))
 
 async def generate_plant_biography(plant_data: dict) -> str:
     system = "You are a warm, knowledgeable botanical writer for the Grove plant community app. Always respond with valid JSON only."

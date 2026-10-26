@@ -61,8 +61,8 @@ SPECIES_DATA = [
 ]
 
 CHALLENGE_TEMPLATES_DATA = [
-    {"slug": "streak-7", "title": "7-Day Streak", "description": "Log care every day for 7 days straight", "goal_type": "streak_days", "target_value": 7, "duration_days": 7},
-    {"slug": "streak-30", "title": "30-Day Dedication", "description": "Maintain a 30-day care streak", "goal_type": "streak_days", "target_value": 30, "duration_days": 30},
+    {"slug": "checkin-weeks-4", "title": "Four steady weeks", "description": "Reach your weekly check-in goal in 4 different weeks. Gaps are fine.", "goal_type": "streak_days", "target_value": 4, "duration_days": None},
+    {"slug": "checkin-weeks-12", "title": "Twelve steady weeks", "description": "Reach your weekly check-in goal in 12 different weeks. Gaps are fine.", "goal_type": "streak_days", "target_value": 12, "duration_days": None},
     {"slug": "grow-10", "title": "Grow to 10", "description": "Build a collection of 10 plants", "goal_type": "plant_count", "target_value": 10, "duration_days": None},
     {"slug": "propagate-5", "title": "Propagation Pro", "description": "Successfully propagate 5 plants this season", "goal_type": "care_logs_count", "target_value": 5, "duration_days": 90},
     {"slug": "care-100", "title": "Care Champion", "description": "Log 100 care actions", "goal_type": "care_logs_count", "target_value": 100, "duration_days": None},
@@ -75,10 +75,6 @@ BADGES_DATA = [
     {"slug": "plant_parent_10", "name": "Plant Parent", "description": "Growing 10 plants", "icon_type": "leaf"},
     {"slug": "green_thumb_25", "name": "Green Thumb", "description": "Growing 25 plants", "icon_type": "leaf"},
     {"slug": "jungle_50", "name": "Urban Jungle", "description": "Growing 50 plants", "icon_type": "crown"},
-    {"slug": "streak_7", "name": "Week Warrior", "description": "7-day care streak", "icon_type": "flame"},
-    {"slug": "streak_30", "name": "Monthly Maven", "description": "30-day care streak", "icon_type": "flame"},
-    {"slug": "streak_100", "name": "Centurion", "description": "100-day care streak", "icon_type": "flame"},
-    {"slug": "streak_365", "name": "Year-Round Grower", "description": "365-day care streak", "icon_type": "crown"},
     {"slug": "first_prop", "name": "First Cutting", "description": "Propagated your first plant", "icon_type": "leaf"},
     {"slug": "prop_master", "name": "Propagation Master", "description": "10 successful propagations", "icon_type": "leaf"},
     {"slug": "first_swap", "name": "First Swap", "description": "Completed your first plant swap", "icon_type": "heart"},
@@ -94,19 +90,28 @@ BADGES_DATA = [
 ]
 
 CHALLENGES_DATA = [
-    {"title": "7-Day Streak Starter", "description": "Log care every day for 7 days", "type": "personal", "target_metric": "streak_days", "target_value": 7, "badge_awarded": "streak_7"},
-    {"title": "30-Day Dedication", "description": "Maintain a 30-day care streak", "type": "personal", "target_metric": "streak_days", "target_value": 30, "badge_awarded": "streak_30"},
+    {"title": "Four steady weeks", "description": "Reach your weekly check-in goal in 4 different weeks", "type": "personal", "target_metric": "streak_days", "target_value": 4, "badge_awarded": "checkin_weeks_4"},
+    {"title": "Twelve steady weeks", "description": "Reach your weekly check-in goal in 12 different weeks", "type": "personal", "target_metric": "streak_days", "target_value": 12, "badge_awarded": "checkin_weeks_12"},
     {"title": "Green Thumb Journey", "description": "Grow your collection to 10 plants", "type": "personal", "target_metric": "species_logged", "target_value": 10, "badge_awarded": "plant_parent_10"},
     {"title": "Propagation Pioneer", "description": "Successfully propagate 3 plants", "type": "personal", "target_metric": "propagations", "target_value": 3, "badge_awarded": "first_prop"},
     {"title": "Spring Growth Sprint", "description": "Log 50 care actions this spring", "type": "seasonal", "target_metric": "care_logs", "target_value": 50},
     {"title": "Summer Hydration", "description": "Water all your plants on schedule for 2 weeks", "type": "seasonal", "target_metric": "care_logs", "target_value": 28},
-    {"title": "Grove Team Streak", "description": "Every grove member logs care today", "type": "grove", "target_metric": "streak_days", "target_value": 1},
+    {"title": "Grove check-in day", "description": "Every grove member checks on a plant today", "type": "grove", "target_metric": "streak_days", "target_value": 1},
     {"title": "Community Photo Day", "description": "Share 5 plant photos this week", "type": "grove", "target_metric": "care_logs", "target_value": 5},
     {"title": "Bouquet Season", "description": "Track 3 bouquets this month", "type": "seasonal", "target_metric": "bouquets", "target_value": 3, "badge_awarded": "first_bouquet"},
     {"title": "Diversity Explorer", "description": "Add 5 different species to your collection", "type": "personal", "target_metric": "species_logged", "target_value": 5},
 ]
 
 ROOMS = ["Living Room", "Bedroom", "Kitchen", "Bathroom", "Office", "Balcony", "Patio", "Greenhouse", "Hallway", "Dining Room"]
+
+
+def build_encyclopedia_entry(s):
+    """The one-paragraph entry. Uses `origin_note` when a species has one (cultivars, hybrids), so it
+    never reads 'native to Cultivar (...)', and drops the Latin name when it equals the common name."""
+    common, latin = s["common_name"], s["latin_name"]
+    name = common if common.strip().lower() == latin.strip().lower() else f"{common} ({latin})"
+    origin = s.get("origin_note") or f"Native to {str(s.get('native_range') or s.get('native_habitat') or 'unknown').rstrip('.')}."
+    return f"{name} belongs to the {s['family']} family. {origin} {s['care_summary']}"
 
 
 def build_species_doc(s):
@@ -118,11 +123,7 @@ def build_species_doc(s):
         # hydrates these with the linked species' name + id at read time
         # so the wire shape gives the frontend everything it needs).
         "companions": COMPANIONS.get(s["slug"], []),
-        "encyclopedia_entry": (
-            f"{s['common_name']} ({s['latin_name']}) belongs to the {s['family']} family, "
-            f"native to {s.get('native_range') or s.get('native_habitat', 'unknown')}. "
-            f"{s['care_summary']}"
-        ),
+        "encyclopedia_entry": build_encyclopedia_entry(s),
         "photo_library_count": 0,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
@@ -281,6 +282,7 @@ async def seed_database(db):
     await db.care_logs.create_index([("plant_id", 1), ("logged_at", -1)])
     await db.care_logs.create_index("user_id")
     await db.streaks.create_index("user_id", unique=True)
+    await db.check_ins.create_index([("user_id", 1), ("date", 1)], unique=True)
     await db.goals.create_index("user_id")
     await db.notifications.create_index([("user_id", 1), ("created_at", -1)])
     await db.portfolio_items.create_index("user_id")

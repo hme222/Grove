@@ -7,6 +7,7 @@ import pytest
 from notification_policy import (
     DEFAULT_NOTIFICATION_PREFS,
     LEGACY_DEFAULTS,
+    RETIRED_PREF_KEYS,
     PREFS_VERSION,
     explicit_prefs,
     in_quiet_hours,
@@ -25,9 +26,26 @@ def test_only_care_check_pushes_are_on_by_default():
     assert on == ["push_bouquet_reminder", "push_care_due", "push_sitter_logged"]
 
 
-def test_streak_alerts_are_off_by_default():
-    assert DEFAULT_NOTIFICATION_PREFS["push_streak_at_risk"] is False
-    assert DEFAULT_NOTIFICATION_PREFS["push_streak_milestone"] is False
+def test_streak_alerts_are_retired_not_just_off():
+    # No default, no effective value and no pref for either, whatever is stored.
+    for key in ("push_streak_at_risk", "push_streak_milestone"):
+        assert key not in DEFAULT_NOTIFICATION_PREFS
+        assert key in RETIRED_PREF_KEYS
+    assert not any("streak" in k for k in DEFAULT_NOTIFICATION_PREFS)
+
+
+def test_stored_streak_prefs_are_kept_on_the_record_but_never_returned():
+    stored = {"prefs_version": PREFS_VERSION, "push_streak_at_risk": True, "push_streak_milestone": True}
+    merged = merge_prefs(stored)
+    assert "push_streak_at_risk" not in merged and "push_streak_milestone" not in merged
+    # An update must not delete what was stored.
+    again = stored_after_update(stored, {"care_daily_cap": 2})
+    assert again["push_streak_at_risk"] is True and again["push_streak_milestone"] is True
+
+
+def test_bloom_hour_and_challenge_pushes_are_off_for_new_owners():
+    assert DEFAULT_NOTIFICATION_PREFS["push_bloom_hour"] is False
+    assert DEFAULT_NOTIFICATION_PREFS["push_grove_challenge"] is False
 
 
 def test_quiet_hours_are_on_overnight_and_care_is_capped_at_one():
@@ -47,7 +65,7 @@ def test_legacy_snapshot_values_equal_to_old_defaults_fall_through_to_new_defaul
     # Old PATCH saved the whole merged dict after the user flipped one toggle.
     snapshot = {**LEGACY_DEFAULTS, "push_swap_match": False}
     merged = merge_prefs(snapshot)
-    assert merged["push_streak_at_risk"] is False
+    assert "push_streak_at_risk" not in merged
     assert merged["quiet_hours_enabled"] is True
     assert merged["care_daily_cap"] == 1
 
@@ -61,9 +79,9 @@ def test_legacy_choices_that_differ_from_old_defaults_are_kept():
 
 
 def test_version_two_records_are_taken_at_face_value():
-    stored = {"prefs_version": PREFS_VERSION, "push_streak_at_risk": True, "quiet_hours_enabled": False}
+    stored = {"prefs_version": PREFS_VERSION, "push_swap_match": True, "quiet_hours_enabled": False}
     merged = merge_prefs(stored)
-    assert merged["push_streak_at_risk"] is True
+    assert merged["push_swap_match"] is True
     assert merged["quiet_hours_enabled"] is False
     assert "prefs_version" not in merged
 
@@ -121,6 +139,7 @@ def test_nothing_sends_during_quiet_hours_or_when_off():
     assert may_send_care_notification(DEFAULT_NOTIFICATION_PREFS, "care_due", 0, time(22, 0)) is False
     assert may_send_care_notification(DEFAULT_NOTIFICATION_PREFS, "care_overdue", 0, time(9, 0)) is False
     assert may_send_care_notification(DEFAULT_NOTIFICATION_PREFS, "streak_at_risk", 0, time(9, 0)) is False
+    assert may_send_care_notification({**DEFAULT_NOTIFICATION_PREFS, "push_streak_at_risk": True}, "streak_at_risk", 0, time(9, 0)) is False
 
 
 # ---------- endpoints ----------
@@ -178,7 +197,7 @@ def test_patch_keeps_a_legacy_users_real_choice_and_writes_only_explicit_keys(cl
     assert res.status_code == 200
     body = res.json()
     assert body["push_care_due"] is False  # explicit legacy choice survives
-    assert body["push_streak_at_risk"] is False  # untouched old default -> new default
+    assert "push_streak_at_risk" not in body  # retired, never returned
     assert body["care_daily_cap"] == 2
     assert user["notification_preferences"] == {"push_care_due": False, "care_daily_cap": 2, "prefs_version": PREFS_VERSION}
 

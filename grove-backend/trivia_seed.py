@@ -10,7 +10,7 @@ the community sees the same daily trivia, and a given user sees the same
 trivia for the duration of the day. The card rotates at midnight in the
 user's local timezone (handled by the frontend by passing tz_offset).
 """
-TRIVIA_SEED_VERSION = "14c4-trivia-v1"
+TRIVIA_SEED_VERSION = "14c4-trivia-v2"
 
 TRIVIA_CARDS = [
     # ---------------- Care (5) ----------------
@@ -34,9 +34,9 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "Tap water can be fine — or fatal — depending on the plant.",
-        "body": "Calatheas, prayer plants, and carnivorous species hate chlorinated tap water. Most aroids and pothos handle it without complaint. When in doubt, leave water out overnight before using.",
+        "body": "Calatheas, prayer plants, and carnivorous species hate chlorinated tap water. Most aroids and pothos handle it without complaint. Letting tap water sit overnight removes chlorine only; fluoride and hardness stay, so use rain or filtered water for the fussy ones.",
         "category": "care",
-        "linked_species_slug": "calathea-ornata",
+        "linked_species_slug": "goeppertia-orbifolia",
     },
     {
         "headline": "Fertilizer doesn't fix unhappy plants — it amplifies whatever's happening.",
@@ -82,7 +82,7 @@ TRIVIA_CARDS = [
         "headline": "Pothos is invasive in subtropical regions.",
         "body": "Adored as a houseplant, but in places like Florida, Hawaii, and parts of Australia, escaped pothos smothers native canopy. Never compost or dump cuttings outdoors in those zones.",
         "category": "native",
-        "linked_species_slug": "pothos-golden",
+        "linked_species_slug": "epipremnum-aureum",
     },
     {
         "headline": "Most native bee species in the US are solitary.",
@@ -144,13 +144,13 @@ TRIVIA_CARDS = [
     # ---------------- Light (5) ----------------
     {
         "headline": "Bright indirect light is the most lied-about phrase in plant care.",
-        "body": "It means: bright enough to read a book without a lamp, but the plant cannot see the sun directly. Most rooms are darker than this — meter readings rarely lie.",
+        "body": "It means: close to a bright window, where the plant gets plenty of daylight but the sun does not land on its leaves. Most rooms are darker than this; a light meter app will show you.",
         "category": "light",
         "linked_species_slug": None,
     },
     {
         "headline": "Light intensity drops fast away from the window.",
-        "body": "At 3 feet from a south-facing window, light is roughly 25% of what hits the glass. At 6 feet, it's about 10%. Most 'low light' plants still want to be within 4 feet of a window.",
+        "body": "Light falls off steeply as you move away from the glass; a few feet back it can be a small fraction of what hits the window (the exact amount depends on the window and the weather). Most 'low light' plants still want to be fairly close to a window.",
         "category": "light",
         "linked_species_slug": None,
     },
@@ -162,7 +162,7 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "A grow light at 12 inches beats a window at 6 feet.",
-        "body": "If your room is dim, an LED grow light running 10–12 hours a day matters more than where you put the plant. Aim for ~200 PPFD at the leaf surface for most foliage plants.",
+        "body": "If your room is dim, an LED grow light running 10–12 hours a day matters more than where you put the plant. The right strength depends on the plant and the lamp, so follow the lamp maker's guidance for distance and hours.",
         "category": "light",
         "linked_species_slug": None,
     },

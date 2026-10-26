@@ -12,21 +12,17 @@ because they have no automated progress signal (admin-grantable only).
 from typing import Dict, Optional, Tuple
 from datetime import datetime, timezone
 
+import check_ins
+
 
 # ---------------------------------------------------------------------------
 # Slug → (metric, target, label) table
 # ---------------------------------------------------------------------------
 BADGE_PROGRESS_RULES: Dict[str, Tuple[str, int, str]] = {
-    # Streak family
-    "streak_7": ("streak", 7, "day streak"),
-    "streak_14": ("streak", 14, "day streak"),
-    "streak_30": ("streak", 30, "day streak"),
-    "streak_60": ("streak", 60, "day streak"),
-    "streak_100": ("streak", 100, "day streak"),
-    "streak_180": ("streak", 180, "day streak"),
-    "streak_365": ("streak", 365, "day streak"),
-    "streak_500": ("streak", 500, "day streak"),
-    "streak_1000": ("streak", 1000, "day streak"),
+    # Weekly check-ins
+    "checkin_first": ("check_ins_total", 1, "check-in"),
+    "checkin_weeks_4": ("weeks_goal_met", 4, "weeks with the goal met"),
+    "checkin_weeks_12": ("weeks_goal_met", 12, "weeks with the goal met"),
     # Watering
     "watering_first": ("water_count", 1, "watering"),
     "watering_10": ("water_count", 10, "waterings"),
@@ -125,9 +121,7 @@ async def collect_user_snapshot(db, user_id: str) -> dict:
     what the awarder will see on the next sweep — no UI/award drift.
     """
     user = await db.users.find_one({"id": user_id}) or {}
-    streak = await db.streaks.find_one({"user_id": user_id}) or {}
-    streak_value = max(streak.get("current_streak", 0) or 0,
-                       streak.get("longest_streak", 0) or 0)
+    check_in_summary = await check_ins.get_summary(db, user_id)
     pipeline = [
         {"$match": {"user_id": user_id}},
         {"$group": {"_id": "$action", "count": {"$sum": 1}}},
@@ -170,7 +164,8 @@ async def collect_user_snapshot(db, user_id: str) -> dict:
     tutorials_seen = set(user.get("tutorials_seen") or [])
 
     return {
-        "streak": streak_value,
+        "check_ins_total": check_in_summary["total_check_ins"],
+        "weeks_goal_met": check_in_summary["weeks_goal_met"],
         "water_count": action_counts.get("water", 0),
         "fert_count": action_counts.get("fertilize", 0),
         "repot_count": action_counts.get("repot", 0),

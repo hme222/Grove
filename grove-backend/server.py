@@ -21,7 +21,7 @@ from auth import (
 )
 from storage import init_storage, put_object, get_object, generate_storage_path
 from room_light import light_fit, normalize_light
-from species_lookup import lookup as species_lookup_value, name_index as species_name_index
+from species_lookup import lookup as species_lookup_value, name_index as species_name_index, search_query as species_search_query
 from ai_service import (
     suggest_watering_schedule, generate_plant_biography, generate_plant_personality,
     call_claude, call_claude_vision, parse_json_response,
@@ -29,14 +29,18 @@ from ai_service import (
 )
 import ai_service
 from hardiness_zones import (
-    lookup_zone, USDA_DESCRIPTIONS, RHS_DESCRIPTIONS,
+    lookup_zone, hemisphere_for_zip, USDA_DESCRIPTIONS, RHS_DESCRIPTIONS,
     US_ZIP_PREFIX_TO_ZONE, UK_POSTCODE_AREA_TO_RHS,
 )
 from seed import seed_database
+from curated_species import CURATED_SPECIES
 import missions as missions_mod
 import soil_check as soil_check_mod
+import check_ins as check_ins_mod
 import notification_policy
 import tracks as tracks_mod
+import auth_flow
+import sso as sso_mod
 import secrets
 import base64
 
@@ -128,52 +132,10 @@ def compute_status_reason(plant: dict, status: str) -> str:
         return f"Soil-dry estimate based on your {freq}-day watering pattern."
     return ""
 
-async def update_streak(user_id: str):
-    today = datetime.now(timezone.utc).date().isoformat()
-    streak = await db.streaks.find_one({"user_id": user_id})
-    if not streak:
-        await db.streaks.insert_one({
-            "id": str(uuid.uuid4()), "user_id": user_id,
-            "current_streak": 1, "longest_streak": 1,
-            "last_log_date": today, "paused": False,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "updated_at": datetime.now(timezone.utc).isoformat()
-        })
-        return
-    last_date = streak.get('last_log_date')
-    if last_date == today:
-        return
-    yesterday = (datetime.now(timezone.utc).date() - timedelta(days=1)).isoformat()
-    current = streak.get('current_streak', 0)
-    longest = streak.get('longest_streak', 0)
-    if last_date == yesterday:
-        current += 1
-    else:
-        current = 1
-    longest = max(longest, current)
-    await db.streaks.update_one(
-        {"user_id": user_id},
-        {"$set": {"current_streak": current, "longest_streak": longest,
-                  "last_log_date": today, "updated_at": datetime.now(timezone.utc).isoformat()}}
-    )
-    # Streak milestone notifications
-    milestone_bodies = {
-        7: "Your social feed just unlocked. See what your grove is growing.",
-        14: "Two weeks of steady care. Your plants feel it.",
-        30: "Swap matching just unlocked. See what's available in your grove.",
-        60: "Sixty days of care. You've built a real rhythm.",
-        100: "One hundred days of care. That's grove-level commitment.",
-    }
-    if current in milestone_bodies:
-        await create_notification(
-            user_id=user_id,
-            ntype="streak_milestone",
-            title=f"{current} days of care",
-            body=milestone_bodies[current],
-            entity_type="streak",
-            entity_id=str(current),
-            data={"streak_days": current},
-        )
+async def record_check_in(user_id: str, kind: str):
+    """Count today as a weekly check-in (lesson, photo). Care logs are read directly."""
+    await check_ins_mod.record_check_in(db, user_id, kind)
+
 
 def compute_health_breakdown(plant: dict, recent_logs: list) -> dict:
     """6-factor explainable plant health breakdown. Each factor 0-100.
@@ -298,10 +260,7 @@ async def check_and_award_badges(user_id: str):
     """
     # Snapshot user state once.
     user = await db.users.find_one({"id": user_id}) or {}
-    streak = await db.streaks.find_one({"user_id": user_id}) or {}
-    current_streak = streak.get("current_streak", 0) or 0
-    longest_streak = streak.get("longest_streak", 0) or 0
-    streak_value = max(current_streak, longest_streak)
+    check_in_summary = await check_ins_mod.get_summary(db, user_id)
 
     # Care-log action counts (single aggregate query)
     pipeline = [
@@ -370,16 +329,10 @@ async def check_and_award_badges(user_id: str):
         if condition and slug not in existing_slugs:
             to_award.append(slug)
 
-    # --- Streak family (9) ---
-    maybe("streak_7",   streak_value >= 7)
-    maybe("streak_14",  streak_value >= 14)
-    maybe("streak_30",  streak_value >= 30)
-    maybe("streak_60",  streak_value >= 60)
-    maybe("streak_100", streak_value >= 100)
-    maybe("streak_180", streak_value >= 180)
-    maybe("streak_365", streak_value >= 365)
-    maybe("streak_500", streak_value >= 500)
-    maybe("streak_1000", streak_value >= 1000)
+    # --- Weekly check-ins (3). Reward checking, never watering volume. ---
+    maybe("checkin_first", check_in_summary["total_check_ins"] >= 1)
+    maybe("checkin_weeks_4", check_in_summary["weeks_goal_met"] >= 4)
+    maybe("checkin_weeks_12", check_in_summary["weeks_goal_met"] >= 12)
 
     # --- Watering family (6) ---
     water_count = action_counts.get("water", 0)
@@ -492,7 +445,7 @@ async def get_user_stats(user_id: str) -> dict:
     propagation_count = await db.care_logs.count_documents({"user_id": user_id, "action": "propagate"})
     care_logs = await db.care_logs.find({"user_id": user_id}).to_list(10000)
     estimated_minutes = sum(CARE_ACTION_MINUTES.get(log.get('action', ''), 1) for log in care_logs)
-    streak = await db.streaks.find_one({"user_id": user_id})
+    check_in_summary = await check_ins_mod.get_summary(db, user_id)
     # Tier + plant-count gate for advanced analytics (Pro tier + 10+ plants)
     user_doc = await db.users.find_one({"id": user_id})
     tier = (user_doc or {}).get('tier', 'free')
@@ -513,8 +466,7 @@ async def get_user_stats(user_id: str) -> dict:
         "propagation_count": propagation_count,
         "thriving_rate": thriving_rate,
         "swap_count": 0, "bouquet_count": 0,
-        "current_streak": streak.get('current_streak', 0) if streak else 0,
-        "longest_streak": streak.get('longest_streak', 0) if streak else 0,
+        "check_ins": check_in_summary,
         "show_advanced_analytics": show_advanced_analytics,
         "tier": tier,
     }
@@ -522,7 +474,7 @@ async def get_user_stats(user_id: str) -> dict:
 # ============ AUTH ROUTES ============
 
 class RegisterInput(BaseModel):
-    username: str
+    username: Optional[str] = None  # left out by the sign-up flow: made from the email
     email: str
     password: str
     display_name: Optional[str] = None
@@ -536,6 +488,22 @@ class RefreshInput(BaseModel):
 
 @api_router.post("/auth/register")
 async def register(input: RegisterInput):
+    return await _register_account(input)
+
+
+async def _unused_username(email: str) -> str:
+    attempt = 0
+    name = auth_flow.username_from_email(email, attempt)
+    while await db.users.find_one({"username": name}):
+        attempt += 1
+        name = auth_flow.username_from_email(email, attempt)
+    return name
+
+
+async def _register_account(input: RegisterInput, sso_provider: Optional[str] = None):
+    if not input.username:
+        input.username = await _unused_username(input.email)
+        input.display_name = input.display_name or auth_flow.display_name_from_email(input.email) or input.username
     existing = await db.users.find_one({"$or": [{"email": input.email}, {"username": input.username}]})
     if existing:
         if existing.get('email') == input.email:
@@ -556,6 +524,13 @@ async def register(input: RegisterInput):
         "created_at": datetime.now(timezone.utc).isoformat(),
         "updated_at": datetime.now(timezone.utc).isoformat()
     }
+    # Only with the flag on does the account carry a confirmed flag; with it off the
+    # document is exactly what it was before. A provider that vouches for the email counts as confirmed.
+    if sso_provider:
+        user["email_confirmed"] = True
+        user["email_confirmed_at"] = datetime.now(timezone.utc).isoformat()
+    elif auth_flow.email_verification_enabled():
+        user["email_confirmed"] = False
     await db.users.insert_one(user)
     await db.streaks.insert_one({
         "id": str(uuid.uuid4()), "user_id": user_id,
@@ -571,6 +546,12 @@ async def register(input: RegisterInput):
     })
     access_token = create_access_token(user_id, input.email)
     refresh_token = create_refresh_token(user_id)
+    if not sso_provider and auth_flow.email_verification_enabled():
+        # A sender that is down must not block sign-up: the screen offers "send again".
+        try:
+            await _send_confirmation(user)
+        except Exception:
+            logger.exception("Could not send the confirmation email at sign-up")
     user_safe = {k: v for k, v in user.items() if k != 'password_hash' and k != '_id'}
     return {"user": user_safe, "access_token": access_token, "refresh_token": refresh_token}
 
@@ -632,6 +613,143 @@ async def test_login():
     user_safe = serialize_doc({k: v for k, v in user.items() if k != 'password_hash'})
     return {"user": user_safe, "access_token": access_token, "refresh_token": refresh_token}
 
+
+# ============ EMAIL CONFIRMATION + SSO (off unless the flags in auth_flow.py are on) ============
+
+@api_router.get("/auth/config")
+async def auth_config():
+    """Which optional sign-up pieces are on. The screens draw nothing for a piece that is off."""
+    return auth_flow.public_config()
+
+
+async def _send_confirmation(user: dict) -> str:
+    """Make a fresh single-use link for this user's current email and send it."""
+    raw, hashed = auth_flow.new_token()
+    now = datetime.now(timezone.utc).isoformat()
+    await db.email_tokens.insert_one({
+        "token_hash": hashed, "user_id": user["id"], "email": user["email"],
+        "expires_at": auth_flow.expiry(), "used_at": None, "created_at": now,
+    })
+    await db.users.update_one({"id": user["id"]}, {"$set": {"email_confirmation_sent_at": now}})
+    return auth_flow.send_confirmation_email(user["email"], auth_flow.confirmation_link(raw))
+
+
+def _require_verification_on():
+    if not auth_flow.email_verification_enabled():
+        raise HTTPException(status_code=404, detail="Not found")
+
+
+@api_router.post("/auth/email/send")
+async def resend_confirmation(current_user: dict = Depends(get_current_user)):
+    _require_verification_on()
+    user = await db.users.find_one({"id": current_user['user_id']})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.get("email_confirmed"):
+        return {"sent": False, "already_confirmed": True}
+    wait = auth_flow.seconds_until_resend(user.get("email_confirmation_sent_at"))
+    if wait:
+        raise HTTPException(status_code=429, detail=f"We just sent one. You can ask again in {wait} seconds.")
+    try:
+        await _send_confirmation(user)
+    except Exception:
+        logger.exception("Could not send the confirmation email")
+        raise HTTPException(status_code=502, detail="We couldn't send that email. Try again in a minute.")
+    return {"sent": True}
+
+
+class EmailConfirmBody(BaseModel):
+    token: str
+
+
+@api_router.post("/auth/email/confirm")
+async def confirm_email(body: EmailConfirmBody):
+    """Open from the link in the email. Needs no sign-in, so it works from the phone's mail app."""
+    _require_verification_on()
+    invalid = HTTPException(status_code=400, detail="This link has expired or was already used. Ask for a new one.")
+    record = await db.email_tokens.find_one({"token_hash": auth_flow.hash_token(body.token or "")})
+    if not record or record.get("used_at") or auth_flow.is_expired(record.get("expires_at")):
+        raise invalid
+    user = await db.users.find_one({"id": record["user_id"]})
+    # A link for an address the person has since changed must not confirm the new one.
+    if not user or user.get("email") != record.get("email"):
+        raise invalid
+    now = datetime.now(timezone.utc).isoformat()
+    await db.email_tokens.update_one({"token_hash": record["token_hash"]}, {"$set": {"used_at": now}})
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {"email_confirmed": True, "email_confirmed_at": now, "updated_at": now}},
+    )
+    return {"confirmed": True, "email": user["email"], "display_name": user.get("display_name")}
+
+
+class EmailChangeBody(BaseModel):
+    email: EmailStr
+
+
+@api_router.post("/auth/email/change")
+async def change_email(body: EmailChangeBody, current_user: dict = Depends(get_current_user)):
+    """"Use a different email": swap the address and send a new link."""
+    _require_verification_on()
+    email = str(body.email)
+    other = await db.users.find_one({"email": email})
+    if other and other.get("id") != current_user['user_id']:
+        raise HTTPException(status_code=400, detail="That email is already registered")
+    now = datetime.now(timezone.utc).isoformat()
+    await db.users.update_one(
+        {"id": current_user['user_id']},
+        {"$set": {"email": email, "email_confirmed": False, "email_confirmation_sent_at": None, "updated_at": now}},
+    )
+    user = await db.users.find_one({"id": current_user['user_id']})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    try:
+        await _send_confirmation(user)
+    except Exception:
+        logger.exception("Could not send the confirmation email after an email change")
+        raise HTTPException(status_code=502, detail="We couldn't send that email. Try again in a minute.")
+    return {"sent": True, "email": email}
+
+
+class SSOBody(BaseModel):
+    id_token: str
+    name: Optional[str] = None  # Apple only shares the name on the first sign-in
+
+
+@api_router.post("/auth/sso/{provider}")
+async def sso_sign_in(provider: str, body: SSOBody):
+    enabled = {"google": auth_flow.sso_google_enabled, "apple": auth_flow.sso_apple_enabled}.get(provider)
+    if enabled is None or not enabled():
+        raise HTTPException(status_code=404, detail="Not found")
+    try:
+        claims = sso_mod.verify_id_token(provider, body.id_token)
+    except sso_mod.SSOError as exc:
+        raise HTTPException(status_code=401, detail=str(exc))
+    identity_key = f"sso_{provider}_sub"
+    user = await db.users.find_one({identity_key: claims["sub"]})
+    if not user and claims["email"] and claims["email_verified"]:
+        # Same person, same verified address: sign them in to the account they already have.
+        user = await db.users.find_one({"email": claims["email"]})
+        if user:
+            await db.users.update_one({"id": user["id"]}, {"$set": {identity_key: claims["sub"]}})
+    is_new = False
+    if not user:
+        if not claims["email"] or not claims["email_verified"]:
+            raise HTTPException(status_code=400, detail="That account has no verified email we can use.")
+        # No password: the stored hash is of a random value nobody holds.
+        created = await _register_account(
+            RegisterInput(email=claims["email"], password=secrets.token_urlsafe(24),
+                          display_name=(body.name or claims.get("name") or None)),
+            sso_provider=provider,
+        )
+        await db.users.update_one({"id": created["user"]["id"]}, {"$set": {identity_key: claims["sub"]}})
+        user = await db.users.find_one({"id": created["user"]["id"]})
+        is_new = True
+    access_token = create_access_token(user['id'], user['email'])
+    refresh_token = create_refresh_token(user['id'])
+    user_safe = serialize_doc({k: v for k, v in user.items() if k != 'password_hash'})
+    return {"user": user_safe, "access_token": access_token, "refresh_token": refresh_token, "is_new": is_new}
+
 # ============ USER ROUTES ============
 
 @api_router.get("/users/me")
@@ -673,6 +791,9 @@ class UserUpdate(BaseModel):
     care_text_detail: Optional[Literal["simple", "detailed"]] = None
     # Do pets share the home? Pet owners see pet safety on their plants.
     has_pets: Optional[bool] = None
+    show_daily_trivia: Optional[bool] = None
+    # Which half of the world the person grows in. Seasons are reversed, so seasonal tips need it.
+    hemisphere: Optional[Literal["north", "south"]] = None
 
 @api_router.patch("/users/me")
 async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_user)):
@@ -696,6 +817,15 @@ async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_
             # Infer system from zone string ("H1"/"H2" etc are RHS, otherwise USDA)
             zone_val = (updates['hardiness_zone'] or '').upper()
             updates['hardiness_zone_system'] = 'RHS' if zone_val.startswith('H') else 'USDA'
+    # A US zip we recognise is in the northern hemisphere. An explicit choice always wins.
+    if location_changed and 'hemisphere' not in updates:
+        existing = await db.users.find_one({"id": current_user['user_id']}) or {}
+        derived = hemisphere_for_zip(
+            updates.get('location_country', existing.get('location_country')) or '',
+            updates.get('location_postcode', existing.get('location_postcode')) or '',
+        )
+        if derived:
+            updates['hemisphere'] = derived
     updates['updated_at'] = datetime.now(timezone.utc).isoformat()
     await db.users.update_one({"id": current_user['user_id']}, {"$set": updates})
     user = await db.users.find_one({"id": current_user['user_id']})
@@ -717,6 +847,7 @@ async def public_zone_lookup(country: str = "US", postcode: str = ""):
         "system": system,
         "source": source,
         "description": desc,
+        "hemisphere": hemisphere_for_zip(country, postcode),
     }
 
 # Phase 14C — Static zone directories for UI dropdowns / overrides.
@@ -788,6 +919,8 @@ async def reset_tutorial(body: TutorialSeenBody, current_user: dict = Depends(ge
 
 class QuizBody(BaseModel):
     answers: List[str] = []
+    # The first-run plan quiz: {"q1": option id, ...}. A skipped question is left out.
+    plan_answers: Optional[Dict[str, str]] = None
 
 
 async def _user_has_plant(user_id: str) -> bool:
@@ -814,9 +947,24 @@ async def submit_quiz(body: QuizBody, current_user: dict = Depends(get_current_u
 
     An empty list (the quiz was skipped) falls back to the default track.
     """
+    now = datetime.now(timezone.utc).isoformat()
+    if body.plan_answers is not None:
+        plan = tracks_mod.resolve_plan(body.plan_answers)
+        await db.users.update_one(
+            {"id": current_user['user_id']},
+            {"$set": {
+                "quiz_plan_answers": plan["answers"],
+                "primary_track": plan["primary_track"],
+                "quiz_completed_at": now,
+                "updated_at": now,
+            }},
+        )
+        out = await _lesson_queue_for(current_user['user_id'])
+        out["matched"] = plan["matched"]
+        out["plan_answers"] = plan["answers"]
+        return out
     track = tracks_mod.resolve_primary_track(body.answers)
     known = [a for a in body.answers if a in tracks_mod.QUIZ_OPTION_TRACK]
-    now = datetime.now(timezone.utc).isoformat()
     await db.users.update_one(
         {"id": current_user['user_id']},
         {"$set": {
@@ -848,6 +996,7 @@ async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_curre
         {"$addToSet": {"tutorials_seen": tracks_mod.lesson_tutorial_id(lesson_id)},
          "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}},
     )
+    await record_check_in(user_id, check_ins_mod.KIND_LESSON)
     await check_and_award_badges(user_id)
     return await _lesson_queue_for(user_id)
 
@@ -855,6 +1004,11 @@ async def complete_lesson(lesson_id: str, current_user: dict = Depends(get_curre
 @api_router.get("/users/me/stats")
 async def get_my_stats(current_user: dict = Depends(get_current_user)):
     return await get_user_stats(current_user['user_id'])
+
+@api_router.get("/users/me/check-ins")
+async def get_my_check_ins(current_user: dict = Depends(get_current_user)):
+    """Weekly rhythm: check-ins this week, the weekly goal, and weeks the goal was met."""
+    return await check_ins_mod.get_summary(db, current_user['user_id'])
 
 @api_router.get("/users/me/badges")
 async def get_my_badges(current_user: dict = Depends(get_current_user)):
@@ -1364,34 +1518,39 @@ async def admin_revoke_badge(
 
 @api_router.get("/users/me/unlocks")
 async def get_my_unlocks(current_user: dict = Depends(get_current_user)):
-    # Auto-compute unlocks from streak so demo actions feel immediate
-    streak = await db.streaks.find_one({"user_id": current_user['user_id']})
-    current_streak = streak.get('current_streak', 0) if streak else 0
+    """Community is open to read for everyone, so the feed and the swap deck are
+    never locked. Posting and swapping need a first plant or care log (see
+    `can_post`). The collection showcase still follows the plant count."""
     plants_count = await db.plants.count_documents({"user_id": current_user['user_id'], "is_archived": {"$ne": True}})
+    stored = await db.user_unlocks.find_one({"user_id": current_user['user_id']}) or {}
+    can_post = await _user_can_take_part(current_user['user_id'])
     computed = {
-        "social_feed_unlocked": current_streak >= 7,
-        "swap_unlocked": current_streak >= 30,
-        "swipe_unlocked": current_streak >= 30,
+        "social_feed_unlocked": True,
+        "swap_unlocked": True,
+        "swipe_unlocked": True,
+        "can_post": can_post,
         "collection_showcase_unlocked": plants_count >= 10,
     }
-    stored = await db.user_unlocks.find_one({"user_id": current_user['user_id']}) or {}
     merged = {**stored, **computed}
     return serialize_doc({k: v for k, v in merged.items() if k != '_id'})
 
+async def _user_can_take_part(user_id: str) -> bool:
+    """Posting, commenting, reacting and swapping need a first plant or a first care log."""
+    if await db.plants.count_documents({"user_id": user_id}) > 0:
+        return True
+    return (await db.care_logs.count_documents({"user_id": user_id})) > 0
+
+async def require_can_take_part(user_id: str):
+    if not await _user_can_take_part(user_id):
+        raise HTTPException(
+            status_code=403,
+            detail="Add a plant or log your first care to post, react or swap. Browsing is open to everyone.",
+        )
+
 @api_router.get("/swap/deck")
 async def get_swap_deck(current_user: dict = Depends(get_current_user), limit: int = 20):
-    """Return a pre-populated swap deck so that when a user unlocks swapping, they
-    can start swiping immediately without waiting for discovery heuristics."""
-    # Check unlock eligibility
-    streak = await db.streaks.find_one({"user_id": current_user['user_id']})
-    current_streak = streak.get('current_streak', 0) if streak else 0
-    if current_streak < 30:
-        return {
-            "unlocked": False,
-            "streak_needed": 30,
-            "current_streak": current_streak,
-            "cards": []
-        }
+    """Return a pre-populated swap deck. Browsing is open to everyone; only
+    expressing interest needs a plant or care log (and the swap eligibility checks)."""
     # Exclude plants the user already swiped on
     passed_ids = [p['plant_id'] async for p in db.swap_passes.find({"user_id": current_user['user_id']}, {"plant_id": 1})]
     interested_ids = [i['plant_id'] async for i in db.swap_interests.find({"user_id": current_user['user_id']}, {"plant_id": 1})]
@@ -1421,8 +1580,6 @@ async def get_swap_deck(current_user: dict = Depends(get_current_user), limit: i
         })
     return {
         "unlocked": True,
-        "streak_needed": 30,
-        "current_streak": current_streak,
         "cards": cards,
     }
 
@@ -1538,6 +1695,9 @@ class PlantUpdate(BaseModel):
     # Phase 13 — when user manually edits species name, set ai_species_confirmed=True
     ai_species_confirmed: Optional[bool] = None
 
+from care_steps import care_step_for
+
+
 def watering_sentence(care_summary):
     """The sentence of a species' care summary that is about water, or None."""
     for sentence in re.split(r'(?<=[.!?])\s+', care_summary or ''):
@@ -1552,12 +1712,14 @@ async def attach_species_toxicity(plants):
     None means unknown, never safe; care_tip is None when the plant is not in the guide, so the
     app falls back to a generic line instead of inventing one.
     """
-    docs = await db.species.find({}, {"_id": 0, "latin_name": 1, "common_name": 1, "toxicity": 1, "care_summary": 1}).to_list(500)
+    docs = await db.species.find({}, {"_id": 0, "slug": 1, "latin_name": 1, "common_name": 1, "toxicity": 1, "care_summary": 1}).to_list(500)
+    for d in docs:
+        d["care_step"] = care_step_for(d.get("slug")) or watering_sentence(d.get("care_summary"))
     index = species_name_index(docs, "toxicity")
-    tips = species_name_index(docs, "care_summary")
+    tips = species_name_index(docs, "care_step")
     for p in plants:
         p['species_toxicity'] = species_lookup_value(p, index)
-        p['care_tip'] = watering_sentence(species_lookup_value(p, tips))
+        p['care_tip'] = species_lookup_value(p, tips)
 
 
 @api_router.get("/plants")
@@ -1655,9 +1817,8 @@ async def log_water_round(input: Optional[WaterRoundInput] = None, current_user:
             "id": round_id, "user_id": current_user['user_id'],
             "logged_at": now.isoformat(), "entries": entries, "undone": False,
         })
-    await update_streak(current_user['user_id'])
-    if count > 0:
-        await missions_mod.on_care_log(db, current_user['user_id'], {})
+    # A water round is not a check-in and does not complete the daily mission:
+    # watering volume earns nothing.
     user_doc = await db.users.find_one({"id": current_user['user_id']})
     first_care_pending = (count > 0) and not bool((user_doc or {}).get('first_care_celebrated'))
     return {"watered": count, "first_care_pending": first_care_pending, "round_id": round_id if count else None}
@@ -1668,8 +1829,8 @@ async def undo_water_round(round_id: str, current_user: dict = Depends(get_curre
     """Remove a water round's logs and put each plant's schedule back.
 
     A plant that has been logged again since the round keeps its newer
-    schedule; only the round's own log is removed. Streak and mission
-    progress from the round are not rolled back.
+    schedule; only the round's own log is removed. Mission progress from
+    the round is not rolled back.
     """
     rnd = await db.water_rounds.find_one({"id": round_id, "user_id": current_user['user_id']})
     if not rnd:
@@ -1767,6 +1928,7 @@ async def create_plant(input: PlantCreate, current_user: dict = Depends(get_curr
     }
     await db.plants.insert_one(plant)
     await check_and_award_badges(current_user['user_id'])
+    await missions_mod.on_plant_added(db, current_user['user_id'])
     return serialize_doc({k: v for k, v in plant.items() if k != '_id'})
 
 @api_router.get("/plants/{plant_id}")
@@ -1856,16 +2018,16 @@ async def ai_schedule(plant_id: str, current_user: dict = Depends(get_current_us
     try:
         result = await suggest_watering_schedule(
             plant.get('common_name', ''), plant.get('latin_name', ''),
-            plant.get('grow_medium', 'soil'), location
+            plant.get('grow_medium', 'soil'), location, (user or {}).get('hemisphere')
         )
         await db.plants.update_one(
             {"id": plant_id},
             {"$set": {
-                "watering_frequency_days": result.get('days', 7),
+                "watering_frequency_days": result['days'],
                 "watering_frequency_source": "ai",
                 "watering_frequency_set_at": datetime.now(timezone.utc).isoformat(),
                 "schedule_review_acknowledged_at": None,
-                "next_water_due": (datetime.now(timezone.utc) + timedelta(days=result.get('days', 7))).isoformat(),
+                "next_water_due": (datetime.now(timezone.utc) + timedelta(days=result['days'])).isoformat(),
                 "updated_at": datetime.now(timezone.utc).isoformat()
             }}
         )
@@ -2007,12 +2169,12 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
             watering_applied = True
     if not watering_applied:
         await db.plants.update_one({"id": plant_id}, {"$set": {"updated_at": now.isoformat()}})
-    await update_streak(current_user['user_id'])
+    # Soil checks, looks and photos count as weekly check-ins; they are read straight from these logs.
     await check_and_award_badges(current_user['user_id'])
     # Phase 11C — mission hook + first-care celebration signal
     user_doc = await db.users.find_one({"id": current_user['user_id']})
     first_care_pending = not bool((user_doc or {}).get('first_care_celebrated'))
-    mission_completed = await missions_mod.on_care_log(db, current_user['user_id'], logs_out[0])
+    mission_completed = await missions_mod.on_care_log(db, current_user['user_id'], logs_out)
     # Legacy shape: return the primary (first) log for backward compatibility,
     # plus the full list under `_meta.logs` for the new multi-action UI.
     primary = serialize_doc({k: v for k, v in logs_out[0].items() if k != '_id'})
@@ -2068,11 +2230,11 @@ async def bulk_care_log(input: BulkCareLogCreate, current_user: dict = Depends(g
                     }}
                 )
                 watering_applied = True
-    await update_streak(current_user['user_id'])
+    # Soil checks, looks and photos count as weekly check-ins; they are read straight from these logs.
     await check_and_award_badges(current_user['user_id'])
     # Phase 11C — mission hook (any log)
     if logs:
-        await missions_mod.on_care_log(db, current_user['user_id'], logs[-1])
+        await missions_mod.on_care_log(db, current_user['user_id'], logs)
     return {
         "logged": len(logs),
         "plants_affected": plants_affected,
@@ -2615,6 +2777,9 @@ async def upload_plant_photo(plant_id: str, file: UploadFile = File(...), curren
             "created_at": now_iso,
         }
         await db.files.insert_one(file_doc)
+        await record_check_in(current_user['user_id'], check_ins_mod.KIND_PHOTO)
+        await missions_mod.on_photo_upload(db, current_user['user_id'])
+        await check_and_award_badges(current_user['user_id'])
         return {"path": result["path"], "size": result["size"], "photo_id": photo_entry["id"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
@@ -2699,6 +2864,9 @@ async def add_plant_photo(
         "plant_id": plant_id, "is_deleted": False,
         "created_at": now_iso,
     })
+    await record_check_in(current_user['user_id'], check_ins_mod.KIND_PHOTO)
+    await missions_mod.on_photo_upload(db, current_user['user_id'])
+    await check_and_award_badges(current_user['user_id'])
     return {"photo": photo_entry, "count": len(existing), "cap": PLANT_PHOTO_CAP}
 
 @api_router.patch("/plants/{plant_id}/photos/{photo_id}")
@@ -2781,7 +2949,12 @@ async def get_rooms(current_user: dict = Depends(get_current_user)):
 
     # Each room's light, and each plant's light need from its species (matched by name).
     light_by_room = {d['name']: d.get('light') async for d in db.rooms.find({"user_id": current_user['user_id']})}
-    need_by_name = species_name_index(await db.species.find({}, {"_id": 0, "common_name": 1, "latin_name": 1, "default_light_level": 1}).to_list(500), "default_light_level")
+    light_docs = await db.species.find({}, {"_id": 0, "common_name": 1, "latin_name": 1, "default_light_level": 1, "light_min": 1, "light_ideal": 1, "sun_sensitive": 1}).to_list(500)
+    for d in light_docs:
+        d["light_band"] = {k: d.get(k) for k in ("light_min", "light_ideal", "sun_sensitive", "default_light_level")}
+        d["need"] = d.get("light_ideal") or d.get("default_light_level")
+    band_by_name = species_name_index(light_docs, "light_band")
+    need_by_name = species_name_index(light_docs, "need")
 
     result = []
     for r in rooms:
@@ -2789,7 +2962,7 @@ async def get_rooms(current_user: dict = Depends(get_current_user)):
         fits = []
         for p in r['plants']:
             need = species_lookup_value(p, need_by_name)
-            fit = light_fit(light, need)
+            fit = light_fit(light, species_lookup_value(p, band_by_name))
             if need:
                 fits.append({"id": p['id'], "name": p.get('nickname') or p.get('common_name'), "need": need, "fit": fit})
         plants_preview = [{k: v for k, v in p.items() if k not in ('latin_name', 'nickname')} for p in r['plants'][:4]]
@@ -3090,7 +3263,6 @@ async def create_bouquet_care_log(bouquet_id: str, input: BouquetCareLogCreate, 
         "photo_url": "", "logged_at": datetime.now(timezone.utc).isoformat()
     }
     await db.bouquet_care_logs.insert_one(log)
-    await update_streak(current_user['user_id'])
     return serialize_doc({k: v for k, v in log.items() if k != '_id'})
 
 @api_router.post("/bouquets/{bouquet_id}/photo")
@@ -3213,6 +3385,7 @@ async def get_feed(current_user: dict = Depends(get_current_user), page: int = 1
 
 @api_router.post("/posts")
 async def create_post(input: PostCreate, current_user: dict = Depends(get_current_user)):
+    await require_can_take_part(current_user['user_id'])
     now = datetime.now(timezone.utc)
     post = {
         "id": str(uuid.uuid4()), "user_id": current_user['user_id'],
@@ -3249,6 +3422,7 @@ async def delete_post(post_id: str, current_user: dict = Depends(get_current_use
 
 @api_router.post("/posts/{post_id}/kudos")
 async def add_kudos(post_id: str, current_user: dict = Depends(get_current_user)):
+    await require_can_take_part(current_user['user_id'])
     existing = await db.kudos.find_one({"post_id": post_id, "user_id": current_user['user_id']})
     if existing:
         raise HTTPException(status_code=400, detail="Already gave kudos")
@@ -3296,6 +3470,7 @@ async def get_post_reactions(post_id: str, current_user: dict = Depends(get_curr
 async def add_reaction(post_id: str, input: ReactionInput, current_user: dict = Depends(get_current_user)):
     if input.type not in REACTION_TYPES:
         raise HTTPException(status_code=400, detail="Invalid reaction type")
+    await require_can_take_part(current_user['user_id'])
     post = await db.posts.find_one({"id": post_id})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -3400,6 +3575,7 @@ async def get_comments(post_id: str, current_user: dict = Depends(get_current_us
 
 @api_router.post("/posts/{post_id}/comments")
 async def create_comment(post_id: str, input: CommentCreate, current_user: dict = Depends(get_current_user)):
+    await require_can_take_part(current_user['user_id'])
     post = await db.posts.find_one({"id": post_id})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -3918,6 +4094,8 @@ DEFAULT_NOTIFICATION_PREFS = notification_policy.DEFAULT_NOTIFICATION_PREFS
 # Map notification type -> preference key that controls whether it should be created.
 # Keep this mapping narrow: most types are always recorded in-app even if push/email is off.
 # These are the types that respect an opt-out for IN-APP creation per user's prefs.
+RETIRED_NOTIFICATION_TYPES = frozenset({"streak_at_risk", "streak_milestone"})
+
 NOTIFICATION_OPT_OUT_KEYS = {
     "kudos_received": "push_kudos_received",
 }
@@ -3941,6 +4119,9 @@ async def create_notification(
     """Centralized notification creator. Returns None if user has opted out of this type.
     Also suppresses self-notifications (actor_id == user_id)."""
     if actor_id and actor_id == user_id:
+        return None
+    # Streak notifications are retired: check-ins never send loss alerts or milestone pushes.
+    if ntype in RETIRED_NOTIFICATION_TYPES:
         return None
     # Respect in-app opt-outs
     opt_key = NOTIFICATION_OPT_OUT_KEYS.get(ntype)
@@ -4028,8 +4209,6 @@ async def delete_notification(notification_id: str, current_user: dict = Depends
 class NotificationPreferencesInput(BaseModel):
     push_care_due: Optional[bool] = None
     push_care_overdue: Optional[bool] = None
-    push_streak_at_risk: Optional[bool] = None
-    push_streak_milestone: Optional[bool] = None
     push_swap_match: Optional[bool] = None
     push_swap_message: Optional[bool] = None
     push_kudos_received: Optional[bool] = None
@@ -4072,14 +4251,6 @@ async def update_notification_preferences(
 @api_router.get("/missions/daily")
 async def get_daily_mission(current_user: dict = Depends(get_current_user)):
     return await missions_mod.get_or_assign_daily_mission(db, current_user['user_id'])
-
-
-@api_router.post("/missions/daily/complete")
-async def complete_daily_mission(current_user: dict = Depends(get_current_user)):
-    result = await missions_mod.manual_complete(db, current_user['user_id'])
-    if not result:
-        raise HTTPException(status_code=400, detail="No mission to complete")
-    return result
 
 
 @api_router.post("/missions/health-check")
@@ -4170,8 +4341,7 @@ async def get_species_list(
     skip = (page - 1) * limit
     query = {}
     if q and len(q) >= 2:
-        regex = {"$regex": q, "$options": "i"}
-        query = {"$or": [{"common_name": regex}, {"latin_name": regex}]}
+        query = species_search_query(q, CURATED_SPECIES)
     species = await db.species.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
     total = await db.species.count_documents(query)
     return {
@@ -4999,6 +5169,7 @@ class SwapInterestInput(BaseModel):
 async def express_swap_interest(input: SwapInterestInput, current_user: dict = Depends(get_current_user)):
     """Swipe right — express interest in another user's plant."""
     user_id = current_user['user_id']
+    await require_can_take_part(user_id)
     # Verify the plant exists and belongs to someone else
     plant = await db.plants.find_one({"id": input.plant_id, "is_archived": {"$ne": True}})
     if not plant:
@@ -5295,17 +5466,9 @@ async def get_demo_status(current_user: dict = Depends(get_current_user)):
         if not user_doc:
             continue
         
-        streak = await db.streaks.find_one({"user_id": user_doc['id']})
+        check_in_summary = await check_ins_mod.get_summary(db, user_doc['id'])
         plants_count = await db.plants.count_documents({"user_id": user_doc['id'], "is_archived": {"$ne": True}})
         bouquets_count = await db.bouquets.count_documents({"user_id": user_doc['id'], "is_active": True})
-        
-        # Check unlocks
-        current_streak = streak.get('current_streak', 0) if streak else 0
-        unlocks = {
-            "social_feed": current_streak >= 7,
-            "swaps": current_streak >= 30,
-            "collection_showcase": plants_count >= 10
-        }
         
         # Last care log
         last_care = await db.care_logs.find_one(
@@ -5317,10 +5480,9 @@ async def get_demo_status(current_user: dict = Depends(get_current_user)):
             "username": username,
             "display_name": user_doc.get('display_name', username),
             "tier": user_doc.get('tier', 'free'),
-            "current_streak": current_streak,
+            "check_ins_this_week": check_in_summary["this_week"],
             "plants_count": plants_count,
             "active_bouquets": bouquets_count,
-            "unlocks": unlocks,
             "last_care_log": last_care['logged_at'] if last_care else None
         })
     
@@ -5378,53 +5540,9 @@ async def set_quick_state(
     if not target_user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Handle quick state actions
-    if action == "set_streak_6":
-        await db.streaks.update_one(
-            {"user_id": target_user['id']},
-            {"$set": {"current_streak": 6}}
-        )
-        return {"success": True, "message": "Streak set to 6 days"}
-    
-    elif action == "set_streak_7":
-        await db.streaks.update_one(
-            {"user_id": target_user['id']},
-            {"$set": {"current_streak": 7}}
-        )
-        # Create notification
-        await db.notifications.insert_one({
-            "id": str(uuid.uuid4()),
-            "user_id": target_user['id'],
-            "type": "unlock",
-            "title": "Social feed unlocked!",
-            "body": "You've maintained a 7-day streak. The community feed is now available.",
-            "entity_type": "unlock",
-            "entity_id": "social_feed",
-            "is_read": False,
-            "created_at": datetime.now(timezone.utc).isoformat()
-        })
-        return {"success": True, "message": "Streak set to 7 days, feed unlocked"}
-    
-    elif action == "set_streak_30":
-        await db.streaks.update_one(
-            {"user_id": target_user['id']},
-            {"$set": {"current_streak": 30}}
-        )
-        await db.notifications.insert_one({
-            "id": str(uuid.uuid4()),
-            "user_id": target_user['id'],
-            "type": "unlock",
-            "title": "Swap matching unlocked!",
-            "body": "30-day streak achieved! You can now swap plants with other grove members.",
-            "entity_type": "unlock",
-            "entity_id": "swaps",
-            "is_read": False,
-            "created_at": datetime.now(timezone.utc).isoformat()
-        })
-        return {"success": True, "message": "Streak set to 30 days, swaps unlocked"}
-    
-    else:
-        return {"success": False, "message": "Unknown action"}
+    # The old streak and unlock shortcuts are gone: the community is open to
+    # everyone and check-ins come from real activity.
+    return {"success": False, "message": "Unknown action"}
 
 # ---------------------------------------------------------------------------
 # Waitlist (public, no auth). Used by the /waitlist landing page (Studio 12).

@@ -13,6 +13,7 @@ For the ~3% of edge cases users encounter (mountain valleys, micro-climate
 coastal pockets), a manual override on the user profile is the canonical
 correction path — these defaults are explicitly approximate.
 """
+import re
 from typing import Optional, Tuple
 
 # ---------------- US 3-digit ZIP prefix → USDA zone ----------------
@@ -292,7 +293,7 @@ US_STATE_DEFAULT_ZONE = {
 # 3-digit prefix → state for falling back via state default. Compact mapping
 # of population-weighted prefix ranges.
 US_PREFIX_TO_STATE_RANGES = [
-    (range(0, 7), "PR"), (range(10, 28), "MA"), (range(28, 30), "RI"),
+    (range(6, 10), "PR"), (range(10, 28), "MA"), (range(28, 30), "RI"),
     (range(30, 39), "NH"), (range(39, 50), "ME"), (range(50, 60), "VT"),
     (range(60, 70), "CT"), (range(70, 90), "NJ"), (range(100, 150), "NY"),
     (range(150, 197), "PA"), (range(197, 200), "DE"), (range(200, 206), "DC"),
@@ -378,9 +379,9 @@ RHS_DESCRIPTIONS = {
 
 # USDA zone → temperature description
 USDA_DESCRIPTIONS = {
-    "1a": "Below -50°F", "1b": "-50 to -45°F",
-    "2a": "-45 to -40°F", "2b": "-40 to -35°F",
-    "3a": "-35 to -30°F", "3b": "-30 to -25°F",
+    "1a": "Below -55°F", "1b": "-55 to -50°F",
+    "2a": "-50 to -45°F", "2b": "-45 to -40°F",
+    "3a": "-40 to -35°F", "3b": "-35 to -30°F",
     "4a": "-30 to -25°F", "4b": "-25 to -20°F",
     "5a": "-20 to -15°F", "5b": "-15 to -10°F",
     "6a": "-10 to -5°F", "6b": "-5 to 0°F",
@@ -408,6 +409,8 @@ def lookup_zone(country: str, postcode: str) -> Tuple[Optional[str], str, Option
     if country in ("US", "USA", "UNITED STATES", ""):
         # Default to US if not specified — US-only fallback to keep UX simple.
         prefix = pc[:3]
+        if prefix.isdigit() and int(prefix) < 5:
+            return None, "USDA", None  # 000-004 are not assigned to any place
         if prefix in US_ZIP_PREFIX_TO_ZONE:
             return US_ZIP_PREFIX_TO_ZONE[prefix], "USDA", "zip-prefix"
         state = _state_for_prefix(prefix)
@@ -429,3 +432,25 @@ def lookup_zone(country: str, postcode: str) -> Tuple[Optional[str], str, Option
             return UK_POSTCODE_AREA_TO_RHS[area[:1]], "RHS", "postcode-area"
         return None, "RHS", None
     return None, "", None
+
+
+_US_ZIP = re.compile(r"\d{5}(-\d{4})?")
+
+
+def is_us_zip(postcode: str) -> bool:
+    """Five digits (or ZIP+4) that start with an assigned prefix. Says nothing about the zone."""
+    pc = (postcode or "").strip()
+    return bool(_US_ZIP.fullmatch(pc)) and int(pc[:3]) >= 5
+
+
+def hemisphere_for_zip(country: str, postcode: str) -> Optional[str]:
+    """"north" when the postcode is one we can place (a US zip with a known state, or a UK
+    postcode we have a rating for). None otherwise: the caller then asks the person."""
+    country = (country or "").strip().upper()
+    pc = (postcode or "").strip()
+    if country in ("US", "USA", "UNITED STATES", ""):
+        return "north" if is_us_zip(pc) and _state_for_prefix(pc[:3]) else None
+    if country in ("UK", "GB", "UNITED KINGDOM", "GREAT BRITAIN"):
+        zone, _system, _source = lookup_zone(country, pc)
+        return "north" if zone else None
+    return None

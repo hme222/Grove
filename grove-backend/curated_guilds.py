@@ -27,7 +27,7 @@ CURATED_GUILDS = [
             "spent seed heads), and want exactly the same conditions: full sun, average garden "
             "soil, no fertilizer, and a hands-off approach to deadheading so the seed heads can "
             "feed birds through autumn. "
-            "\n\nThis guild is intentionally short. Two species is enough to establish a real "
+            "\n\nThis guild is intentionally short. Two species are enough to establish a real "
             "ecological relationship — adding more should be a deliberate choice based on your "
             "specific region's native flora. Ask your local native plant nursery for region-"
             "appropriate companions like Asclepias tuberosa (butterfly weed) or "
@@ -115,22 +115,24 @@ CURATED_GUILDS = [
             "spathiphyllum-wallisii",
         ],
         "description": (
-            "These four plants survive — even thrive — in light that would kill most "
-            "houseplants. North-facing windows, internal hallways, north-side bathrooms, "
-            "office corners away from windows: this is the guild for those spots. "
-            "\n\nSnake Plant and ZZ Plant are the structural uprights — both store water in "
-            "rhizomes, both will forgive multiple weeks of neglect, both are happy in light "
-            "barely brighter than office fluorescents. Pothos is the trailing softener — let it "
-            "drape from a high shelf or climb a moss pole. Peace Lily is the only one in this "
-            "group that will actually flower in low light, giving the hallway a moment of "
-            "drama once or twice a year. "
-            "\n\nWatering is once every two weeks for the Snake Plant and ZZ; weekly for the "
-            "Pothos and Peace Lily. The Peace Lily's dramatic wilt-recovery is a feature, not "
-            "a bug — it tells you when to water without you having to remember."
+            "These four tolerate low light better than most houseplants. North-facing windows "
+            "(south-facing in the southern hemisphere), rooms a few feet back from a window and "
+            "office corners with daylight suit them. They grow slowly there, and the Pothos and "
+            "Peace Lily lose vigour in very dim rooms. A hallway with no window needs a grow light. "
+            "\n\nSnake Plant and ZZ Plant are the structural uprights. Both store water in their "
+            "leaves or rhizomes and forgive a few missed weeks, which makes them the safest picks if "
+            "you travel. Pothos is the trailing softener: let it drape from a high shelf or climb a "
+            "moss pole. Peace Lily flowers best in medium light, so expect fewer blooms in the dimmest spot. "
+            "\n\nCheck the soil rather than the calendar: about every two weeks for the Snake Plant "
+            "and ZZ, weekly for the Pothos, and every five days or so for the Peace Lily, and less often "
+            "in winter. A Peace Lily droops when it is thirsty, but do not wait for that every time; "
+            "check the top inch and water when it starts to dry. "
+            "\n\nPets and children: all four are toxic to cats and dogs if chewed. Keep them on a shelf "
+            "or stand out of reach, or choose a pet-safe set such as Cast Iron Plant."
         ),
         "design_notes": (
-            "Place the upright Snake Plant and ZZ at eye level on a console or low shelf, with "
-            "Pothos trailing from above and Peace Lily on the floor. The vertical rhythm makes "
+            "Place the upright Snake Plant and ZZ at eye level on a console or sturdy shelf, with "
+            "Pothos trailing from above and Peace Lily on a high stand, out of reach of pets. The vertical rhythm makes "
             "the hallway feel intentional rather than 'wherever the plants fit'."
         ),
     },

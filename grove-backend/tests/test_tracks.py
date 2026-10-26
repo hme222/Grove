@@ -72,3 +72,64 @@ def test_completed_lessons_reads_only_known_lesson_entries():
 
 def test_completed_lessons_handles_missing_list():
     assert tracks.completed_lessons(None) == []
+
+
+# ---- first-run plan quiz (four skippable questions) ----
+
+def test_plan_every_option_points_at_an_existing_track_or_nothing():
+    for question, options in tracks.PLAN_QUESTIONS.items():
+        assert len(options) == 6, question
+        for option, track in options.items():
+            assert track is None or track in tracks.TRACKS, (question, option)
+
+
+def test_plan_every_track_can_be_reached():
+    reachable = {t for opts in tracks.PLAN_QUESTIONS.values() for t in opts.values() if t}
+    assert reachable == set(tracks.TRACKS)
+
+
+def test_plan_all_skipped_uses_default_and_says_nothing_matched():
+    for empty in ({}, None, "nope", []):
+        out = tracks.resolve_plan(empty)
+        assert out["primary_track"] == tracks.DEFAULT_TRACK
+        assert out["matched"] == []
+        assert out["answers"] == {}
+
+
+def test_plan_ignores_unknown_questions_and_options():
+    out = tracks.resolve_plan({"q9": "gift", "q1": "<script>", "q2": 5})
+    assert out == {"primary_track": tracks.DEFAULT_TRACK, "matched": [], "answers": {}}
+
+
+def test_plan_one_answer_picks_its_track_and_quotes_it():
+    out = tracks.resolve_plan({"q1": "gift"})
+    assert out["primary_track"] == "rescue"
+    assert out["matched"] == [{"question": "q1", "answer": "gift"}]
+
+
+def test_plan_majority_wins_and_matched_lists_only_the_winners():
+    out = tracks.resolve_plan({"q1": "loved_and_lost", "q2": "feel_guilty", "q3": "save_gift", "q4": "know_basics"})
+    assert out["primary_track"] == "reset"
+    assert out["matched"] == [
+        {"question": "q1", "answer": "loved_and_lost"},
+        {"question": "q2", "answer": "feel_guilty"},
+    ]
+    assert out["answers"]["q4"] == "know_basics"
+
+
+def test_plan_tie_goes_to_track_priority():
+    # one vote each for seedling and rescue: rescue is earlier in TRACK_PRIORITY
+    out = tracks.resolve_plan({"q1": "none_yet", "q3": "save_gift"})
+    assert out["primary_track"] == "rescue"
+
+
+def test_plan_confident_answers_alone_fall_back_to_default():
+    out = tracks.resolve_plan({"q1": "my_job", "q2": "check_roots", "q3": "advanced", "q4": "botanical"})
+    assert out["primary_track"] == tracks.DEFAULT_TRACK
+    assert out["matched"] == []
+    assert len(out["answers"]) == 4
+
+
+def test_plan_resolves_to_a_real_first_lesson():
+    out = tracks.resolve_plan({"q4": "blank_slate"})
+    assert tracks.build_lesson_queue(out["primary_track"], [])[0] == "window-blueprint"

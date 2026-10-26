@@ -10,6 +10,7 @@ Plus 6 supporting grove member accounts.
 """
 
 import asyncio
+import sys
 import uuid
 import os
 from datetime import datetime, timezone, timedelta
@@ -1148,7 +1149,7 @@ async def seed_groveling(db):
         "collection_public": True,
         "streak_public": True,
         "tier": "free",
-        "onboarding_complete": True,
+        "onboarding_complete": False,
         "is_admin": True,
         "is_florist": False,
         "studio_name": "",
@@ -1203,6 +1204,12 @@ async def main():
     
     print(f"\n📦 Connected to MongoDB: {os.environ.get('DB_NAME', 'grove_db')}")
     
+    # `python3 seed_testing.py groveling` reseeds only the first-run user (no plants, onboarding not done).
+    if len(sys.argv) > 1 and sys.argv[1] == "groveling":
+        await seed_groveling(db)
+        print("\nGroveling reset: sign in as groveling.testing@grove.app (password: see TEST_PASSWORD above) to walk the whole first run.")
+        return
+
     # Seed accounts
     await seed_maya(db)
     await seed_james(db)

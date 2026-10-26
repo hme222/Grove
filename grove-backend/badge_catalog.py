@@ -22,7 +22,7 @@ Per scoping round + user message:
 """
 from typing import List, Dict, Optional
 
-BADGE_SEED_VERSION = "14c3c-177-v2"
+BADGE_SEED_VERSION = "14c3c-171-v3"
 
 
 def _b(slug: str, name: str, category: str, subcategory: str,
@@ -49,9 +49,8 @@ def _b(slug: str, name: str, category: str, subcategory: str,
 # Slugs that have backend-wired earning logic (top 60+1 per user message).
 # Everything else is admin-grantable + visible in the gallery as locked.
 EARNABLE_SLUGS = {
-    # Streak (9)
-    "streak_7", "streak_14", "streak_30", "streak_60", "streak_100",
-    "streak_180", "streak_365", "streak_500", "streak_1000",
+    # Weekly check-ins (3)
+    "checkin_first", "checkin_weeks_4", "checkin_weeks_12",
     # Watering (6)
     "watering_first", "watering_10", "watering_50", "watering_100",
     "watering_500", "watering_1000",
@@ -101,34 +100,19 @@ EARNABLE_SLUGS = {
 # B.1 Care category (44 badges)
 # ---------------------------------------------------------------------------
 _CARE_BADGES: List[Dict] = [
-    # Streak — 9
-    _b("streak_7", "First week", "Care", "Streak",
-       "Care for plants 7 days in a row", icon="flame", earnable=True,
-       family="streak", family_order=1),
-    _b("streak_14", "Two weeks strong", "Care", "Streak",
-       "14 days in a row", icon="flame", earnable=True,
-       family="streak", family_order=2),
-    _b("streak_30", "One month rhythm", "Care", "Streak",
-       "30 days in a row", icon="flame", tier="bronze", earnable=True,
-       family="streak", family_order=3),
-    _b("streak_60", "Two months steady", "Care", "Streak",
-       "60 days in a row", icon="flame", tier="silver", earnable=True,
-       family="streak", family_order=4),
-    _b("streak_100", "Hundred-day grower", "Care", "Streak",
-       "100 days in a row", icon="flame", tier="gold", earnable=True,
-       family="streak", family_order=5),
-    _b("streak_180", "Half a year of care", "Care", "Streak",
-       "180 days in a row", icon="flame", tier="gold", earnable=True,
-       family="streak", family_order=6),
-    _b("streak_365", "A year of rhythm", "Care", "Streak",
-       "365 days in a row", icon="flame", tier="platinum", earnable=True,
-       family="streak", family_order=7),
-    _b("streak_500", "The dedicated", "Care", "Streak",
-       "500 days in a row", icon="flame", tier="platinum", earnable=True,
-       family="streak", family_order=8),
-    _b("streak_1000", "The lifer", "Care", "Streak",
-       "1000 days in a row", icon="flame", tier="platinum", earnable=True,
-       family="streak", family_order=9),
+    # Weekly check-ins — 3. Reward looking, never watering volume. The weekly
+    # goal is 3 check-ins in a calendar week and gaps are fine, so the weeks
+    # are counted in total, not in a row. The old streak_* badges are retired:
+    # people who earned them keep them in their history.
+    _b("checkin_first", "First check-in", "Care", "Check-ins",
+       "Check on a plant: a soil check, a photo or a finished lesson", icon="sprout", earnable=True,
+       family="checkin", family_order=1),
+    _b("checkin_weeks_4", "Four steady weeks", "Care", "Check-ins",
+       "Reach your weekly check-in goal in 4 different weeks", icon="calendar-check", tier="bronze", earnable=True,
+       family="checkin", family_order=2),
+    _b("checkin_weeks_12", "Twelve steady weeks", "Care", "Check-ins",
+       "Reach your weekly check-in goal in 12 different weeks", icon="calendar-check", tier="silver", earnable=True,
+       family="checkin", family_order=3),
 
     # Watering — 6
     _b("watering_first", "First drink", "Care", "Watering",
@@ -225,7 +209,7 @@ _CARE_BADGES: List[Dict] = [
     _b("sunday_devotee", "Sunday ritual", "Care", "Care patterns",
        "4 consecutive Sunday care sessions", icon="calendar"),
     _b("holiday_survivor", "Holiday survivor", "Care", "Care patterns",
-       "Maintain streak through 7+ day vacation", icon="palm-tree"),
+       "Keep checking in through a 7+ day vacation", icon="palm-tree"),
     _b("comeback_kid", "Welcome back", "Care", "Care patterns",
        "Resume care after a 30+ day break", icon="rotate-ccw"),
 
@@ -416,14 +400,14 @@ _COMMUNITY_BADGES: List[Dict] = [
        family="kudos_received", family_order=4),
 
     # Groves — 7
-    _b("grove_joined_first", "First Grove", "Community", "Groves",
-       "Join your first Grove", icon="users", earnable=True,
+    _b("grove_joined_first", "First grove", "Community", "Groves",
+       "Join your first grove", icon="users", earnable=True,
        family="grove_joined", family_order=1),
-    _b("grove_joined_5", "Multi-Grove member", "Community", "Groves",
-       "Join 5 Groves", icon="users",
+    _b("grove_joined_5", "Multi-grove member", "Community", "Groves",
+       "Join 5 groves", icon="users",
        family="grove_joined", family_order=2),
     _b("grove_chat_first", "First chat", "Community", "Groves",
-       "Send your first Grove chat message", icon="message-circle",
+       "Send your first grove chat message", icon="message-circle",
        earnable=True,
        family="grove_chat", family_order=1),
     _b("grove_chat_50", "Chatty member", "Community", "Groves",
@@ -431,11 +415,11 @@ _COMMUNITY_BADGES: List[Dict] = [
        earnable=True,
        family="grove_chat", family_order=2),
     _b("grove_regular", "Grove regular", "Community", "Groves",
-       "Active in a Grove for 30 days", icon="users"),
+       "Active in a grove for 30 days", icon="users"),
     _b("grove_ambassador", "Grove ambassador", "Community", "Groves",
-       "50+ posts in a single Grove", icon="users", tier="bronze"),
+       "50+ posts in a single grove", icon="users", tier="bronze"),
     _b("grove_suggester", "Friend matchmaker", "Community", "Groves",
-       "Suggest a Grove that a friend joined", icon="user-plus"),
+       "Suggest a grove that a friend joined", icon="user-plus"),
 
     # Swaps — 6 (verified_user is earnable, swap_first auto-awards once swap data exists)
     _b("verified_user", "Verified", "Community", "Swaps",
@@ -490,19 +474,19 @@ _ACHIEVEMENT_BADGES: List[Dict] = [
 
     # Time milestones — 9
     _b("grove_1_month", "One month in", "Achievement", "Time milestones",
-       "1 month with Grove", icon="calendar", earnable=True,
+       "1 month with FloraGrove", icon="calendar", earnable=True,
        family="grove_age", family_order=1),
     _b("grove_6_months", "Half a year in", "Achievement", "Time milestones",
-       "6 months with Grove", icon="calendar", earnable=True,
+       "6 months with FloraGrove", icon="calendar", earnable=True,
        family="grove_age", family_order=2),
     _b("grove_1_year", "One year in", "Achievement", "Time milestones",
-       "1 year with Grove", icon="calendar", tier="bronze", earnable=True,
+       "1 year with FloraGrove", icon="calendar", tier="bronze", earnable=True,
        family="grove_age", family_order=3),
     _b("grove_2_years", "Two years in", "Achievement", "Time milestones",
-       "2 years with Grove", icon="calendar", tier="silver",
+       "2 years with FloraGrove", icon="calendar", tier="silver",
        family="grove_age", family_order=4),
     _b("grove_5_years", "Five years in", "Achievement", "Time milestones",
-       "5 years with Grove", icon="calendar", tier="gold",
+       "5 years with FloraGrove", icon="calendar", tier="gold",
        family="grove_age", family_order=5),
     _b("plant_alive_1y", "One year alive", "Achievement", "Time milestones",
        "Kept a single plant alive 1 year", icon="leaf",
@@ -631,7 +615,7 @@ _SEASONAL_NICHE_BADGES: List[Dict] = [
 
     # Identity & ecology — 5
     _b("verified_pro", "Verified Pro", "Seasonal & niche", "Identity & ecology",
-       "Granted by Grove team — verified professional or influencer",
+       "Granted by the FloraGrove team — verified professional or influencer",
        icon="shield-check"),
     _b("plant_grandparent", "Plant grandparent", "Seasonal & niche", "Identity & ecology",
        "5+ of your plants now live with others", icon="users"),
@@ -679,11 +663,11 @@ SLUG_TO_FAMILY: Dict[str, str] = {
 # Note: Supplement v2 § B.6 summary table claims 170 total, but the actual
 # badge listings in B.1-B.5 ladder out to 177. We trust the listings as the
 # source of truth and treat the header "~170" as approximate.
-assert len(BADGE_CATALOG) == 177, f"BADGE_CATALOG must contain 177 entries, found {len(BADGE_CATALOG)}"
+assert len(BADGE_CATALOG) == 171, f"BADGE_CATALOG must contain 171 entries, found {len(BADGE_CATALOG)}"
 _seen_slugs = set()
 for _b_doc in BADGE_CATALOG:
     if _b_doc["slug"] in _seen_slugs:
         raise RuntimeError(f"Duplicate badge slug: {_b_doc['slug']}")
     _seen_slugs.add(_b_doc["slug"])
 assert "verified_user" in EARNABLE_SLUGS
-assert len(EARNABLE_SLUGS) == 63, f"EARNABLE_SLUGS should contain 63 slugs, found {len(EARNABLE_SLUGS)}"
+assert len(EARNABLE_SLUGS) == 57, f"EARNABLE_SLUGS should contain 57 slugs, found {len(EARNABLE_SLUGS)}"
