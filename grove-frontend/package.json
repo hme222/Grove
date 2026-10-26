@@ -31,6 +31,7 @@
     "@radix-ui/react-toggle": "^1.1.6",
     "@radix-ui/react-toggle-group": "^1.1.7",
     "@radix-ui/react-tooltip": "^1.2.4",
+    "@vercel/analytics": "^2.0.1",
     "ajv": "^8.20.0",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
@@ -62,7 +63,13 @@
     "build": "craco build",
     "test": "craco test",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "tokens": "node scripts/generate-tokens.js",
+    "prestart": "npm run tokens",
+    "prebuild": "npm run tokens",
+    "check:tokens": "node scripts/generate-tokens.js --check && node scripts/check-tokens.js && node scripts/check-computed-tokens.js",
+    "lint": "eslint src --ext .js,.jsx --max-warnings 0",
+    "verify": "npm run check:tokens && npm run lint && craco test --watchAll=false && craco build"
   },
   "browserslist": {
     "production": [

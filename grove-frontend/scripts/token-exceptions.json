@@ -1,0 +1,86 @@
+[
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "top-[11px]",
+    "reason": "Dynamic Island of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "h-[34px]",
+    "reason": "Dynamic Island of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "w-[122px]",
+    "reason": "Dynamic Island of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "h-[5px]",
+    "reason": "Home indicator of the desktop iPhone preview frame, real device metrics.",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "w-[134px]",
+    "reason": "Home indicator of the desktop iPhone preview frame, real device metrics.",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/WelcomeStage.js",
+    "rule": "inline-style-number",
+    "match": "*",
+    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/FirstCareCelebration.js",
+    "rule": "inline-style-number",
+    "match": "marginTop: 70",
+    "reason": "Burst origin is tuned to sit on the centre of the celebration icon; it is art placement, not layout spacing.",
+    "retireWhen": "the burst is re-anchored to the icon element instead of a typed offset."
+  },
+  {
+    "file": "src/components/WelcomeScreen.css",
+    "rule": "css-px",
+    "match": "*",
+    "reason": "Type sizes inside the welcome stage, a 430pt composition canvas scaled as one picture; a size has no meaning outside that coordinate space.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "*",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/lib/microAnimations.css",
+    "rule": "css-px",
+    "match": "*",
+    "reason": "Droplet and leaf-burst particles: tiny decorative art sized in px for the keyframes, not layout.",
+    "retireWhen": "the particles are drawn as SVG with a viewBox."
+  },
+  {
+    "file": "src/App.css",
+    "rule": "css-px",
+    "match": "*",
+    "reason": "Scrollbar track thickness is browser chrome with no token role.",
+    "retireWhen": "a scrollbar size token exists, or the custom scrollbar is dropped."
+  },
+  {
+    "file": "src/index.css",
+    "rule": "css-px",
+    "match": "*",
+    "reason": "iOS Safari zooms a focused field under 16px, so the floor must be a literal 16px, not a rem that follows the reader's text size.",
+    "retireWhen": "iOS stops zooming on focus or the app locks viewport scale deliberately."
+  }
+]
