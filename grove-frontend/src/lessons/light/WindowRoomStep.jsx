@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Check } from 'lucide-react';
 import NookCanvas from '../../nook/NookCanvas';
 import { windowSentence, directionName } from '../../nook/windowLight';
 import { lightAPI } from '../../lib/api';
 import { lessonView } from './lessonView';
 import { levelName } from './lightCopy';
+import { PAPER_ERROR, PAPER_FRAME, paperChip } from '../../nook/paperStyles';
 
 const DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 const GROW_LIGHT = 'A lamp or grow light does the work of a window. Choose one made for low light plants.';
 
-const chip = (on) =>
-  `min-h-[44px] rounded-[8px] border-[0.5px] px-3 py-3 text-sm font-ui text-[#1A1A17] ${
-    on ? 'border-[#1C2E10] bg-[#EAF3DE] ring-1 ring-[#1C2E10]/20' : 'border-[#D3C9B8] bg-[#F5F0E8] hover:border-[#2D5016]'
-  }`;
+const chip = (on) => `${paperChip(on)} inline-flex items-center justify-center gap-1`;
+const tick = (on) => on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />;
 
 // Part 2, card 2: one room lit the way the person picked. The chips and the season switch only
 // change the picture and the words. They save nothing.
@@ -59,7 +59,7 @@ export default function WindowRoomStep({ window }) {
 
   return (
     <div className="space-y-3" data-testid="window-room-step">
-      <div className="rounded-[12px] bg-[#EDE5D8] p-2">
+      <div className={PAPER_FRAME}>
         <NookCanvas view={room} animate={false} label={label} />
       </div>
 
@@ -68,6 +68,7 @@ export default function WindowRoomStep({ window }) {
           <div className="grid grid-cols-4 gap-2" role="group" aria-label="Window direction">
             {DIRECTIONS.map((d) => (
               <button key={d} type="button" aria-pressed={direction === d} onClick={() => setDirection(d)} className={chip(direction === d)} data-testid={`chip-${d}`}>
+                {tick(direction === d)}
                 {d}
               </button>
             ))}
@@ -75,6 +76,7 @@ export default function WindowRoomStep({ window }) {
           <div className="grid grid-cols-2 gap-2" role="group" aria-label="Season">
             {['summer', 'winter'].map((s) => (
               <button key={s} type="button" aria-pressed={season === s} onClick={() => setSeason(s)} className={chip(season === s)} data-testid={`season-${s}`}>
+                {tick(season === s)}
                 {s === 'summer' ? 'Summer' : 'Winter'}
               </button>
             ))}
@@ -83,21 +85,21 @@ export default function WindowRoomStep({ window }) {
       )}
 
       {failed && (
-        <p role="alert" className="text-xs font-ui text-red-700" data-testid="room-error">
+        <p role="alert" className={PAPER_ERROR} data-testid="room-error">
           Could not load the other windows. Your own window is shown below.
         </p>
       )}
 
-      <p className="text-sm text-[#1A1A17]" data-testid="room-text">
+      <p className="font-ui text-sm text-grove-ink" data-testid="room-text">
         {text}
       </p>
       {lamp && (
-        <p className="text-sm text-[#1A1A17]" data-testid="room-grow-light">
+        <p className="font-ui text-sm text-grove-ink" data-testid="room-grow-light">
           {GROW_LIGHT}
         </p>
       )}
 
-      <ul className="text-xs font-ui text-[#2B2B26] list-disc pl-4 space-y-1" data-testid="room-footnotes">
+      <ul className="list-disc space-y-1 pl-4 font-ui text-sm text-grove-inkSoft" data-testid="room-footnotes">
         {hemisphere === 'south' ? (
           <>
             <li>West and northwest glass gets hot. A sheer curtain helps.</li>

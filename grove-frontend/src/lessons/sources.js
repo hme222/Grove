@@ -62,10 +62,18 @@ export const LESSON_SOURCES = {
       GAP_KNUCKLE,
     ],
   },
-  'window-blueprint': {
+  'light-basics': {
+    sources: [RHS_LIGHT, KEW_CLEAN],
+    gaps: [
+      'The plain-words definition of bright indirect light (close to a bright window, within about 3 feet or 1 meter, where the sun does not land on the leaves) is ours, not a page we read.',
+      'The sources describe south and west as sunnier for the northern hemisphere. For the southern hemisphere we swap north and south, which is our reading, not a page we read.',
+    ],
+  },
+  'window-map': {
     sources: [RHS_LIGHT, KEW_CLEAN],
     gaps: [
       'The sources describe south and west as sunnier for the northern hemisphere. For the southern hemisphere we swap north and south, which is our reading, not a page we read.',
+      'How fast a plant grows in a north window, and how many hours of sun each window gets, are our rough guides, not figures from a page we read.',
       GAP_PETS,
     ],
   },

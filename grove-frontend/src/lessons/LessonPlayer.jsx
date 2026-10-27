@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import BackButton from '../components/BackButton';
 import { cn } from '../lib/utils';
+import { sanitizeLessonHtml } from '../lib/safeHtml';
 import { buttonVariants } from '../components/ui/button';
 
 const clampIndex = (value, count) => (Number.isInteger(value) ? Math.max(0, Math.min(value, count - 1)) : 0);
@@ -20,6 +21,8 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
   const card = cards[index];
   const isLast = index === cards.length - 1;
   const Icon = card.icon;
+  // The light lessons (the paper family) draw their cards and steps on paper; every other lesson stays dark forest.
+  const paper = !!card.paper;
 
   const go = (target) => {
     const next = clampIndex(target, cards.length);
@@ -62,24 +65,30 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           </div>
         )}
 
-        <div className={`rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
+        <div className={paper ? `rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
-          <p className="text-xs font-ui text-grove-cream mb-2">{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
+          <p className={cn('text-xs font-ui mb-2', paper ? 'text-grove-inkSoft' : 'text-grove-cream')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
           <h1
             id="page-title"
             ref={headingRef}
             tabIndex={-1}
-            className="font-plant text-grove-cream text-2xl mb-3 focus:outline-none"
+            className={cn('font-plant text-2xl mb-3 focus:outline-none', paper ? 'text-grove-root' : 'text-grove-cream')}
             data-testid="lesson-headline"
-            dangerouslySetInnerHTML={{ __html: card.headline }}
+            dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.headline) }}
           />
-          <p className="text-sm leading-relaxed text-grove-cream" dangerouslySetInnerHTML={{ __html: card.body }} />
+          <p className={cn('text-sm leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
         </div>
 
         <div className="mt-4">
           {custom ? (
             <>
-              {custom}
+              {paper ? (
+                <div className="rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5" data-testid="lesson-step-tile">
+                  {custom}
+                </div>
+              ) : (
+                custom
+              )}
               {index > 0 && <div className="mt-2">{backButton}</div>}
             </>
           ) : isLast && renderFinalCard ? (
@@ -93,7 +102,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
                 className={cn(buttonVariants(), "flex-1 flex")}
                 data-testid="lesson-next"
               >
-                <span dangerouslySetInnerHTML={{ __html: card.cta || 'Next' }} />
+                <span dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.cta || 'Next') }} />
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>

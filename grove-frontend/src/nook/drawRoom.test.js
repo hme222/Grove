@@ -170,7 +170,7 @@ describe('plants on the shelf', () => {
   });
 });
 
-test('drawSprite puts the bottom row on the base line and the centre column on the centre', () => {
+test('drawSprite puts the bottom row on the base line and the center column on the center', () => {
   const { ctx, calls } = recorder();
   drawSprite(ctx, ['.......e.......', '.......g.......'], 20, 10);
   expect(calls).toEqual([

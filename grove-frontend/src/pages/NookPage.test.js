@@ -13,6 +13,7 @@ jest.mock('../lib/api', () => ({
     looksOff: jest.fn(),
   },
   speciesAPI: { search: jest.fn() },
+  getFileUrl: (path) => `https://files.test/${path}`,
 }));
 
 const mockNavigate = jest.fn();
@@ -54,7 +55,7 @@ let container;
 let root;
 
 const q = (id) => container.querySelector(`[data-testid="${id}"]`);
-const click = (el) => act(() => el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+const click = (el) => act(() => el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })));
 const flush = () => act(async () => {});
 const mount = async () => {
   await act(async () => {
@@ -90,8 +91,10 @@ describe('loading', () => {
   test('a failed load offers a retry that loads again', async () => {
     nookAPI.state.mockRejectedValueOnce(new Error('network'));
     await mount();
-    expect(container.querySelector('[role="alert"]').textContent).toContain('Could not load the nook');
-    await click(q('nook-retry'));
+    expect(q('load-error').textContent).toContain("Pip's nook");
+    expect(q('nook-canvas')).toBeNull();
+    await click(q('load-retry'));
+    await act(async () => { await new Promise((r) => setTimeout(r, 800)); });
     await flush();
     expect(q('nook-summary')).not.toBeNull();
   });
@@ -136,15 +139,15 @@ describe('the picture and what it says in words', () => {
   test('writes down the level, the week, what is next, and what is unlocked', async () => {
     await mount();
     expect(q('nook-summary').textContent).toContain('Your nook: Bare');
-    expect(q('nook-rhythm').textContent).toBe('You showed up on 2 days this week.');
-    expect(q('nook-next').textContent).toBe('Next: the shelf.');
+    expect(q('nook-rhythm').textContent).toBe('2 days this week');
+    expect(q('nook-next').textContent).toBe('next: the shelf');
     expect(q('nook-items').textContent).toBe('Nothing is unlocked yet.');
   });
 
   test('says "1 day" in the singular and has no numbers for growth', async () => {
     nookAPI.state.mockResolvedValue({ data: STATE({ weekly_days: 1 }) });
     await mount();
-    expect(q('nook-rhythm').textContent).toBe('You showed up on 1 day this week.');
+    expect(q('nook-rhythm').textContent).toBe('1 day this week');
     expect(container.textContent).not.toMatch(/growth/i);
   });
 
@@ -160,7 +163,7 @@ describe('the picture and what it says in words', () => {
     });
     await mount();
     expect(q('nook-items').textContent).toBe('In the nook: a shelf, a rug, a lamp, a hanging plant, a botanical print.');
-    expect(q('nook-next').textContent).toBe('Everything is unlocked.');
+    expect(q('nook-next').textContent).toBe('everything is unlocked');
     expect(q('nook-canvas').getAttribute('aria-label')).toContain('Pip is on the shelf');
   });
 });
@@ -313,5 +316,93 @@ describe('getting ready for a first plant', () => {
     root = createRoot(container);
     await mount();
     expect(q('nook-window').textContent).toBe('Your window faces southwest and looks out on a tree. Hot sun from midday into the evening.');
+  });
+});
+
+describe('the paper layout', () => {
+  const THREE = () =>
+    STATE({
+      plants: [PLANT('p1'), PLANT('p2', { condition: 'due-soon' }), PLANT('p3', { condition: 'needs-attention', looks_off: true, photo_url: 'plants/p3.jpg' })],
+    });
+
+  test('the room sits on a dark band, and Pip speaks in a light note over it, not a live region', async () => {
+    await mount();
+    const note = q('nook-pip');
+    expect(note.getAttribute('role')).toBeNull();
+    expect(note.getAttribute('aria-label')).toBe("Pip's note");
+    expect(note.className).toContain('bg-grove-paperCard');
+    expect(note.className).toContain('-mt-10');
+    expect(q('nook-canvas').closest('.bg-grove-forest')).not.toBeNull();
+    expect(container.firstChild.className).toContain('bg-grove-paper');
+  });
+
+  test('the plants are a swipeable, keyboard-focusable row of tiles, one list item each', async () => {
+    nookAPI.state.mockResolvedValue({ data: THREE() });
+    await mount();
+    const region = container.querySelector('[role="region"][aria-label="Your plants"]');
+    expect(region).not.toBeNull();
+    expect(region.getAttribute('tabindex')).toBe('0');
+    expect(region.className).toContain('snap-x');
+    expect(region.className).toContain('overflow-x-auto');
+    const tiles = region.querySelectorAll('ul > li');
+    expect(tiles).toHaveLength(3);
+    expect(tiles[0].className).toContain('w-tile');
+    expect(tiles[0].className).toContain('snap-start');
+  });
+
+  test('each tile says its status in words and has an icon, and shows a photo when the state carries one', async () => {
+    nookAPI.state.mockResolvedValue({ data: THREE() });
+    await mount();
+    expect(q('nook-plant-p2').querySelector('svg')).not.toBeNull();
+    expect(q('nook-condition-p2').textContent).toBe('Due soon');
+    expect(q('nook-photo-p1').querySelector('img')).toBeNull();
+    expect(q('nook-photo-p1').querySelector('svg')).not.toBeNull();
+    const img = q('nook-photo-p3').querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img.getAttribute('alt')).toBe('');
+    expect(img.getAttribute('src')).toBe('https://files.test/plants/p3.jpg');
+  });
+
+  test('Looks off is a 44px toggle that reports whether it is pressed', async () => {
+    nookAPI.state.mockResolvedValue({ data: THREE() });
+    await mount();
+    expect(q('nook-looks-off-p1').getAttribute('aria-pressed')).toBe('false');
+    expect(q('nook-looks-off-p3').getAttribute('aria-pressed')).toBe('true');
+    expect(q('nook-looks-off-p1').className).toContain('min-h-touch');
+    nookAPI.looksOff.mockResolvedValue({ data: {} });
+    await click(q('nook-looks-off-p3'));
+    await flush();
+    expect(nookAPI.looksOff).toHaveBeenCalledWith('p3', false);
+  });
+
+  test('the progress line is one line of words, with a hairline divider before the plants', async () => {
+    await mount();
+    expect(q('nook-summary').textContent).toContain('2 days this week');
+    expect(q('nook-summary').className).toContain('border-b-hairline');
+  });
+
+  test('the quiet lesson link is a real link with a 44px target', async () => {
+    nookAPI.state.mockResolvedValue({ data: STATE({ quiet: true }) });
+    await mount();
+    const link = q('nook-quiet-lesson');
+    expect(link.tagName).toBe('A');
+    expect(link.getAttribute('href')).toBe('/lessons/plant-er');
+    expect(link.className).toContain('min-h-touch');
+  });
+
+  test('a failed load shows the shared load error with Try again, and no paper page', async () => {
+    nookAPI.state.mockRejectedValue(new Error('network'));
+    await mount();
+    expect(q('load-error')).not.toBeNull();
+    expect(q('load-retry').textContent).toBe('Try again');
+    expect(q('nook-pip')).toBeNull();
+  });
+
+  test('the off state is a paper card on the normal dark page', async () => {
+    nookAPI.state.mockResolvedValue({ data: STATE({ enabled: false }) });
+    await mount();
+    expect(q('nook-off').className).toContain('bg-grove-paperDeep');
+    expect(q('nook-pip')).toBeNull();
+    expect(q('nook-turn-on').className).toContain('min-h-touch');
   });
 });

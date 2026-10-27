@@ -54,17 +54,58 @@ test('draws the nook on mount and describes it for screen readers', () => {
   expect(canvas().height).toBe(80);
 });
 
-test('scales by whole numbers, two times at least', () => {
-  mount();
-  expect(canvas().dataset.scale).toBe('2');
-  expect(canvas().style.width).toBe('256px');
-  expect(canvas().style.height).toBe('160px');
+const setWidth = (width) => {
+  Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, get: () => width });
+};
+const setDpr = (dpr) => {
+  window.devicePixelRatio = dpr;
+};
+
+afterEach(() => {
+  delete HTMLElement.prototype.clientWidth;
+  delete window.devicePixelRatio;
 });
 
-test('an explicit scale is used as given, for small pictures', () => {
+test('fills the full width of its container with a canvas of the same aspect ratio', () => {
+  setWidth(390);
+  mount();
+  expect(canvas().className).toMatch(/\bw-full\b/);
+  expect(canvas().className).toMatch(/object-cover/);
+  expect(canvas().style.imageRendering).toBe('pixelated');
+  expect(canvas().style.aspectRatio.replace(/\s/g, '')).toBe('128/80');
+  // The picture is never sized in fixed pixels, so no blank strip can be left beside it.
+  expect(canvas().style.width).toBe('');
+});
+
+test.each([
+  [320, 1, 2],
+  [390, 1, 3],
+  [500, 1, 3],
+  [320, 2, 5],
+  [390, 2, 6],
+  [500, 2, 7],
+])('at %ipx wide and %ix density the backing canvas is drawn at %ix', (width, dpr, scale) => {
+  setWidth(width);
+  setDpr(dpr);
+  mount();
+  expect(canvas().dataset.scale).toBe(String(scale));
+  expect(canvas().width).toBe(128 * scale);
+  expect(canvas().height).toBe(80 * scale);
+});
+
+test('draws in room pixels through a scale transform so drawRoom needs no change', () => {
+  setWidth(390);
+  const transforms = [];
+  HTMLCanvasElement.prototype.getContext = () => ({ fillStyle: '', fillRect: () => {}, setTransform: (...args) => transforms.push(args) });
+  mount();
+  expect(transforms[transforms.length - 1]).toEqual([3, 0, 0, 3, 0, 0]);
+});
+
+test('an explicit scale fixes the width, for small pictures', () => {
   mount({ scale: 1 });
-  expect(canvas().style.width).toBe('128px');
-  expect(canvas().style.height).toBe('80px');
+  expect(canvas().parentElement.style.width).toBe('128px');
+  expect(canvas().width).toBe(128);
+  expect(canvas().height).toBe(80);
 });
 
 test('redraws every 700ms so Pip can bob', () => {

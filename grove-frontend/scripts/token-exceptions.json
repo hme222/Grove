@@ -82,5 +82,19 @@
     "match": "*",
     "reason": "iOS Safari zooms a focused field under 16px, so the floor must be a literal 16px, not a rem that follows the reader's text size.",
     "retireWhen": "iOS stops zooming on focus or the app locks viewport scale deliberately."
+  },
+  {
+    "file": "src/nook/palette.js",
+    "rule": "hex",
+    "match": "*",
+    "reason": "Pip's nook is a 128 x 80 pixel-art scene drawn on a canvas. These are the art's own colors (sprite letters and room surfaces), not interface colors, and canvas fillStyle cannot read a CSS variable or Tailwind class.",
+    "retireWhen": "the room is drawn from SVG or image assets, or the pixel palette becomes a token group in design/tokens.json."
+  },
+  {
+    "file": "src/nook/palette.js",
+    "rule": "colour-function",
+    "match": "*",
+    "reason": "The room's translucent light (sun beams, lamp glow, ghost outlines) is canvas art with an alpha; canvas fillStyle cannot use color-mix or a CSS variable.",
+    "retireWhen": "the room is drawn from SVG or image assets, or the pixel palette becomes a token group in design/tokens.json."
   }
 ]

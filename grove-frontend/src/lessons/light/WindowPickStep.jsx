@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { lightAPI } from '../../lib/api';
+import { Check } from 'lucide-react';
+import { PAPER_CHOICE, PAPER_ERROR, PAPER_LABEL, paperChip } from '../../nook/paperStyles';
 
 const TIMINGS = [
   { value: 'morning', label: 'In the morning' },
@@ -19,10 +21,10 @@ const HEMISPHERES = [
 ];
 const DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
-const button =
-  'w-full min-h-[44px] rounded-[8px] border-[0.5px] px-3 py-3 text-sm font-ui text-[#1A1A17] text-left disabled:opacity-60';
-const plain = `${button} border-[#D3C9B8] bg-[#F5F0E8] hover:border-[#2D5016]`;
-const chosen = (on) => `${button} ${on ? 'border-[#1C2E10] bg-[#EAF3DE] ring-1 ring-[#1C2E10]/20' : 'border-[#D3C9B8] bg-[#F5F0E8]'}`;
+const plain = PAPER_CHOICE;
+const chosen = (on) => `${paperChip(on)} flex w-full items-center gap-1 text-left`;
+// A chosen chip also shows a check, so the choice is not carried by color alone.
+const tick = (on) => on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />;
 
 // Part 2, card 1: which window, and when the sun reaches it. The compass is an optional shortcut.
 // A pick is saved once, then the lesson moves on. Nothing is saved for "not sure" or "later".
@@ -77,10 +79,11 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
   return (
     <div className="space-y-4" data-testid="window-pick-step">
       <fieldset>
-        <legend className="text-xs font-ui uppercase tracking-[0.1em] text-[#2B2B26] mb-1">What can you see out of it?</legend>
+        <legend className={`${PAPER_LABEL} mb-1`}>What can you see out of it?</legend>
         <div className="grid grid-cols-3 gap-2">
           {VIEWS.map((item) => (
             <button key={item.value} type="button" aria-pressed={view === item.value} onClick={() => setView(item.value)} className={chosen(view === item.value)} data-testid={`view-${item.value}`}>
+              {tick(view === item.value)}
               {item.label}
             </button>
           ))}
@@ -88,10 +91,11 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
       </fieldset>
 
       <fieldset>
-        <legend className="text-xs font-ui uppercase tracking-[0.1em] text-[#2B2B26] mb-1">Which half of the world are you in?</legend>
+        <legend className={`${PAPER_LABEL} mb-1`}>Which half of the world are you in?</legend>
         <div className="grid grid-cols-2 gap-2">
           {HEMISPHERES.map((item) => (
             <button key={item.value} type="button" aria-pressed={hemisphere === item.value} onClick={() => setHemisphere(item.value)} className={chosen(hemisphere === item.value)} data-testid={`hemi-${item.value}`}>
+              {tick(hemisphere === item.value)}
               {item.label}
             </button>
           ))}
@@ -100,7 +104,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
 
       {mode === 'timing' && (
         <div className="space-y-2">
-          <p className="text-sm font-ui text-[#1A1A17]">When does the sun reach that window?</p>
+          <p className="font-ui text-sm text-grove-ink">When does the sun reach that window?</p>
           {TIMINGS.map((item) => (
             <button key={item.value} type="button" disabled={saving} onClick={() => save({ sun: item.value })} className={plain} data-testid={`pick-${item.value}`}>
               {item.label}
@@ -118,7 +122,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
 
       {mode === 'compass' && (
         <div className="space-y-2" data-testid="pick-compass-panel">
-          <p className="text-sm font-ui text-[#1A1A17]">Which way does it face?</p>
+          <p className="font-ui text-sm text-grove-ink">Which way does it face?</p>
           <div className="grid grid-cols-4 gap-2">
             {DIRECTIONS.map((direction) => (
               <button key={direction} type="button" disabled={saving} onClick={() => save({ direction })} className={`${plain} text-center`} data-testid={`dir-${direction}`}>
@@ -134,7 +138,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
 
       {mode === 'unsure' && (
         <div className="space-y-2" data-testid="pick-shadow-help">
-          <p className="text-sm font-ui text-[#1A1A17]">
+          <p className="font-ui text-sm text-grove-ink">
             Hold your hand about a foot above the spot around midday. A crisp shadow means direct sun, a soft one means bright indirect light, and a faint one means low light.
           </p>
           <button type="button" onClick={() => setMode('timing')} className={plain} data-testid="pick-recheck">
@@ -145,7 +149,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
       )}
 
       {error && (
-        <p role="alert" className="text-xs font-ui text-red-700" data-testid="pick-error">
+        <p role="alert" className={PAPER_ERROR} data-testid="pick-error">
           {error}
         </p>
       )}

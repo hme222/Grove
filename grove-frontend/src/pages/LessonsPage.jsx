@@ -76,7 +76,7 @@ export default function LessonsPage() {
                     <span className="block text-xs font-ui text-grove-cream">{LESSON_META[id].blurb}</span>
                   </span>
                   {data?.up_next === id && !completed.has(id) && (
-                    <span className="text-xs font-ui text-[#2D5016]" data-testid={`lesson-up-next-${id}`}>
+                    <span className="text-xs font-ui text-grove-sprout" data-testid={`lesson-up-next-${id}`}>
                       Up next
                     </span>
                   )}

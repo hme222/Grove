@@ -29,7 +29,7 @@ const lowestRow = (rows, column) => {
   return lowest;
 };
 
-test('every row is 15 characters wide, so each sprite has a centre column', () => {
+test('every row is 15 characters wide, so each sprite has a center column', () => {
   expect(SPRITE_WIDTH).toBe(15);
   expect(CENTER).toBe(7);
   everyRow().forEach((row) => expect(row).toHaveLength(SPRITE_WIDTH));

@@ -134,7 +134,7 @@ describe('LessonFinalStep', () => {
 
 describe('the lesson quizzes', () => {
   test('each reading lesson has 3 questions with exactly one correct answer, and the soil test has none', () => {
-    expect(Object.keys(LESSON_QUIZZES).sort()).toEqual(['habit-stacking', 'plant-er', 'plant-parent-reset', 'window-blueprint']);
+    expect(Object.keys(LESSON_QUIZZES).sort()).toEqual(['habit-stacking', 'plant-er', 'plant-parent-reset']);
     Object.values(LESSON_QUIZZES).forEach((questions) => {
       expect(questions).toHaveLength(3);
       questions.forEach((question) => {
@@ -176,7 +176,7 @@ describe('the lesson quizzes', () => {
   test('every light lesson card that names a direction carries the hemisphere note', () => {
     // The window lessons ask which hemisphere the person is in, on the window pick card, and swap
     // north and south from there, so a card naming a direction in plain text must say so too.
-    const note = 'Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.';
+    const note = 'Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.';
     [...LESSON_CARDS['light-basics'], ...LESSON_CARDS['window-map']]
       .filter((c) => /\b(north|south|east|west)\b|which direction/i.test(c.body))
       .forEach((c) => expect(c.body).toContain(note));

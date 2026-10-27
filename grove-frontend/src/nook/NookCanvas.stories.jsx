@@ -70,7 +70,7 @@ function Sheet({ rowsList }) {
     });
   }, [rowsList]);
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, background: PALETTE.c, padding: 12 }}>
+    <div className="flex flex-wrap gap-3 p-3" style={{ background: PALETTE.c }}>
       {rowsList.map((rows, i) => (
         <canvas
           key={i}
@@ -79,7 +79,7 @@ function Sheet({ rowsList }) {
           }}
           width={15}
           height={24}
-          style={{ width: 60, height: 96, imageRendering: 'pixelated' }}
+          style={{ width: '3.75rem', height: '6rem', imageRendering: 'pixelated' }}
         />
       ))}
     </div>

@@ -98,11 +98,11 @@ test('a failed dismiss still hides the card for now', async () => {
   expect(q('light-prompt')).toBeNull();
 });
 
-test('both buttons are labelled and at least 44px tall', async () => {
+test('both buttons are labeled and at least 44px tall', async () => {
   await mount();
   ['light-prompt-go', 'light-prompt-dismiss'].forEach((id) => {
     expect(q(id).textContent.trim().length).toBeGreaterThan(0);
-    expect(q(id).className).toContain('min-h-[44px]');
+    expect(q(id).className).toContain('min-h-touch');
   });
 });
 
@@ -110,10 +110,10 @@ test('both buttons are labelled and at least 44px tall', async () => {
 test('embedded, it is a row in the From Pip group without its own card box', async () => {
   await mount(at(12), { embedded: true });
   expect(q('light-prompt').className).toContain('py-4');
-  expect(q('light-prompt').className).not.toContain('border-[0.5px]');
+  expect(q('light-prompt').className).not.toContain('border-hairline');
 });
 
 test('on its own it keeps the card box', async () => {
   await mount(at(12));
-  expect(q('light-prompt').className).toContain('border-[0.5px]');
+  expect(q('light-prompt').className).toContain('border-hairline');
 });

@@ -41,14 +41,14 @@ export default function PipNoteCard({ embedded = false }) {
 
   return (
     <section
-      className={embedded ? 'flex gap-3 items-center py-4' : 'rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-3 flex gap-3 items-center'}
+      className={embedded ? 'flex gap-3 items-center py-4' : 'rounded-small border-hairline border-grove-paperBorder bg-grove-paperDeep px-4 py-3 flex gap-3 items-center'}
       data-testid="pip-note"
     >
       {view && (
         <button
           type="button"
           onClick={() => navigate('/nook')}
-          className="shrink-0 rounded-[8px] overflow-hidden"
+          className="min-h-touch shrink-0 overflow-hidden rounded-inset"
           aria-label="Open Pip's nook"
           data-testid="pip-note-thumb"
         >
@@ -56,11 +56,11 @@ export default function PipNoteCard({ embedded = false }) {
         </button>
       )}
       <div>
-        <p className={`text-[11px] font-ui uppercase tracking-[0.1em] ${embedded ? 'text-grove-sage' : 'text-[#2B2B26]'}`}>Pip&apos;s note</p>
+        <p className={`font-ui text-sm uppercase tracking-label ${embedded ? 'text-grove-sage' : 'text-grove-inkSoft'}`}>Pip&apos;s note</p>
         {card && !(state && state.quiet) && (
-          <p className={`font-plant text-base ${embedded ? 'text-grove-cream' : 'text-[#1C2E10]'}`} data-testid="pip-note-headline">{card.headline}</p>
+          <p className={`font-plant text-base ${embedded ? 'text-grove-cream' : 'text-grove-root'}`} data-testid="pip-note-headline">{card.headline}</p>
         )}
-        <p className={`text-sm ${embedded ? 'text-grove-cream' : 'text-[#1A1A17]'}`} data-testid="pip-note-body">{note}</p>
+        <p className={`text-sm ${embedded ? 'text-grove-cream' : 'text-grove-ink'}`} data-testid="pip-note-body">{note}</p>
       </div>
     </section>
   );

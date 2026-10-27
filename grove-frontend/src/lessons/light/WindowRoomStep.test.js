@@ -112,7 +112,7 @@ test('every chip and switch is a button at least 44px tall', async () => {
   await mount();
   [...DIRS.map((d) => `chip-${d}`), 'season-summer', 'season-winter'].forEach((id) => {
     expect(q(id).tagName).toBe('BUTTON');
-    expect(q(id).className).toContain('min-h-[44px]');
+    expect(q(id).className).toContain('min-h-touch');
   });
 });
 

@@ -109,13 +109,13 @@ test('a failed save stays with an error and can be tried again', async () => {
   expect(next).toHaveBeenCalledTimes(1);
 });
 
-test('every choice is a labelled button at least 44px tall', async () => {
+test('every choice is a labeled button at least 44px tall', async () => {
   await mount();
   ['pick-morning', 'pick-midday', 'pick-afternoon', 'pick-none', 'pick-unsure', 'pick-nowindow', 'pick-compass', 'pick-later',
     'view-open', 'view-tree', 'view-building', 'hemi-north', 'hemi-south'].forEach((id) => {
     expect(q(id).tagName).toBe('BUTTON');
     expect(q(id).textContent.trim().length).toBeGreaterThan(0);
-    expect(q(id).className).toContain('min-h-[44px]');
+    expect(q(id).className).toContain('min-h-touch');
   });
 });
 

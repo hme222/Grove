@@ -21,6 +21,14 @@ module.exports = {
       "blush": "#F7B4C8",
       "paper": "#F5F0E8",
       "ink": "#1A1A17",
+      "paperCard": "#FDFAF6",
+      "paperDeep": "#EDE5D8",
+      "paperBorder": "#D3C9B8",
+      "inkSoft": "#2B2B26",
+      "paperGreen": "#2D5016",
+      "paperAccent": "#3B6D11",
+      "paperPale": "#EAF3DE",
+      "paperError": "#9B1C1C",
       "inputOutline": "#869A68"
     }
   },
@@ -130,7 +138,8 @@ module.exports = {
   },
   "width": {
     "popover": "330px",
-    "touch": "44px"
+    "touch": "44px",
+    "tile": "150px"
   },
   "height": {
     "photoFrame": "180px",

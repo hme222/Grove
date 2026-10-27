@@ -40,14 +40,15 @@ export default function PipPanel({ form = 'seed', mood = 'calm', animate = false
   }, [rows, height, animate]);
 
   return (
-    <div className="inline-flex rounded-[10px] bg-[#F3EAD9] p-3" data-testid="pip-panel">
+    <div className="inline-flex rounded-chip bg-grove-paperDeep p-3" data-testid="pip-panel">
       <canvas
         ref={canvasRef}
         width={SPRITE_WIDTH}
         height={height}
         role="img"
         aria-label={label}
-        style={{ width: SPRITE_WIDTH * scale, height: height * scale, imageRendering: 'pixelated', display: 'block' }}
+        className="block"
+        style={{ width: SPRITE_WIDTH * scale, height: height * scale, imageRendering: 'pixelated' }}
       />
     </div>
   );

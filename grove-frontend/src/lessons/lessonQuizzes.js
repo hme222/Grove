@@ -3,8 +3,6 @@
 // reason, shown the moment it is picked, so a wrong pick teaches instead of scoring.
 // Facts are limited to what the lesson cards and sources state.
 
-const NORTH_SOUTH_NOTE = 'Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.';
-
 export const LESSON_QUIZZES = {
   'plant-parent-reset': [
     {
@@ -93,35 +91,6 @@ export const LESSON_QUIZZES = {
       ],
     },
   ],
-  'window-blueprint': [
-    {
-      id: 'north',
-      prompt: `You live in the northern hemisphere. Which windows are the brightest? (${NORTH_SOUTH_NOTE})`,
-      options: [
-        { id: 'a', label: 'North and east.', why: 'In the northern hemisphere those are the shadier sides.' },
-        { id: 'b', label: 'South and west.', correct: true, why: 'South and west windows are the brightest in the northern hemisphere.' },
-        { id: 'c', label: 'They are all the same.', why: 'Direction changes how much sun a window gets, which is why mapping your windows helps.' },
-      ],
-    },
-    {
-      id: 'south',
-      prompt: 'You live in the southern hemisphere. Which windows are the brightest?',
-      options: [
-        { id: 'a', label: 'North and west.', correct: true, why: 'In the southern hemisphere the brightest windows are north and west. It is the northern rule with north and south swapped.' },
-        { id: 'b', label: 'South and west.', why: 'That is the northern hemisphere answer. In the southern hemisphere, swap north and south.' },
-        { id: 'c', label: 'South and east.', why: 'In the southern hemisphere south is the shadier side, so this is the dimmer pair.' },
-      ],
-    },
-    {
-      id: 'reading',
-      prompt: 'A friend says a spot is bright enough if you can read there without a lamp. Is that a good test?',
-      options: [
-        { id: 'a', label: 'Yes, if you can read there, a plant will be happy.', why: 'Reading ability is not a reliable test of how bright a spot is for a plant.' },
-        { id: 'b', label: 'No. Look at how far it is from the window and whether it avoids direct midday sun.', correct: true, why: 'Bright, indirect light is close to a bright window, within about 3 feet (1 meter), where the sun does not land on the leaves.' },
-        { id: 'c', label: 'Only in the afternoon.', why: 'The time of day does not make reading a reliable test. Distance from the window and direct midday sun are better guides.' },
-      ],
-    },
-  ],
 };
 
 // What the "Try it on your plant" step does for lessons with a natural action. Lessons not listed
@@ -136,10 +105,5 @@ export const LESSON_ACTIONS = {
     to: '/care/today',
     text: 'Open Today and pick the daily moment you will use to check your plants.',
     cta: 'Open Today',
-  },
-  'window-blueprint': {
-    to: '/plants',
-    text: 'Pick one of your plants and look at the nearest window. Which way does it face?',
-    cta: 'Choose a plant',
   },
 };

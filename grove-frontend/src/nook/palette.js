@@ -1,4 +1,4 @@
-// Colours for Pip's nook. Sprite letters and room colours share one muted palette.
+// Colors for Pip's nook. Sprite letters and room colors share one muted palette.
 export const PALETTE = {
   g: '#A9C5A0',
   G: '#6E9A74',

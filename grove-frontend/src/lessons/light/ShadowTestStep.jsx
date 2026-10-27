@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { lightAPI } from '../../lib/api';
+import { PAPER_CHOICE, PAPER_ERROR } from '../../nook/paperStyles';
 
 const READINGS = [
   { value: 'crisp', label: 'Crisp, with sharp edges' },
@@ -7,8 +8,7 @@ const READINGS = [
   { value: 'faint', label: 'Faint, hard to see' },
 ];
 
-const choiceClass =
-  'w-full min-h-[44px] rounded-[8px] border-[0.5px] border-[#D3C9B8] bg-[#F5F0E8] px-3 py-3 text-sm font-ui text-[#1A1A17] text-left hover:border-[#2D5016] disabled:opacity-60';
+const choiceClass = PAPER_CHOICE;
 
 // Part 1, card 1: the hand-shadow test. A choice is saved once, then the lesson moves on.
 // "Later" leaves a one-time reminder on Care Today and moves on.
@@ -68,7 +68,7 @@ export default function ShadowTestStep({ next, onSaved, onLater }) {
         I&apos;ll do this later
       </button>
       {error && (
-        <p role="alert" className="text-xs font-ui text-red-700" data-testid="shadow-error">
+        <p role="alert" className={PAPER_ERROR} data-testid="shadow-error">
           {error}
         </p>
       )}

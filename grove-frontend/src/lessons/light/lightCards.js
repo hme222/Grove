@@ -1,8 +1,10 @@
 import { Hand, Sun, Cloud, Sprout, MapPin, Home, Sparkles, Eye } from 'lucide-react';
 
 // Card text for the two light lessons. Cards with `interactive` get a step from `steps.js`.
-const part1 = { accent: 'from-amber-100 via-orange-50 to-emerald-50', ring: 'text-amber-600' };
-const part2 = { accent: 'from-lime-100 via-emerald-50 to-emerald-100', ring: 'text-emerald-700' };
+// Both lessons are drawn on paper (see LessonPlayer): the same family, two quiet tints.
+export const HEMISPHERE_NOTE = 'Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.';
+const part1 = { paper: true, accent: 'from-grove-paperCard via-grove-paper to-grove-paperDeep', ring: 'text-grove-paperGreen' };
+const part2 = { paper: true, accent: 'from-grove-paperCard via-grove-paper to-grove-paperPale', ring: 'text-grove-paperAccent' };
 
 export const LIGHT_BASICS_CARDS = [
   {
@@ -19,7 +21,7 @@ export const LIGHT_BASICS_CARDS = [
     headline: 'Direct and indirect light.',
     body:
       '<strong>Direct light</strong> means the sun&rsquo;s rays land on the leaves. A crisp shadow means direct light.<br/><br/>' +
-      '<strong>Indirect light</strong> means the room is bright but no rays touch the leaves. A soft shadow means bright indirect light, and a faint one means low light.<br/><br/>' +
+      '<strong>Bright indirect light</strong> is a spot close to a bright window, within about 3 feet (1 meter), where daylight is strong but the sun does not land on the leaves. A soft shadow means bright indirect light, and a faint one means low light.<br/><br/>' +
       'Grove uses four words: direct, bright indirect, medium, and low.',
     cta: 'Got it',
     icon: Sun,
@@ -30,7 +32,8 @@ export const LIGHT_BASICS_CARDS = [
     header: 'Card 3 of 4 · The curtain',
     headline: 'A curtain softens the sun.',
     body:
-      'A sheer curtain turns direct sun into filtered, bright indirect light. Same window, same spot, and a kinder light for leaves that scorch.',
+      'A sheer curtain turns direct sun into filtered, bright indirect light. Same window, same spot, and a kinder light for leaves that scorch.<br/><br/>' +
+      `<em>${HEMISPHERE_NOTE}</em>`,
     cta: 'Got it',
     icon: Cloud,
     interactive: 'curtain',
@@ -61,7 +64,11 @@ export const WINDOW_MAP_CARDS = [
     ...part2,
     header: 'Card 2 of 4 · Your room',
     headline: 'Your room, lit your way.',
-    body: 'Here is how that window lights a room. Try the other directions to see how they differ.',
+    body:
+      'Here is how that window lights a room. Try the other directions to see how they differ.<br/><br/>' +
+      'North windows give low light. Pothos and Snake plant tolerate it, but they will grow slowly and may need a brighter spot in winter. ' +
+      'Pothos and Snake plant are toxic to cats and dogs if chewed. Keep them out of reach, or check the plant&rsquo;s pet-safety label first.<br/><br/>' +
+      `<em>${HEMISPHERE_NOTE}</em>`,
     cta: 'Got it',
     icon: Home,
     interactive: 'window-room',

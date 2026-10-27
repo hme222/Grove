@@ -180,7 +180,7 @@ test('the window pick starts from the saved hemisphere and view', () => {
   expect(q('pick-initial').textContent).toBe('tree-south');
 });
 
-test('the curtain card is labelled for the person\'s hemisphere', () => {
+test('the curtain card is labeled for the person\'s hemisphere', () => {
   show(renderLightCard({ interactive: 'curtain', cta: 'Got it' }, helpers(), { user: { hemisphere: 'south' } }));
   expect([...container.querySelectorAll('[role="img"]')].map((el) => el.getAttribute('aria-label'))[0]).toBe('North window, no curtain');
 });

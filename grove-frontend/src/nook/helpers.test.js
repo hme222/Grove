@@ -1,6 +1,6 @@
 import { unlockedItems, pipLine, READINESS_STEP_LABELS, CONDITION_LABELS } from './nookCopy';
 import { pipMood } from './pipMood';
-import { integerScale } from './scale';
+import { backingScale } from './scale';
 import { shouldShowNookOffer, hasFinishedALesson } from './offerGate';
 import { buildView } from './buildView';
 
@@ -57,13 +57,26 @@ describe('pipMood', () => {
   });
 });
 
-describe('integerScale', () => {
-  test.each([[0, 2], [undefined, 2], [200, 2], [256, 2], [343, 2], [384, 3], [500, 3], [640, 5], [700, 5]])(
-    'a %s px wide space scales %i times',
-    (width, scale) => {
-      expect(integerScale(width)).toBe(scale);
-    }
-  );
+describe('backingScale', () => {
+  test.each([
+    [0, 1, 1],
+    [undefined, 1, 1],
+    [320, 1, 2],
+    [390, 1, 3],
+    [500, 1, 3],
+    [320, 2, 5],
+    [390, 2, 6],
+    [500, 2, 7],
+    [500, 3, 11],
+  ])('a %s px wide room at %sx density is drawn at %ix', (width, dpr, scale) => {
+    expect(backingScale(width, dpr)).toBe(scale);
+  });
+
+  test('never smaller than one room pixel per device pixel, and a bad density counts as 1', () => {
+    expect(backingScale(100, 1)).toBe(1);
+    expect(backingScale(400, 0)).toBe(3);
+    expect(backingScale(400, NaN)).toBe(3);
+  });
 });
 
 describe('the nook offer gate', () => {

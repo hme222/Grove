@@ -36,7 +36,7 @@ afterEach(() => {
   container.remove();
 });
 
-test('is a labelled dialog that takes focus and sits below the first-care celebration', async () => {
+test('is a labeled dialog that takes focus and sits below the first-care celebration', async () => {
   await mount();
   const dialog = q('nook-offer');
   const heading = container.querySelector('h1');
@@ -44,7 +44,7 @@ test('is a labelled dialog that takes focus and sits below the first-care celebr
   expect(dialog.getAttribute('aria-modal')).toBe('true');
   expect(dialog.getAttribute('aria-labelledby')).toBe(heading.id);
   expect(document.activeElement).toBe(heading);
-  expect(dialog.className).toContain('z-[70]');
+  expect(dialog.className).toContain('z-intro');
 });
 
 test('says what the nook is and that it is optional and never scores plants', async () => {

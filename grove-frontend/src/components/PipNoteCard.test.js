@@ -78,7 +78,7 @@ test("shows today's trivia card in Pip's slot", async () => {
 
 test('a small picture of the nook opens it', async () => {
   await mount();
-  expect(q('pip-note-thumb').querySelector('canvas').style.width).toBe('128px');
+  expect(q('pip-note-thumb').querySelector('canvas').parentElement.style.width).toBe('128px');
   await click(q('pip-note-thumb'));
   expect(mockNavigate).toHaveBeenCalledWith('/nook');
 });
@@ -115,12 +115,12 @@ test('embedded, it sits as a row in the From Pip group without its own card box'
   await mount({ embedded: true });
   const note = q('pip-note');
   expect(note.className).toContain('py-4');
-  expect(note.className).not.toContain('border-[0.5px]');
+  expect(note.className).not.toContain('border-hairline');
   expect(note.className).not.toContain('bg-[#EDE5D8]');
   expect(q('pip-note-thumb')).not.toBeNull();
 });
 
 test('on its own it keeps the card box', async () => {
   await mount();
-  expect(q('pip-note').className).toContain('border-[0.5px]');
+  expect(q('pip-note').className).toContain('border-hairline');
 });

@@ -36,7 +36,7 @@ function RoomCard({ card, helpers, picked }) {
       {window ? (
         <WindowRoomStep window={window} />
       ) : (
-        <p className="text-sm font-ui text-[#1A1A17]" data-testid="room-none">
+        <p className="font-ui text-sm text-grove-ink" data-testid="room-none">
           Pick your window first and this will fill in.
         </p>
       )}
@@ -66,7 +66,7 @@ export function renderLightCard(card, helpers, ctx) {
       return (
         <div className="space-y-3">
           {line && (
-            <p className="text-sm font-ui text-[#1A1A17]" data-testid="reading-note">
+            <p className="font-ui text-sm text-grove-ink" data-testid="reading-note">
               {line}
             </p>
           )}

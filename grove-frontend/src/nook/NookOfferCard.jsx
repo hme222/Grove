@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { nookAPI } from '../lib/api';
 import PipPanel from './PipPanel';
+import { PAPER_BUTTON, PAPER_BUTTON_QUIET, PAPER_ERROR } from './paperStyles';
 
 // The one-time offer of Pip's nook. Either answer is recorded, so it is never shown again.
 // It sits below the first-care celebration, so the celebration plays first.
@@ -32,24 +33,24 @@ export default function NookOfferCard({ onDone }) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-[#F5F0E8]/95 px-4"
+      className="fixed inset-0 z-intro flex items-center justify-center bg-grove-paper/80 px-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="nook-offer-title"
       data-testid="nook-offer"
     >
-      <div className="w-full max-w-sm rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#FDFAF6] p-5 text-center">
+      <div className="w-full max-w-dialog rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5 text-center">
         <div className="flex justify-center mb-3">
           <PipPanel form="seed" mood="curious" animate label="Pip, a small pixel plant in a pot" />
         </div>
-        <h1 id="nook-offer-title" ref={headingRef} tabIndex={-1} className="font-plant text-[#1C2E10] text-2xl mb-2 focus:outline-none">
+        <h1 id="nook-offer-title" ref={headingRef} tabIndex={-1} className="mb-2 font-plant text-2xl text-grove-root focus:outline-none">
           Meet Pip
         </h1>
-        <p className="text-sm text-[#1A1A17] mb-1">Optional: a small pixel nook that grows as you learn. It never scores your plants.</p>
-        <p className="text-xs text-[#2B2B26] mb-4">You can change this any time in your profile.</p>
+        <p className="mb-1 font-ui text-sm text-grove-ink">Optional: a small pixel nook that grows as you learn. It never scores your plants.</p>
+        <p className="mb-4 font-ui text-sm text-grove-inkSoft">You can change this any time in your profile.</p>
 
         {error && (
-          <p role="alert" className="mb-3 text-xs font-ui text-red-700" data-testid="nook-offer-error">
+          <p role="alert" className={`mb-3 ${PAPER_ERROR}`} data-testid="nook-offer-error">
             {error}
           </p>
         )}
@@ -58,7 +59,7 @@ export default function NookOfferCard({ onDone }) {
           <button
             type="button"
             onClick={() => choose(false)}
-            className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] border-[#D3C9B8] text-[#1C2E10]"
+            className={`${PAPER_BUTTON_QUIET} flex-1`}
             data-testid="nook-offer-no"
           >
             Not now
@@ -67,7 +68,7 @@ export default function NookOfferCard({ onDone }) {
             type="button"
             onClick={() => choose(true)}
             aria-busy={saving}
-            className="flex-1 rounded-[2px] font-plant uppercase tracking-[0.08em] text-xs px-4 py-3 border-[0.5px] bg-[#1C2E10] text-[#F5F0E8] border-[#1C2E10]"
+            className={`${PAPER_BUTTON} flex-1`}
             data-testid="nook-offer-yes"
           >
             Try Pip&apos;s nook

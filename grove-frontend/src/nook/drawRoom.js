@@ -32,7 +32,7 @@ function ghost(ctx, x, y, w, h) {
   ctx.fillRect(x + w - 1, y, 1, h);
 }
 
-// Draws a sprite so its bottom row sits on `baseY` and its centre column on `cx`.
+// Draws a sprite so its bottom row sits on `baseY` and its center column on `cx`.
 export function drawSprite(ctx, rows, cx, baseY) {
   const top = baseY - rows.length + 1;
   const left = cx - CENTER;
@@ -82,7 +82,7 @@ function drawTable(ctx) {
   rect(ctx, 74, 53, 2, 13, ROOM.woodDark);
 }
 
-// A small potted plant for the shelf: a pot and a leaf blob in the plant's condition colour.
+// A small potted plant for the shelf: a pot and a leaf blob in the plant's condition color.
 function drawMiniPlant(ctx, x, baseY, condition) {
   const leaf = condition === 'needs-attention' ? PALETTE.n : PALETTE.G;
   rect(ctx, x + 1, baseY - 6, 3, 3, leaf);

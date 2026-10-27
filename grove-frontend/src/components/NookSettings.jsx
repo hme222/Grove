@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { nookAPI } from '../lib/api';
+import { PAPER_ERROR, PAPER_PANEL } from '../nook/paperStyles';
 
 // The profile switch for Pip's nook. Turning it off hides it. Nothing earned is removed.
 export default function NookSettings() {
@@ -27,11 +28,11 @@ export default function NookSettings() {
   };
 
   return (
-    <div className="rounded-[14px] border-[0.5px] border-[#D3C9B8] bg-[#EDE5D8] p-4" data-testid="profile-nook">
+    <div className={PAPER_PANEL} data-testid="profile-nook">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-plant text-[#1C2E10] text-sm mb-1">Pip&apos;s nook</h3>
-          <p className="text-xs font-ui text-[#2B2B26]">
+          <h3 className="mb-1 font-plant text-base text-grove-root">Pip&apos;s nook</h3>
+          <p className="font-ui text-sm text-grove-inkSoft">
             A small pixel nook that grows as you learn. It never scores your plants. Turning it off keeps everything you&apos;ve earned.
           </p>
         </div>
@@ -42,14 +43,14 @@ export default function NookSettings() {
           aria-label="Pip's nook"
           aria-busy={saving}
           onClick={toggle}
-          className={`shrink-0 rounded-[20px] border-[0.5px] px-3 py-1 text-xs font-ui ${on ? 'border-[#1C2E10] bg-[#EAF3DE]' : 'border-[#D3C9B8] bg-[#F5F0E8]'}`}
+          className={`min-h-touch min-w-touch shrink-0 rounded-pill border-hairline px-3 py-1 font-ui text-sm text-grove-ink ${on ? 'border-grove-root bg-grove-paperPale' : 'border-grove-paperGreen bg-grove-paper'}`}
           data-testid="profile-nook-switch"
         >
           {on ? 'On' : 'Off'}
         </button>
       </div>
       {error && (
-        <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="profile-nook-error">
+        <p role="alert" className={`mt-2 ${PAPER_ERROR}`} data-testid="profile-nook-error">
           {error}
         </p>
       )}

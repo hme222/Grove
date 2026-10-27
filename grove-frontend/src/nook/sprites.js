@@ -1,5 +1,5 @@
 // Pixel sprites for Pip's nook. Every row is 15 characters wide, so each sprite
-// has a centre column (index 7) and draws symmetrically. Letters map to colours
+// has a center column (index 7) and draws symmetrically. Letters map to colors
 // in palette.js and '.' is transparent. Sprites are anchored by their bottom row.
 export const SPRITE_WIDTH = 15;
 export const CENTER = 7;
@@ -195,7 +195,7 @@ export const SEEDLING_TOPS = {
 const LEAF_LETTERS = 'gGd';
 const MUTED = { g: 'm', G: 'n', d: 'n' };
 
-// Side leaves sag one pixel; the centre column (the stem) stays put.
+// Side leaves sag one pixel; the center column (the stem) stays put.
 function droop(rows) {
   const grid = rows.map((row) => row.split(''));
   for (let y = grid.length - 2; y >= 0; y -= 1) {
@@ -209,7 +209,7 @@ function droop(rows) {
   return grid.map((row) => row.join(''));
 }
 
-// A plant's condition changes its shape and colour, and the page always adds a text label.
+// A plant's condition changes its shape and color, and the page always adds a text label.
 export function applyCondition(rows, condition) {
   if (condition === 'due-soon') {
     const grid = rows.map((row) => row.split(''));

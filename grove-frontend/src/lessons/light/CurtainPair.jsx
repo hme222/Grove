@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import NookCanvas from '../../nook/NookCanvas';
 import { lessonView } from './lessonView';
+import { PAPER_FRAME } from '../../nook/paperStyles';
 
 const SOUTH = { draw_direction: 'S', direction: 'S', season: 'summer', lamp: false };
 
@@ -13,13 +14,13 @@ export default function CurtainPair({ hemisphere = 'north' }) {
   const curtained = useMemo(() => lessonView({ ...SOUTH, view: 'tree' }), []);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" data-testid="curtain-pair">
-      <figure className="rounded-[12px] bg-[#EDE5D8] p-2">
+      <figure className={PAPER_FRAME}>
         <NookCanvas view={bare} animate={false} label={`${side} window, no curtain`} />
-        <figcaption className="mt-1 text-xs font-ui text-[#1A1A17]">Direct. Sharp patch, strong light.</figcaption>
+        <figcaption className="mt-1 font-ui text-sm text-grove-ink">Direct. Sharp patch, strong light.</figcaption>
       </figure>
-      <figure className="rounded-[12px] bg-[#EDE5D8] p-2">
+      <figure className={PAPER_FRAME}>
         <NookCanvas view={curtained} animate={false} label={`${side} window, sheer curtain`} />
-        <figcaption className="mt-1 text-xs font-ui text-[#1A1A17]">Filtered, bright indirect. Soft patch, no scorch.</figcaption>
+        <figcaption className="mt-1 font-ui text-sm text-grove-ink">Filtered, bright indirect. Soft patch, no scorch.</figcaption>
       </figure>
     </div>
   );

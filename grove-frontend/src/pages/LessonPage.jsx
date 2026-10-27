@@ -93,7 +93,7 @@ export default function LessonPage() {
       <>
         <SoilTestStep hasPlant={hasPlant} onLogged={onSoilLogged} />
         {error && (
-          <p role="alert" className="mt-2 text-xs font-ui text-red-700" data-testid="lesson-error">
+          <p role="alert" className="mt-2 text-xs font-ui text-destructive" data-testid="lesson-error">
             {error}
           </p>
         )}
