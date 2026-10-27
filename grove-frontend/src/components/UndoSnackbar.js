@@ -64,7 +64,7 @@ export default function UndoSnackbar({ message, onUndo, onDismiss, duration = 80
         onClick={onDismiss}
         aria-label="Dismiss"
         data-testid="undo-snackbar-dismiss"
-        className="w-touch h-touch rounded-full text-grove-root hover:bg-grove-root hover:text-grove-lime focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-root flex items-center justify-center"
+        className="w-touch h-touch rounded-pill text-grove-root hover:bg-grove-root hover:text-grove-lime focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-root flex items-center justify-center"
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>

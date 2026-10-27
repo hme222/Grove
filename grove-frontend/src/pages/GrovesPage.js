@@ -19,6 +19,8 @@ export default function GrovesPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [newGrove, setNewGrove] = useState({ name: '', description: '', is_private: false });
   const [creating, setCreating] = useState(false);
+  const [joinErrors, setJoinErrors] = useState({});
+  const [joining, setJoining] = useState('');
 
   const fetchGroves = async () => {
     try {
@@ -54,13 +56,20 @@ export default function GrovesPage() {
     }
   };
 
+  // A failed join says so on the card it belongs to (and in a toast), so it is not missed.
   const handleJoin = async (groveId) => {
+    setJoinErrors((prev) => ({ ...prev, [groveId]: '' }));
+    setJoining(groveId);
     try {
       await groveAPI.join(groveId);
       toast.success('Joined grove');
       fetchGroves();
     } catch (e) {
-      toast.error(e.response?.data?.detail || 'Failed to join');
+      const message = e.response?.data?.detail || 'We couldn’t join that grove. Check your connection and try again.';
+      setJoinErrors((prev) => ({ ...prev, [groveId]: message }));
+      toast.error(message);
+    } finally {
+      setJoining('');
     }
   };
 
@@ -106,7 +115,7 @@ export default function GrovesPage() {
                       data-testid="grove-card"
                       className="w-full flex items-center gap-3 rounded-small border-hairline border-grove-lime/25 bg-grove-moss px-4 py-3 text-left hover:border-grove-lime transition-colors duration-150"
                     >
-                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 border-hairline border-grove-lime/25">
+                      <div className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center flex-shrink-0 border-hairline border-grove-lime/25">
                         <Users className="h-5 w-5 text-grove-sprout" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -134,25 +143,40 @@ export default function GrovesPage() {
                   {discoverGroves.map(grove => (
                     <div
                       key={grove.id}
-                      className="flex items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-moss px-4 py-3"
+                      className="rounded-small border-hairline border-grove-moss bg-grove-moss px-4 py-3"
+                      data-testid="grove-discover-card"
                     >
-                      <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
-                        <Globe className="h-5 w-5 text-grove-sprout" />
+                      <div className="flex flex-wrap items-center gap-3">
+                        <AppLink
+                          to={`/groves/${grove.id}`}
+                          data-testid="grove-discover-link"
+                          className="flex min-w-0 flex-1 basis-40 items-center gap-3 rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
+                        >
+                          <div className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center flex-shrink-0">
+                            <Globe className="h-5 w-5 text-grove-sprout" aria-hidden="true" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-ui text-grove-cream text-sm font-medium break-words">{grove.name}</p>
+                            <p className="font-ui text-xs text-grove-cream">{grove.member_count} {grove.member_count === 1 ? 'member' : 'members'}</p>
+                            {grove.description && (
+                              <p className="font-ui text-xs text-grove-sage line-clamp-2 mt-0.5">{grove.description}</p>
+                            )}
+                          </div>
+                        </AppLink>
+                        <button
+                          type="button"
+                          onClick={() => handleJoin(grove.id)}
+                          disabled={joining === grove.id}
+                          aria-label={`Join ${grove.name}`}
+                          data-testid="grove-join-button"
+                          className={cn(buttonVariants(), "flex-shrink-0")}
+                        >
+                          {joining === grove.id ? 'Joining…' : 'Join'}
+                        </button>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-ui text-grove-cream text-sm font-medium truncate">{grove.name}</p>
-                        <p className="font-ui text-xs text-grove-cream">{grove.member_count} {grove.member_count === 1 ? 'member' : 'members'}</p>
-                        {grove.description && (
-                          <p className="font-ui text-xs text-grove-sage truncate mt-0.5">{grove.description}</p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => handleJoin(grove.id)}
-                        data-testid="grove-join-button"
-                        className={cn(buttonVariants(), "flex-shrink-0")}
-                      >
-                        Join
-                      </button>
+                      {joinErrors[grove.id] && (
+                        <p role="alert" className="mt-2 font-ui text-sm text-destructive" data-testid="grove-join-error">{joinErrors[grove.id]}</p>
+                      )}
                     </div>
                   ))}
                 </div>

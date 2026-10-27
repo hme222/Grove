@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
 import NotificationBell from './NotificationBell';
 import BackButton from './BackButton';
+import PhotoBand from './PhotoBand';
 
 // One header for every screen: [Back] Title ... [page action] [bell] [profile].
 // `back` is true (step back in history) or { to, where } (go to a named place).
@@ -20,7 +21,7 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
   return (
     <header className="sticky top-0 z-sticky bg-grove-forest border-b-hairline border-grove-moss">
       <div className="max-w-page mx-auto px-4 py-3">
-        {/* Wraps instead of running off the edge when the reader's text is large. */}
+        {/* Wraps instead of running off the edge when the reader’s text is large. */}
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
           <div className="flex min-w-0 flex-1 basis-28 items-center gap-2">
             {back && <BackButton {...(back === true ? {} : back)} />}
@@ -35,7 +36,7 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
                 onClick={() => navigate('/profile')}
                 aria-label="Profile"
                 data-testid="header-profile-button"
-                className="w-touch h-touch rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center"
+                className="w-touch h-touch rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center"
               >
                 <User className="h-4 w-4" />
               </button>
@@ -84,12 +85,15 @@ export function FilterChips({ filters, active, onChange, className = '' }) {
   );
 }
 
-export function EmptyState({ title, description, action }) {
+export function EmptyState({ title, description, action, photo }) {
   return (
-    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center my-8">
-      <p className="font-plant text-grove-cream text-base mb-1">{title}</p>
-      <p className="text-sm font-ui text-grove-cream mb-4">{description}</p>
-      {action}
+    <div className={`rounded-card border-hairline border-grove-moss bg-grove-moss text-center my-8 ${photo ? 'overflow-hidden' : 'p-5'}`}>
+      {photo && <PhotoBand src={photo} className="rounded-none" ratio="band" />}
+      <div className={photo ? 'p-5' : ''}>
+        <p className="font-plant text-grove-cream text-base mb-1">{title}</p>
+        <p className="text-sm font-ui text-grove-cream mb-4">{description}</p>
+        {action}
+      </div>
     </div>
   );
 }

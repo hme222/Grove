@@ -94,7 +94,7 @@ test('a failed save shows an error, keeps the picks, and can be retried', async 
   await click(q('quiz-option-forget'));
   await click(q('quiz-start'));
   await flush();
-  expect(q('quiz-error').textContent).toBe('Could not save that. Try again.');
+  expect(q('quiz-error').textContent).toBe('Couldn\u2019t save that. Try again.');
   expect(onDone).not.toHaveBeenCalled();
   expect(q('quiz-option-forget').getAttribute('aria-checked')).toBe('true');
   expect(q('quiz-start').getAttribute('aria-busy')).toBe('false');

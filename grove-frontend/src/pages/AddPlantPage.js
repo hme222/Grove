@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { plantAPI, speciesAPI, encyclopediaAPI } from '../lib/api';
+import PhotoBand from '../components/PhotoBand';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
 import { Search, Camera } from 'lucide-react';
@@ -20,12 +21,12 @@ const MEDIUMS = [
   { value: 'leca', label: 'LECA' },
   { value: 'bark', label: 'Bark', orchidOnly: true },
   { value: 'water', label: 'Water' },
-  { value: 'propagation_jar', label: 'Propagation Jar' },
+  { value: 'propagation_jar', label: 'Propagation jar' },
   { value: 'other', label: 'Other' },
 ];
 const SOURCES = [
   { value: 'nursery', label: 'Nursery' },
-  { value: 'swap', label: 'Plant Swap' },
+  { value: 'swap', label: 'Plant swap' },
   { value: 'propagation', label: 'Propagation' },
   { value: 'gift', label: 'Gift' },
 ];
@@ -72,6 +73,7 @@ export default function AddPlantPage() {
     <div>
       <PageHeader title="Add a plant" back />
       <div className="max-w-form mx-auto px-4 py-4">
+      <PhotoBand src="/photos/sprout-1.jpg" ratio="short" className="mb-4" eager />
       <p className="font-ui italic text-grove-sage text-xs font-medium mb-5">Start with a name or a photo.</p>
       <div className="space-y-2">
         {opts.map(({ key, icon: Icon, title, desc, testId, onClick }) => (
@@ -277,7 +279,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
             {!selectedSpecies && (
               <>
                 <div>
-                  <label htmlFor="addplant-plant-name" className="font-ui text-xs text-grove-cream block mb-1.5">Plant Name *</label>
+                  <label htmlFor="addplant-plant-name" className="font-ui text-xs text-grove-cream block mb-1.5">Plant name *</label>
                   <input id="addplant-plant-name" aria-label="Plant name"
                     type="text"
                     value={formData.common_name}
@@ -289,7 +291,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   />
                 </div>
                 <div>
-                  <label htmlFor="addplant-latin-name" className="font-ui text-xs text-grove-cream block mb-1.5">Latin Name</label>
+                  <label htmlFor="addplant-latin-name" className="font-ui text-xs text-grove-cream block mb-1.5">Latin name</label>
                   <input id="addplant-latin-name" aria-label="Latin name"
                     type="text"
                     value={formData.latin_name}
@@ -321,12 +323,12 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                     onClick={() => setFormData(prev => ({...prev, room: prev.room === room ? '' : room}))}
                     className={buttonVariants({ variant: 'chip' })}
                     aria-pressed={formData.room === room}
-                  >{room}</button>
+                  >{room.charAt(0) + room.slice(1).toLowerCase()}</button>
                 ))}
               </div>
             </div>
             <div>
-              <p id="addplant-grow-medium-label" className="font-ui text-xs text-grove-cream block mb-1.5">Grow Medium</p>
+              <p id="addplant-grow-medium-label" className="font-ui text-xs text-grove-cream block mb-1.5">Grow medium</p>
               <div role="group" aria-labelledby="addplant-grow-medium-label" className="flex flex-wrap gap-1.5">
                 {MEDIUMS.filter(m => !m.orchidOnly || selectedSpecies?.family === 'Orchidaceae' || formData.grow_medium === 'bark').map(m => (
                   <button
@@ -340,7 +342,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               </div>
             </div>
             <div>
-              <p id="addplant-acquired-from-label" className="font-ui text-xs text-grove-cream block mb-1.5">Acquired From</p>
+              <p id="addplant-acquired-from-label" className="font-ui text-xs text-grove-cream block mb-1.5">Acquired from</p>
               <div role="group" aria-labelledby="addplant-acquired-from-label" className="flex flex-wrap gap-1.5">
                 {SOURCES.map(s => (
                   <button

@@ -7,7 +7,7 @@ export function Spinner({ className }) {
   return (
     <span
       aria-hidden="true"
-      className={cn('inline-block h-5 w-5 shrink-0 rounded-full border-strong border-grove-fernLine border-t-transparent motion-safe:animate-spin', className)}
+      className={cn('inline-block h-5 w-5 shrink-0 rounded-pill border-strong border-grove-fernLine border-t-transparent motion-safe:animate-spin', className)}
     />
   );
 }
@@ -22,14 +22,17 @@ export default function Loading({ label = 'Loading', className, ...props }) {
   );
 }
 
-// A wait for a list or grid: static tinted blocks where the cards will be (no motion), with the
-// same visible label so the screen says what it is waiting for.
-export function LoadingList({ count = 3, label = 'Loading', className, ...props }) {
+// A wait for a list or grid: tinted blocks where the cards will be, with the same visible label so
+// the screen says what it is waiting for. The blocks default to the height of a real media row
+// (min-h-media-row) so the list does not jump when data lands; pass `rowHeight` (a token-backed
+// class such as 'min-h-row') for shorter rows. They breathe with the soft-pulse token, and stay
+// still under reduced motion.
+export function LoadingList({ count = 3, label = 'Loading', rowHeight = 'min-h-media-row', className, ...props }) {
   return (
     <div role="status" className={cn('w-full', className)} {...props}>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" aria-hidden="true">
         {Array.from({ length: count }, (_, i) => (
-          <div key={i} className="h-24 rounded-card bg-grove-moss/40" />
+          <div key={i} className={cn(rowHeight, 'rounded-card bg-grove-moss/40 motion-safe:animate-soft-pulse')} />
         ))}
       </div>
       <p className="mt-3 text-center font-ui text-sm text-grove-sage">{label}</p>

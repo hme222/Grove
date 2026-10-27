@@ -134,7 +134,7 @@ export default function BadgesPage() {
       const detail = e?.response?.data?.detail;
       const msg = (detail && typeof detail === 'object' && detail.message)
         || (typeof detail === 'string' ? detail : null)
-        || 'Could not save selection.';
+        || 'Couldn\u2019t save selection.';
       toast.error(msg);
     } finally {
       setSavingPicker(false);
@@ -166,7 +166,7 @@ export default function BadgesPage() {
       const detail = e?.response?.data?.detail;
       const msg = (detail && typeof detail === 'object' && detail.message)
         || (typeof detail === 'string' ? detail : null)
-        || 'Could not update goals.';
+        || 'Couldn\u2019t update goals.';
       toast.error(msg);
     } finally {
       setPinning(null);
@@ -252,7 +252,7 @@ export default function BadgesPage() {
                     </>
                   ) : (
                     <>
-                      <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
+                      <span className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center mb-1">
                         <Award className="h-4 w-4 text-grove-lichen" />
                       </span>
                       <p className="font-latin italic text-xs text-grove-lichen">Empty slot</p>
@@ -365,7 +365,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
     >
       {isPinned && !compact && (
         <span
-          className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime text-grove-root px-1.5 py-0.5"
+          className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-pill bg-grove-lime text-grove-root px-1.5 py-0.5"
           data-testid={`badge-tile-${item.slug}-pinned-flag`}
         >
           <Target className="h-2.5 w-2.5" />
@@ -373,7 +373,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
         </span>
       )}
       <span
-        className={`${sizeClass} rounded-full flex items-center justify-center mb-1 ${earned && tierColor ? 'border-hairline' : ''} ${earned ? '' : 'grayscale opacity-50'}`}
+        className={`${sizeClass} rounded-pill flex items-center justify-center mb-1 ${earned && tierColor ? 'border-hairline' : ''} ${earned ? '' : 'grayscale opacity-50'}`}
         style={
           earned && tierColor
             ? { backgroundColor: tierColor.bg, borderColor: tierColor.border }
@@ -505,7 +505,7 @@ function PickerModal({ data, selection, toggle, onSave, onCancel, saving }) {
                         }`}
                       >
                         {isSel && (
-                          <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-grove-lime flex items-center justify-center">
+                          <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-pill bg-grove-lime flex items-center justify-center">
                             <Check className="h-3 w-3 text-grove-cream" />
                           </span>
                         )}

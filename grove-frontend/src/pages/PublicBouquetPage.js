@@ -71,7 +71,7 @@ export default function PublicBouquetPage() {
         <div className="text-center mb-6">
           {bouquet.photo_url && (
             <div className="rounded-small overflow-hidden border-hairline border-grove-bloom/25 mb-4">
-              <div className="w-full aspect-[4/3] bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="w-full h-full object-cover" /></div>
+              <div className="w-full aspect-photo bg-grove-bloom/15 flex items-center justify-center"><img src={getFileUrl(bouquet.photo_url)} alt={bouquet.name} className="w-full h-full object-cover" /></div>
             </div>
           )}
           <h1 className="font-plant text-grove-cream text-2xl">{bouquet.name}</h1>
@@ -111,7 +111,7 @@ export default function PublicBouquetPage() {
         {/* Care plan */}
         {bouquet.care_plan && (
           <div className="mb-6">
-            <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">Care Instructions</h2>
+            <h2 className="font-plant text-grove-cream text-xl font-semibold mb-3">Care instructions</h2>
             {bouquet.care_plan.immediate_steps?.length > 0 && (
               <div className="rounded-card border-hairline border-grove-bloom/25 bg-grove-canopy p-5 mb-2">
                 <h3 className="font-plant text-grove-blush text-base font-semibold  mb-2">Immediate</h3>

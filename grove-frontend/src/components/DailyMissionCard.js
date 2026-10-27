@@ -65,7 +65,7 @@ export default function DailyMissionCard({ embedded = false }) {
     >
       <div className="flex flex-wrap items-center gap-3">
         <div
-          className={`relative w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${
+          className={`relative w-11 h-11 rounded-pill flex items-center justify-center flex-shrink-0 ${
             completed ? 'bg-grove-lime text-grove-root' : 'bg-grove-lime text-grove-root'
           }`}
           aria-hidden="true"
@@ -73,7 +73,7 @@ export default function DailyMissionCard({ embedded = false }) {
           {completed ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
         </div>
         <div className="min-w-36 flex-1">
-          <p className="font-ui text-xs font-medium text-grove-sage">
+          <p className="font-ui text-sm text-grove-sage">
             Today's mission
           </p>
           <h3

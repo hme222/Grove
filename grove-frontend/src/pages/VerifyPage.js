@@ -249,7 +249,7 @@ function ProgressDots({ step }) {
       {STEPS.map((s, i) => (
         <span
           key={s}
-          className={`h-1.5 rounded-full transition-all duration-200 ${
+          className={`h-1.5 rounded-pill transition-all duration-200 ${
             i <= idx ? 'bg-grove-lime w-6' : 'bg-grove-moss w-3'
           }`}
         />
@@ -272,7 +272,7 @@ function StepCard({ children, testid }) {
 function WelcomeStep({ onContinue, onCancel }) {
   return (
     <StepCard testid="verify-step-welcome">
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/15 mb-4">
+      <span className="inline-flex items-center justify-center w-12 h-12 rounded-pill bg-grove-lime/15 mb-4">
         <ShieldCheck className="h-6 w-6 text-grove-sprout" />
       </span>
       <h2 className="font-plant text-grove-cream text-2xl leading-tight mb-4">
@@ -479,7 +479,7 @@ function PactStep({ acks, setAcks, openSection, setOpenSection, ackedCount, allA
                 aria-expanded={isOpen}
                 data-testid={`pact-section-${s.number}-toggle`}
               >
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-grove-lime/15 text-grove-sprout font-ui text-xs font-medium flex items-center justify-center">
+                <span className="flex-shrink-0 w-7 h-7 rounded-pill bg-grove-lime/15 text-grove-sprout font-ui text-xs font-medium flex items-center justify-center">
                   {s.number}
                 </span>
                 <span className="flex-1 min-w-0 font-ui text-sm font-medium text-grove-cream">
@@ -635,7 +635,7 @@ function FinalStep({ allAcksTrue, submitting, onAgree, onDecline }) {
 function SuccessStep({ onBrowseSwaps }) {
   return (
     <StepCard testid="verify-step-success">
-      <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-grove-lime/15 mb-4">
+      <span className="inline-flex items-center justify-center w-14 h-14 rounded-pill bg-grove-lime/15 mb-4">
         <ShieldCheck className="h-7 w-7 text-grove-sprout" />
       </span>
       <h2 className="font-plant text-grove-cream text-2xl mb-2 flex items-center gap-2">
@@ -648,7 +648,7 @@ function SuccessStep({ onBrowseSwaps }) {
         className="rounded-chip border-hairline border-grove-fernLine bg-grove-moss p-4 flex items-center gap-3 mb-6"
         data-testid="verify-success-badge-card"
       >
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-grove-lime text-grove-root">
+        <span className="inline-flex items-center justify-center w-10 h-10 rounded-pill bg-grove-lime text-grove-root">
           <Sparkles className="h-5 w-5" />
         </span>
         <div className="min-w-0">

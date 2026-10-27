@@ -36,27 +36,27 @@ export default function PipNoteCard({ embedded = false }) {
 
   const card = trivia && !trivia.dismissed ? trivia.card : null;
   let note = 'Pip is here when you want a quiet moment with your plants.';
-  if (state && state.quiet) note = 'Pip is keeping quiet. A plant of yours may need you.';
+  if (state && state.quiet) note = 'Pip is here when you want a quiet look at your plants.';
   else if (card) note = card.body;
 
   return (
     <section
-      className={embedded ? 'flex gap-3 items-center py-4' : 'rounded-small border-hairline border-grove-paperBorder bg-grove-paperDeep px-4 py-3 flex gap-3 items-center'}
+      className={embedded ? 'flex flex-wrap gap-3 items-center py-4' : 'rounded-small border-hairline border-grove-paperBorder bg-grove-paperDeep px-4 py-3 flex flex-wrap gap-3 items-center'}
       data-testid="pip-note"
     >
       {view && (
         <button
           type="button"
           onClick={() => navigate('/nook')}
-          className="min-h-touch shrink-0 overflow-hidden rounded-inset"
-          aria-label="Open Pip's nook"
+          className="min-h-touch max-w-full shrink-0 overflow-hidden rounded-inset"
+          aria-label="Open Pip’s nook"
           data-testid="pip-note-thumb"
         >
-          <NookCanvas view={view} animate={false} scale={1} label="A small picture of Pip's nook" />
+          <NookCanvas view={view} animate={false} scale={1} className="max-w-full" label="A small picture of Pip’s nook" />
         </button>
       )}
-      <div>
-        <p className={`font-ui text-sm uppercase tracking-label ${embedded ? 'text-grove-sage' : 'text-grove-inkSoft'}`}>Pip&apos;s note</p>
+      <div className="min-w-0 max-w-full flex-1 basis-40">
+        <p className={`font-ui text-sm ${embedded ? 'text-grove-sage' : 'text-grove-inkSoft'}`}>Pip&rsquo;s note</p>
         {card && !(state && state.quiet) && (
           <p className={`font-plant text-base ${embedded ? 'text-grove-cream' : 'text-grove-root'}`} data-testid="pip-note-headline">{card.headline}</p>
         )}

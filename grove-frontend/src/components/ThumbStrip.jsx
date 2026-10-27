@@ -7,11 +7,11 @@ import { cn } from '../lib/utils';
 // the row scrolls sideways when it overflows, keeping the current preview in view.
 // `variant` 'dark' is the forest app; 'paper' is Pip's nook (paperGreen outline, because lime fails
 // contrast on paper). An item carries `src` (a photo) or `node` (an illustration); with neither, or
-// when the photo fails, it shows the Leaf tile.
+// when the photo fails, it shows the Leaf tile, or the item's `short` label (a first word) when given.
 
 const VARIANTS = {
-  dark: { tile: 'bg-grove-moss text-grove-sprout', current: 'outline-grove-lime', focus: 'focus-visible:ring-grove-cream' },
-  paper: { tile: 'bg-grove-paperDeep text-grove-paperGreen', current: 'outline-grove-paperGreen', focus: 'focus-visible:ring-grove-ink' },
+  dark: { tile: 'bg-grove-moss text-grove-sprout', current: 'ring-grove-lime ring-offset-grove-forest', focus: 'focus-visible:ring-grove-cream' },
+  paper: { tile: 'bg-grove-paperDeep text-grove-paperGreen', current: 'ring-grove-paperGreen ring-offset-grove-paper', focus: 'focus-visible:ring-grove-ink' },
 };
 const SIZES = { md: 'scale-110', lg: 'scale-125' };
 
@@ -25,14 +25,14 @@ function Preview({ item, tileClass }) {
   if (!item.src || failed) {
     return (
       <span className={cn('flex h-full w-full items-center justify-center', tileClass)} data-testid="thumb-fallback" aria-hidden="true">
-        <Leaf className="h-4 w-4" />
+        {item.short ? <span className="block max-w-full truncate px-0.5 font-ui text-sm leading-none">{item.short}</span> : <Leaf className="h-4 w-4" />}
       </span>
     );
   }
   return <img src={item.src} alt="" loading="lazy" onError={() => setFailed(true)} className="h-full w-full object-cover" />;
 }
 
-export default function ThumbStrip({ items, activeIndex = 0, onSelect, variant = 'dark', size = 'md', label = 'Choose an item', testId = 'thumb-strip', className }) {
+export default function ThumbStrip({ items, activeIndex = 0, onSelect, variant = 'dark', size = 'md', label = 'Choose an item', testId = 'thumb-strip', className, announce = true }) {
   const stripRef = useRef(null);
   const v = VARIANTS[variant] || VARIANTS.dark;
 
@@ -54,7 +54,7 @@ export default function ThumbStrip({ items, activeIndex = 0, onSelect, variant =
       className={cn('flex items-center gap-2 overflow-x-auto px-2 py-2', className)}
       data-testid={testId}
     >
-      <span className="sr-only" aria-live="polite">{activeIndex + 1} of {items.length}</span>
+      {announce && <span className="sr-only" aria-live="polite">{activeIndex + 1} of {items.length}</span>}
       {items.map((item, i) => {
         const current = i === activeIndex;
         return (
@@ -68,7 +68,7 @@ export default function ThumbStrip({ items, activeIndex = 0, onSelect, variant =
             className={cn(
               'h-touch min-h-touch w-touch min-w-touch shrink-0 overflow-hidden rounded-chip focus-visible:outline-none focus-visible:ring-2 motion-safe:transition-transform',
               v.focus,
-              current ? cn('outline outline-2 outline-offset-2', v.current, SIZES[size] || SIZES.md) : '',
+              current ? cn('ring-2 ring-offset-2', v.current, SIZES[size] || SIZES.md) : '',
             )}
           >
             <Preview item={item} tileClass={v.tile} />

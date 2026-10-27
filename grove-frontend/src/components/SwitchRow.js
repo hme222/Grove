@@ -23,12 +23,12 @@ export default function SwitchRow({ label, help, checked, onChange, disabled = f
         <span className="font-ui text-xs text-grove-cream" aria-hidden="true">{checked ? 'On' : 'Off'}</span>
         <span
           aria-hidden="true"
-          className={`relative h-6 w-11 shrink-0 rounded-full border-hairline motion-safe:transition-colors motion-safe:duration-200 ${
+          className={`relative h-6 w-11 shrink-0 rounded-pill border-hairline motion-safe:transition-colors motion-safe:duration-200 ${
             checked ? 'border-grove-lime bg-grove-lime' : 'border-grove-inputOutline bg-grove-moss'
           }`}
         >
           <span
-            className={`absolute left-0 top-px h-5 w-5 rounded-full motion-safe:transition-transform motion-safe:duration-200 ${
+            className={`absolute left-0 top-px h-5 w-5 rounded-pill motion-safe:transition-transform motion-safe:duration-200 ${
               checked ? 'translate-x-5 bg-grove-root' : 'translate-x-px bg-grove-sage'
             }`}
           />

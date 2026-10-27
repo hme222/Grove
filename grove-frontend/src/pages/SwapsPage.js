@@ -66,7 +66,7 @@ export default function SwapsPage() {
             data-testid="swaps-locked-card"
           >
             <div className="flex items-start gap-3 mb-3">
-              <span className="w-10 h-10 rounded-full bg-grove-sun/25 flex items-center justify-center flex-shrink-0">
+              <span className="w-10 h-10 rounded-pill bg-grove-sun/25 flex items-center justify-center flex-shrink-0">
                 <Lock className="h-5 w-5 text-grove-sun" />
               </span>
               <div className="flex-1">
@@ -86,7 +86,7 @@ export default function SwapsPage() {
                 title="Use FloraGrove for at least 3 months"
                 detail={
                   ageDaysCompleted
-                    ? `You've been on FloraGrove for ${ageDays} days.`
+                    ? `You’ve been on FloraGrove for ${ageDays} days.`
                     : `${ageDays} of 90 days. ${90 - ageDays} more to go.`
                 }
                 testid="swap-condition-account-age"
@@ -105,7 +105,7 @@ export default function SwapsPage() {
                 title="Complete the one-time verification"
                 detail={
                   verifiedCompleted
-                    ? "You're verified."
+                    ? "You’re verified."
                     : 'Sign the 8-section FloraGrove community pact.'
                 }
                 cta={!verifiedCompleted ? { label: 'Start verification', onClick: () => navigate('/verify') } : null}
@@ -120,10 +120,10 @@ export default function SwapsPage() {
             className="rounded-card border-hairline border-grove-fernLine bg-grove-moss p-5 text-center"
             data-testid="swaps-eligible-card"
           >
-            <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-grove-lime/15 mb-3">
+            <span className="inline-flex items-center justify-center w-12 h-12 rounded-pill bg-grove-lime/15 mb-3">
               <Repeat className="h-6 w-6 text-grove-sprout" />
             </span>
-            <h2 className="font-plant text-grove-cream text-xl font-semibold">You're cleared to swap</h2>
+            <h2 className="font-plant text-grove-cream text-xl font-semibold">You’re cleared to swap</h2>
             <p className="font-ui text-xs text-grove-sage mt-1 leading-relaxed">
               Swap listings ship next — for now this is your verified-grower lounge. Browse, want-list, and stay tuned.
             </p>
@@ -140,7 +140,7 @@ export default function SwapsPage() {
 
         {/* Discovery surface — visible to everyone, transactable only by eligible users */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-          <h3 className="font-plant text-grove-cream text-base font-semibold ">What you'll trade</h3>
+          <h3 className="font-plant text-grove-cream text-base font-semibold ">What you’ll trade</h3>
           <ul className="mt-2 space-y-1.5 font-ui text-xs text-grove-cream leading-relaxed">
             <li>• Cuttings from your established plants — Pothos, Monstera, String of Pearls.</li>
             <li>• Divisions of clumping perennials — Snake Plant pups, Spider Plant runners.</li>

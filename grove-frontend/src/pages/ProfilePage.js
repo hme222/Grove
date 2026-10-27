@@ -39,7 +39,7 @@ export default function ProfilePage() {
       await userAPI.updateMe({ has_pets: value });
     } catch (e) {
       updateUser({ has_pets: previous });
-      toast.error("Couldn't save that. Try again.");
+      toast.error("Couldn’t save that. Try again.");
     } finally {
       setSavingPets(false);
     }
@@ -132,7 +132,7 @@ export default function ProfilePage() {
         {/* Identity card */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-identity-card">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
+            <div className="w-16 h-16 rounded-pill bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
               <span className="font-plant text-grove-sprout text-2xl">
                 {(user?.display_name || user?.username || 'G')[0].toUpperCase()}
               </span>
@@ -954,7 +954,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
             key={badge?.id}
             className="rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3 flex flex-col items-center text-center"
           >
-            <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
+            <span className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center mb-1">
               <BadgeIcon name={badge?.icon} className="h-5 w-5 text-grove-sprout" />
             </span>
             <p className="font-ui text-xs font-medium text-grove-cream leading-tight">
@@ -1001,7 +1001,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
           className="rounded-chip border-hairline border-grove-fernLine bg-grove-canopy p-3 flex flex-col items-center text-center"
           data-testid={`profile-featured-badge-${it.slug}`}
         >
-          <span className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center mb-1">
+          <span className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center mb-1">
             <BadgeIcon name={it.icon} className="h-5 w-5 text-grove-sprout" />
           </span>
           <p className="font-ui text-xs font-medium text-grove-cream leading-tight">

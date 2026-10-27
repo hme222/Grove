@@ -30,7 +30,7 @@ export default function QuizFlow({ onDone }) {
       const res = await lessonAPI.submitQuiz(answers);
       onDone(res.data);
     } catch (_e) {
-      setError('Could not save that. Try again.');
+      setError('Couldn\u2019t save that. Try again.');
       submitting.current = false;
       setSaving(false);
     }

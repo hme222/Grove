@@ -71,7 +71,7 @@ test('shows nothing when there is no user', async () => {
 
 test("shows today's trivia card in Pip's slot", async () => {
   await mount();
-  expect(q('pip-note').textContent).toContain("Pip's note");
+  expect(q('pip-note').textContent).toContain("Pip’s note");
   expect(q('pip-note-headline').textContent).toBe('Roots like air');
   expect(q('pip-note-body').textContent).toBe('Pots with holes let roots breathe.');
 });
@@ -86,7 +86,7 @@ test('a small picture of the nook opens it', async () => {
 test('while a plant needs attention Pip keeps quiet and the trivia waits', async () => {
   nookAPI.state.mockResolvedValue({ data: STATE({ quiet: true }) });
   await mount();
-  expect(q('pip-note-body').textContent).toBe('Pip is keeping quiet. A plant of yours may need you.');
+  expect(q('pip-note-body').textContent).toBe('Pip is here when you want a quiet look at your plants.');
   expect(q('pip-note-headline')).toBeNull();
 });
 

@@ -74,8 +74,8 @@ export default function NextLessonCard({ embedded = false }) {
       data-testid="next-lesson-card"
     >
       <div>
-        <p className="text-xs font-ui text-grove-cream">Your next lesson</p>
-        <p className="font-plant text-grove-cream text-lg">{lesson.title}</p>
+        <p className="font-ui text-sm text-grove-sage">Your next lesson</p>
+        <p className="font-plant text-base font-semibold text-grove-cream">{lesson.title}</p>
         <p className="text-xs font-ui text-grove-cream">{lesson.blurb}</p>
         <button
           type="button"

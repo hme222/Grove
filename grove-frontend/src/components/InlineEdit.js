@@ -179,7 +179,7 @@ export function InlineRoom({ value, options = [], onSave, testid = 'inline-room'
                     onClick={commitNew}
                     aria-label="Create room"
                     data-testid={`${testid}-create-confirm`}
-                    className={cn(buttonVariants(), "w-6 flex items-center justify-center")}
+                    className={cn(buttonVariants(), "min-w-touch flex items-center justify-center")}
                   >
                     <Check className="h-3 w-3" />
                   </button>
@@ -232,9 +232,11 @@ export function InlineStepper({
         disabled={busy || draft <= min}
         aria-label="Decrease"
         data-testid={`${testid}-decrement`}
-        className="w-7 h-7 rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
+        className="group flex h-touch w-touch items-center justify-center disabled:opacity-40"
       >
-        <Minus className="h-3 w-3" />
+        <span className="flex h-7 w-7 items-center justify-center rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-cream transition-colors duration-150 group-hover:border-grove-fernLine">
+          <Minus className="h-3 w-3" />
+        </span>
       </button>
       <span className="font-ui text-sm text-grove-cream min-w-tab text-center" data-testid={`${testid}-value`}>
         Every {draft} {unit}
@@ -245,9 +247,11 @@ export function InlineStepper({
         disabled={busy || draft >= max}
         aria-label="Increase"
         data-testid={`${testid}-increment`}
-        className="w-7 h-7 rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream flex items-center justify-center hover:border-grove-fernLine disabled:opacity-40 transition-colors duration-150"
+        className="group flex h-touch w-touch items-center justify-center disabled:opacity-40"
       >
-        <Plus className="h-3 w-3" />
+        <span className="flex h-7 w-7 items-center justify-center rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-cream transition-colors duration-150 group-hover:border-grove-fernLine">
+          <Plus className="h-3 w-3" />
+        </span>
       </button>
     </div>
   );

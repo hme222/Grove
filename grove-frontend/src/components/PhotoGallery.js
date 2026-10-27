@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Loading from './Loading';
 import { plantAPI, getFileUrl } from '../lib/api';
-import PlantImage from './PlantImage';
+import LoadError from './LoadError';
 import ConfirmDialog from './ConfirmDialog';
 import { toast } from 'sonner';
-import { Upload, Trash2, Star, Calendar, X, Check, Pencil } from 'lucide-react';
+import { Upload, Star, Calendar, X, Check } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
+import PhotoViewer from './PhotoViewer';
+import PhotoBand from './PhotoBand';
 
 /**
  * Phase 14A.2 — Photo gallery for a plant.
@@ -17,14 +19,16 @@ import { buttonVariants } from './ui/button';
  *   growth timeline (Phase 14B) can render chronologically.
  * - Cover photo is the hero image shown across the app (Collection tile, etc.)
  */
-export default function PhotoGallery({ plantId, onChanged }) {
+export default function PhotoGallery({ plantId, plantName, onChanged }) {
   const [photos, setPhotos] = useState([]);
   const [count, setCount] = useState(0);
   const [cap, setCap] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [pending, setPending] = useState(null); // photo id awaiting delete confirmation
   const [editing, setEditing] = useState(null); // photo being edited
+  const [viewerId, setViewerId] = useState(null); // photo open in the paged viewer
   const fileInputRef = useRef(null);
   const [pendingTakenAt, setPendingTakenAt] = useState('');
 
@@ -34,8 +38,10 @@ export default function PhotoGallery({ plantId, onChanged }) {
       setPhotos(res.data.photos || []);
       setCount(res.data.count || 0);
       setCap(res.data.cap || 10);
+      setLoadFailed(false);
     } catch (_e) {
-      // Gallery may be missing on old plants — don't surface an error.
+      // A failed request is a load error, never "No photos yet".
+      setLoadFailed(true);
     } finally {
       setLoading(false);
     }
@@ -44,6 +50,7 @@ export default function PhotoGallery({ plantId, onChanged }) {
   useEffect(() => { fetchPhotos(); }, [fetchPhotos]);
 
   const handleAddClick = () => {
+    if (loadFailed) return; // Add photo is aria-disabled until the photos load
     setPendingTakenAt(''); // empty = "now" by default
     fileInputRef.current?.click();
   };
@@ -72,8 +79,6 @@ export default function PhotoGallery({ plantId, onChanged }) {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
-
-  const handleDelete = (photoId) => setPending(photoId);
 
   const performDelete = async (photoId) => {
     try {
@@ -118,6 +123,15 @@ export default function PhotoGallery({ plantId, onChanged }) {
     } catch { return '—'; }
   };
 
+  // The pill on a 98px tile: month and day only, on one line. The full date is in the pill's title,
+  // its screen reader text, the Open button's label and the viewer.
+  const formatShort = (iso) => {
+    if (!iso) return '—';
+    try {
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch { return '—'; }
+  };
+
   // For the date input we need YYYY-MM-DD
   const isoToDateInput = (iso) => {
     if (!iso) return '';
@@ -126,21 +140,29 @@ export default function PhotoGallery({ plantId, onChanged }) {
 
   return (
     <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="photo-gallery">
-      <div className="flex items-center justify-between mb-3">
-        <div>
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="min-w-0">
           <h3 className="font-plant text-grove-cream text-base font-semibold ">Photos</h3>
-          <p className="font-latin text-xs text-grove-sage mt-0.5">
-            {count} of {cap} · each photo feeds the growth timeline.
-          </p>
+          {loadFailed ? (
+            <p id="photo-gallery-add-reason" className="font-ui text-sm text-grove-sage mt-0.5" data-testid="photo-gallery-add-reason">
+              Photos have to load before you can add one.
+            </p>
+          ) : !loading && (
+            <p className="font-ui text-sm text-grove-sage mt-0.5" data-testid="photo-gallery-caption">
+              {count} of {cap} · each photo feeds the growth timeline.
+            </p>
+          )}
         </div>
         <button
           type="button"
           onClick={handleAddClick}
-          disabled={uploading || count >= cap}
+          disabled={uploading || (!loadFailed && count >= cap)}
+          aria-disabled={loadFailed ? 'true' : undefined}
+          aria-describedby={loadFailed ? 'photo-gallery-add-reason' : undefined}
           data-testid="photo-gallery-add"
-          className={cn(buttonVariants(), "flex gap-1.5")}
+          className={cn(buttonVariants(), "flex shrink-0 gap-1.5 whitespace-nowrap", loadFailed && "cursor-not-allowed opacity-50")}
         >
-          <Upload className="h-3 w-3" />
+          <Upload className="h-4 w-4" aria-hidden="true" />
           {uploading ? 'Uploading…' : 'Add photo'}
         </button>
         <input
@@ -155,6 +177,8 @@ export default function PhotoGallery({ plantId, onChanged }) {
 
       {loading ? (
         <Loading label="Loading photos" className="py-8" />
+      ) : loadFailed && photos.length === 0 ? (
+        <LoadError what="photos" compact onRetry={fetchPhotos} testId="photo-gallery-error" />
       ) : photos.length === 0 ? (
         <div
           className="rounded-chip border-hairline border-dashed border-grove-fernLine bg-grove-forest p-5 text-center"
@@ -168,58 +192,38 @@ export default function PhotoGallery({ plantId, onChanged }) {
       ) : (
         <div className="grid grid-cols-3 gap-2" data-testid="photo-gallery-grid">
           {photos.map((p) => (
-            <div key={p.id} className="relative group" data-testid={`photo-tile-${p.id}`}>
-              <div className="aspect-square rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss">
-                <PlantImage src={p.path} tone="plant" rounded="none" className="w-full h-full" />
-              </div>
+            <div key={p.id} className="relative" data-testid={`photo-tile-${p.id}`}>
+              <button
+                type="button"
+                onClick={() => setViewerId(p.id)}
+                aria-label={`Open photo${p.taken_at ? ` from ${formatWhen(p.taken_at)}` : ''}`}
+                data-testid={`photo-open-${p.id}`}
+                className="block w-full rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-cream"
+              >
+                <PhotoBand src={getFileUrl(p.path)} aspect="square" className="rounded-none" testId="photo-tile-image" />
+              </button>
               {p.is_cover && (
                 <span
-                  className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-grove-lime px-2 py-0.5 text-xs font-ui text-grove-root"
+                  className="pointer-events-none absolute top-1.5 left-1.5 inline-flex min-h-6 items-center gap-1 whitespace-nowrap rounded-pill bg-grove-lime px-2.5 py-1 text-xs font-ui text-grove-root"
                   data-testid="photo-cover-badge"
                 >
                   <Star className="h-2.5 w-2.5 fill-current" /> Cover
                 </span>
               )}
-              <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1 rounded-full bg-grove-lime/80 px-2 py-0.5 text-xs font-ui text-grove-cream">
-                  <Calendar className="h-2.5 w-2.5" />
-                  {formatWhen(p.taken_at)}
+              <div className="pointer-events-none absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between">
+                <span
+                  className="inline-flex min-h-6 items-center gap-1 whitespace-nowrap rounded-pill bg-grove-root px-2.5 py-1 text-xs font-ui text-grove-cream"
+                  title={formatWhen(p.taken_at)}
+                  data-testid="photo-date-pill"
+                >
+                  <Calendar className="h-2.5 w-2.5" aria-hidden="true" />
+                  <span aria-hidden="true">{formatShort(p.taken_at)}</span>
+                  <span className="sr-only">{p.taken_at ? formatWhen(p.taken_at) : 'No date'}</span>
                 </span>
-              </div>
-              <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                <button
-                  type="button"
-                  onClick={() => setEditing(p)}
-                  data-testid={`photo-edit-${p.id}`}
-                  aria-label="Edit photo"
-                  className="w-6 h-6 rounded-full bg-grove-forest/80 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
-                >
-                  <Pencil className="h-3 w-3" />
-                </button>
-                {!p.is_cover && (
-                  <button
-                    type="button"
-                    onClick={() => handleSetCover(p.id)}
-                    data-testid={`photo-setcover-${p.id}`}
-                    aria-label="Set as cover"
-                    className="w-6 h-6 rounded-full bg-grove-forest/80 text-grove-cream flex items-center justify-center hover:bg-grove-moss"
-                  >
-                    <Star className="h-3 w-3" />
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleDelete(p.id)}
-                  data-testid={`photo-delete-${p.id}`}
-                  aria-label="Delete photo"
-                  className="w-6 h-6 rounded-full bg-grove-forest/80 text-grove-blush flex items-center justify-center hover:bg-grove-sprout hover:text-grove-cream"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </button>
               </div>
             </div>
           ))}
-          {count < cap && !loading && (
+          {count < cap && !loading && !loadFailed && (
             <button
               type="button"
               onClick={handleAddClick}
@@ -233,6 +237,17 @@ export default function PhotoGallery({ plantId, onChanged }) {
           )}
         </div>
       )}
+
+      <PhotoViewer
+        open={viewerId != null && photos.length > 0}
+        onOpenChange={(o) => { if (!o) setViewerId(null); }}
+        photos={photos.map((p) => ({ id: p.id, path: p.path, taken_at: p.taken_at, caption: p.caption, is_cover: p.is_cover }))}
+        startId={viewerId}
+        plantName={plantName}
+        onEdit={(v) => { setViewerId(null); setEditing(photos.find((p) => p.id === v.id) || null); }}
+        onDelete={(v) => performDelete(v.id)}
+        onSetCover={(v) => handleSetCover(v.id)}
+      />
 
       {/* Edit photo modal (caption + taken_at) */}
       <Dialog open={!!editing} onOpenChange={(o) => { if (!o) setEditing(null); }}>
@@ -268,13 +283,7 @@ function PhotoEditForm({ photo, onCancel, onSave, isoToDateInput }) {
   const [takenAt, setTakenAt] = useState(isoToDateInput(photo.taken_at));
   return (
     <div className="space-y-3">
-      <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss">
-        <img
-          src={getFileUrl(photo.path)}
-          alt=""
-          className="w-full aspect-[4/3] object-contain bg-grove-moss"
-        />
-      </div>
+      <PhotoBand src={getFileUrl(photo.path)} ratio="photo" fit="contain" className="rounded-chip border-hairline border-grove-moss" testId="photo-edit-preview" />
       <div>
         <label htmlFor="photo-edit-takenat-input" className="block font-ui text-xs text-grove-cream mb-1">
           Taken on

@@ -113,7 +113,7 @@ export default function NotificationsPage() {
                   data-testid="notification-item"
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    <div className={`w-10 h-10 rounded-pill flex items-center justify-center flex-shrink-0 ${
                       notification.is_read ? 'bg-grove-moss' : 'bg-grove-lime'
                     }`}>
                       <IconComponent className={`h-5 w-5 ${
@@ -124,7 +124,7 @@ export default function NotificationsPage() {
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="font-plant text-grove-cream text-base font-semibold ">{notification.title}</h3>
                         {!notification.is_read && (
-                          <div className="w-2 h-2 rounded-full bg-grove-lime flex-shrink-0 mt-1" />
+                          <div className="w-2 h-2 rounded-pill bg-grove-lime flex-shrink-0 mt-1" />
                         )}
                       </div>
                       <p className="text-sm text-grove-cream mt-1">{notification.body}</p>

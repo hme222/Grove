@@ -99,7 +99,7 @@ describe('choosing a plant', () => {
     await type(q('readiness-query'), 'snake');
     await submit();
     await flush();
-    expect(q('readiness-error').textContent).toBe('Could not search plants. Try again.');
+    expect(q('readiness-error').textContent).toBe('Couldn’t search plants. Try again.');
   });
 
   test('shows at most eight results', async () => {

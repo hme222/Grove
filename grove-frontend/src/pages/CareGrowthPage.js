@@ -123,7 +123,7 @@ export default function CareGrowthPage() {
         {showAdvanced ? (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="growth-advanced-card">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-plant text-grove-cream text-base font-semibold ">Advanced Analytics</h3>
+              <h3 className="font-plant text-grove-cream text-base font-semibold ">Advanced analytics</h3>
               <TrendingUp className="h-4 w-4 text-grove-sprout" />
             </div>
             <div className="grid grid-cols-1 gap-2">

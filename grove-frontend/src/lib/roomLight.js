@@ -24,7 +24,7 @@ export function fitSentence({ name, need, fit }) {
 
 // What to say about the room as a whole.
 export function roomSummary(room) {
-  if (!room.light) return { tone: 'prompt', text: 'Tell us how bright this room is and we will check your plants suit it.' };
+  if (!room.light) return { tone: 'prompt', text: 'Tell us how bright this room is and we\u2019ll check your plants suit it.' };
   const known = (room.fits || []).filter((f) => f.fit);
   const issues = known.filter((f) => f.fit !== 'good');
   if (!known.length) return { tone: 'neutral', text: '' };

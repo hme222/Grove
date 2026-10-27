@@ -2,7 +2,6 @@
 .gw {
   position: fixed;
   inset: 0;
-  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,7 +31,7 @@
 .gw-safe b { font-weight: 700; }
 .gw-tools { font-style: italic; font-weight: 300; }
 .gw-serif-bold { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
-.gw-forest { display: block; }
+.gw-forest { display: block; object-fit: cover; border-radius: var(--radius-card); }
 .gw-lines { left: 0; top: 0; overflow: visible; pointer-events: none; }
 .gw-cta {
   display: flex; align-items: center; justify-content: center;

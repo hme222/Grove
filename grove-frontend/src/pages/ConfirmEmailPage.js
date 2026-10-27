@@ -49,7 +49,7 @@ export default function ConfirmEmailPage() {
         {state === 'working' && <Loading label="Confirming your email" />}
         {state !== 'working' && (
           <div className="rounded-card border-hairline border-grove-fernLine bg-grove-canopy p-5 text-center">
-            <span className={cn('mx-auto flex h-16 w-16 items-center justify-center rounded-full', state === 'done' ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-cream')} aria-hidden="true">
+            <span className={cn('mx-auto flex h-16 w-16 items-center justify-center rounded-pill', state === 'done' ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-cream')} aria-hidden="true">
               {state === 'done' ? <Check className="h-8 w-8" /> : <AlertCircle className="h-8 w-8" />}
             </span>
             <h1 ref={headingRef} tabIndex={-1} className="mt-4 font-plant text-2xl text-grove-cream focus:outline-none" data-testid="confirm-heading">

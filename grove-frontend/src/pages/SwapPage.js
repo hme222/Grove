@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import VerifiedProBadge from '../components/VerifiedProBadge';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
+import PhotoBand from '../components/PhotoBand';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -119,9 +120,9 @@ export default function SwapPage() {
               : 'translate-x-0 opacity-100'
             }`}
           >
-            <div className="aspect-[4/5] bg-grove-moss flex items-center justify-center">
+            <div className="aspect-portrait bg-grove-moss flex items-center justify-center">
               {current.photo_url ? (
-                <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(current.photo_url)} alt={current.common_name} className="w-full h-full object-cover" /></div>
+                <PhotoBand src={getFileUrl(current.photo_url)} alt={current.common_name} ratio="portrait" className="rounded-none" />
               ) : (
                 <Leaf className="h-16 w-16 text-grove-sprout opacity-30" />
               )}
@@ -150,7 +151,7 @@ export default function SwapPage() {
           </div>
         ) : (
           <div className="text-center py-16" data-testid="swap-empty">
-            <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-4">
+            <div className="w-16 h-16 mx-auto rounded-pill bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-4">
               <Sparkles className="h-7 w-7 text-grove-sprout" />
             </div>
             <p className="font-plant text-grove-cream text-lg mb-1">You've seen the current deck</p>
@@ -172,7 +173,7 @@ export default function SwapPage() {
               onClick={() => handleChoice('left')}
               aria-label="Pass"
               data-testid="swap-pass"
-              className="w-14 h-14 rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-bloom hover:text-grove-blush flex items-center justify-center transition-colors duration-150"
+              className="w-14 h-14 rounded-pill border-hairline border-grove-moss bg-grove-forest text-grove-cream hover:border-grove-bloom hover:text-grove-blush flex items-center justify-center transition-colors duration-150"
             >
               <X className="h-6 w-6" />
             </button>
@@ -180,7 +181,7 @@ export default function SwapPage() {
               onClick={() => handleChoice('right')}
               aria-label="Interested"
               data-testid="swap-like"
-              className={cn(buttonVariants(), "h-14 w-14 rounded-full px-0")}
+              className={cn(buttonVariants(), "h-14 w-14 rounded-pill px-0")}
             >
               <Heart className="h-6 w-6" />
             </button>

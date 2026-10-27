@@ -12,6 +12,7 @@ import { Leaf, ChevronRight } from 'lucide-react';
 import { LIGHT_LEVELS, lightHelp, roomSummary } from '../lib/roomLight';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
+import PhotoBand from '../components/PhotoBand';
 
 export default function RoomPage() {
   const [rooms, setRooms] = useState([]);
@@ -28,7 +29,7 @@ export default function RoomPage() {
       setRooms(res.data);
     } catch (e) {
       setRooms(previous);
-      toast.error('Could not save the light. Try again.');
+      toast.error('Couldn\u2019t save the light. Try again.');
     }
   };
 
@@ -56,6 +57,7 @@ export default function RoomPage() {
           <LoadingList label="Loading rooms" />
         ) : rooms.length === 0 ? (
           <EmptyState
+            photo="/photos/room-1.jpg"
             title="No rooms yet"
             description="Add rooms to your plants to organize them by location."
             action={
@@ -99,7 +101,7 @@ export default function RoomPage() {
                       className="relative block aspect-square rounded-chip overflow-hidden border-hairline border-grove-moss"
                     >
                       {plant.photo_url ? (
-                        <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={getFileUrl(plant.photo_url)} alt="" className="w-full h-full object-cover" /></div>
+                        <PhotoBand src={getFileUrl(plant.photo_url)} aspect="square" className="rounded-none" testId="room-plant-photo" />
                       ) : (
                         <div className="w-full h-full bg-grove-moss flex items-center justify-center">
                           <Leaf className="h-4 w-4 text-grove-sprout opacity-40" />

@@ -6,6 +6,7 @@ import { buttonVariants } from './ui/button';
 import { toast } from 'sonner';
 import { plantAPI, getFileUrl } from '../lib/api';
 import PhotoGuideCards from './PhotoGuideCards';
+import PhotoBand from './PhotoBand';
 
 const GUIDE_OPEN_KEY = 'grove_photo_guide_seen';
 
@@ -109,10 +110,13 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onSkip }) {
       >
         {uploadedPath ? (
           <div className="relative">
-            <img
+            <PhotoBand
               src={getFileUrl(uploadedPath)}
               alt="Uploaded plant preview"
-              className="w-full aspect-[4/3] bg-grove-moss object-contain"
+              ratio="photo"
+              fit="contain"
+              className="rounded-none"
+              testId="photo-requirement-preview"
             />
             {validating && (
               <div className="absolute inset-0 bg-grove-lime/80 flex items-center justify-center">
@@ -124,7 +128,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onSkip }) {
             )}
           </div>
         ) : (
-          <div className="aspect-[4/3] flex flex-col items-center justify-center text-center px-6">
+          <div className="aspect-photo flex flex-col items-center justify-center text-center px-6">
             <Camera className="h-8 w-8 text-grove-sprout mb-2" />
             <p className="font-ui text-grove-cream text-sm font-medium">Tap a button below</p>
             <p className="font-ui text-xs text-grove-sage mt-1">

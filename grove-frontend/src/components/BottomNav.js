@@ -5,9 +5,9 @@ import { Leaf, Sun, Users, BookOpen } from 'lucide-react';
 
 const tabs = [
   { path: '/care/today', match: (p) => p === '/' || p.startsWith('/care') || p.startsWith('/help-my-plant') || p.startsWith('/search'), icon: Sun, label: 'Today', testid: 'bottom-tab-care' },
-  { path: '/plants', match: (p) => p === '/plants' || p.startsWith('/plants/') || p.startsWith('/bouquets') || p === '/add-plant' || p.startsWith('/wishlist') || p.startsWith('/wants') || p === '/rooms', icon: Leaf, label: 'Plants', testid: 'bottom-tab-collection' },
+  { path: '/plants', match: (p) => p === '/plants' || p.startsWith('/plants/') || p.startsWith('/bouquets') || p === '/add-plant' || p.startsWith('/wants') || p === '/rooms', icon: Leaf, label: 'Plants', testid: 'bottom-tab-collection' },
   { path: '/greenhouse', match: (p) => p.startsWith('/greenhouse') || p.startsWith('/encyclopedia') || p.startsWith('/species') || p.startsWith('/guilds') || p.startsWith('/lessons'), icon: BookOpen, label: 'Learn', testid: 'bottom-tab-greenhouse' },
-  { path: '/feed', match: (p) => p === '/feed' || p.startsWith('/groves') || p.startsWith('/swap') || p.startsWith('/verify'), icon: Users, label: 'Community', testid: 'bottom-tab-grove' },
+  { path: '/feed', match: (p) => p === '/feed' || p.startsWith('/groves') || p.startsWith('/swap') || p.startsWith('/verify') || p.startsWith('/wishlist'), icon: Users, label: 'Community', testid: 'bottom-tab-grove' },
 ];
 
 export default function BottomNav() {
@@ -29,7 +29,7 @@ export default function BottomNav() {
                   isActive ? 'text-grove-cream' : 'text-grove-sage'
                 }`}
               >
-                {isActive && <span aria-hidden="true" className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-grove-lime" />}
+                {isActive && <span aria-hidden="true" className="absolute inset-x-6 top-0 h-0.5 rounded-pill bg-grove-lime" />}
                 <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.5} />
                 <span className={`text-center leading-tight ${isActive ? 'font-bold' : ''}`}>{label}</span>
               </AppLink>

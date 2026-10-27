@@ -3,7 +3,8 @@ import { AlertCircle, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { userAPI, zoneAPI } from '@/lib/api';
-import StepScreen from './StepScreen';
+import StepScreen, { StepActions, blockedClass } from './StepScreen';
+import PhotoBand from '../PhotoBand';
 
 const ZIP = /^\d{5}$/;
 const inputClass = 'w-full rounded-inset border-hairline border-grove-fernLine bg-grove-canopy px-4 py-3 font-ui text-sm text-grove-cream placeholder:text-grove-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime aria-[invalid=true]:border-destructive';
@@ -70,6 +71,7 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
       heading="Where do you grow?"
       intro="Your zip code helps us tailor seasonal care tips. We never share it. You can skip this."
       testId="onboarding-zone"
+      hero={<PhotoBand src="/photos/window-1.jpg" ratio="short" eager />}
     >
       <div className="mt-6 flex flex-1 flex-col">
         <label htmlFor="zone-zip" className="mb-1.5 block font-ui text-sm text-grove-cream">Zip code</label>
@@ -126,14 +128,32 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
         </div>
         {error && <p role="alert" className="mt-3 font-ui text-sm text-destructive" data-testid="zone-error">{error}</p>}
 
-        <div className="mt-auto space-y-2 pt-8">
-          <button type="button" onClick={save} disabled={!canContinue} aria-busy={saving} className={cn(buttonVariants(), 'w-full')} data-testid="zone-continue">
-            {saving ? 'Saving…' : 'Continue'}
-          </button>
-          <button type="button" onClick={onSkip} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="zone-skip">
-            Skip for now
-          </button>
-        </div>
+        {!canContinue && !saving && (
+          <p id="zone-continue-hint" className="mt-6 text-center font-ui text-sm text-grove-sage" data-testid="zone-continue-hint">
+            {state === 'checking' ? 'Checking your zip…' : 'Enter a zip or choose Skip for now'}
+          </p>
+        )}
+        <StepActions
+          className={canContinue || saving ? undefined : 'pt-2'}
+          primary={(
+            <button
+              type="button"
+              onClick={canContinue ? save : undefined}
+              aria-disabled={canContinue ? undefined : 'true'}
+              aria-describedby={canContinue || saving ? undefined : 'zone-continue-hint'}
+              aria-busy={saving}
+              className={cn(buttonVariants(), 'w-full', !canContinue && blockedClass)}
+              data-testid="zone-continue"
+            >
+              {saving ? 'Saving…' : 'Continue'}
+            </button>
+          )}
+          secondary={(
+            <button type="button" onClick={onSkip} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="zone-skip">
+              Skip for now
+            </button>
+          )}
+        />
       </div>
     </StepScreen>
   );

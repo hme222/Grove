@@ -19,13 +19,16 @@ const statusIcons = {
   dormant: Moon,
 };
 
-const statusLabels = {
+// The one visible vocabulary for a plant's state. Every surface that shows a status word reads it
+// from here (the nook tiles too, via CONDITION_LABELS in nook/nookCopy.js).
+export const STATUS_LABELS = {
   healthy: 'Healthy',
   needs_water: 'Due soon',
-  urgent: 'Check',
+  urgent: 'Needs a check',
   propagating: 'Propagating',
   dormant: 'Dormant',
 };
+const statusLabels = STATUS_LABELS;
 
 export function StatusDot({ status, size = 'sm', showLabel = false, className = '' }) {
   const sizeClass = size === 'lg' ? 'h-5 w-5' : 'h-4 w-4';
@@ -34,16 +37,16 @@ export function StatusDot({ status, size = 'sm', showLabel = false, className = 
   const isPulsing = status === 'urgent' || status === 'needs_water';
 
   return (
-    <span className={`inline-flex items-center gap-1.5 ${className}`}>
+    <span className={`inline-flex max-w-full items-center gap-1.5 ${className}`}>
       <span
-        className={`${sizeClass} inline-flex items-center justify-center rounded-full ${colorClass} text-grove-root ${isPulsing ? 'status-pulse' : ''}`}
+        className={`${sizeClass} inline-flex items-center justify-center rounded-pill ${colorClass} text-grove-root ${isPulsing ? 'status-pulse' : ''}`}
         data-testid={`status-dot-${status}`}
       >
         <Icon className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
       </span>
       {!showLabel && <span className="sr-only">{statusLabels[status] || status}</span>}
       {showLabel && (
-        <span className="whitespace-nowrap text-xs font-ui text-grove-cream">{statusLabels[status] || status}</span>
+        <span className="min-w-0 font-ui text-xs leading-tight text-grove-cream sm:whitespace-nowrap">{statusLabels[status] || status}</span>
       )}
     </span>
   );

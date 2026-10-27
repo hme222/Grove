@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { LeafIllustration } from '@/components/illustrations/LeafIllustration';
 import { ClusterIllustration } from '@/components/illustrations/ClusterIllustration';
 import { BloomIllustration } from '@/components/illustrations/BloomIllustration';
+import PhotoBand from '@/components/PhotoBand';
 
 const illustrations = {
   leaf: LeafIllustration,
@@ -23,11 +24,12 @@ export function EmptyState({ config }) {
 
   return (
     <div
-      className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-left max-w-md mx-auto"
+      className={`rounded-card border-hairline border-grove-moss bg-grove-moss text-left max-w-md mx-auto ${config.photo ? 'overflow-hidden' : 'p-5'}`}
       data-testid="empty-state"
     >
-      <div className="flex flex-col items-center gap-4">
-        <IllustrationComponent className="opacity-60" />
+      {config.photo && <PhotoBand src={config.photo} className="rounded-none" ratio="band" />}
+      <div className={`flex flex-col items-center gap-4 ${config.photo ? 'p-5' : ''}`}>
+        {!config.photo && <IllustrationComponent className="opacity-60" />}
         <div className="space-y-2 text-center">
           <h3 className="font-plant text-base font-semibold text-grove-cream">{config.heading}</h3>
           <p className="text-sm text-grove-cream">{config.body}</p>

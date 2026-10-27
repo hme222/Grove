@@ -6,7 +6,7 @@ import LessonPlayer from './LessonPlayer';
 const SAMPLE_CARDS = [
   {
     n: 1,
-    header: 'Card 1 of 3 · The Hook',
+    header: 'Card 1 of 3 · The hook',
     headline: 'Erase the plant guilt.',
     body: 'Most plants don’t die from a lack of love — they die from <strong>drowning</strong>.',
     cta: 'I’m ready',
@@ -16,7 +16,7 @@ const SAMPLE_CARDS = [
   },
   {
     n: 2,
-    header: 'Card 2 of 3 · The Probe',
+    header: 'Card 2 of 3 · The probe',
     headline: 'Your natural moisture sensor.',
     body: 'Push your index finger <strong>up to the second knuckle</strong> into the soil.',
     cta: 'Got it &mdash; finger as probe',
@@ -26,7 +26,7 @@ const SAMPLE_CARDS = [
   },
   {
     n: 3,
-    header: 'Card 3 of 3 · Your Turn',
+    header: 'Card 3 of 3 · Your turn',
     headline: '60 seconds. One plant. Real answer.',
     body: 'Go to your nearest plant right now.',
     cta: 'Log my first soil test',

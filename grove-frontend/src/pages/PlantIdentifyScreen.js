@@ -160,7 +160,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           src={null}
           tone="plant"
           rounded="lg"
-          className="w-full aspect-[4/3] mb-3"
+          className="w-full aspect-photo mb-3"
           testId="identify-viewfinder"
         />
         <p className="font-ui text-xs text-grove-sage text-center mb-3">
@@ -218,8 +218,8 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           <ul className="space-y-1.5">
             {items.map(({ key, label }) => (
               <li key={key} className="flex items-center gap-2">
-                <span className={`w-4 h-4 rounded-full flex items-center justify-center ${scanProgress[key] ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sage'}`}>
-                  {scanProgress[key] ? <Check className="h-3 w-3" /> : <span className="w-1.5 h-1.5 rounded-full bg-grove-moss" />}
+                <span className={`w-4 h-4 rounded-pill flex items-center justify-center ${scanProgress[key] ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sage'}`}>
+                  {scanProgress[key] ? <Check className="h-3 w-3" /> : <span className="w-1.5 h-1.5 rounded-pill bg-grove-moss" />}
                 </span>
                 <span className={`font-ui text-sm ${scanProgress[key] ? 'text-grove-cream' : 'text-grove-lichen'}`}>{label}</span>
               </li>
@@ -338,7 +338,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       <div className="mt-2 mb-3">
         <p className="font-ui text-xs text-grove-lichen">Health · initial reading</p>
         <div className="flex items-center gap-2 mt-1">
-          <div className="flex-1 h-2 bg-grove-moss rounded-full overflow-hidden">
+          <div className="flex-1 h-2 bg-grove-moss rounded-pill overflow-hidden">
             <div className="h-full bg-grove-lime" style={{ width: `${identified?.healthScore || 80}%` }} />
           </div>
           <span className="font-ui text-grove-cream text-sm font-medium">{identified?.healthScore || 80}</span>

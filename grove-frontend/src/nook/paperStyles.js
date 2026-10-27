@@ -22,7 +22,7 @@ export const paperChip = (on) =>
 export const PAPER_FIELD = 'mt-1 min-h-touch w-full rounded-control border-hairline border-grove-paperGreen bg-grove-paper px-3 py-2 font-ui text-sm text-grove-ink';
 export const PAPER_LINK = 'inline-flex min-h-touch items-center font-ui text-sm text-grove-paperGreen underline';
 export const PAPER_ERROR = 'font-ui text-sm text-grove-paperError';
-export const PAPER_LABEL = 'font-ui text-sm uppercase tracking-label text-grove-inkSoft';
+export const PAPER_LABEL = 'font-ui text-sm text-grove-inkSoft';
 
 // Surfaces.
 export const PAPER_CARD = 'rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5';

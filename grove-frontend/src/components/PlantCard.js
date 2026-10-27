@@ -3,6 +3,7 @@ import { AppLink } from './AppLink';
 import { StatusDot } from './StatusDot';
 import { getFileUrl } from '../lib/api';
 import { Leaf } from 'lucide-react';
+import PhotoBand from './PhotoBand';
 
 export default function PlantCard({ plant, selected, onSelect, selectionMode }) {
   const photoUrl = getFileUrl(plant.photo_url);
@@ -14,15 +15,14 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
   const content = (
     <>
       {photoUrl ? (
-        <div className="w-full h-full bg-grove-moss flex items-center justify-center">
-          <img
-            src={photoUrl}
-            // The card already prints the name. Only describe the photo when the printed name is a nickname.
-            alt={plant.nickname && plant.nickname !== plant.common_name ? plant.common_name : ''}
-            className="w-full h-full object-cover"
-            onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.nextSibling.style.display = 'flex'; }}
-          />
-        </div>
+        <PhotoBand
+          src={photoUrl}
+          // The card already prints the name. Only describe the photo when the printed name is a nickname.
+          alt={plant.nickname && plant.nickname !== plant.common_name ? plant.common_name : ''}
+          aspect="square"
+          className="rounded-none"
+          testId="plant-card-photo"
+        />
       ) : null}
       <div
         className={`absolute inset-0 bg-grove-moss flex items-center justify-center ${photoUrl ? 'hidden' : 'flex'}`}
@@ -37,14 +37,14 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
       
       {/* Selection check */}
       {selectionMode && selected && (
-        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-grove-lime flex items-center justify-center">
+        <div className="absolute top-2 right-2 w-5 h-5 rounded-pill bg-grove-lime flex items-center justify-center">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="var(--grove-root)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
       )}
       
       {/* Name overlay */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-grove-night/95 via-grove-night/80 to-transparent px-2.5 pb-2 pt-10">
-        <p className="font-ui text-grove-cream text-sm font-medium truncate">
+        <p className="font-plant text-base text-grove-cream truncate">
           {plant.nickname || plant.common_name}
         </p>
         {plant.latin_name && (

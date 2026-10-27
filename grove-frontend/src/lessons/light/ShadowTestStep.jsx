@@ -27,7 +27,7 @@ export default function ShadowTestStep({ next, onSaved, onLater }) {
       if (onSaved) onSaved(reading);
       next();
     } catch (_e) {
-      setError('Could not save that. Try again.');
+      setError('Couldn’t save that. Try again.');
     } finally {
       busy.current = false;
       setSaving(false);

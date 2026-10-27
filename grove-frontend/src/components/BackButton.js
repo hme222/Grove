@@ -16,7 +16,7 @@ export default function BackButton({ to, where, onClick, variant = 'inline', tes
         type="button"
         onClick={go}
         data-testid={testId || 'back-button'}
-        className={`flex min-h-touch min-w-touch items-center justify-center rounded-full bg-grove-night/65 text-grove-cream backdrop-blur-sm transition-colors duration-150 hover:bg-grove-night/85 ${className}`}
+        className={`flex min-h-touch min-w-touch items-center justify-center rounded-pill bg-grove-night/65 text-grove-cream backdrop-blur-sm transition-colors duration-150 hover:bg-grove-night/85 ${className}`}
       >
         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         <span className="sr-only">Back{where ? ` to ${where}` : ''}</span>

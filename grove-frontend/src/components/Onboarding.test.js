@@ -17,10 +17,10 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('@/contexts/AuthContext', () => ({ useAuth: jest.fn() }));
 jest.mock('./WelcomeScreen', () => ({
-  WelcomeScreen: ({ onContinue, showSkip }) => (
+  WelcomeScreen: ({ onContinue, onSkip, showSkip }) => (
     <div data-testid="onboarding-welcome">
       <button type="button" onClick={onContinue} data-testid="welcome-continue">Continue</button>
-      {showSkip && <button type="button" data-testid="welcome-skip">Skip</button>}
+      {showSkip && <button type="button" onClick={onSkip} data-testid="onboarding-skip">Skip</button>}
     </div>
   ),
 }));
@@ -87,14 +87,17 @@ const toAccount = async () => {
 test('a signed-out visitor sees the welcome with a way to sign in and no skip that needs an account', async () => {
   await mount();
   expect(q('onboarding-welcome')).not.toBeNull();
-  expect(q('welcome-skip')).toBeNull();
+  expect(q('onboarding-skip')).toBeNull();
   expect(q('welcome-signin').getAttribute('href')).toBe('/login');
 });
 
 test('the three intro slides move on and carry no day-7 or day-30 promise', async () => {
   await mount();
   await click(q('welcome-continue'));
-  expect(text()).toContain('Welcome to FloraGrove');
+  // The welcome screen already said the name and what a grove is; this screen carries something new.
+  expect(q('onboarding-heading').textContent).toBe('Three short steps to set up');
+  expect(text()).not.toContain('A grove is a small group');
+  expect(text()).not.toContain('Welcome to FloraGrove');
   expect(text()).toContain('1 of 3');
   await click(q('onboarding-continue'));
   expect(text()).toContain('Track care, not metrics');
@@ -250,7 +253,7 @@ test('a signed-in person starts after the account step, at the zone step', async
   signedIn();
   await mount();
   expect(q('onboarding-zone')).not.toBeNull();
-  expect(q('zone-continue').disabled).toBe(true);
+  expect(q('zone-continue').getAttribute('aria-disabled')).toBe('true');
   expect(text()).toContain('US zip codes only for now');
 });
 
@@ -277,7 +280,7 @@ test('a zip that is not found says so, blocks Continue, and never shows a zone',
   await flush();
   expect(q('zone-missing').textContent).toContain('Zip not found');
   expect(q('zone-found')).toBeNull();
-  expect(q('zone-continue').disabled).toBe(true);
+  expect(q('zone-continue').getAttribute('aria-disabled')).toBe('true');
   expect(q('zone-zip').getAttribute('aria-invalid')).toBe('true');
 });
 
@@ -360,12 +363,12 @@ test('each question says why it is asked, needs a pick for Next, and can be skip
   await toQuestions();
   expect(q('question-count').textContent).toBe('Question 1 of 4');
   expect(q('question-why').textContent).toMatch(/^Why we ask:/);
-  expect(q('question-next').disabled).toBe(true);
+  expect(q('question-next').getAttribute('aria-disabled')).toBe('true');
   expect(q('question-skip')).not.toBeNull();
   expect(document.activeElement).toBe(q('onboarding-heading'));
   await click(q('option-q1-gift'));
   expect(q('option-q1-gift').getAttribute('aria-checked')).toBe('true');
-  expect(q('question-next').disabled).toBe(false);
+  expect(q('question-next').getAttribute('aria-disabled')).toBeNull();
 });
 
 test('every option is a 44px-high radio and the last button says See my plan', async () => {
@@ -405,7 +408,7 @@ test('answers are sent once at the end, a skipped question is left out, and the 
   expect(q('onboarding-plan')).not.toBeNull();
   expect(q('plan-lesson-title').textContent).toBe('Plant ER');
   expect(q('plan-because').textContent).toContain('I got one as a gift');
-  expect(q('plan-then').textContent).toContain('Soil Finger-Test');
+  expect(q('plan-then').textContent).toContain('Soil finger-test');
   expect(text()).toContain('Welcome, Maya');
   expect(auth.updateUser).toHaveBeenCalledWith({ primary_track: 'rescue' });
   userAPI.updateMe.mockClear();
@@ -423,7 +426,7 @@ test('skipping every question still builds a plan and says the questions were sk
   await click(q('quiz-intro-skip'));
   expect(lessonAPI.submitPlan).toHaveBeenCalledWith({});
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
-  expect(q('plan-lesson-title').textContent).toBe('Soil Finger-Test');
+  expect(q('plan-lesson-title').textContent).toBe('Soil finger-test');
   expect(q('plan-because').textContent).toContain('You skipped the questions');
   await click(q('plan-explore'));
   await flush();
@@ -510,17 +513,17 @@ const photo = () => q('hero-image');
 test('each intro slide carries its photo from the Figma frames, decorative and with a fixed shape', async () => {
   await mount();
   await click(q('welcome-continue'));
-  expect(photo().getAttribute('data-photo')).toBe('forest');
+  expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-forest.jpg');
   await click(q('onboarding-continue'));
-  expect(photo().getAttribute('data-photo')).toBe('shelf');
+  expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-shelf.jpg');
   await click(q('onboarding-continue'));
-  expect(photo().getAttribute('data-photo')).toBe('plants');
+  expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-plants.jpg');
   expect(photo().getAttribute('aria-hidden')).toBe('true');
-  expect(photo().style.aspectRatio).toBe('3 / 2');
+  expect(photo().style.aspectRatio).toBe('4 / 3');
   const img = photo().querySelector('img');
   expect(img.getAttribute('alt')).toBe('');
   expect(img.className).toContain('object-cover');
-  expect(img.getAttribute('src')).toBe('/onboarding/plants.jpg');
+  expect(img.getAttribute('src')).toBe('/photos/onboarding-plants.jpg');
 });
 
 test('a photo that fails to load is replaced by a designed tile of the same shape', async () => {
@@ -528,9 +531,9 @@ test('a photo that fails to load is replaced by a designed tile of the same shap
   await click(q('welcome-continue'));
   const box = photo();
   await act(async () => { box.querySelector('img').dispatchEvent(new Event('error')); });
-  expect(q('hero-fallback')).not.toBeNull();
+  expect(q('photo-fallback')).not.toBeNull();
   expect(photo().querySelector('img')).toBeNull();
-  expect(photo().style.aspectRatio).toBe('3 / 2');
+  expect(photo().style.aspectRatio).toBe('4 / 3');
 });
 
 test('the quiz intro and the plan screen carry their photos, and the soil photo shows only for the soil lesson', async () => {
@@ -538,11 +541,11 @@ test('the quiz intro and the plan screen carry their photos, and the soil photo 
   lessonAPI.submitPlan.mockResolvedValue({ data: { primary_track: 'rebirth', queue: ['soil-finger-test', 'plant-parent-reset'], matched: [], plan_answers: {} } });
   await mount();
   await click(q('zone-skip'));
-  expect(photo().getAttribute('data-photo')).toBe('windowsill');
+  expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-windowsill.jpg');
   await click(q('quiz-intro-skip'));
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
   const photos = [...container.querySelectorAll('[data-testid="hero-image"]')].map((el) => el.getAttribute('data-photo'));
-  expect(photos).toEqual(['sprouts', 'soil']);
+  expect(photos).toEqual(['/photos/onboarding-sprouts.jpg', '/photos/onboarding-soil.jpg']);
 });
 
 test('a plan for another lesson has the sprouts hero but no soil photo', async () => {
@@ -552,14 +555,171 @@ test('a plan for another lesson has the sprouts hero but no soil photo', async (
   await click(q('quiz-intro-skip'));
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
   const photos = [...container.querySelectorAll('[data-testid="hero-image"]')].map((el) => el.getAttribute('data-photo'));
-  expect(photos).toEqual(['sprouts']);
+  expect(photos).toEqual(['/photos/onboarding-sprouts.jpg']);
 });
 
 test('the shipped photos exist and each is under 300KB', () => {
-  const dir = path.resolve(__dirname, '../../public/onboarding');
+  const dir = path.resolve(__dirname, '../../public/photos');
   ['forest', 'shelf', 'plants', 'windowsill', 'sprouts', 'soil'].forEach((name) => {
-    const size = fs.statSync(path.join(dir, `${name}.jpg`)).size;
+    const size = fs.statSync(path.join(dir, `onboarding-${name}.jpg`)).size;
     expect(size).toBeGreaterThan(10000);
     expect(size).toBeLessThan(300 * 1024);
   });
+});
+
+// ---------- the overlay is a real modal ----------
+
+test('the first-run overlay is a labelled modal dialog with focus inside it from the first screen', async () => {
+  await mount();
+  const shellEl = q('onboarding-flow');
+  expect(shellEl.getAttribute('role')).toBe('dialog');
+  expect(shellEl.getAttribute('aria-modal')).toBe('true');
+  expect(shellEl.getAttribute('aria-label')).toBe('Welcome to FloraGrove');
+  expect(shellEl.contains(document.activeElement)).toBe(true);
+  expect(document.activeElement).not.toBe(document.body);
+});
+
+test('each step moves focus to its headline and the dialog label follows the step', async () => {
+  await mount();
+  await click(q('welcome-continue'));
+  expect(document.activeElement).toBe(q('onboarding-heading'));
+  expect(q('onboarding-flow').getAttribute('aria-label')).toBe('Three short steps to set up');
+});
+
+test('siblings of the overlay are inert and hidden from screen readers while it is open, then restored', async () => {
+  const appRoot = document.createElement('div');
+  document.body.appendChild(appRoot);
+  // Render the overlay straight into appRoot so it is a sibling of <main>.
+  const r3 = createRoot(appRoot);
+  await act(async () => { r3.render(<><main id="m"><button type="button">Behind</button></main><Onboarding onComplete={jest.fn()} /></>); });
+  await flush();
+  const m = appRoot.querySelector('#m');
+  expect(m.hasAttribute('inert')).toBe(true);
+  expect(m.getAttribute('aria-hidden')).toBe('true');
+  const late = document.createElement('div');
+  appRoot.appendChild(late);
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
+  expect(late.hasAttribute('inert')).toBe(true);
+  await act(async () => { r3.render(<main id="m"><button type="button">Behind</button></main>); });
+  expect(appRoot.querySelector('#m').hasAttribute('inert')).toBe(false);
+  await act(async () => { r3.unmount(); });
+  appRoot.remove();
+});
+
+// ---------- a failed save while skipping is never silent ----------
+
+const keyDown = (el, key) => act(async () => { el.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })); });
+
+test('Skip on the welcome screen shows an alert when the save fails, stays enabled, and retries', async () => {
+  signedIn({ onboarding_complete: false });
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  const onComplete = await mount({ replay: true });
+  expect(q('onboarding-welcome')).not.toBeNull();
+  await click(q('onboarding-skip'));
+  const alert = q('onboarding-finish-error');
+  expect(alert.getAttribute('role')).toBe('alert');
+  expect(alert.textContent).toContain('We couldn’t save that');
+  expect(onComplete).not.toHaveBeenCalled();
+  expect(q('onboarding-skip').disabled).toBeFalsy();
+  await click(q('onboarding-skip'));
+  expect(onComplete).toHaveBeenCalled();
+  expect(q('onboarding-finish-error').textContent).toBe('');
+});
+
+test('Skip intro shows the same alert from an intro slide, and moving on clears it', async () => {
+  signedIn({ onboarding_complete: false });
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await mount({ replay: true });
+  await click(q('welcome-continue'));
+  await click(q('onboarding-skip'));
+  expect(q('onboarding-finish-error').textContent).toContain('We couldn’t save that');
+  await click(q('onboarding-continue'));
+  expect(q('onboarding-finish-error').textContent).toBe('');
+});
+
+test('Skip for now on a failed plan shows the alert in the shared slot', async () => {
+  signedIn({ hemisphere: 'north' });
+  lessonAPI.submitPlan.mockRejectedValueOnce(new Error('offline'));
+  await mount();
+  await click(q('zone-skip'));
+  await click(q('quiz-intro-skip'));
+  await flush();
+  expect(q('building-error')).not.toBeNull();
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await click(q('building-skip'));
+  expect(q('onboarding-finish-error').getAttribute('role')).toBe('alert');
+  expect(q('onboarding-finish-error').textContent).toContain('We couldn’t save that');
+});
+
+// ---------- step 2 and the eyebrow ----------
+
+test('the Grow together eyebrow sits above the headline, in sage, as a 14px sentence-case label', async () => {
+  await mount();
+  await click(q('welcome-continue'));
+  await click(q('onboarding-continue'));
+  const eyebrow = q('onboarding-eyebrow');
+  expect(eyebrow.textContent).toBe('Grow together');
+  expect(eyebrow.className).toContain('text-grove-sage');
+  expect(eyebrow.className).toContain('text-sm');
+  expect(eyebrow.compareDocumentPosition(q('onboarding-heading')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
+// ---------- disabled primary actions say why ----------
+
+test('Continue on the zip step stays focusable, says why, and does nothing until there is a zip', async () => {
+  signedIn();
+  await mount();
+  const btn = q('zone-continue');
+  expect(btn.disabled).toBe(false);
+  expect(btn.getAttribute('aria-disabled')).toBe('true');
+  const hint = container.querySelector(`#${btn.getAttribute('aria-describedby')}`);
+  expect(hint.textContent).toBe('Enter a zip or choose Skip for now');
+  await click(btn);
+  expect(userAPI.updateMe).not.toHaveBeenCalled();
+  await type(q('zone-zip'), '10019');
+  await flush();
+  expect(q('zone-continue').getAttribute('aria-disabled')).toBeNull();
+  expect(q('zone-continue').getAttribute('aria-describedby')).toBeNull();
+});
+
+test('Next on a question stays focusable, says why, and does nothing until an option is chosen', async () => {
+  await toQuestions();
+  const btn = q('question-next');
+  expect(btn.disabled).toBe(false);
+  expect(btn.getAttribute('aria-disabled')).toBe('true');
+  expect(container.querySelector(`#${btn.getAttribute('aria-describedby')}`).textContent).toBe('Choose an option to continue');
+  await click(btn);
+  expect(q('question-count').textContent).toBe('Question 1 of 4');
+});
+
+// ---------- the options are one radio group ----------
+
+test('the options have one tab stop and arrow keys move and choose', async () => {
+  await toQuestions();
+  const options = PLAN_QUESTIONS[0].options.map((o) => q(`option-q1-${o.id}`));
+  expect(options.map((el) => el.getAttribute('tabindex'))).toEqual(['0', ...options.slice(1).map(() => '-1')]);
+  await keyDown(options[0], 'ArrowDown');
+  expect(options[1].getAttribute('aria-checked')).toBe('true');
+  expect(document.activeElement).toBe(options[1]);
+  expect(options.map((el) => el.getAttribute('tabindex'))).toEqual(options.map((_, i) => (i === 1 ? '0' : '-1')));
+  await keyDown(options[1], 'ArrowRight');
+  expect(options[2].getAttribute('aria-checked')).toBe('true');
+  await keyDown(options[2], 'ArrowUp');
+  expect(options[1].getAttribute('aria-checked')).toBe('true');
+  await keyDown(options[1], 'ArrowLeft');
+  expect(options[0].getAttribute('aria-checked')).toBe('true');
+  await keyDown(options[0], 'ArrowUp'); // wraps to the last
+  expect(options[options.length - 1].getAttribute('aria-checked')).toBe('true');
+  await keyDown(options[options.length - 1], 'Home');
+  expect(options[0].getAttribute('aria-checked')).toBe('true');
+  await keyDown(options[0], 'End');
+  expect(options[options.length - 1].getAttribute('aria-checked')).toBe('true');
+  expect(options.filter((el) => el.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+});
+
+test('Space and Enter choose the focused option (a native button click)', async () => {
+  await toQuestions();
+  await click(q('option-q1-gift'));
+  expect(q('option-q1-gift').getAttribute('aria-checked')).toBe('true');
+  expect(q('option-q1-gift').getAttribute('tabindex')).toBe('0');
 });

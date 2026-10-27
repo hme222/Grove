@@ -1,10 +1,10 @@
-// Lesson cards for "Plant Parent Reset". The text is used exactly as written; colors are design tokens.
+// Lesson cards for "Plant parent reset". The text is used exactly as written; colors are design tokens.
 import { Sun, Droplets, Heart, Sprout, Wind } from "lucide-react";
 
 export const CARDS = [
   {
     n: 1,
-    header: "Lesson 1 of 5 · Mindset Reset",
+    header: "Lesson 1 of 5 · Mindset reset",
     headline: "You are not a plant killer.",
     body:
       "Most plants don\u2019t die from lack of love\u2014they die from <strong>too much</strong> of it (usually overwatering!). Let go of the guilt. Today, we start fresh with a clean slate and zero judgment.",
@@ -30,7 +30,7 @@ export const CARDS = [
   },
   {
     n: 3,
-    header: "Lesson 3 of 5 · Potting Basics",
+    header: "Lesson 3 of 5 · Potting basics",
     headline: "Give those roots some air.",
     body:
       "Imagine standing in wet socks all day\u2014that\u2019s what happens to roots in a pot with no drainage. pots need <strong>drainage holes</strong> so excess water can escape. If a decorative pot has none, keep the plant in its nursery pot inside it. Lift the plant out to water, let it drain, then put it back. Your plant\u2019s roots need to breathe!",
@@ -43,7 +43,7 @@ export const CARDS = [
   },
   {
     n: 4,
-    header: "Lesson 4 of 5 · Light Matching",
+    header: "Lesson 4 of 5 · Light matching",
     headline: "\u201CBright, indirect light\u201D demystified.",
     body:
       "Bright, indirect light is a spot close to a bright window, within about 3 feet (1 meter), where daylight is strong but the sun does not land on the leaves. Being able to read there is not a reliable test. Avoid blasting direct, hot afternoon sun right onto the leaves\u2014it sunburns them just like us!",
@@ -56,7 +56,7 @@ export const CARDS = [
   },
   {
     n: 5,
-    header: "Lesson 5 of 5 · Reading Signs",
+    header: "Lesson 5 of 5 · Reading signs",
     headline: "A yellow leaf is just a whisper, not a scream.",
     body:
       "Spotting a yellow leaf doesn\u2019t mean your plant is dying! Check the soil first. If it is bone dry, thirst or light can also turn leaves yellow. If it is wet, it\u2019s usually just telling you: <em>\u201CHey, I got slightly too wet this week.\u201D</em> Snip it off, let the soil dry out, and watch it bounce back.",

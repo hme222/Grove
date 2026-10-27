@@ -32,6 +32,11 @@ jest.mock('../lessons/registry', () => ({
       { header: 'Card 1 of 2', headline: 'Reset one', body: 'First.', cta: 'Next' },
       { header: 'Card 2 of 2', headline: 'Reset last', body: 'Finish.', cta: 'Go' },
     ],
+    'habit-stacking': [
+      { header: 'Card 1 of 3', headline: 'Habit one', body: 'First.', cta: 'Next' },
+      { header: 'Card 2 of 3', headline: 'Habit two', body: 'Second.', cta: 'Next' },
+      { header: 'Card 3 of 3', headline: 'Habit last', body: 'Last.', cta: 'Go' },
+    ],
     'window-map': [{ header: 'Card 1 of 1', headline: 'Closing', body: 'Last.', interactive: 'closing' }],
     'plant-er': [
       { header: 'Card 1 of 2', headline: 'ER one', body: 'First.', cta: 'Next' },
@@ -113,7 +118,7 @@ describe('LessonPage', () => {
   test('an unknown lesson says so and links back to the lessons list', async () => {
     mockParams = { lessonId: 'not-a-lesson' };
     await mount(<LessonPage />);
-    expect(container.textContent).toContain("That lesson isn't here");
+    expect(container.textContent).toContain("That lesson isn’t here");
     await click(container.querySelector('[data-testid="not-found-home"]'));
     expect(mockNavigate).toHaveBeenCalledWith('/lessons', { replace: true });
   });
@@ -151,7 +156,7 @@ describe('LessonPage', () => {
     await passQuiz();
     await click(q('mark-done-done'));
     await flush();
-    expect(q('lesson-error').textContent).toBe('Could not save your progress. Try again.');
+    expect(q('lesson-error').textContent).toBe('Couldn\u2019t save your progress. Try again.');
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -236,7 +241,7 @@ describe('the light lesson ending', () => {
     await mount(<LessonPage />);
     await click(q('mark-done-done'));
     await flush();
-    expect(q('lesson-error').textContent).toBe('Could not save your progress. Try again.');
+    expect(q('lesson-error').textContent).toBe('Couldn\u2019t save your progress. Try again.');
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
@@ -286,7 +291,7 @@ describe('LessonsPage', () => {
   test('shows the next lesson, what comes after it, and all six lessons', async () => {
     await mount(<LessonsPage />);
     expect(q('lessons-up-next').textContent).toContain('Plant ER');
-    expect(q('lessons-then').textContent).toBe('After that: Soil Finger-Test');
+    expect(q('lessons-then').textContent).toBe('After that: Soil finger-test');
     expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
   });
 
@@ -381,5 +386,22 @@ describe('LessonPage and the nook', () => {
     await click(q('celebration-close'));
     await flush();
     expect(mockUpdateUser).toHaveBeenCalledWith({ first_care_celebrated: true });
+  });
+
+  test('a progress save that fails says so without blocking, and the next card retries and clears it', async () => {
+    mockParams = { lessonId: 'habit-stacking' };
+    lightAPI.progress.mockRejectedValueOnce(new Error('offline'));
+    await mount(<LessonPage />);
+    expect(q('lesson-notice').textContent).toBe('');
+    await click(q('lesson-next'));
+    await flush();
+    const notice = q('lesson-notice');
+    expect(notice.getAttribute('role')).toBe('status');
+    expect(notice.textContent).toBe('Progress isn\u2019t saving right now. You can keep reading.');
+    expect(q('lesson-headline').textContent).toBe('Habit two');
+    await click(q('lesson-next'));
+    await flush();
+    expect(lightAPI.progress).toHaveBeenCalledTimes(2);
+    expect(q('lesson-notice').textContent).toBe('');
   });
 });

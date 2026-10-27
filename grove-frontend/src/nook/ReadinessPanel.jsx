@@ -27,7 +27,7 @@ export default function ReadinessPanel({ readiness, busy, onStart, onStep }) {
       const res = await speciesAPI.search(query.trim());
       setResults(res.data || []);
     } catch (_e) {
-      setError('Could not search plants. Try again.');
+      setError('Couldn’t search plants. Try again.');
     } finally {
       setSearching(false);
     }

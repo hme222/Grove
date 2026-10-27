@@ -10,7 +10,6 @@ import { buttonVariants } from '../components/ui/button';
 export default function LessonQuiz({ questions, onComplete }) {
   const [index, setIndex] = useState(0);
   const [pickedId, setPickedId] = useState(null);
-  const feedbackRef = useRef(null);
   const promptRef = useRef(null);
   const shownIndex = useRef(index);
 
@@ -19,10 +18,13 @@ export default function LessonQuiz({ questions, onComplete }) {
   const solved = !!picked?.correct;
   const isLast = index === questions.length - 1;
 
-  // Focus follows the answer: to the feedback after a pick, to the next question after Next.
+  // The feedback is a polite live region, so a screen reader reads it once without focus moving: a wrong pick
+  // keeps focus on the option. Focus moves only to the next question after Next, and to the finish button
+  // when the last question is solved.
+  const nextRef = useRef(null);
   useEffect(() => {
-    if (picked && feedbackRef.current) feedbackRef.current.focus();
-  }, [pickedId, picked]);
+    if (solved && isLast && nextRef.current) nextRef.current.focus();
+  }, [solved, isLast]);
   useEffect(() => {
     if (shownIndex.current !== index && promptRef.current) promptRef.current.focus();
     shownIndex.current = index;
@@ -92,7 +94,6 @@ export default function LessonQuiz({ questions, onComplete }) {
       </div>
 
       <div
-        ref={feedbackRef}
         tabIndex={-1}
         role="status"
         aria-live="polite"
@@ -110,6 +111,7 @@ export default function LessonQuiz({ questions, onComplete }) {
 
       {solved && (
         <button
+          ref={nextRef}
           type="button"
           onClick={next}
           className={cn(buttonVariants(), 'mt-3 w-full')}

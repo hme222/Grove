@@ -14,6 +14,7 @@ import SectionTutorial from '../components/SectionTutorial';
 import { toast } from 'sonner';
 import { MessageCircle, Send, Leaf, X, Sun, Scissors, ChevronRight, Plus } from 'lucide-react';
 import VerifiedProBadge from '../components/VerifiedProBadge';
+import PhotoBand from '../components/PhotoBand';
 
 // Decorative SVG used as a fallback when a post has no photo.
 function BotanicalFallback({ tone = 'grove' }) {
@@ -34,6 +35,33 @@ function BotanicalFallback({ tone = 'grove' }) {
         <circle cx="100" cy="18" r="3" fill={stroke} />
       </svg>
     </div>
+  );
+}
+
+// The post's photo. The feed hotlinks images from other hosts, so a blocked or missing one falls back to the
+// same moss tile with a leaf that PhotoBand and ThumbStrip use, instead of leaving a blank hole.
+function PostMedia({ post, photoSrc, tone, onOpen }) {
+  const [failed, setFailed] = useState(false);
+  const author = post.display_name || post.username;
+  const hasPhoto = !!photoSrc && !failed;
+  return (
+    <button
+      type="button"
+      onClick={() => hasPhoto && onOpen(photoSrc)}
+      data-testid="feed-post-media"
+      aria-label={hasPhoto ? `Open photo from ${author}'s post${post.plant_name ? ` about ${post.plant_name}` : ''}` : 'Post illustration'}
+      className={`block w-full aspect-photo ${hasPhoto ? 'cursor-zoom-in' : 'cursor-default'}`}
+    >
+      {hasPhoto ? (
+        <PhotoBand src={photoSrc} ratio="photo" onFail={() => setFailed(true)} className="rounded-none" testId="feed-post-photo" />
+      ) : photoSrc ? (
+        <div className="flex h-full w-full items-center justify-center bg-grove-moss text-grove-sprout" data-testid="feed-photo-fallback" aria-hidden="true">
+          <Leaf className="h-8 w-8" />
+        </div>
+      ) : (
+        <BotanicalFallback tone={tone} />
+      )}
+    </button>
   );
 }
 
@@ -60,7 +88,7 @@ function Lightbox({ src, onClose }) {
         onClick={onClose}
         aria-label="Close photo"
         data-testid="feed-lightbox-close"
-        className="pointer-events-auto absolute top-4 right-4 min-h-touch min-w-touch rounded-full bg-grove-forest/25 text-grove-cream hover:bg-grove-forest/25 flex items-center justify-center transition-colors duration-150"
+        className="pointer-events-auto absolute top-4 right-4 min-h-touch min-w-touch rounded-pill bg-grove-forest/25 text-grove-cream hover:bg-grove-forest/25 flex items-center justify-center transition-colors duration-150"
       >
         <X className="h-5 w-5" />
       </button>
@@ -296,23 +324,11 @@ export default function FeedPage() {
                 }`}
               >
                 {/* Hero media (photo-first; botanical SVG fallback when none) */}
-                <button
-                  type="button"
-                  onClick={() => photoSrc && setLightboxSrc(photoSrc)}
-                  data-testid="feed-post-media"
-                  aria-label={photoSrc ? 'Open photo' : 'Post illustration'}
-                  className={`block w-full aspect-[4/3] ${photoSrc ? 'cursor-zoom-in' : 'cursor-default'}`}
-                >
-                  {photoSrc ? (
-                    <img src={photoSrc} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    <BotanicalFallback tone={tone} />
-                  )}
-                </button>
+                <PostMedia post={post} photoSrc={photoSrc} tone={tone} onOpen={setLightboxSrc} />
 
                 {/* Post header */}
                 <div className="px-4 pt-3 pb-1 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
+                  <div className="w-8 h-8 rounded-pill bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
                     <span className="font-ui text-grove-sprout text-xs font-medium">
                       {(post.display_name || post.username || 'G')[0].toUpperCase()}
                     </span>
@@ -356,6 +372,7 @@ export default function FeedPage() {
                           disabled={canPost === false}
                           data-testid={`feed-reaction-${type}`}
                           aria-pressed={active}
+                          aria-label={`${label} reaction, ${count}`}
                           className={`min-h-touch flex items-center gap-1.5 text-xs font-ui px-2 py-1 rounded-pill border-hairline transition-colors duration-150 ${
                             active
                               ? `border-transparent ${activeClass}`
@@ -394,7 +411,7 @@ export default function FeedPage() {
                       <div className="space-y-2 pt-2">
                         {(commentsData[post.id] || []).map(c => (
                           <div key={c.id} className="flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
+                            <div className="w-6 h-6 rounded-pill bg-grove-moss flex items-center justify-center flex-shrink-0">
                               <span className="text-xs font-ui font-medium text-grove-sprout">{(c.display_name || c.username || 'G')[0].toUpperCase()}</span>
                             </div>
                             <div className="flex-1 min-w-0">
@@ -406,7 +423,7 @@ export default function FeedPage() {
                                   data-testid="feed-comment-photo"
                                   className="mt-1.5 block rounded-inset overflow-hidden border-hairline border-grove-moss w-32 h-32 cursor-zoom-in"
                                 >
-                                  <img src={getFileUrl(c.photo_url)} alt="Attached to this comment" className="w-full h-full object-cover" />
+                                  <PhotoBand src={getFileUrl(c.photo_url)} alt="Attached to this comment" aspect="square" className="rounded-none" testId="feed-comment-photo-band" />
                                 </button>
                               )}
                             </div>
@@ -426,7 +443,7 @@ export default function FeedPage() {
                             onClick={() => handleComment(post.id)}
                             data-testid="feed-comment-submit"
                             aria-label="Post comment"
-                            className={cn(buttonVariants({ size: 'icon' }), "rounded-full")}
+                            className={cn(buttonVariants({ size: 'icon' }), "rounded-pill")}
                           >
                             <Send className="h-3 w-3" />
                           </button>

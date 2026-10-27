@@ -3,6 +3,7 @@ import LoadError from '../components/LoadError';
 import { Check } from 'lucide-react';
 import { buttonVariants } from '../components/ui/button';
 import { AppLink } from '../components/AppLink';
+import PhotoBand from '../components/PhotoBand';
 import { PageHeader } from '../components/PageHeader';
 import { lessonAPI } from '../lib/api';
 import { LESSON_META, lessonPath } from '../lessons/lessonMeta';
@@ -34,9 +35,11 @@ export default function LessonsPage() {
         )}
 
         {next && (
-          <section className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="lessons-up-next">
-            <p className="text-xs font-ui text-grove-cream">Up next</p>
-            <p className="font-plant text-grove-cream text-xl">{LESSON_META[next].title}</p>
+          <section className="overflow-hidden rounded-card border-hairline border-grove-moss bg-grove-moss" data-testid="lessons-up-next">
+            <PhotoBand src={LESSON_META[next].photo} ratio="band" className="rounded-none" eager />
+            <div className="p-5">
+            <p className="font-ui text-sm text-grove-sage">Up next</p>
+            <h2 className="font-plant text-base font-semibold text-grove-cream">{LESSON_META[next].title}</h2>
             <p className="text-sm text-grove-cream mb-3">{LESSON_META[next].blurb}</p>
             <AppLink
               to={lessonPath(next)}
@@ -45,6 +48,7 @@ export default function LessonsPage() {
             >
               Start lesson
             </AppLink>
+            </div>
           </section>
         )}
 
@@ -68,20 +72,21 @@ export default function LessonsPage() {
                 <AppLink
                  
                   to={lessonPath(id)}
-                  className="w-full flex items-center justify-between gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 text-left hover:border-grove-fernLine"
+                  className="w-full flex items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 text-left hover:border-grove-fernLine"
                   data-testid={`lesson-row-${id}`}
                 >
-                  <span>
-                    <span className="block text-sm font-ui text-grove-cream">{LESSON_META[id].title}</span>
-                    <span className="block text-xs font-ui text-grove-cream">{LESSON_META[id].blurb}</span>
+                  <PhotoBand src={LESSON_META[id].thumb} aspect="thumb" className="h-14 w-14" testId="lesson-thumb" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-ui text-sm font-medium text-grove-cream">{LESSON_META[id].title}</span>
+                    <span className="block font-ui text-sm text-grove-sage">{LESSON_META[id].blurb}</span>
                   </span>
                   {data?.up_next === id && !completed.has(id) && (
-                    <span className="text-xs font-ui text-grove-sprout" data-testid={`lesson-up-next-${id}`}>
+                    <span className="font-ui text-sm text-grove-sprout" data-testid={`lesson-up-next-${id}`}>
                       Up next
                     </span>
                   )}
                   {completed.has(id) && (
-                    <span className="flex items-center gap-1 text-xs font-ui text-grove-sprout">
+                    <span className="flex items-center gap-1 font-ui text-sm text-grove-sprout">
                       <Check className="h-4 w-4" aria-hidden="true" /> Done
                     </span>
                   )}

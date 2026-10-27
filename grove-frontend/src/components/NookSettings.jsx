@@ -20,7 +20,7 @@ export default function NookSettings() {
       const res = await nookAPI.settings({ enabled: !on });
       if (updateUser) updateUser(res.data);
     } catch (_e) {
-      setError('Could not save that. Try again.');
+      setError('Couldn’t save that. Try again.');
     } finally {
       busy.current = false;
       setSaving(false);
@@ -31,16 +31,16 @@ export default function NookSettings() {
     <div className={PAPER_PANEL} data-testid="profile-nook">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="mb-1 font-plant text-base text-grove-root">Pip&apos;s nook</h3>
+          <h3 className="mb-1 font-plant text-base text-grove-root">Pip&rsquo;s nook</h3>
           <p className="font-ui text-sm text-grove-inkSoft">
-            A small pixel nook that grows as you learn. It never scores your plants. Turning it off keeps everything you&apos;ve earned.
+            A small pixel nook that grows as you learn. It never scores your plants. Turning it off keeps everything you&rsquo;ve earned.
           </p>
         </div>
         <button
           type="button"
           role="switch"
           aria-checked={on}
-          aria-label="Pip's nook"
+          aria-label="Pip’s nook"
           aria-busy={saving}
           onClick={toggle}
           className={`min-h-touch min-w-touch shrink-0 rounded-pill border-hairline px-3 py-1 font-ui text-sm text-grove-ink ${on ? 'border-grove-root bg-grove-paperPale' : 'border-grove-paperGreen bg-grove-paper'}`}

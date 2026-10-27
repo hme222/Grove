@@ -13,6 +13,7 @@ import { Leaf, Droplets, Sun, Sprout, Bug, BookOpen, ExternalLink, ShieldAlert, 
 import SectionTutorial from '../components/SectionTutorial';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { toast } from 'sonner';
+import PhotoBand from '../components/PhotoBand';
 
 const LIGHT_COPY = {
   low: 'Low light · north window or hallway',
@@ -183,11 +184,12 @@ export default function SpeciesDetailPage() {
           {/* Botanical illustration hero */}
           {(species.botanical_illustration || species.bhl_primary_illustration) && (
             <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy mb-4">
-              <img
+              <PhotoBand
                 src={species.botanical_illustration || species.bhl_primary_illustration}
-                alt={`Botanical illustration of ${species.common_name}`}
-                className="w-full max-h-72 object-contain bg-grove-canopy"
-                loading="lazy"
+                ratio="photo"
+                fit="contain"
+                className="rounded-none"
+                testId="species-illustration"
               />
               <p className="px-3 py-1.5 font-latin italic text-xs text-grove-lichen bg-grove-canopy">
                 {species.botanical_illustration_title || 'Botanical illustration'} — {species.botanical_illustration_license || 'Public Domain'}
@@ -301,12 +303,7 @@ export default function SpeciesDetailPage() {
             <SectionHeading icon={Camera}>Photo</SectionHeading>
             <div className="grid grid-cols-1 gap-2">
               <div className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy">
-                <img
-                  src={species.wiki_image}
-                  alt={`${species.common_name} in the wild`}
-                  className="w-full aspect-[16/9] object-cover"
-                  loading="lazy"
-                />
+                <PhotoBand src={species.wiki_image} className="rounded-none" testId="species-wiki-photo" />
               </div>
             </div>
             <p className="font-latin italic text-xs text-grove-lichen mt-2">
@@ -360,11 +357,12 @@ export default function SpeciesDetailPage() {
                   rel="noopener noreferrer"
                   className="rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-canopy hover:border-grove-fernLine transition-colors duration-150 block"
                 >
-                  <img
+                  <PhotoBand
                     src={ill.thumbnail_url}
                     alt={`${species.common_name} illustration from ${ill.source_title}`}
-                    className="w-full aspect-square object-cover"
-                    loading="lazy"
+                    aspect="square"
+                    className="rounded-none"
+                    testId="species-bhl-photo"
                   />
                   {ill.source_title && (
                     <p className="px-1.5 py-1 font-latin italic text-xs text-grove-lichen truncate">

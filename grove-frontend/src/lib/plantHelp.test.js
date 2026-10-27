@@ -59,7 +59,7 @@ describe('search', () => {
     expect(matchLessons({ a: { title: 'Soil', blurb: '' } }, '')).toEqual([]);
   });
   test('matches lessons by title or blurb', () => {
-    const meta = { a: { id: 'a', title: 'Soil Finger-Test', blurb: 'Check with your finger.' }, b: { id: 'b', title: 'Window Blueprint', blurb: 'Match light.' } };
+    const meta = { a: { id: 'a', title: 'Soil finger-test', blurb: 'Check with your finger.' }, b: { id: 'b', title: 'Window Blueprint', blurb: 'Match light.' } };
     expect(matchLessons(meta, 'soil').map((l) => l.id)).toEqual(['a']);
     expect(matchLessons(meta, 'light').map((l) => l.id)).toEqual(['b']);
   });
@@ -69,5 +69,24 @@ describe('search', () => {
     expect(bugs.causes.filter((c) => /test on one leaf first/.test(c.fix)).length).toBeGreaterThanOrEqual(2);
     const winter = SYMPTOMS.flatMap((s) => s.causes).filter((c) => c.title === 'Resting for winter');
     expect(winter.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe('SAFETY_CONTACTS', () => {
+  const { SAFETY_CONTACTS, SAFETY_STEPS } = require('./plantHelp');
+  const byId = (id) => SAFETY_CONTACTS.find((c) => c.id === id);
+
+  test('four labelled groups in a hurry-friendly order', () => {
+    expect(SAFETY_CONTACTS.map((c) => c.heading)).toEqual(['In an emergency', 'If a pet ate it', 'If a child ate it', 'Outside the US']);
+  });
+
+  test('phone numbers are tel: links', () => {
+    expect(byId('pet').links[0].href).toBe('tel:+18884264435');
+    expect(byId('pet').text).toMatch(/fee may apply/);
+    expect(byId('child').links[0].href).toBe('tel:+18002221222');
+    expect(byId('child').links.some((l) => /poison\.org/.test(l.href))).toBe(true);
+    expect(byId('emergency').text).toMatch(/collapses, has a seizure, has trouble breathing or cannot be woken, call 911 or your local emergency number/);
+    expect(byId('outside-us').text).toMatch(/local vet or poison center/);
+    expect(SAFETY_STEPS).toBe('Do not make them vomit unless told to. Bring the plant or a photo.');
   });
 });

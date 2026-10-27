@@ -102,7 +102,7 @@ test('a failed save stays with an error and can be tried again', async () => {
   const { next } = await mount();
   click('pick-midday');
   await flush();
-  expect(q('pick-error').textContent).toBe('Could not save that. Try again.');
+  expect(q('pick-error').textContent).toBe('Couldn’t save that. Try again.');
   expect(next).not.toHaveBeenCalled();
   click('pick-midday');
   await flush();

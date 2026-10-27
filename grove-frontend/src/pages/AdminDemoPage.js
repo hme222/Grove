@@ -104,7 +104,7 @@ export default function AdminDemoPage() {
             className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
           >
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-pill bg-grove-moss flex items-center justify-center flex-shrink-0">
                 <User className="h-6 w-6 text-grove-sprout" />
               </div>
               <div className="flex-1">

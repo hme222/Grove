@@ -7,7 +7,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import Disclosure from '../components/Disclosure';
 import PhotoGuideCards from '../components/PhotoGuideCards';
+import { photoCredits } from '../lib/photoCredits';
+import { ExternalLink } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 const TUTORIAL_SECTIONS = [
   {
@@ -83,7 +87,7 @@ export default function HelpPage() {
               className="rounded-small border-hairline border-grove-moss bg-grove-moss px-4"
               data-testid={`help-section-${section.id}`}
             >
-              <AccordionTrigger className="font-plant text-base font-semibold text-grove-cream py-4 hover:no-underline">
+              <AccordionTrigger className="py-4 font-ui text-sm font-medium text-grove-cream hover:no-underline">
                 {section.title}
               </AccordionTrigger>
               <AccordionContent className="text-sm text-grove-cream pb-4 leading-relaxed">
@@ -99,6 +103,33 @@ export default function HelpPage() {
             </AccordionItem>
           ))}
         </Accordion>
+
+        {/* Photo credits */}
+        <Disclosure title="Photo credits" testId="photo-credits">
+          <div>
+            <p className="mb-2 font-ui text-sm text-grove-cream">
+              Photos in the app come from Unsplash photographers and are free to use under the{' '}
+              <a href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-touch items-center text-grove-sprout underline underline-offset-2">
+                Unsplash License<span className="sr-only"> (opens in a new tab)</span>
+              </a>.
+            </p>
+            <ul className="space-y-1">
+              {photoCredits.filter((c) => !c.file.includes('-thumb-')).map((c) => (
+                <li key={c.file} className="font-ui text-sm text-grove-cream">
+                  <span className="block">{c.title}</span>
+                  <span className="flex flex-wrap items-center gap-x-4">
+                    <a href={c.photographerUrl} target="_blank" rel="noopener noreferrer" className={cn('inline-flex min-h-touch items-center gap-1 text-grove-sprout underline underline-offset-2')}>
+                      {c.photographer}<ExternalLink className="h-3 w-3" aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                    <a href={c.photoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-touch items-center gap-1 text-grove-sprout underline underline-offset-2">
+                      View photo<ExternalLink className="h-3 w-3" aria-hidden="true" /><span className="sr-only"> of {c.title} (opens in a new tab)</span>
+                    </a>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Disclosure>
       </div>
     </div>
   );

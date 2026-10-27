@@ -21,7 +21,7 @@ const choiceClass = (on) =>
     on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/25' : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
   }`;
 
-// The Soil Finger-Test's last card. With a plant it logs a real soil test.
+// The Soil finger-test's last card. With a plant it logs a real soil test.
 // Without one it says to save the lesson for the first plant, logs nothing,
 // and does not mark the lesson complete.
 export default function SoilTestStep({ hasPlant, onLogged }) {

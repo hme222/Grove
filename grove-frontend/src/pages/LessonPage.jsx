@@ -26,6 +26,7 @@ export default function LessonPage() {
   const [pickedWindow, setPickedWindow] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
   const [error, setError] = useState('');
+  const [saveFailed, setSaveFailed] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -49,12 +50,13 @@ export default function LessonPage() {
   }, [lessonId]);
 
   const onAdvance = (index) => {
-    lightAPI.progress(lessonId, index).catch(() => {});
+    // A failed save never blocks reading. It says so, and the next card tries again.
+    Promise.resolve(lightAPI.progress(lessonId, index)).then(() => setSaveFailed(false), () => setSaveFailed(true));
     if (updateUser) updateUser({ lesson_progress: { ...(user?.lesson_progress || {}), [lessonId]: index } });
   };
 
   if (!cards || !LESSON_META[lessonId]) {
-    return <NotFoundPage title="Lesson not found" heading="That lesson isn't here" message="It may have been renamed or removed." to="/lessons" toLabel="Back to lessons" />;
+    return <NotFoundPage title="Lesson not found" heading="That lesson isn’t here" message="It may have been renamed or removed." to="/lessons" toLabel="Back to lessons" />;
   }
 
   const finish = async (to = '/lessons') => {
@@ -67,7 +69,7 @@ export default function LessonPage() {
       if (updateUser && !seen.includes(entry)) updateUser({ tutorials_seen: [...seen, entry] });
       navigate(to);
     } catch (_e) {
-      setError('Could not save your progress. Try again.');
+      setError('Couldn\u2019t save your progress. Try again.');
     }
   };
 
@@ -114,6 +116,7 @@ export default function LessonPage() {
         renderFinalCard={renderFinalCard}
         onExit={() => navigate('/lessons')}
         sources={LESSON_SOURCES[lessonId]}
+        notice={saveFailed ? 'Progress isn\u2019t saving right now. You can keep reading.' : ''}
         host={nookOn ? <PipPanel form={pipForm} label="Pip" /> : null}
       />
       <FirstCareCelebration

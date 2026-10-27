@@ -91,7 +91,7 @@ describe('loading', () => {
   test('a failed load offers a retry that loads again', async () => {
     nookAPI.state.mockRejectedValueOnce(new Error('network'));
     await mount();
-    expect(q('load-error').textContent).toContain("Pip's nook");
+    expect(q('load-error').textContent).toContain("Pip’s nook");
     expect(q('nook-canvas')).toBeNull();
     await click(q('load-retry'));
     await act(async () => { await new Promise((r) => setTimeout(r, 800)); });
@@ -105,7 +105,7 @@ describe('when the nook is off', () => {
 
   test('says so and offers to turn it on, with no picture', async () => {
     await mount();
-    expect(q('nook-off').textContent).toContain("Pip's nook is off");
+    expect(q('nook-off').textContent).toContain("Pip’s nook is off");
     expect(q('nook-canvas')).toBeNull();
   });
 
@@ -126,28 +126,29 @@ describe('when the nook is off', () => {
     await mount();
     await click(q('nook-turn-on'));
     await flush();
-    expect(container.querySelector('[role="alert"]').textContent).toBe('Could not turn the nook on. Try again.');
+    expect(container.querySelector('[role="alert"]').textContent).toBe('Couldn’t turn the nook on. Try again.');
   });
 });
 
 describe('the picture and what it says in words', () => {
   test('describes the nook for screen readers, with Pip\'s place', async () => {
     await mount();
-    expect(q('nook-canvas').getAttribute('aria-label')).toBe("Pip's nook, bare. Pip is on the sill.");
+    expect(q('nook-canvas').getAttribute('aria-label')).toBe("Pip’s nook, bare. Pip is on the sill.");
   });
 
   test('writes down the level, the week, what is next, and what is unlocked', async () => {
     await mount();
     expect(q('nook-summary').textContent).toContain('Your nook: Bare');
-    expect(q('nook-rhythm').textContent).toBe('2 days this week');
-    expect(q('nook-next').textContent).toBe('next: the shelf');
+    expect(q('nook-rhythm')).toBeNull();
+    expect(q('nook-summary').textContent).not.toMatch(/days? this week/);
+    expect(q('nook-next').textContent).toBe('Next in your nook: the shelf.');
     expect(q('nook-items').textContent).toBe('Nothing is unlocked yet.');
   });
 
-  test('says "1 day" in the singular and has no numbers for growth', async () => {
+  test('has no days-this-week count and no numbers for growth', async () => {
     nookAPI.state.mockResolvedValue({ data: STATE({ weekly_days: 1 }) });
     await mount();
-    expect(q('nook-rhythm').textContent).toBe('1 day this week');
+    expect(q('nook-rhythm')).toBeNull();
     expect(container.textContent).not.toMatch(/growth/i);
   });
 
@@ -163,7 +164,7 @@ describe('the picture and what it says in words', () => {
     });
     await mount();
     expect(q('nook-items').textContent).toBe('In the nook: a shelf, a rug, a lamp, a hanging plant, a botanical print.');
-    expect(q('nook-next').textContent).toBe('everything is unlocked');
+    expect(q('nook-next').textContent).toBe('Everything is unlocked.');
     expect(q('nook-canvas').getAttribute('aria-label')).toContain('Pip is on the shelf');
   });
 });
@@ -172,7 +173,7 @@ describe('Pip', () => {
   test('says the nook grew after a level up, and tells the server it was seen once', async () => {
     nookAPI.state.mockResolvedValue({ data: STATE({ grew: true, level_up: true, level: 2, level_name: 'Settling in' }) });
     await mount();
-    expect(q('nook-pip-line').textContent).toBe("Your nook grew. It's settling in now.");
+    expect(q('nook-pip-line').textContent).toBe("Your nook grew. It’s settling in now.");
     await flush();
     expect(nookAPI.seen).toHaveBeenCalledTimes(1);
   });
@@ -195,6 +196,7 @@ describe('Pip', () => {
     });
     await mount();
     expect(q('nook-pip-line').textContent).toContain('keep quiet');
+    expect(q('nook-pip-line').textContent).toContain('One of your plants could use a look.');
     expect(q('nook-pip-line').textContent.toLowerCase()).not.toContain('grew');
     await click(q('nook-quiet-lesson'));
     expect(mockNavigate).toHaveBeenCalledWith('/lessons/plant-er');
@@ -216,9 +218,9 @@ describe('plants', () => {
   test('lists each plant with its condition in words and where the label comes from', async () => {
     nookAPI.state.mockResolvedValue({ data: TWO() });
     await mount();
-    expect(q('nook-condition-p1').textContent).toBe('Doing fine');
+    expect(q('nook-condition-p1').textContent).toBe('Healthy');
     expect(q('nook-condition-p2').textContent).toBe('Due soon');
-    expect(q('nook-source').textContent).toBe("From your records and Grove's plant check");
+    expect(q('nook-source').textContent).toBe("From your records and Grove’s plant check");
   });
 
   test('marking a plant as looking off saves and refreshes, and says so in words', async () => {
@@ -230,7 +232,7 @@ describe('plants', () => {
     await click(q('nook-looks-off-p1'));
     await flush();
     expect(nookAPI.looksOff).toHaveBeenCalledWith('p1', true);
-    expect(q('nook-condition-p1').textContent).toBe('Needs attention, marked as looking off');
+    expect(q('nook-condition-p1').textContent).toBe('Needs a check, marked as looking off');
     expect(q('nook-looks-off-p1').getAttribute('aria-pressed')).toBe('true');
   });
 
@@ -251,7 +253,7 @@ describe('plants', () => {
     await mount();
     await click(q('nook-looks-off-p1'));
     await flush();
-    expect(q('nook-error').textContent).toBe('Could not save that. Try again.');
+    expect(q('nook-error').textContent).toBe('Couldn’t save that. Try again.');
   });
 
   test('the plant picker appears only with more than one plant and saves the choice', async () => {
@@ -329,7 +331,7 @@ describe('the paper layout', () => {
     await mount();
     const note = q('nook-pip');
     expect(note.getAttribute('role')).toBeNull();
-    expect(note.getAttribute('aria-label')).toBe("Pip's note");
+    expect(note.getAttribute('aria-label')).toBe("Pip’s note");
     expect(note.className).toContain('bg-grove-paperCard');
     expect(note.className).toContain('-mt-10');
     expect(q('nook-canvas').closest('.bg-grove-forest')).not.toBeNull();
@@ -369,6 +371,8 @@ describe('the paper layout', () => {
     expect(q('nook-looks-off-p1').getAttribute('aria-pressed')).toBe('false');
     expect(q('nook-looks-off-p3').getAttribute('aria-pressed')).toBe('true');
     expect(q('nook-looks-off-p1').className).toContain('min-h-touch');
+    expect(q('nook-looks-off-p1').getAttribute('aria-label')).toBe('Looks off: Plant p1');
+    expect(q('nook-looks-off-p3').getAttribute('aria-label')).toBe('Looks off, Plant p3, pressed');
     nookAPI.looksOff.mockResolvedValue({ data: {} });
     await click(q('nook-looks-off-p3'));
     await flush();
@@ -377,7 +381,7 @@ describe('the paper layout', () => {
 
   test('the progress line is one line of words, with a hairline divider before the plants', async () => {
     await mount();
-    expect(q('nook-summary').textContent).toContain('2 days this week');
+    expect(q('nook-summary').textContent).toContain('Next in your nook: the shelf.');
     expect(q('nook-summary').className).toContain('border-b-hairline');
   });
 

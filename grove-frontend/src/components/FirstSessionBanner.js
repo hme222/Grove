@@ -43,7 +43,7 @@ export default function FirstSessionBanner() {
       className="max-w-page mx-auto px-4 pt-3"
     >
       <div className="relative overflow-hidden rounded-small border-hairline border-grove-fernLine/40 bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-pill bg-grove-lime flex items-center justify-center flex-shrink-0">
           <Sprout className="h-5 w-5 text-grove-sprout" />
         </div>
         <div className="flex-1 min-w-0">
@@ -59,9 +59,11 @@ export default function FirstSessionBanner() {
           onClick={handleDismiss}
           aria-label="Dismiss welcome banner"
           data-testid="first-session-banner-dismiss"
-          className="relative overflow-hidden flex-shrink-0 w-8 h-8 rounded-full border-hairline border-grove-lime/25 text-grove-sprout hover:bg-grove-sprout flex items-center justify-center"
+          className="group relative flex h-touch w-touch flex-shrink-0 items-center justify-center overflow-hidden"
         >
-          <X className="h-4 w-4" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-lime/25 text-grove-sprout group-hover:bg-grove-sprout">
+            <X className="h-4 w-4" />
+          </span>
         </button>
       </div>
     </div>

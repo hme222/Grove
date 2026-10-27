@@ -97,3 +97,37 @@ export const SOIL_CHECK = {
 };
 
 export const SAFETY_NOTE = 'If a pet or child has eaten part of a plant, act at once. If a child collapses, has a seizure, has trouble breathing or cannot be woken, call 911 (or your local emergency number) now. Pets: call your vet or the ASPCA Animal Poison Control line, (888) 426-4435 in the US (a fee may apply). Children: call your local poison center (US poison help line 1-800-222-1222, or poison.org online). Outside the US, ask your local vet or poison center. Do not make them vomit unless told to, and bring the plant or a photo of it.';
+
+// The same emergency guidance as a labelled list, so it can be scanned in a hurry. In an emergency
+// comes first. SAFETY_NOTE above stays as the plain-text version of the same words.
+export const SAFETY_INTRO = 'If a pet or child has eaten part of a plant, act at once.';
+export const SAFETY_CONTACTS = [
+  {
+    id: 'emergency',
+    heading: 'In an emergency',
+    text: 'If a child collapses, has a seizure, has trouble breathing or cannot be woken, call 911 or your local emergency number now.',
+    links: [{ label: 'Call 911', href: 'tel:911' }],
+  },
+  {
+    id: 'pet',
+    heading: 'If a pet ate it',
+    text: 'Call your vet or the ASPCA Animal Poison Control line. A fee may apply.',
+    links: [{ label: 'ASPCA Animal Poison Control, (888) 426-4435', href: 'tel:+18884264435' }],
+  },
+  {
+    id: 'child',
+    heading: 'If a child ate it',
+    text: 'Call your local poison center.',
+    links: [
+      { label: 'US poison help line, 1-800-222-1222', href: 'tel:+18002221222' },
+      { label: 'poison.org', href: 'https://www.poison.org', external: true },
+    ],
+  },
+  {
+    id: 'outside-us',
+    heading: 'Outside the US',
+    text: 'Ask your local vet or poison center.',
+    links: [],
+  },
+];
+export const SAFETY_STEPS = 'Do not make them vomit unless told to. Bring the plant or a photo.';

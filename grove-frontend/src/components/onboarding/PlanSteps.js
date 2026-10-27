@@ -5,8 +5,8 @@ import { buttonVariants } from '@/components/ui/button';
 import { lessonAPI } from '@/lib/api';
 import { LESSON_META } from '@/lessons/lessonMeta';
 import { answerLabel } from '@/constants/onboardingQuiz';
-import StepScreen from './StepScreen';
-import HeroImage from './HeroImage';
+import StepScreen, { StepActions } from './StepScreen';
+import PhotoBand from '../PhotoBand';
 
 const HOLD_MS = 600;
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -14,7 +14,7 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 function Item({ done, children }) {
   return (
     <li className="flex items-center gap-3 font-ui text-sm text-grove-cream">
-      <span aria-hidden="true" className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full', done ? 'bg-grove-lime text-grove-root' : 'border-strong border-grove-fernLine')}>
+      <span aria-hidden="true" className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-pill', done ? 'bg-grove-lime text-grove-root' : 'border-strong border-grove-fernLine')}>
         {done ? <Check className="h-3 w-3" /> : <Circle className="h-3 w-3 opacity-0" />}
       </span>
       <span>{children}<span className="sr-only">{done ? ', done' : ', in progress'}</span></span>
@@ -71,10 +71,10 @@ export function BuildingStep({ answers, onResult, onSkip }) {
           </>
         )}
         {status === 'failed' && (
-          <div className="mt-auto space-y-2 pt-8">
-            <button type="button" onClick={run} className={cn(buttonVariants(), 'w-full')} data-testid="building-retry">Try again</button>
-            <button type="button" onClick={onSkip} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="building-skip">Skip for now</button>
-          </div>
+          <StepActions
+            primary={<button type="button" onClick={run} className={cn(buttonVariants(), 'w-full')} data-testid="building-retry">Try again</button>}
+            secondary={<button type="button" onClick={onSkip} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="building-skip">Skip for now</button>}
+          />
         )}
       </div>
     </StepScreen>
@@ -111,12 +111,12 @@ export function PlanStep({ name, result, busy, error, onStart, onExplore }) {
     <StepScreen
       heading={name ? `Welcome, ${name}` : 'Welcome to FloraGrove'}
       testId="onboarding-plan"
-      bleed={<HeroImage name="sprouts" ratio="5 / 4" eager className="rounded-none" />}
+      bleed={<PhotoBand src="/photos/onboarding-sprouts.jpg" ratio="tall" eager className="rounded-none" testId="hero-image" />}
     >
       <div className="mt-6 flex flex-1 flex-col">
         {first && (
           <section aria-labelledby="plan-first" className="rounded-card border-hairline border-grove-fernLine bg-grove-canopy p-5" data-testid="plan-card">
-            {queue[0] === 'soil-finger-test' && <HeroImage name="soil" ratio="13 / 10" className="mb-4 rounded-small" />}
+            {queue[0] === 'soil-finger-test' && <PhotoBand src="/photos/onboarding-soil.jpg" ratio="photo" className="mb-4 rounded-small" testId="hero-image" />}
             <p id="plan-first" className="font-ui text-sm text-grove-sage">Your first lesson</p>
             <h2 className="mt-1 font-plant text-2xl leading-tight text-grove-cream" data-testid="plan-lesson-title">{first.title}</h2>
             <p className="mt-1 font-ui text-sm text-grove-cream">{first.blurb}</p>
@@ -129,16 +129,22 @@ export function PlanStep({ name, result, busy, error, onStart, onExplore }) {
           </section>
         )}
         {error && <p role="alert" className="mt-3 font-ui text-sm text-destructive" data-testid="plan-error">{error}</p>}
-        <div className="mt-auto space-y-2 pt-8">
-          {first && (
+        <StepActions
+          primary={first ? (
             <button type="button" onClick={onStart} disabled={busy} aria-busy={busy} className={cn(buttonVariants(), 'w-full')} data-testid="plan-start">
               {busy ? 'Saving…' : 'Start lesson'}
             </button>
+          ) : (
+            <button type="button" onClick={onExplore} disabled={busy} className={cn(buttonVariants(), 'w-full')} data-testid="plan-explore">
+              Explore the app first
+            </button>
           )}
-          <button type="button" onClick={onExplore} disabled={busy} className={cn(buttonVariants({ variant: first ? 'ghost' : 'default' }), 'w-full', first && 'underline underline-offset-2')} data-testid="plan-explore">
-            Explore the app first
-          </button>
-        </div>
+          secondary={first ? (
+            <button type="button" onClick={onExplore} disabled={busy} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="plan-explore">
+              Explore the app first
+            </button>
+          ) : null}
+        />
       </div>
     </StepScreen>
   );

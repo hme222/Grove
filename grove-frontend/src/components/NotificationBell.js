@@ -139,13 +139,13 @@ export default function NotificationBell() {
         onClick={() => setOpen(o => !o)}
         data-testid="notification-bell"
         aria-label={`Notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
-        className="relative w-touch h-touch rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
+        className="relative w-touch h-touch rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
       >
         <Bell className="h-4 w-4" />
         {unread > 0 && (
           <span
             data-testid="notification-badge"
-            className="absolute -top-0.5 -right-0.5 min-w-5 h-5 rounded-full bg-grove-bloom text-grove-root text-xs font-ui font-medium flex items-center justify-center px-1"
+            className="absolute -top-0.5 -right-0.5 min-w-5 h-5 rounded-pill bg-grove-bloom text-grove-root text-xs font-ui font-medium flex items-center justify-center px-1"
           >
             {unread > 99 ? '99+' : unread}
           </span>
@@ -189,7 +189,7 @@ export default function NotificationBell() {
               <Loading label="Loading notifications" className="py-10" />
             ) : items.length === 0 ? (
               <div className="text-center py-10 px-4" data-testid="notification-empty">
-                <div className="w-10 h-10 mx-auto rounded-full bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-2">
+                <div className="w-10 h-10 mx-auto rounded-pill bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-2">
                   <Bell className="h-4 w-4 text-grove-sprout" />
                 </div>
                 <p className="font-ui text-sm text-grove-cream">Nothing new right now.</p>
@@ -214,7 +214,7 @@ export default function NotificationBell() {
                       data-unread={!n.is_read}
                       className="flex-1 min-w-0 text-left pl-4 py-3 flex items-start gap-3"
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      <div className={`w-8 h-8 rounded-pill flex items-center justify-center flex-shrink-0 ${
                         !n.is_read ? 'bg-grove-forest' : 'bg-grove-moss'
                       }`}>
                         <Icon className="h-4 w-4 text-grove-sprout" />

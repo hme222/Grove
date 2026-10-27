@@ -25,7 +25,7 @@ export default function NookOfferCard({ onDone }) {
       const res = await nookAPI.settings({ enabled });
       onDone(res.data);
     } catch (_e) {
-      setError('Could not save that. Try again.');
+      setError('Couldn’t save that. Try again.');
       busy.current = false;
       setSaving(false);
     }

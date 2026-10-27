@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import ConfirmDialog from '../components/ConfirmDialog';
+import PhotoBand from '../components/PhotoBand';
 
 export default function FloristDashboard() {
   const navigate = useNavigate();
@@ -159,15 +160,17 @@ export default function FloristDashboard() {
                   </span>
                   {formData.photo_url ? (
                     <div className="relative">
-                      <img
+                      <PhotoBand
                         src={getFileUrl(formData.photo_url)}
                         alt="Preview"
-                        className="w-full h-48 bg-grove-bloom/15 object-contain rounded-inset border-hairline border-grove-moss"
+                        ratio="photo"
+                        fit="contain"
+                        className="rounded-inset border-hairline border-grove-moss"
                       />
                       <button
                         onClick={() => setFormData({ ...formData, photo_url: '' })}
                         aria-label="Remove photo"
-                        className="absolute top-2 right-2 p-2.5 bg-grove-canopy rounded-full border-hairline border-grove-moss"
+                        className="absolute top-2 right-2 p-2.5 bg-grove-canopy rounded-pill border-hairline border-grove-moss"
                       >
                         <Trash2 className="h-4 w-4 text-grove-blush" />
                       </button>
@@ -232,10 +235,12 @@ export default function FloristDashboard() {
                 data-testid="portfolio-item"
               >
                 {item.photo_url ? (
-                  <img
+                  <PhotoBand
                     src={getFileUrl(item.photo_url)}
                     alt={item.title}
-                    className="w-full aspect-square bg-grove-bloom/15 object-contain"
+                    aspect="square"
+                    fit="contain"
+                    className="rounded-none"
                   />
                 ) : (
                   <div className="w-full aspect-square bg-grove-moss flex items-center justify-center">

@@ -52,6 +52,22 @@ export default function GroveDetailPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
+  const [joining, setJoining] = useState(false);
+  const [joinError, setJoinError] = useState('');
+  const handleJoin = async () => {
+    setJoining(true);
+    setJoinError('');
+    try {
+      await groveAPI.join(groveId);
+      toast.success('Joined grove');
+      fetchData();
+    } catch (e) {
+      setJoinError(e.response?.data?.detail || 'We couldn’t join that grove. Check your connection and try again.');
+    } finally {
+      setJoining(false);
+    }
+  };
+
   const [leaveOpen, setLeaveOpen] = useState(false);
   const handleLeave = async () => {
     try {
@@ -126,7 +142,22 @@ export default function GroveDetailPage() {
             )}
           </div>
           {grove?.description && (
-            <p className="font-ui text-xs text-grove-cream">{grove.description}</p>
+            <p className="font-ui text-sm text-grove-cream" data-testid="grove-description">{grove.description}</p>
+          )}
+          {grove && !grove.is_member && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={handleJoin}
+                disabled={joining}
+                aria-label={`Join ${grove.name}`}
+                className={buttonVariants()}
+                data-testid="grove-detail-join"
+              >
+                {joining ? 'Joining…' : 'Join'}
+              </button>
+              {joinError && <p role="alert" className="mt-2 font-ui text-sm text-destructive" data-testid="grove-detail-join-error">{joinError}</p>}
+            </div>
           )}
         </div>
       </div>
@@ -154,7 +185,7 @@ export default function GroveDetailPage() {
                 <button aria-label="Post to grove"
                   onClick={handlePost}
                   disabled={posting || !caption.trim()}
-                  className={cn(buttonVariants({ size: 'icon' }), "rounded-full")}
+                  className={cn(buttonVariants({ size: 'icon' }), "rounded-pill")}
                 >
                   <Send className="h-4 w-4" />
                 </button>
@@ -170,7 +201,7 @@ export default function GroveDetailPage() {
               posts.map(post => (
                 <div key={post.id} className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-7 h-7 rounded-full bg-grove-moss flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-pill bg-grove-moss flex items-center justify-center">
                       <span className="font-ui text-grove-sprout text-xs font-medium">{(post.display_name || 'G')[0].toUpperCase()}</span>
                     </div>
                     <span className="font-ui text-xs font-medium text-grove-cream inline-flex items-center gap-1">
@@ -212,7 +243,7 @@ export default function GroveDetailPage() {
           <TabsContent value="members" className="pt-4 space-y-2">
             {members.map(m => (
               <div key={m.user_id} className="flex items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-moss px-4 py-3">
-                <div className="w-9 h-9 rounded-full bg-grove-moss flex items-center justify-center">
+                <div className="w-9 h-9 rounded-pill bg-grove-moss flex items-center justify-center">
                   <span className="font-ui text-grove-sprout text-sm font-medium">{(m.display_name || m.username || 'G')[0].toUpperCase()}</span>
                 </div>
                 <div className="flex-1 min-w-0">

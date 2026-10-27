@@ -112,7 +112,7 @@ describe('filter chips', () => {
 describe('Simple / Detailed care tips', () => {
   test('Simple is the default: the exact step, no why', async () => {
     await mount();
-    expect(q('care-text-simple').checked).toBe(true);
+    expect(q('care-text-simple').getAttribute('aria-pressed')).toBe('true');
     expect(q('care-card-step').textContent).toBe("Check the top inch of soil. Water if it's dry.");
     expect(q('care-card-status-reason')).toBeNull();
   });
@@ -120,7 +120,7 @@ describe('Simple / Detailed care tips', () => {
   test('Detailed adds the why', async () => {
     mockUser = { care_text_detail: 'detailed' };
     await mount();
-    expect(q('care-text-detailed').checked).toBe(true);
+    expect(q('care-text-detailed').getAttribute('aria-pressed')).toBe('true');
     expect(q('care-card-step')).not.toBeNull();
     expect(q('care-card-status-reason').textContent).toBe("Why: It's on a 7-day schedule, so the soil may be dry by now.");
   });

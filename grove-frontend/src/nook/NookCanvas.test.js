@@ -72,7 +72,7 @@ test('fills the full width of its container with a canvas of the same aspect rat
   expect(canvas().className).toMatch(/\bw-full\b/);
   expect(canvas().className).toMatch(/object-cover/);
   expect(canvas().style.imageRendering).toBe('pixelated');
-  expect(canvas().style.aspectRatio.replace(/\s/g, '')).toBe('128/80');
+  expect(canvas().style.aspectRatio.replace(/\s/g, '')).toBe('8/5');
   // The picture is never sized in fixed pixels, so no blank strip can be left beside it.
   expect(canvas().style.width).toBe('');
 });

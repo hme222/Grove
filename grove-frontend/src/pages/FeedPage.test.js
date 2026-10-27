@@ -80,3 +80,20 @@ test('if the check itself fails nothing is switched off, and the server has the 
   await act(async () => { q('feed-reaction-leaf').click(); });
   expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Browsing is open to everyone'));
 });
+
+test('reaction and photo buttons carry names that say who, what and the state', async () => {
+  feedAPI.getFeed.mockResolvedValue({ data: { posts: [{ ...POST, photo_url: 'https://upload.wikimedia.org/x.jpg', plant_name: 'Pothos', user_reactions: ['leaf'] }] } });
+  await mount({ social_feed_unlocked: true, can_post: true });
+  expect(q('feed-post-media').getAttribute('aria-label')).toBe("Open photo from maya's post about Pothos");
+  expect(q('feed-reaction-leaf').getAttribute('aria-label')).toBe('Leaf reaction, 1');
+  expect(q('feed-reaction-light').getAttribute('aria-label')).toBe('Light reaction, 0');
+  expect(q('feed-reaction-cutting').getAttribute('aria-label')).toBe('Cutting reaction, 0');
+});
+
+test('a blocked photo host falls back to the leaf tile instead of a blank hole', async () => {
+  feedAPI.getFeed.mockResolvedValue({ data: { posts: [{ ...POST, photo_url: 'https://upload.wikimedia.org/x.jpg' }] } });
+  await mount({ social_feed_unlocked: true, can_post: true });
+  await act(async () => { q('feed-post-media').querySelector('img').dispatchEvent(new Event('error')); });
+  expect(q('feed-photo-fallback')).not.toBeNull();
+  expect(q('feed-post-media').querySelector('img')).toBeNull();
+});

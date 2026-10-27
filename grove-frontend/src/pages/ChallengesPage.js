@@ -91,7 +91,7 @@ export default function ChallengesPage() {
                         data-testid="active-challenge"
                       >
                         <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
+                          <div className="w-10 h-10 rounded-pill bg-grove-lime flex items-center justify-center flex-shrink-0">
                             <Icon className="h-5 w-5 text-grove-cream" />
                           </div>
                           <div className="flex-1">
@@ -106,7 +106,7 @@ export default function ChallengesPage() {
                                   {goal.current_value} / {goal.target_value}
                                 </span>
                               </div>
-                              <div className="w-full bg-grove-moss rounded-full h-2 overflow-hidden">
+                              <div className="w-full bg-grove-moss rounded-pill h-2 overflow-hidden">
                                 <div
                                   className="bg-grove-lime h-full transition-all duration-300"
                                   style={{ width: `${Math.min((goal.current_value / goal.target_value) * 100, 100)}%` }}
@@ -143,7 +143,7 @@ export default function ChallengesPage() {
                       data-testid="challenge-template"
                     >
                       <div className="flex items-start gap-3 mb-3">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        <div className={`w-12 h-12 rounded-pill flex items-center justify-center flex-shrink-0 ${
                           isActive ? 'bg-grove-moss' : 'bg-grove-lime'
                         }`}>
                           <Icon className={`h-6 w-6 ${

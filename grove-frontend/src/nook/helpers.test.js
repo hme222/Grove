@@ -1,4 +1,4 @@
-import { unlockedItems, pipLine, READINESS_STEP_LABELS, CONDITION_LABELS } from './nookCopy';
+import { unlockedItems, pipLine, lookLine, READINESS_STEP_LABELS, CONDITION_LABELS } from './nookCopy';
 import { pipMood } from './pipMood';
 import { backingScale } from './scale';
 import { shouldShowNookOffer, hasFinishedALesson } from './offerGate';
@@ -20,9 +20,16 @@ describe('nookCopy', () => {
     expect(line.toLowerCase()).not.toContain('grew');
   });
 
+  test('the quiet line counts the plants that need a look, so it matches the tiles', () => {
+    const plants = (n) => Array.from({ length: 4 }, (_, i) => ({ condition: i < n ? 'needs-attention' : 'fine' }));
+    expect(pipLine({ quiet: true, plants: plants(1) })).toMatch(/^One of your plants could use a look\./);
+    expect(pipLine({ quiet: true, plants: plants(4) })).toMatch(/^Some of your plants could use a look\./);
+    expect(lookLine({ quiet: false, plants: plants(0) })).toBe('Everyone looks settled.');
+  });
+
   test('a level up says the nook grew and names the level', () => {
     expect(pipLine({ level_up: true, grew: true, level_name: 'Settling in', pip: { location: 'shelf' } })).toBe(
-      "Your nook grew. It's settling in now."
+      "Your nook grew. It’s settling in now."
     );
   });
 

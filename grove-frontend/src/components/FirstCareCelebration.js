@@ -76,13 +76,15 @@ export default function FirstCareCelebration({ open, onClose }) {
           onClick={handleClose}
           aria-label="Close"
           data-testid="first-care-celebration-close-x"
-          className="absolute top-3 right-3 w-8 h-8 rounded-full border-hairline border-grove-moss text-grove-sage hover:bg-grove-moss flex items-center justify-center"
+          className="group absolute top-1.5 right-1.5 flex h-touch w-touch items-center justify-center"
         >
-          <X className="h-4 w-4" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-moss text-grove-sage group-hover:bg-grove-moss">
+            <X className="h-4 w-4" />
+          </span>
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-full bg-grove-lime text-grove-root flex items-center justify-center mb-4">
+          <div className="w-16 h-16 rounded-pill bg-grove-lime text-grove-root flex items-center justify-center mb-4">
             <Sparkles className="h-7 w-7" />
           </div>
           <p className="font-ui text-xs font-medium text-grove-sprout">

@@ -94,9 +94,11 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
           onClick={dismiss}
           aria-label="Close tutorial"
           data-testid={`section-tutorial-close-${tutorialId}`}
-          className="absolute right-3 top-3 z-raised flex h-8 w-8 items-center justify-center rounded-pill bg-grove-forest text-grove-cream hover:bg-grove-moss"
+          className="group absolute right-1.5 top-1.5 z-raised flex h-touch w-touch items-center justify-center"
         >
-          <X className="h-4 w-4" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-pill bg-grove-forest text-grove-cream group-hover:bg-grove-moss">
+            <X className="h-4 w-4" />
+          </span>
         </button>
         <div className="p-6">
           <div

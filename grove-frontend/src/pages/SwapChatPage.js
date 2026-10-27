@@ -203,7 +203,7 @@ export default function SwapChatPage() {
               className={`flex gap-2 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}
             >
               <div
-                className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
+                className={`flex-shrink-0 w-7 h-7 rounded-pill flex items-center justify-center ${
                   isOwn ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout'
                 }`}
               >
@@ -296,7 +296,7 @@ export default function SwapChatPage() {
               type="button"
               onClick={handleSend}
               disabled={sending || !body.trim()}
-              className={cn(buttonVariants({ size: 'icon' }), "rounded-full flex-shrink-0")}
+              className={cn(buttonVariants({ size: 'icon' }), "rounded-pill flex-shrink-0")}
               aria-label="Send"
             >
               <Send className="h-4 w-4" />

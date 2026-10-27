@@ -69,7 +69,7 @@ export default function NookPage() {
   };
 
   const turnOn = async () => {
-    const res = await act(() => nookAPI.settings({ enabled: true }), 'Could not turn the nook on. Try again.');
+    const res = await act(() => nookAPI.settings({ enabled: true }), 'Couldn’t turn the nook on. Try again.');
     if (res && updateUser) updateUser(res.data);
   };
 
@@ -80,14 +80,14 @@ export default function NookPage() {
   }, [state]);
 
   if (failed && !state) {
-    return <LoadErrorPage title="Pip's nook" what="Pip's nook" onRetry={load} />;
+    return <LoadErrorPage title="Pip’s nook" what="Pip’s nook" onRetry={load} />;
   }
 
   if (!state) {
     return (
       <div>
-        <PageHeader title="Pip's nook" />
-        <Loading label="Loading Pip's nook" />
+        <PageHeader title="Pip’s nook" />
+        <Loading label="Loading Pip’s nook" />
       </div>
     );
   }
@@ -95,10 +95,10 @@ export default function NookPage() {
   if (!state.enabled) {
     return (
       <div>
-        <PageHeader title="Pip's nook" />
+        <PageHeader title="Pip’s nook" />
         <div className="mx-auto max-w-sheet px-4 py-4">
           <section className="rounded-card border-hairline border-grove-paperBorder bg-grove-paperDeep p-5" data-testid="nook-off">
-            <h2 className="mb-1 font-plant text-lg text-grove-root">Pip&apos;s nook is off</h2>
+            <h2 className="mb-1 font-plant text-base font-semibold text-grove-root">Pip&rsquo;s nook is off</h2>
             <p className="mb-3 font-ui text-sm text-grove-ink">A small pixel nook that grows as you learn. It never scores your plants.</p>
             {error && (
               <p role="alert" className={`mb-2 ${PAPER_ERROR}`}>
@@ -106,7 +106,7 @@ export default function NookPage() {
               </p>
             )}
             <button type="button" onClick={turnOn} aria-busy={busy} className={PAPER_BUTTON} data-testid="nook-turn-on">
-              Turn on Pip&apos;s nook
+              Turn on Pip&rsquo;s nook
             </button>
           </section>
         </div>
@@ -115,28 +115,27 @@ export default function NookPage() {
   }
 
   const items = unlockedItems(state.unlocked);
-  const days = state.weekly_days;
-  const choosePlant = (event) => act(() => nookAPI.settings({ hero_plant_id: event.target.value }), 'Could not change that. Try again.');
-  const toggleLooksOff = (plant) => act(() => nookAPI.looksOff(plant.id, !plant.looks_off), 'Could not save that. Try again.');
+  const choosePlant = (event) => act(() => nookAPI.settings({ hero_plant_id: event.target.value }), 'Couldn’t change that. Try again.');
+  const toggleLooksOff = (plant) => act(() => nookAPI.looksOff(plant.id, !plant.looks_off), 'Couldn’t save that. Try again.');
 
   return (
     <div className="min-h-screen bg-grove-paper">
-      <PageHeader title="Pip's nook" />
+      <PageHeader title="Pip’s nook" />
 
       <div className="bg-grove-forest pb-2 pt-2">
         <div className="mx-auto max-w-sheet">
-          <NookCanvas view={view} label={`Pip's nook, ${state.level_name.toLowerCase()}. Pip is on the ${state.pip.location}.`} />
+          <NookCanvas view={view} label={`Pip’s nook, ${state.level_name.toLowerCase()}. Pip is on the ${state.pip.location}.`} />
         </div>
       </div>
 
       <div className="mx-auto max-w-sheet px-4 pb-6">
         <section
-          aria-label="Pip's note"
+          aria-label="Pip’s note"
           className="relative z-raised -mt-10 rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5 shadow-lift"
           data-testid="nook-pip"
         >
           <span aria-hidden="true" className="absolute -top-1.5 left-8 h-3 w-3 rotate-45 border-l-hairline border-t-hairline border-grove-paperBorder bg-grove-paperCard" />
-          <p className={PAPER_LABEL}>Pip says</p>
+          <p className={PAPER_LABEL}>Pip’s note</p>
           <p className="font-ui text-base text-grove-ink" data-testid="nook-pip-line">
             {pipLine(state)}
           </p>
@@ -152,12 +151,8 @@ export default function NookPage() {
             <span className="sr-only">Your nook: </span>
             {state.level_name}
           </h2>
-          <p className="flex flex-wrap gap-x-2 font-ui text-sm text-grove-ink">
-            <span data-testid="nook-rhythm">
-              {days} {days === 1 ? 'day' : 'days'} this week
-            </span>
-            <span aria-hidden="true">·</span>
-            <span data-testid="nook-next">{state.next_unlock ? `next: ${state.next_unlock}` : 'everything is unlocked'}</span>
+          <p className="font-ui text-sm text-grove-ink" data-testid="nook-next">
+            {state.next_unlock ? `Next in your nook: ${state.next_unlock}.` : 'Everything is unlocked.'}
           </p>
           {state.window && (
             <p className="font-ui text-sm text-grove-inkSoft" data-testid="nook-window">
@@ -199,8 +194,8 @@ export default function NookPage() {
             <ReadinessPanel
               readiness={state.readiness}
               busy={busy}
-              onStart={(speciesId) => act(() => nookAPI.startReadiness(speciesId), 'Could not save that. Try again.')}
-              onStep={(stepId) => act(() => nookAPI.completeStep(stepId), 'Could not save that. Try again.')}
+              onStart={(speciesId) => act(() => nookAPI.startReadiness(speciesId), 'Couldn’t save that. Try again.')}
+              onStep={(stepId) => act(() => nookAPI.completeStep(stepId), 'Couldn’t save that. Try again.')}
             />
           </div>
         )}

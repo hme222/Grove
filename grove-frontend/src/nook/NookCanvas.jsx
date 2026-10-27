@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { drawRoom, ROOM_W, ROOM_H } from './drawRoom';
 import { backingScale } from './scale';
+import { aspectRatios } from '@/styles/tokens.generated';
 
 const currentDpr = () => (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
 
@@ -66,7 +67,7 @@ export default function NookCanvas({ view, animate = true, label, scale, classNa
         data-testid="nook-canvas"
         data-scale={used}
         className="block h-auto w-full object-cover"
-        style={{ imageRendering: 'pixelated', aspectRatio: `${ROOM_W} / ${ROOM_H}` }}
+        style={{ imageRendering: 'pixelated', aspectRatio: aspectRatios.room }}
       />
     </div>
   );

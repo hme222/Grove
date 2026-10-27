@@ -89,7 +89,7 @@ function DailyTriviaCardBody({ embedded = false }) {
       </button>
 
       <div className="flex items-start gap-3">
-        <span className="flex-shrink-0 w-9 h-9 rounded-full bg-grove-moss flex items-center justify-center mt-0.5">
+        <span className="flex-shrink-0 w-9 h-9 rounded-pill bg-grove-moss flex items-center justify-center mt-0.5">
           <Sparkles className="h-4 w-4 text-grove-sprout" />
         </span>
         <div className="flex-1 min-w-0 pr-6">

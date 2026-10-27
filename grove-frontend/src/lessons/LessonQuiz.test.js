@@ -53,7 +53,7 @@ describe('LessonQuiz', () => {
     click('lesson-quiz-option-b');
     expect(q('lesson-quiz-feedback').textContent).toContain('Yes. This is why it is right.');
     expect(q('lesson-quiz-option-b').textContent).toContain('Correct');
-    expect(document.activeElement).toBe(q('lesson-quiz-feedback'));
+    expect(document.activeElement).not.toBe(q('lesson-quiz-feedback'));
     click('lesson-quiz-next');
     expect(q('lesson-quiz-progress').textContent).toBe('Question 2 of 2');
     expect(document.activeElement).toBe(q('lesson-quiz-prompt'));
@@ -66,6 +66,8 @@ describe('LessonQuiz', () => {
     expect(q('lesson-quiz-feedback').textContent).toContain('Not quite. This is why it is wrong.');
     expect(q('lesson-quiz-option-a').textContent).toContain('Not quite');
     expect(q('lesson-quiz-feedback').getAttribute('aria-live')).toBe('polite');
+    // The live region announces it; focus must not also move into it, or it is read twice.
+    expect(document.activeElement).not.toBe(q('lesson-quiz-feedback'));
     expect(q('lesson-quiz-next')).toBeNull();
     click('lesson-quiz-option-a');
     click('lesson-quiz-option-a');
@@ -83,6 +85,7 @@ describe('LessonQuiz', () => {
     click('lesson-quiz-option-b');
     click('lesson-quiz-option-a');
     expect(q('lesson-quiz-next').textContent).toBe('Finish quick check');
+    expect(document.activeElement).toBe(q('lesson-quiz-next'));
     click('lesson-quiz-next');
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
@@ -156,9 +159,9 @@ describe('the lesson quizzes', () => {
     const q = LESSON_QUIZZES['habit-stacking'].find((item) => item.id === 'succulent');
     expect(q.prompt).toContain('desert succulent, an aloe');
     expect(q.options.filter((o) => o.correct)).toHaveLength(1);
-    expect(q.options.find((o) => o.correct).label).toBe('When the whole pot is dry.');
+    expect(q.options.find((o) => o.correct).label).toBe('When the whole pot is dry, not just the top.');
     const light = LESSON_QUIZZES['plant-parent-reset'].find((item) => item.id === 'light');
-    expect(light.options.find((o) => o.correct).label).toMatch(/within about 3 feet \(1 meter\)/);
+    expect(light.options.find((o) => o.correct).label).toMatch(/within about 3 feet \(1 meter\)/i);
     const droop = LESSON_QUIZZES['plant-er'].find((item) => item.id === 'wet-droop');
     expect(droop.options.find((o) => o.id === 'c').why).toMatch(/mushy or smell sour/);
   });
@@ -180,5 +183,16 @@ describe('the lesson quizzes', () => {
     [...LESSON_CARDS['light-basics'], ...LESSON_CARDS['window-map']]
       .filter((c) => /\b(north|south|east|west)\b|which direction/i.test(c.body))
       .forEach((c) => expect(c.body).toContain(note));
+  });
+});
+
+describe('quiz option lengths', () => {
+  test('the right answer is never the longest option and no option is more than 1.6 times another', () => {
+    Object.values(LESSON_QUIZZES).flat().forEach((question) => {
+      const lengths = question.options.map((o) => o.label.length);
+      const right = question.options.find((o) => o.correct).label.length;
+      expect(right).toBeLessThan(Math.max(...lengths));
+      expect(Math.max(...lengths) / Math.min(...lengths)).toBeLessThan(1.6);
+    });
   });
 });

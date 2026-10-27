@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getFileUrl } from '../lib/api';
+import PhotoBand from './PhotoBand';
 
 // A plant's journal: photos as keepsake prints, notes as handwritten lines, first-time moments
 // as larger cards, and routine care folded into one sentence per month.
@@ -111,15 +112,16 @@ function PhotoMemory({ item, plantName, index, onOpen }) {
         style={{ transform: `rotate(${tilt}deg)` }}
       >
         {item.first && (
-          <span className="absolute -top-2 left-3 z-raised rounded-full bg-grove-sun px-2.5 py-0.5 font-ui text-xs font-medium text-grove-root">
+          <span className="absolute -top-2 left-3 z-raised rounded-pill bg-grove-sun px-2.5 py-0.5 font-ui text-xs font-medium text-grove-root">
             First photo
           </span>
         )}
-        <img
+        <PhotoBand
           src={getFileUrl(item.photo_url)}
           alt={item.notes ? item.notes : `${plantName}, ${when(item.logged_at).toLowerCase()}`}
-          loading="lazy"
-          className="aspect-[4/3] w-full rounded-hairline bg-grove-moss object-cover"
+          ratio="photo"
+          className="rounded-hairline"
+          testId="journal-photo-band"
         />
         <figcaption className="px-1 pt-2.5">
           <p className="font-plant text-lead italic leading-snug text-grove-root">{caption}</p>
@@ -187,7 +189,7 @@ export default function MemoryJournal({ logs, plant, onOpenEntry }) {
       <div aria-hidden="true" className="absolute bottom-2 left-2 top-3 w-px bg-gradient-to-b from-grove-fernLine via-grove-moss to-transparent" />
       {months.map((m) => (
         <section key={m.key} aria-labelledby={`journal-${m.key}`} className="relative pb-10">
-          <span aria-hidden="true" className="absolute -left-6 top-2.5 h-2.5 w-2.5 rounded-full bg-grove-sun ring-4 ring-grove-forest" />
+          <span aria-hidden="true" className="absolute -left-6 top-2.5 h-2.5 w-2.5 rounded-pill bg-grove-sun ring-4 ring-grove-forest" />
           <h2 id={`journal-${m.key}`} className="font-plant text-xl leading-none text-grove-cream">{m.label}</h2>
           {m.summary && <p className="mt-2 font-ui text-sm leading-relaxed text-grove-sage">{m.summary}</p>}
           <ul className={m.items.length ? 'mt-5 space-y-6' : 'hidden'}>

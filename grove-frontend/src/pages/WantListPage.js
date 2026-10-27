@@ -7,8 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { wantsAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
+import { EMPTY_STATES } from '@/constants/emptyStates';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { Bookmark, ChevronRight, Trash2, Sun, Droplets, Leaf } from 'lucide-react';
+import { ChevronRight, Trash2, Sun, Droplets, Leaf } from 'lucide-react';
 import { toast } from 'sonner';
 
 const LIGHT_LABEL = {
@@ -59,13 +60,9 @@ export default function WantListPage() {
         {loadError && !loading ? (<LoadError what="want list" onRetry={fetchWants} />) : loading ? (
           <Loading label="Loading your want list" className="py-10" />
         ) : wants.length === 0 ? (
-          <EmptyState
-            data-testid="want-list-empty"
-            icon={Bookmark}
-            title="Nothing on your want list yet"
-            body="Browse the plant guide and tap the bookmark on any species to save it for later."
-            action={{ label: 'Browse the plant guide', onClick: () => navigate('/greenhouse') }}
-          />
+          <div data-testid="want-list-empty">
+            <EmptyState config={EMPTY_STATES.want_list_empty} />
+          </div>
         ) : (
           <ul className="space-y-2" data-testid="want-list-items">
             {wants.map((w) => {
@@ -80,7 +77,7 @@ export default function WantListPage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-ui text-sm font-medium text-grove-cream">{s.common_name}</p>
+                        <p className="font-plant text-base text-grove-cream">{s.common_name}</p>
                         <p className="font-latin italic text-xs text-grove-cream mt-0.5">{s.latin_name}</p>
                         <div className="flex flex-wrap gap-2 mt-1.5 text-xs font-ui text-grove-sage">
                           {s.default_light_level && (

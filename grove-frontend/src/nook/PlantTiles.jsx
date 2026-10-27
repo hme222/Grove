@@ -4,6 +4,7 @@ import { getFileUrl } from '../lib/api';
 import { CONDITION_LABELS } from './nookCopy';
 import { PAPER_BUTTON_QUIET } from './paperStyles';
 import ThumbStrip from '../components/ThumbStrip';
+import PhotoBand from '../components/PhotoBand';
 
 // Status is a word and an icon, never color alone.
 const CONDITION_ICONS = {
@@ -13,16 +14,16 @@ const CONDITION_ICONS = {
 };
 
 function PhotoSlot({ plant }) {
-  // The nook state does not carry a photo yet. When it does (`photo_url`), it shows here.
+  // The plant's cover photo (`photo_url`) when it has one; the leaf tile otherwise.
   const url = plant.photo_url ? getFileUrl(plant.photo_url) : null;
   return (
-    <div className="flex aspect-video items-center justify-center overflow-hidden rounded-chip bg-grove-paperDeep" data-testid={`nook-photo-${plant.id}`}>
-      {url ? (
-        <img src={url} alt="" loading="lazy" className="h-full w-full object-cover" />
-      ) : (
+    url ? (
+      <PhotoBand src={url} className="rounded-chip" testId={`nook-photo-${plant.id}`} />
+    ) : (
+      <div className="flex aspect-wide items-center justify-center overflow-hidden rounded-chip bg-grove-paperDeep" data-testid={`nook-photo-${plant.id}`}>
         <Leaf className="h-6 w-6 text-grove-paperGreen" aria-hidden="true" />
-      )}
-    </div>
+      </div>
+    )
   );
 }
 
@@ -65,6 +66,7 @@ export default function PlantTiles({ plants, onToggleLooksOff }) {
       id: p.id,
       src: p.photo_url ? getFileUrl(p.photo_url) : null,
       label: `Show plant ${i + 1} of ${plants.length}: ${p.name}`,
+      short: String(p.name || '').trim().split(/\s+/)[0],
     })),
     [plants],
   );
@@ -86,7 +88,7 @@ export default function PlantTiles({ plants, onToggleLooksOff }) {
       role="region"
       aria-label="Your plants"
       {...SCROLL_FOCUS}
-      className="-mx-4 overflow-x-auto scroll-px-4 snap-x snap-mandatory px-4 pb-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-grove-paperGreen"
+      className="-mx-4 overflow-x-auto scroll-px-4 snap-x snap-mandatory px-4 pb-2 no-scrollbar focus-visible:outline focus-visible:outline-2 focus-visible:outline-grove-paperGreen"
       data-testid="nook-tiles"
     >
       <ul className="flex w-max gap-3">
@@ -110,6 +112,7 @@ export default function PlantTiles({ plants, onToggleLooksOff }) {
               <button
                 type="button"
                 aria-pressed={plant.looks_off}
+                aria-label={plant.looks_off ? `Looks off, ${plant.name}, pressed` : `Looks off: ${plant.name}`}
                 onClick={() => onToggleLooksOff(plant)}
                 className={`${PAPER_BUTTON_QUIET} mt-auto w-full rounded-pill aria-pressed:border-grove-root aria-pressed:bg-grove-paperPale`}
                 data-testid={`nook-looks-off-${plant.id}`}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
-import { SYMPTOMS, SAFETY_NOTE, SOIL_CHECK } from '../lib/plantHelp';
+import { SYMPTOMS, SAFETY_INTRO, SAFETY_CONTACTS, SAFETY_STEPS, SOIL_CHECK } from '../lib/plantHelp';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 
@@ -74,7 +74,30 @@ export default function HelpMyPlantPage() {
           )}
         </section>
 
-        <p className="rounded-small bg-grove-canopy px-4 py-3 font-ui text-sm text-grove-sage" data-testid="safety-note">{SAFETY_NOTE}</p>
+        <section className="rounded-small bg-grove-canopy px-4 py-4" data-testid="safety-note" aria-labelledby="safety-heading">
+          <h2 id="safety-heading" className="font-plant text-base font-semibold text-grove-cream">{SAFETY_INTRO}</h2>
+          <dl className="mt-3 space-y-3 font-ui text-sm text-grove-sage">
+            {SAFETY_CONTACTS.map((c) => (
+              <div key={c.id} data-testid={`safety-${c.id}`}>
+                <dt className="font-medium text-grove-cream">{c.heading}</dt>
+                <dd>
+                  <span>{c.text}</span>
+                  {c.links.map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="flex min-h-touch items-center text-grove-sprout underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
+                    >
+                      {l.label}
+                    </a>
+                  ))}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-3 font-ui text-sm text-grove-cream" data-testid="safety-steps">{SAFETY_STEPS}</p>
+        </section>
       </div>
     </div>
   );

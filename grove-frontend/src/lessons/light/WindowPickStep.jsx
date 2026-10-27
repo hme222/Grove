@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { lightAPI } from '../../lib/api';
 import { Check } from 'lucide-react';
-import { PAPER_CHOICE, PAPER_ERROR, PAPER_LABEL, paperChip } from '../../nook/paperStyles';
+import { PAPER_CHOICE, PAPER_ERROR, paperChip } from '../../nook/paperStyles';
 
 const TIMINGS = [
   { value: 'morning', label: 'In the morning' },
@@ -29,6 +29,9 @@ const tick = (on) => on && <Check className="h-4 w-4 shrink-0" aria-hidden="true
 // Part 2, card 1: which window, and when the sun reaches it. The compass is an optional shortcut.
 // A pick is saved once, then the lesson moves on. Nothing is saved for "not sure" or "later".
 // The hemisphere and view start from what the person saved before, so a retake never resets them.
+// The one eyebrow treatment: UI face, sentence case, 14px, no tracking, inkSoft on paper.
+const EYEBROW = 'font-ui text-sm text-grove-inkSoft';
+
 export default function WindowPickStep({ next, onSaved, onLater, initialView, initialHemisphere }) {
   const [mode, setMode] = useState('timing'); // timing | compass | unsure
   const [view, setView] = useState(VIEWS.some((v) => v.value === initialView) ? initialView : 'open');
@@ -47,7 +50,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
       if (onSaved) onSaved(res.data);
       next();
     } catch (_e) {
-      setError('Could not save that. Try again.');
+      setError('Couldn’t save that. Try again.');
     } finally {
       busy.current = false;
       setSaving(false);
@@ -79,7 +82,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
   return (
     <div className="space-y-4" data-testid="window-pick-step">
       <fieldset>
-        <legend className={`${PAPER_LABEL} mb-1`}>What can you see out of it?</legend>
+        <legend className={`${EYEBROW} mb-1`}>What can you see out of it?</legend>
         <div className="grid grid-cols-3 gap-2">
           {VIEWS.map((item) => (
             <button key={item.value} type="button" aria-pressed={view === item.value} onClick={() => setView(item.value)} className={chosen(view === item.value)} data-testid={`view-${item.value}`}>
@@ -91,7 +94,7 @@ export default function WindowPickStep({ next, onSaved, onLater, initialView, in
       </fieldset>
 
       <fieldset>
-        <legend className={`${PAPER_LABEL} mb-1`}>Which half of the world are you in?</legend>
+        <legend className={`${EYEBROW} mb-1`}>Which half of the world are you in?</legend>
         <div className="grid grid-cols-2 gap-2">
           {HEMISPHERES.map((item) => (
             <button key={item.value} type="button" aria-pressed={hemisphere === item.value} onClick={() => setHemisphere(item.value)} className={chosen(hemisphere === item.value)} data-testid={`hemi-${item.value}`}>

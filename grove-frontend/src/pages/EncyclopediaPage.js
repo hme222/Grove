@@ -2,7 +2,6 @@ import LoadError from '../components/LoadError';
 import { LoadingList } from '../components/Loading';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { guildIcon } from '../lib/guildIcon';
-import { tint, guildAccent } from '../lib/color';
 import React, { useState, useEffect } from 'react';
 import AppLink from '../components/AppLink';
 import { encyclopediaAPI, guildAPI } from '../lib/api';
@@ -13,11 +12,15 @@ import { Search, Leaf, ChevronRight } from 'lucide-react';
 import { getToxicityInfo } from '../lib/toxicity';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
+import PhotoBand from '../components/PhotoBand';
+
+const GUILD_PLACEHOLDERS = 4;
 
 export default function EncyclopediaPage() {
   const [species, setSpecies] = useState([]);
   const [guilds, setGuilds] = useState([]);
   const [guildsFailed, setGuildsFailed] = useState(false);
+  const [guildsLoading, setGuildsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -52,6 +55,7 @@ export default function EncyclopediaPage() {
         const res = await guildAPI.list();
         if (alive) setGuilds(res.data.guilds || []);
       } catch { if (alive) setGuildsFailed(true); }
+      finally { if (alive) setGuildsLoading(false); }
     })();
     return () => { alive = false; };
   }, []);
@@ -74,8 +78,9 @@ export default function EncyclopediaPage() {
 
       <div className="max-w-page mx-auto px-4 py-4 space-y-4">
         <AppLink to="/lessons" data-testid="learn-lessons-card"
-          className="block w-full rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss p-5 text-left transition-colors duration-200 hover:border-grove-sun/80">
-          <span className="flex items-center justify-between gap-3">
+          className="block w-full overflow-hidden rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss text-left transition-colors duration-200 hover:border-grove-sun/80">
+          <PhotoBand src="/photos/watering-1.jpg" ratio="band" className="rounded-none" eager />
+          <span className="flex items-center justify-between gap-3 p-5">
             <span className="min-w-0">
               <span className="block font-plant text-base font-semibold text-grove-cream">Short lessons</span>
               <span className="mt-1 block font-ui text-sm leading-snug text-grove-sage">Watering, light and soil, explained in a few minutes each.</span>
@@ -87,6 +92,23 @@ export default function EncyclopediaPage() {
         {guildsFailed && !loadError && !searchQuery && (
           <LoadError compact what="the themed guilds" note="The plant guide below still works." testId="guilds-failed" />
         )}
+        {/* While the guilds load, the row's place is held by tinted blocks of the same size (a guild card's
+            title is always two lines tall), so the plant guide below does not jump when they arrive. */}
+        {guildsLoading && !searchQuery && (
+          <div className="space-y-2" role="status" data-testid="greenhouse-guilds-loading">
+            <h2 className="font-plant text-grove-cream text-xl font-semibold">Themed guilds</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" aria-hidden="true">
+              {Array.from({ length: GUILD_PLACEHOLDERS }, (_, i) => (
+                <div key={i} className="rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3">
+                  <div className="mb-2 h-7 w-7 rounded-inset bg-grove-moss motion-safe:animate-soft-pulse" />
+                  <div className="h-10" />
+                  <div className="mt-1 h-4 w-1/2 rounded-inset bg-grove-moss motion-safe:animate-soft-pulse" />
+                </div>
+              ))}
+            </div>
+            <span className="sr-only">Loading themed guilds</span>
+          </div>
+        )}
         {guilds.length > 0 && !searchQuery && (
           <div className="space-y-2" data-testid="greenhouse-guilds-row">
             <div className="flex items-center justify-between">
@@ -97,26 +119,18 @@ export default function EncyclopediaPage() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {guilds.map((g) => {
-                const accent = guildAccent(g);
                 return (
                   <AppLink
                     key={g.id}
                     to={`/guilds/${g.slug}`}
                     state={{ name: g.name }}
                     data-testid={`guild-card-${g.slug}`}
-                    className="block text-left rounded-chip border-hairline p-3 hover:brightness-125 transition-[filter] duration-150"
-                    style={{
-                      backgroundColor: tint(accent, 6),
-                      borderColor: tint(accent, 25),
-                    }}
+                    className="block rounded-chip border-hairline border-grove-moss bg-grove-canopy p-3 text-left transition-colors duration-150 hover:border-grove-fernLine"
                   >
-                    <div
-                      className="w-7 h-7 rounded-inset flex items-center justify-center mb-2"
-                      style={{ backgroundColor: tint(accent, 15) }}
-                    >
-                      <GuildGlyph guild={g} className="h-3.5 w-3.5" style={{ color: accent }} />
+                    <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-inset bg-grove-moss">
+                      <GuildGlyph guild={g} className="h-3.5 w-3.5 text-grove-sprout" />
                     </div>
-                    <h3 className="font-plant text-base font-semibold text-grove-cream leading-tight">
+                    <h3 className="h-10 overflow-hidden font-plant text-base font-semibold text-grove-cream leading-tight line-clamp-2">
                       {g.name}
                     </h3>
                     <p className="font-ui text-xs font-normal text-grove-sage mt-1">
@@ -168,9 +182,14 @@ export default function EncyclopediaPage() {
                 data-testid="species-card"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-full bg-grove-moss flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div className="w-12 h-12 rounded-pill bg-grove-moss flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {(s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image) ? (
-                      <img src={s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image} alt="" className="w-full h-full object-cover" />
+                      <PhotoBand
+                        src={s.botanical_illustration_thumb || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image}
+                        aspect="thumb"
+                        fit={s.botanical_illustration_thumb ? 'contain' : 'cover'}
+                        className="h-full w-full rounded-none"
+                      />
                     ) : (
                       <Leaf className="h-6 w-6 text-grove-sprout" />
                     )}
@@ -178,10 +197,10 @@ export default function EncyclopediaPage() {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-plant text-grove-cream text-base font-semibold truncate">{s.common_name}</h3>
                     <p className="text-xs italic text-grove-sage truncate">{s.latin_name}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="text-xs text-grove-sage">{s.family}</span>
+                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                      <span className="min-w-0 max-w-full break-words text-xs text-grove-sage">{s.family}</span>
                       {s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown' && (
-                        <ToxicityBadge toxicity={s.toxicity} size="sm" />
+                        <ToxicityBadge toxicity={s.toxicity} size="sm" className="max-w-full" />
                       )}
                     </div>
                   </div>

@@ -63,7 +63,7 @@ describe('MemoryJournal', () => {
     const { el, unmount } = mount(<MemoryJournal logs={logs} plant={plant} />);
     const headings = [...el.querySelectorAll('h2')].map((h) => h.textContent);
     expect(headings).toEqual(['October', 'September']);
-    expect(el.querySelector('img[alt="New leaf!"]')).not.toBeNull();
+    expect(el.querySelector('[role="img"][aria-label="New leaf!"]')).not.toBeNull();
     unmount();
   });
 });

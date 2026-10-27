@@ -67,7 +67,7 @@ export default function WorkingTowardSection() {
               data-testid={`goal-${g.slug}`}
             >
               <span
-                className="flex-shrink-0 w-9 h-9 rounded-full bg-grove-moss flex items-center justify-center"
+                className="flex-shrink-0 w-9 h-9 rounded-pill bg-grove-moss flex items-center justify-center"
                 aria-hidden="true"
               >
                 <BadgeIcon name={g.icon} className="h-4 w-4 text-grove-sprout" />
@@ -88,7 +88,7 @@ export default function WorkingTowardSection() {
                   </p>
                 </div>
                 <div
-                  className="h-1.5 rounded-full bg-grove-moss overflow-hidden"
+                  className="h-1.5 rounded-pill bg-grove-moss overflow-hidden"
                   role="progressbar"
                   aria-valuenow={pctDisplay}
                   aria-valuemin={0}

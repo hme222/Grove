@@ -37,7 +37,7 @@ export default function LightPromptCard({ now = new Date(), embedded = false }) 
       className={embedded ? 'flex items-center justify-between gap-3 py-4' : 'rounded-small border-hairline border-grove-paperBorder bg-grove-paperCard px-4 py-3 mb-3 flex items-center justify-between gap-3'}
       data-testid="light-prompt"
     >
-      <p className={`font-plant text-lg ${embedded ? 'text-grove-cream' : 'text-grove-root'}`}>Ready to check your light?</p>
+      <p className={`font-plant text-base font-semibold ${embedded ? 'text-grove-cream' : 'text-grove-root'}`}>Ready to check your light?</p>
       <div className="flex gap-2 shrink-0">
         <button
           type="button"

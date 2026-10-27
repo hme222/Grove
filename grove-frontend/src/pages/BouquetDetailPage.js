@@ -12,6 +12,7 @@ import { confidenceText } from '../lib/aiTrust';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { Sparkles, Edit2, Flower2, Droplets, Scissors, Camera, FileText, Share2 } from 'lucide-react';
+import PhotoBand from '../components/PhotoBand';
 
 const BOUQUET_CARE_ACTIONS = [
   { value: 'water_change', label: 'Water change', icon: Droplets },
@@ -147,9 +148,9 @@ export default function BouquetDetailPage() {
     <div>
       {/* Header */}
       <div className="relative">
-        <div className="aspect-[16/9] bg-grove-canopy overflow-hidden relative">
+        <div className="aspect-wide bg-grove-canopy overflow-hidden relative">
           {photoUrl ? (
-            <div className="w-full h-full flex items-center justify-center"><img src={photoUrl} alt={bouquet.name} className="w-full h-full object-cover" /></div>
+            <PhotoBand src={photoUrl} alt={bouquet.name} eager className="rounded-none" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <Flower2 className="h-16 w-16 text-grove-bloom opacity-60" aria-hidden="true" />
@@ -159,11 +160,11 @@ export default function BouquetDetailPage() {
           <div className="absolute top-4 right-4 flex gap-2">
             <label className="cursor-pointer">
               <input type="file" accept="image/*" onChange={handlePhotoUpload} className="sr-only" aria-label="Change photo" />
-              <div className="w-11 h-11 rounded-full bg-grove-night/65 flex items-center justify-center text-grove-cream hover:bg-grove-night/85">
+              <div className="w-11 h-11 rounded-pill bg-grove-night/65 flex items-center justify-center text-grove-cream hover:bg-grove-night/85">
                 <Edit2 className="h-4 w-4" />
               </div>
             </label>
-            <button aria-label="Share bouquet" onClick={handleShare} className="w-touch h-touch rounded-full bg-grove-night/65 flex items-center justify-center text-grove-cream hover:bg-grove-night/85">
+            <button aria-label="Share bouquet" onClick={handleShare} className="w-touch h-touch rounded-pill bg-grove-night/65 flex items-center justify-center text-grove-cream hover:bg-grove-night/85">
               <Share2 className="h-4 w-4" />
             </button>
           </div>

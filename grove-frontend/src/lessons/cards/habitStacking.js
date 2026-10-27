@@ -1,11 +1,11 @@
-// Lesson cards for "Habit Stacking". The text is used exactly as written; colors are design tokens.
+// Lesson cards for "Habit stacking". The text is used exactly as written; colors are design tokens.
 import { Coffee, Link as LinkIcon, Cat, Bell, Repeat } from "lucide-react";
 
 export const CARDS = [
   {
     n: 1,
-    header: "Card 1 of 5 · The Hook",
-    eyebrow: "Zero-effort Consistency",
+    header: "Card 1 of 5 · The hook",
+    eyebrow: "Zero-effort consistency",
     headline: "Don\u2019t rely on memory.",
     body:
       "To build a consistent care routine, don&rsquo;t try to remember. Instead, <strong>stack</strong> your plant check onto an unbreakable habit you already do every single day.",
@@ -17,8 +17,8 @@ export const CARDS = [
   },
   {
     n: 2,
-    header: "Card 2 of 5 · The Formula",
-    eyebrow: "The Routine Recipe",
+    header: "Card 2 of 5 · The formula",
+    eyebrow: "The routine recipe",
     headline: "The habit-stack formula.",
     body:
       "Use this one line as your template &mdash; then repeat it out loud until it feels like yours: <strong>&ldquo;After I do [Existing Habit], I will [Check My Plant].&rdquo;</strong>",
@@ -31,7 +31,7 @@ export const CARDS = [
   {
     n: 3,
     header: "Card 3 of 5 · Example A",
-    eyebrow: "The Morning Grind",
+    eyebrow: "The morning grind",
     headline: "Coffee grinder \u2192 Monstera.",
     body:
       "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes 8 seconds and the smell of coffee becomes your daily cue. Monstera is toxic to cats and dogs if chewed, so keep it out of reach, or check the plant&rsquo;s pet-safety label first.",
@@ -44,7 +44,7 @@ export const CARDS = [
   {
     n: 4,
     header: "Card 4 of 5 · Example B",
-    eyebrow: "The Furry Friend",
+    eyebrow: "The furry friend",
     headline: "Cat bowl \u2192 desk plant.",
     body:
       "&ldquo;Right after I feed my cat (like Luna, who keeps things grounded), I will touch the soil of my desk plant.&rdquo; Two little rituals, one shared moment. Push a finger in to the first knuckle in a small pot, or the second in a pot 6 in (15 cm) or bigger, and water only if it&rsquo;s dry. Desert succulents and cacti (aloe, jade, echeveria, opuntia) want the whole pot dry. Rainforest cacti such as Christmas cactus want it lightly moist. A finger cannot test a whole pot, so lift it: a light pot is a dry pot.",
@@ -56,8 +56,8 @@ export const CARDS = [
   },
   {
     n: 5,
-    header: "Card 5 of 5 · Your Turn",
-    eyebrow: "60-Second Action",
+    header: "Card 5 of 5 · Your turn",
+    eyebrow: "60-second action",
     headline: "Pick your anchor habit.",
     body:
       "Identify one daily habit you never skip &mdash; brushing teeth, making coffee, feeding the cat. Pair your plant check with it right now.",

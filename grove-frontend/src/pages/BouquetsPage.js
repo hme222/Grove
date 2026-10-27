@@ -9,6 +9,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import { Plus, Flower2, Calendar, Lock } from 'lucide-react';
 import { toast } from 'sonner';
+import PhotoBand from '../components/PhotoBand';
 
 export default function BouquetsPage() {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export default function BouquetsPage() {
             className="mb-4 flex items-center justify-between gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3"
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-grove-forest">
+              <div className="w-8 h-8 rounded-pill flex items-center justify-center bg-grove-forest">
                 <Flower2 className={`h-4 w-4 ${atLimit ? 'text-grove-bloom' : 'text-grove-sprout'}`} />
               </div>
               <div>
@@ -118,7 +119,7 @@ export default function BouquetsPage() {
               >
                 <div className="aspect-square bg-grove-forest flex items-center justify-center">
                   {b.photo_url ? (
-                    <div className="w-full h-full flex items-center justify-center"><img src={getFileUrl(b.photo_url)} alt={b.name} className="w-full h-full object-cover" /></div>
+                    <PhotoBand src={getFileUrl(b.photo_url)} alt={b.name} aspect="square" className="rounded-none" />
                   ) : (
                     <Flower2 className="h-10 w-10 text-grove-bloom opacity-60" aria-hidden="true" />
                   )}

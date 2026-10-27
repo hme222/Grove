@@ -433,7 +433,7 @@ function BouquetTile({ bouquet }) {
       <PlantImage src={bouquet.photo_url} tone="bouquet" rounded="none" className="absolute inset-0 w-full h-full" />
       <span
         aria-hidden="true"
-        className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-grove-canopy border-hairline border-grove-moss flex items-center justify-center"
+        className="absolute top-1.5 right-1.5 w-6 h-6 rounded-pill bg-grove-canopy border-hairline border-grove-moss flex items-center justify-center"
         title="Bouquet"
       >
         <Flower2 className="h-3 w-3 text-grove-blush" />

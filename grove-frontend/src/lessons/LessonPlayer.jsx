@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import Disclosure from '../components/Disclosure';
 import BackButton from '../components/BackButton';
 import { cn } from '../lib/utils';
 import { sanitizeLessonHtml } from '../lib/safeHtml';
@@ -15,7 +16,8 @@ const clampIndex = (value, count) => (Number.isInteger(value) ? Math.max(0, Math
 //   renderCard    (card, { next, back, index, isLast }) => node | null. A node replaces the
 //                 card's next button (and the final-card hook on the last card).
 //   host          shown above the card (Pip, for people who turned the nook on)
-export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExit, sources, host, initialIndex, onAdvance }) {
+//   notice        a calm status line under the card (such as "Progress isn't saving right now")
+export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExit, sources, host, initialIndex, onAdvance, notice }) {
   const [index, setIndex] = useState(() => clampIndex(initialIndex, cards.length));
   const headingRef = useRef(null);
   const card = cards[index];
@@ -50,9 +52,10 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
   }, [index]);
 
   return (
-    <div className="min-h-screen bg-grove-forest flex items-start justify-center px-4 py-4" data-testid="lesson-player">
+    <div className="min-h-screen bg-grove-forest flex items-start justify-center px-4 pb-4" data-testid="lesson-player">
       <div className="w-full max-w-md">
-        <div className="flex items-center justify-between mb-4">
+        {/* Back and the card count stay in view on a long card (the window-map page is over 1100px tall). */}
+        <div className="sticky top-0 z-sticky -mx-4 mb-4 flex items-center justify-between gap-2 bg-grove-forest px-4 py-3" data-testid="lesson-chrome">
           <BackButton onClick={onExit} where="lessons" testId="lesson-exit" />
           <p className="text-xs font-ui text-grove-cream" data-testid="lesson-progress">
             Card {index + 1} of {cards.length}
@@ -67,7 +70,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
 
         <div className={paper ? `rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
-          <p className={cn('text-xs font-ui mb-2', paper ? 'text-grove-inkSoft' : 'text-grove-cream')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
+          <p className={cn('mb-2 font-ui text-sm', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
           <h1
             id="page-title"
             ref={headingRef}
@@ -108,13 +111,10 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
             </div>
           )}
         </div>
+        <p role="status" className={notice ? 'mt-3 font-ui text-sm text-grove-cream' : 'sr-only'} data-testid="lesson-notice">{notice}</p>
         {sources && (sources.sources?.length > 0 || sources.gaps?.length > 0) && (
-          <details className="group mt-6 rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3" data-testid="lesson-sources">
-            <summary className="flex min-h-touch cursor-pointer items-center justify-between font-ui text-base font-medium text-grove-cream">
-              Sources for this lesson
-              <ChevronDown className="h-4 w-4 shrink-0 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
-            </summary>
-            <ul className="mt-2 space-y-3">
+          <Disclosure title="Sources for this lesson" testId="lesson-sources" className="mt-6">
+            <ul className="space-y-3">
               {sources.sources.map((src) => (
                 <li key={src.url} className="font-ui text-sm text-grove-sage">
                   <a
@@ -133,7 +133,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
             {sources.gaps?.map((g) => (
               <p key={g} className="mt-3 font-ui text-sm leading-snug text-grove-sage">{g}</p>
             ))}
-          </details>
+          </Disclosure>
         )}
       </div>
     </div>

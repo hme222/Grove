@@ -18,10 +18,12 @@ import CareLogModal from '../components/CareLogModal';
 import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Droplets, Sparkles, Camera, Archive, Leaf, X } from 'lucide-react';
+import { Droplets, Sparkles, Camera, Archive, X } from 'lucide-react';
 import HealthScorePanel from '../components/HealthScorePanel';
 import MemoryJournal from '../components/MemoryJournal';
 import PhotoGallery from '../components/PhotoGallery';
+import PhotoViewer from '../components/PhotoViewer';
+import PhotoBand from '../components/PhotoBand';
 import { InlineText, InlineRoom, InlineStepper } from '../components/InlineEdit';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
@@ -41,6 +43,7 @@ export default function PlantDetailPage() {
   const [aiSchedule, setAiSchedule] = useState(null);
   const [generatingSchedule, setGeneratingSchedule] = useState(false);
   const [openEntry, setOpenEntry] = useState(null);
+  const [viewerStart, setViewerStart] = useState(null); // journal photo open in the paged viewer
   const [rooms, setRooms] = useState([]);
 
   // Phase 14B.1 — merge plant.photos[] into the timeline so each photo becomes
@@ -68,6 +71,17 @@ export default function PlantDetailPage() {
     const dedupedPhotos = photoEntries.filter((p) => !careLogPaths.has(p.photo_url));
     return [...(timeline || []), ...dedupedPhotos];
   }, [plant, timeline]);
+
+  // Every photo the journal knows about (gallery photos and care-log photos), for the paged viewer.
+  const journalPhotos = useMemo(() => mergedTimeline
+    .filter((l) => l && l.photo_url)
+    .map((l) => ({ id: l.id, path: l.photo_url, taken_at: l.logged_at, caption: l.notes || '' })), [mergedTimeline]);
+
+  const openJournalEntry = (entry) => {
+    // An entry with a photo opens the paged viewer; notes and milestones keep the single-entry dialog.
+    if (entry.photo_url && journalPhotos.some((p) => p.id === entry.id)) setViewerStart(entry.id);
+    else setOpenEntry(entry);
+  };
 
   const fetchPlant = useCallback(async () => {
     setLoadError(false);
@@ -217,21 +231,15 @@ export default function PlantDetailPage() {
     <div>
       {/* Header with photo */}
       <div className="relative">
-        <div className="w-full h-80 min-h-hero max-h-hero bg-grove-moss overflow-hidden relative">
-          {photoUrl ? (
-            <div className="w-full h-full bg-grove-moss flex items-center justify-center"><img src={photoUrl} alt={plant.common_name} className="w-full h-full object-cover" /></div>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Leaf className="h-16 w-16 text-grove-sprout opacity-20" />
-            </div>
-          )}
+        <div className="w-full bg-grove-moss overflow-hidden relative">
+          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none" testId="plant-detail-hero" />
           {/* Back button */}
           <BackButton variant="overlay" testId="plant-detail-back" className="absolute left-3 top-3" />
           {/* Upload photo */}
-          <label className="absolute top-3 right-3 cursor-pointer rounded-full focus-within:ring-2 focus-within:ring-grove-lime">
+          <label className="absolute top-3 right-3 cursor-pointer rounded-pill focus-within:ring-2 focus-within:ring-grove-lime">
             <input type="file" accept="image/*" onChange={handlePhotoUpload} className="peer sr-only" />
             <span className="sr-only">Change plant photo</span>
-            <div className="w-11 h-11 rounded-full bg-grove-night/65 backdrop-blur-sm flex items-center justify-center text-grove-cream hover:bg-grove-night/85 transition-colors duration-150" aria-hidden="true">
+            <div className="w-touch h-touch rounded-pill bg-grove-night/65 backdrop-blur-sm flex items-center justify-center text-grove-cream hover:bg-grove-night/85 transition-colors duration-150" aria-hidden="true">
               <Camera className="h-4 w-4" />
             </div>
           </label>
@@ -261,7 +269,7 @@ export default function PlantDetailPage() {
                   {plant.ai_identified && !plant.ai_species_confirmed && (
                     <span
                       data-testid="plant-ai-identified-badge"
-                      className="ml-2 font-ui text-xs tracking-label text-grove-lichen uppercase"
+                      className="ml-2 font-ui text-sm text-grove-lichen"
                     >
                       AI identified
                     </span>
@@ -331,13 +339,13 @@ export default function PlantDetailPage() {
             <MemoryJournal
               logs={mergedTimeline}
               plant={plant}
-              onOpenEntry={(entry) => setOpenEntry(entry)}
+              onOpenEntry={openJournalEntry}
             />
           </TabsContent>
 
           {/* Photos Tab — Phase 14A.2 */}
           <TabsContent value="photos" className="pt-4">
-            <PhotoGallery plantId={plantId} onChanged={fetchPlant} />
+            <PhotoGallery plantId={plantId} plantName={plant.nickname || plant.common_name} onChanged={fetchPlant} />
           </TabsContent>
 
           {/* Care Tab */}
@@ -501,6 +509,14 @@ export default function PlantDetailPage() {
         onLogged={fetchPlant}
       />
 
+      <PhotoViewer
+        open={viewerStart != null}
+        onOpenChange={(o) => { if (!o) setViewerStart(null); }}
+        photos={journalPhotos}
+        startId={viewerStart}
+        plantName={plant.nickname || plant.common_name}
+      />
+
       {/* Full entry detail */}
       <Dialog open={!!openEntry} onOpenChange={(o) => { if (!o) setOpenEntry(null); }}>
         <DialogContent data-testid="timeline-entry-modal" showClose={false} className="max-w-entry overflow-hidden p-0" aria-describedby={undefined}>
@@ -512,16 +528,12 @@ export default function PlantDetailPage() {
                 onClick={() => setOpenEntry(null)}
                 aria-label="Close"
                 data-testid="timeline-entry-modal-close"
-                className="absolute right-3 top-3 z-raised flex h-touch w-touch items-center justify-center rounded-full bg-grove-forest/80 text-grove-cream hover:bg-grove-moss"
+                className="absolute right-3 top-3 z-raised flex h-touch w-touch items-center justify-center rounded-pill bg-grove-forest/80 text-grove-cream hover:bg-grove-moss"
               >
                 <X className="h-4 w-4" />
               </button>
               {openEntry.photo_url && (
-                <img
-                  src={getFileUrl(openEntry.photo_url)}
-                  alt=""
-                  className="w-full aspect-[4/3] bg-grove-moss object-contain"
-                />
+                <PhotoBand src={getFileUrl(openEntry.photo_url)} ratio="photo" className="rounded-none" testId="timeline-entry-photo" />
               )}
               <div className="p-4">
                 <p className="font-plant text-grove-cream text-lg">

@@ -289,7 +289,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
           aria-label="Previous card"
           data-testid="photo-guide-prev"
           disabled={index === 0}
-          className="flex h-touch min-h-touch w-touch min-w-touch shrink-0 items-center justify-center rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream disabled:opacity-40"
+          className="flex h-touch min-h-touch w-touch min-w-touch shrink-0 items-center justify-center rounded-pill border-hairline border-grove-moss bg-grove-forest text-grove-cream disabled:opacity-40"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -307,16 +307,11 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
           aria-label="Next card"
           data-testid="photo-guide-next"
           disabled={index === CARDS.length - 1}
-          className="flex h-touch min-h-touch w-touch min-w-touch shrink-0 items-center justify-center rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream disabled:opacity-40"
+          className="flex h-touch min-h-touch w-touch min-w-touch shrink-0 items-center justify-center rounded-pill border-hairline border-grove-moss bg-grove-forest text-grove-cream disabled:opacity-40"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
-
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { scrollbar-width: none; }
-      `}</style>
     </div>
   );
 }

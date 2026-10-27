@@ -57,7 +57,7 @@ export default function SwapMatchesPage() {
         )}
         {matches.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 mx-auto rounded-full bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-4">
+            <div className="w-16 h-16 mx-auto rounded-pill bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-4">
               <Sparkles className="h-7 w-7 text-grove-sprout" />
             </div>
             <h2 className="font-plant text-grove-cream text-base font-semibold mb-1">No matches yet</h2>
@@ -121,7 +121,7 @@ export default function SwapMatchesPage() {
               {/* Right side: unread badge + chevron */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 {unread_messages > 0 && (
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-grove-lime text-grove-root font-ui text-xs">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-pill bg-grove-lime text-grove-root font-ui text-xs">
                     {unread_messages > 9 ? '9+' : unread_messages}
                   </span>
                 )}

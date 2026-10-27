@@ -61,7 +61,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
       } else if (status === 404) {
         setError('Grove not found.');
       } else {
-        setError('Could not load chat.');
+        setError('Couldn\u2019t load chat.');
       }
     } finally {
       setInitialLoading(false);
@@ -159,7 +159,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
       setPhotoPath(res.data.path);
       toast.success('Photo attached');
     } catch (err) {
-      toast.error(err?.response?.data?.detail || 'Could not upload photo.');
+      toast.error(err?.response?.data?.detail || 'Couldn\u2019t upload photo.');
     } finally {
       setPhotoUploading(false);
     }
@@ -185,7 +185,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
       setPhotoPath(null);
       wasNearBottomRef.current = true;
     } catch (err) {
-      toast.error(err?.response?.data?.detail || 'Could not send message.');
+      toast.error(err?.response?.data?.detail || 'Couldn\u2019t send message.');
     } finally {
       setSending(false);
     }
@@ -213,7 +213,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
       setEditingId(null);
       setEditBody('');
     } catch (err) {
-      toast.error(err?.response?.data?.detail || 'Could not save edit.');
+      toast.error(err?.response?.data?.detail || 'Couldn\u2019t save edit.');
     }
   };
 
@@ -227,7 +227,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
         ? { ...m, is_deleted: true, body: '', photo_path: null }
         : m)));
     } catch (err) {
-      toast.error(err?.response?.data?.detail || 'Could not delete message.');
+      toast.error(err?.response?.data?.detail || 'Couldn\u2019t delete message.');
     }
   };
 
@@ -317,14 +317,16 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             onClick={() => fileInputRef.current?.click()}
             disabled={photoUploading || !!photoPath}
             data-testid="grove-chat-attach-btn"
-            className="flex-shrink-0 w-9 h-9 rounded-full border-hairline border-grove-moss bg-grove-canopy text-grove-sprout hover:border-grove-fernLine disabled:opacity-40 flex items-center justify-center"
+            className="group flex h-touch w-touch flex-shrink-0 items-center justify-center disabled:opacity-40"
             aria-label="Attach photo"
           >
-            {photoUploading ? (
-              <Spinner className="h-3.5 w-3.5" />
-            ) : (
-              <ImageIcon className="h-4 w-4" />
-            )}
+            <span className="flex h-9 w-9 items-center justify-center rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-sprout group-hover:border-grove-fernLine">
+              {photoUploading ? (
+                <Spinner className="h-3.5 w-3.5" />
+              ) : (
+                <ImageIcon className="h-4 w-4" />
+              )}
+            </span>
           </button>
           <textarea aria-label="Message your grove"
             value={body}
@@ -345,7 +347,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
             onClick={handleSend}
             disabled={sending || (!body.trim() && !photoPath)}
             data-testid="grove-chat-send-btn"
-            className={cn(buttonVariants({ size: 'icon' }), "rounded-full flex-shrink-0")}
+            className={cn(buttonVariants({ size: 'icon' }), "rounded-pill flex-shrink-0")}
             aria-label="Send"
           >
             <Send className="h-4 w-4" />
@@ -414,7 +416,7 @@ function ChatMessage({ msg, isOwn, canDeleteAny, editing, editBody, setEditBody,
       data-own={isOwn ? 'true' : 'false'}
     >
       <div
-        className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
+        className={`flex-shrink-0 w-7 h-7 rounded-pill flex items-center justify-center ${
           isOwn ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout'
         }`}
         title={msg.author_display_name || msg.author_username || ''}

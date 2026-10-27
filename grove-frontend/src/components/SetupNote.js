@@ -65,7 +65,7 @@ export default function SetupNote() {
     return (
       <section aria-label="Pets" data-testid="pets-note" className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
         <p className="font-plant text-base font-semibold text-grove-cream">Do you have pets at home?</p>
-        <p className="mt-1 font-ui text-sm text-grove-sage">If you do, we will show whether each of your plants is safe for them.</p>
+        <p className="mt-1 font-ui text-sm text-grove-sage">If you do, we&rsquo;ll show whether each of your plants is safe for them.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" disabled={saving} onClick={() => answerPets(true)} data-testid="pets-yes" className={primary}>Yes</button>
           <button type="button" disabled={saving} onClick={() => answerPets(false)} data-testid="pets-no" className={equal}>No pets</button>

@@ -13,8 +13,8 @@ import { CheckEmailStep, ConfirmedStep } from './onboarding/EmailSteps';
 import { ZoneStep, HemisphereStep } from './onboarding/ZoneSteps';
 import { QuizIntroStep, QuestionStep } from './onboarding/QuizSteps';
 import { BuildingStep, PlanStep } from './onboarding/PlanSteps';
-import StepScreen from './onboarding/StepScreen';
-import HeroImage from './onboarding/HeroImage';
+import StepScreen, { StepActions } from './onboarding/StepScreen';
+import PhotoBand from './PhotoBand';
 
 // The first-run flow, from the Figma file "Grove App" (Full Onboarding, with the Sill-style additions):
 //   welcome, three intro slides, create account (1 of 3), [check email], where you grow (2 of 3),
@@ -26,28 +26,42 @@ const OFF = { email_verification: false, sso: {} };
 
 const SLIDES = [
   {
+    // The welcome screen has already said the name, the definition of a grove and the promise, so this
+    // screen says something new: what the next few minutes are.
     kicker: null,
-    title: 'Welcome to FloraGrove',
-    lead: 'FloraGrove is a safe space to learn about plants.',
-    body: 'Providing tools to help you feel confident in caring for your plants',
-    note: 'A grove is a small group of trees growing closely together',
-    photo: 'forest',
+    title: 'Three short steps to set up',
+    lead: 'Make your account, tell us where you grow, and answer four quick questions.',
+    body: 'You can skip the last two and change any answer later.',
+    photo: '/photos/onboarding-forest.jpg',
   },
   {
     kicker: 'Grow together',
     title: 'Track care, not metrics',
     lead: 'FloraGrove gives you simple, clear tools to help plants thrive.',
     body: 'FloraGrove does not gamify your plants. It helps you pay attention to plant care and build a rhythm.',
-    photo: 'shelf',
+    photo: '/photos/onboarding-shelf.jpg',
   },
   {
     kicker: null,
     title: 'Each plant has a story',
     lead: 'Whether or not you’re a plant parent, we’re here to become a part of that story.',
     body: 'FloraGrove will always explain the “why” behind any plant care suggestion',
-    photo: 'plants',
+    photo: '/photos/onboarding-plants.jpg',
   },
 ];
+
+const STAGE_LABELS = {
+  welcome: 'Welcome to FloraGrove',
+  account: 'Create your account',
+  'check-email': 'Check your email',
+  confirmed: 'Email confirmed',
+  zone: 'Where you grow',
+  hemisphere: 'Where you grow',
+  'quiz-intro': 'A few quick questions',
+  question: 'A few quick questions',
+  building: 'Building your plan',
+  plan: 'Your plan',
+};
 
 const FOCUSABLE = 'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled])';
 
@@ -71,7 +85,7 @@ export function firstName(value) {
 function IntroStep({ index, onBack, onNext, onSkip }) {
   const slide = SLIDES[index];
   return (
-    <StepScreen heading={slide.title} onBack={onBack} testId={`onboarding-intro-${index + 1}`}>
+    <StepScreen heading={slide.title} eyebrow={slide.kicker} onBack={onBack} testId={`onboarding-intro-${index + 1}`}>
       <button
         type="button"
         onClick={onSkip}
@@ -81,18 +95,18 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
       >
         <X className="h-5 w-5" aria-hidden="true" />
       </button>
-      {slide.kicker && <p className="mt-1 font-ui text-sm text-grove-sprout">{slide.kicker}</p>}
       <div className="mt-4 flex flex-1 flex-col">
         <p className="font-ui text-base font-medium text-grove-cream">{slide.lead}</p>
         <p className="mt-2 font-ui text-sm leading-relaxed text-grove-cream">{slide.body}</p>
-        {slide.note && <p className="mt-4 font-ui text-sm italic text-grove-sage">{slide.note}</p>}
-        <HeroImage name={slide.photo} ratio="3 / 2" eager={index === 0} className="mt-6" />
-        <div className="mt-auto space-y-2 pt-8">
-          <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
-            Continue
-          </button>
-          <p className="text-center font-ui text-sm text-grove-sage">{index + 1} of {SLIDES.length}</p>
-        </div>
+        <PhotoBand src={slide.photo} ratio="photo" eager={index === 0} className="mt-6" testId="hero-image" />
+        <StepActions
+          primary={(
+            <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
+              Continue
+            </button>
+          )}
+          secondary={<p className="font-ui text-sm text-grove-sage">{index + 1} of {SLIDES.length}</p>}
+        />
       </div>
     </StepScreen>
   );
@@ -123,6 +137,45 @@ export function Onboarding({ onComplete, replay = false }) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
+
+  // While the flow is open the app behind it is inert (and hidden from screen readers), so Tab and the
+  // virtual cursor cannot wander into Today's controls under the overlay. Restored when it closes.
+  useEffect(() => {
+    const host = shell.current && shell.current.parentElement;
+    if (!host) return undefined;
+    const marked = new Set();
+    // The app behind may mount a moment after the overlay (routes render after the first-run redirect), so
+    // mark siblings now and again whenever the root's children change.
+    const mark = () => [...host.children].forEach((el) => {
+      if (el === shell.current || marked.has(el) || el.hasAttribute('inert')) return;
+      el.setAttribute('inert', '');
+      el.setAttribute('aria-hidden', 'true');
+      marked.add(el);
+    });
+    mark();
+    const observer = typeof MutationObserver === 'function' ? new MutationObserver(mark) : null;
+    if (observer) observer.observe(host, { childList: true });
+    return () => {
+      if (observer) observer.disconnect();
+      marked.forEach((el) => {
+        el.removeAttribute('inert');
+        el.removeAttribute('aria-hidden');
+      });
+    };
+  }, []);
+
+  // The welcome screen has no StepScreen to take focus, so put it on its headline (or Continue).
+  useEffect(() => {
+    if (stage !== 'welcome' || !shell.current) return;
+    const target = shell.current.querySelector('h1') || shell.current.querySelector('button[data-testid="welcome-continue"], button');
+    if (!target) return;
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.style.outline = 'none';
+    target.focus({ preventScroll: true });
+  }, [stage]);
+
+  // A save error belongs to the screen it happened on.
+  useEffect(() => { setFinishError(''); }, [stage]);
 
   const greetName = name || firstName(user && user.display_name);
 
@@ -170,25 +223,24 @@ export function Onboarding({ onComplete, replay = false }) {
     setStage('plan');
   }, [updateUser]);
 
-  if (stage === 'welcome') {
-    return (
+  const welcome = stage === 'welcome';
+  let body = null;
+  if (welcome) {
+    body = (
       <>
         <WelcomeScreen onContinue={() => setStage('intro-0')} onSkip={() => finish()} disabled={finishing} showSkip={!!user} />
         {!user && (
           <AppLink
             to="/login"
             data-testid="welcome-signin"
-            className="fixed inset-x-0 bottom-0 z-intro flex min-h-touch items-center justify-center font-ui text-sm text-grove-cream underline underline-offset-2"
+            className="fixed inset-x-0 bottom-0 z-intro flex min-h-touch items-center justify-center bg-grove-forest font-ui text-sm text-grove-cream underline underline-offset-2"
           >
             Already have an account? Sign in
           </AppLink>
         )}
       </>
     );
-  }
-
-  let body = null;
-  if (stage.startsWith('intro-')) {
+  } else if (stage.startsWith('intro-')) {
     const index = Number(stage.slice(6));
     body = (
       <IntroStep
@@ -244,23 +296,34 @@ export function Onboarding({ onComplete, replay = false }) {
         name={greetName}
         result={planResult}
         busy={finishing}
-        error={finishError}
         onStart={() => finish({ to: lessonPath(first), planned: true })}
         onExplore={() => finish({ planned: true })}
       />
     );
   }
 
+  const introIndex = stage.startsWith('intro-') ? Number(stage.slice(6)) : -1;
+  const dialogLabel = introIndex >= 0 ? SLIDES[introIndex].title : STAGE_LABELS[stage] || 'Welcome to FloraGrove';
+
   return (
     <div
       ref={shell}
       role="dialog"
       aria-modal="true"
-      aria-label="Welcome to FloraGrove"
-      className="fixed inset-0 z-intro overflow-y-auto bg-grove-forest"
+      aria-label={dialogLabel}
+      className={welcome ? undefined : 'fixed inset-0 z-intro overflow-y-auto bg-grove-forest'}
       data-testid="onboarding-flow"
     >
       {body}
+      {/* One slot for every stage: a failed save while leaving (the welcome X, Skip intro, Skip for now on
+          the plan) says so here. The skip stays enabled, so pressing it again retries. */}
+      <p
+        role="alert"
+        className={finishError ? 'fixed inset-x-4 top-4 z-celebration mx-auto max-w-md rounded-small border-hairline border-destructive bg-grove-canopy px-4 py-3 font-ui text-sm text-grove-cream' : 'sr-only'}
+        data-testid="onboarding-finish-error"
+      >
+        {finishError}
+      </p>
     </div>
   );
 }

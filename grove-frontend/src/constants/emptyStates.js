@@ -1,5 +1,6 @@
 export const EMPTY_STATES = {
   collection_zero_plants: {
+    photo: '/photos/plant-2.jpg',
     illustration: 'leaf',
     heading: 'Your grove starts here',
     body: 'Add your first plant. It takes under a minute — photos can come later.',
@@ -7,6 +8,7 @@ export const EMPTY_STATES = {
     ctaPath: '/add-plant',
   },
   feed_empty: {
+    photo: '/photos/plant-1.jpg',
     illustration: 'cluster',
     heading: 'Nothing shared yet',
     body: 'Updates from you and your groves show up here. Anyone can browse the community. Join a grove to see more plants.',
@@ -14,6 +16,7 @@ export const EMPTY_STATES = {
     ctaPath: '/groves',
   },
   bouquet_none: {
+    photo: '/photos/bouquet-1.jpg',
     illustration: 'bloom',
     heading: 'No bouquets yet',
     body: 'Next time you receive flowers, photograph them. FloraGrove identifies every stem and tells you exactly how to keep them alive.',
@@ -33,12 +36,28 @@ export const EMPTY_STATES = {
     cta: 'Add a goal',
   },
   care_all_done: {
+    photo: '/photos/calm-1.jpg',
     illustration: 'leaf',
     heading: 'All caught up!',
     body: 'No plants need care right now. Nice work — your grove is thriving.',
     cta: null,
   },
+  want_list_empty: {
+    illustration: 'leaf',
+    heading: 'Nothing on your want list yet',
+    body: 'Browse the plant guide and tap the bookmark on any species to save it for later.',
+    cta: 'Browse the plant guide',
+    ctaPath: '/greenhouse',
+  },
+  wishlist_none: {
+    illustration: 'leaf',
+    heading: 'No saved cuttings yet',
+    body: 'Tap Cutting on a grove post to save it here.',
+    cta: 'Browse the feed',
+    ctaPath: '/feed',
+  },
   rooms_none: {
+    photo: '/photos/room-1.jpg',
     illustration: 'leaf',
     heading: 'No rooms yet',
     body: 'Add rooms to your plants to organize them by location. Rooms make bulk watering faster.',

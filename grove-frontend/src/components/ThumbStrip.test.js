@@ -67,9 +67,28 @@ test('thumbs are real buttons, so Enter and Space activate them', () => {
   });
 });
 
-test('the paper variant outlines the current thumb in paperGreen', () => {
+test('the paper variant rings the current thumb in paperGreen, with an offset against the paper', () => {
   mount(<ThumbStrip items={items} activeIndex={0} variant="paper" onSelect={() => {}} />);
-  expect(qa('button')[0].className).toContain('outline-grove-paperGreen');
+  const cls = qa('button')[0].className;
+  expect(cls).toContain('ring-2');
+  expect(cls).toContain('ring-grove-paperGreen');
+  expect(cls).toContain('ring-offset-grove-paper');
+  expect(qa('button')[1].className).not.toContain('ring-grove-paperGreen');
+});
+
+test('the dark variant rings the active thumb in lime and keeps the scale', () => {
+  mount(<ThumbStrip items={items} activeIndex={1} onSelect={() => {}} />);
+  const cls = qa('button')[1].className;
+  expect(cls).toContain('ring-2');
+  expect(cls).toContain('ring-grove-lime');
+  expect(cls).toContain('scale-110');
+  expect(qa('button')[0].className).not.toContain('ring-grove-lime');
+});
+
+test('an item with no photo shows its short label in the leaf tile', () => {
+  mount(<ThumbStrip items={[{ id: 'x', src: null, label: 'Show plant 1 of 1: Monstera Deliciosa', short: 'Monstera' }]} activeIndex={0} onSelect={() => {}} />);
+  expect(q('[data-testid="thumb-fallback"]').textContent).toBe('Monstera');
+  expect(qa('button')[0].getAttribute('aria-label')).toContain('Monstera Deliciosa');
 });
 
 test('photo guide cards paginate with thumbnails, not dots', () => {
@@ -93,4 +112,13 @@ test('nook tiles show a thumbnail strip with a tinted leaf for a plant with no p
   act(() => q('[data-testid="nook-thumbs-thumb-1"]').click());
   expect(q('[data-testid="nook-thumbs-thumb-1"]').getAttribute('aria-current')).toBe('true');
   expect(q('[data-testid="nook-tiles"]')).not.toBeNull();
+  expect(q('[data-testid="nook-thumbs-thumb-1"] [data-testid="thumb-fallback"]').textContent).toBe('Fern');
+  expect(q('[data-testid="nook-tiles"]').className).toContain('no-scrollbar');
+});
+
+test('announce={false} drops the strip\'s own live "N of M" so a host with its own counter is not read twice', () => {
+  mount(<ThumbStrip items={items} activeIndex={1} onSelect={() => {}} />);
+  expect(q('[aria-live="polite"]')).not.toBeNull();
+  mount(<ThumbStrip items={items} activeIndex={1} onSelect={() => {}} announce={false} />);
+  expect(q('[aria-live="polite"]')).toBeNull();
 });

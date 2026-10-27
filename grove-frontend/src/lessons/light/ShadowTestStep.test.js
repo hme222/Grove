@@ -70,7 +70,7 @@ test('a failed save shows an error, stays on the card, and can be tried again', 
   const { next } = await mount();
   click(q('shadow-soft'));
   await flush();
-  expect(q('shadow-error').textContent).toBe('Could not save that. Try again.');
+  expect(q('shadow-error').textContent).toBe('Couldn’t save that. Try again.');
   expect(q('shadow-error').getAttribute('role')).toBe('alert');
   expect(next).not.toHaveBeenCalled();
   click(q('shadow-soft'));

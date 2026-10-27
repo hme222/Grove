@@ -34,11 +34,11 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
         aria-expanded={expanded}
         className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-grove-canopy transition-colors duration-150"
       >
-        <div className="w-10 h-10 rounded-full bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
+        <div className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
           <Sprout className="h-5 w-5 text-grove-sprout" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-ui text-grove-cream text-sm font-medium">Plant Health</p>
+          <p className="font-ui text-grove-cream text-sm font-medium">Plant health</p>
           <p className="font-latin text-xs text-grove-cream">
             6-factor breakdown · tap for details
           </p>
@@ -49,7 +49,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
           {isEarly && (
             <span
               data-testid="plant-health-early-reading"
-              className="inline-block mt-1 rounded-full px-1.5 py-px bg-grove-forest text-grove-lichen font-ui text-xs tracking-label"
+              className="inline-block mt-1 rounded-pill px-1.5 py-px bg-grove-forest text-grove-lichen font-ui text-sm"
             >
               Early reading
             </span>
@@ -70,9 +70,9 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
               const col = factorColor(f.score);
               return (
                 <div key={f.key} className="flex items-center gap-3">
-                  <span className={`w-1.5 h-1.5 rounded-full ${col.dot}`} aria-hidden="true" />
+                  <span className={`w-1.5 h-1.5 rounded-pill ${col.dot}`} aria-hidden="true" />
                   <span className="flex-1 font-ui text-xs text-grove-cream">{f.label}</span>
-                  <div className="w-24 h-1.5 rounded-full bg-grove-forest overflow-hidden">
+                  <div className="w-24 h-1.5 rounded-pill bg-grove-forest overflow-hidden">
                     <div
                       className={`h-full ${col.dot}`}
                       style={{ width: `${Math.max(4, Math.min(100, f.score))}%` }}

@@ -175,3 +175,24 @@ test('a rendered last card wins over the final-card hook, and a null result fall
   render({ cards: THREE, initialIndex: 2, renderCard: () => null, renderFinalCard: () => <div data-testid="final-card">final</div> });
   expect(q('final-card')).not.toBeNull();
 });
+
+test('Back and the card count live in a sticky header with the dark background', () => {
+  render();
+  const chrome = q('lesson-chrome');
+  expect(chrome.className).toContain('sticky');
+  expect(chrome.className).toContain('top-0');
+  expect(chrome.className).toContain('z-sticky');
+  expect(chrome.className).toContain('bg-grove-forest');
+  expect(chrome.contains(q('lesson-exit'))).toBe(true);
+  expect(chrome.contains(q('lesson-progress'))).toBe(true);
+});
+
+test('Sources use the shared Disclosure and keep their test id', () => {
+  render({ sources: { sources: [{ url: 'https://example.org/a', publisher: 'RHS', title: 'Watering', supports: 'Check first.' }], gaps: [] } });
+  const panel = q('lesson-sources');
+  expect(panel.tagName).toBe('DETAILS');
+  expect(panel.className).toContain('bg-grove-canopy');
+  expect(panel.querySelector('summary').textContent).toBe('Sources for this lesson');
+  expect(panel.querySelector('summary').className).toContain('font-ui');
+  expect(panel.querySelector('summary').className).toContain('text-sm');
+});

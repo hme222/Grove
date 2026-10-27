@@ -1,5 +1,5 @@
 import React from 'react';
-import forest from '@/assets/welcome-forest.jpg';
+import { photoSrc } from '@/components/PhotoBand';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 import './WelcomeScreen.css';
 
@@ -40,7 +40,7 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
         A <b className="gw-serif-bold">grove</b> is a small group of trees growing closely together
       </p>
 
-      <img className="gw-a gw-forest" src={forest} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
+      <img className="gw-a gw-forest" src={photoSrc('/photos/welcome-forest.jpg')} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
 
       <p className="gw-a gw-lower gw-safe" style={{ left: 103, top: 650 }}>
         FloraGrove is a <b>safe space</b> to learn about plants.

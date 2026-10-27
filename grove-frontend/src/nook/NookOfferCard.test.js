@@ -88,7 +88,7 @@ test('a failed save shows a plain error and can be tried again', async () => {
   const onDone = await mount();
   await click(q('nook-offer-yes'));
   await flush();
-  expect(q('nook-offer-error').textContent).toBe('Could not save that. Try again.');
+  expect(q('nook-offer-error').textContent).toBe('Couldn’t save that. Try again.');
   expect(onDone).not.toHaveBeenCalled();
   await click(q('nook-offer-yes'));
   await flush();

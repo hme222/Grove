@@ -122,7 +122,7 @@ export function CheckEmailStep({ onBack, onConfirmed, onLater }) {
     <StepScreen heading="Check your email" testId="onboarding-check-email" onBack={onBack}
       intro={<>We sent a link to <strong className="font-semibold break-all">{user && user.email}</strong>. Tap it to confirm, then come back here.</>}>
       <div className="mt-6 flex flex-1 flex-col">
-        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-grove-moss text-grove-sprout" aria-hidden="true">
+        <span className="flex h-16 w-16 items-center justify-center rounded-pill bg-grove-moss text-grove-sprout" aria-hidden="true">
           <Mail className="h-8 w-8" />
         </span>
         <p className="mt-4 font-ui text-sm text-grove-sage">Not there? Check spam.</p>
@@ -158,7 +158,7 @@ export function ConfirmedStep({ name, onContinue }) {
     <StepScreen heading="You’re confirmed" testId="onboarding-confirmed"
       intro={`${name ? `Thanks, ${name}. ` : 'Thanks. '}Next, a quick look at your growing space.`}>
       <div className="mt-6 flex flex-1 flex-col">
-        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-grove-lime text-grove-root" aria-hidden="true">
+        <span className="flex h-16 w-16 items-center justify-center rounded-pill bg-grove-lime text-grove-root" aria-hidden="true">
           <Check className="h-8 w-8" />
         </span>
         <div className="mt-auto pt-8">

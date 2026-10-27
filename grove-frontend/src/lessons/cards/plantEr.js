@@ -4,7 +4,7 @@ import { Droplets, Thermometer, LifeBuoy, Scale, ClipboardCheck } from "lucide-r
 export const CARDS = [
   {
     n: 1,
-    header: "Card 1 of 5 · The Hook",
+    header: "Card 1 of 5 · The hook",
     eyebrow: "Deep breath",
     headline: "Suddenly have a plant with zero instructions?",
     body:
@@ -19,7 +19,7 @@ export const CARDS = [
   {
     n: 2,
     header: "Card 2 of 5 · Step 1",
-    eyebrow: "Draft Defense",
+    eyebrow: "Draft defense",
     headline: "Move it away from drafts.",
     body:
       "Keep your plant away from direct AC vents, radiators, and doors that keep opening. Cold drafts and heat from vents can scorch or chill leaves. A calm corner is a safe corner.",
@@ -33,7 +33,7 @@ export const CARDS = [
   {
     n: 3,
     header: "Card 3 of 5 · Step 2",
-    eyebrow: "Escape Route",
+    eyebrow: "Escape route",
     headline: "Check for drainage.",
     body:
       "Lift the pot. Does it have drainage holes at the bottom? If it doesn&rsquo;t, <strong>don&rsquo;t pour water into it yet</strong> &mdash; water will pool and rot the roots within weeks. Keep the plant in a pot with holes, such as its nursery pot. If it sits in a decorative pot, lift the plant out to water, let it drain, then put it back.",
@@ -47,7 +47,7 @@ export const CARDS = [
   {
     n: 4,
     header: "Card 4 of 5 · Step 3",
-    eyebrow: "Moisture Check",
+    eyebrow: "Moisture check",
     headline: "Assess the weight.",
     body:
       "Push a finger into the soil (to the second knuckle in a pot 6 in or 15 cm or bigger, the first in a small pot) and lift the pot. If it&rsquo;s soaking wet, <strong>do nothing</strong>. If the pot feels feather-light and the soil is pulling away from the edges, take it to the sink for a thorough soak. If water runs straight through, let the pot sit in a basin for 20 minutes, then drain fully.<br/><br/>If the plant is in distress, don&rsquo;t fertilize it or give it a bigger pot. If the roots are mushy or smell sour, unpot it and repot into fresh, dry mix.",
@@ -60,8 +60,8 @@ export const CARDS = [
   },
   {
     n: 5,
-    header: "Card 5 of 5 · Your Turn",
-    eyebrow: "60-Second Action",
+    header: "Card 5 of 5 · Your turn",
+    eyebrow: "60-second action",
     headline: "Lift your mystery plant.",
     body:
       "Check the very bottom of the pot right now. Does it have drainage holes?",

@@ -83,6 +83,6 @@ test('a failed save shows a plain error and does not change the user', async () 
   await mount();
   await click(q('profile-nook-switch'));
   await flush();
-  expect(q('profile-nook-error').textContent).toBe('Could not save that. Try again.');
+  expect(q('profile-nook-error').textContent).toBe('Couldn’t save that. Try again.');
   expect(mockUpdateUser).not.toHaveBeenCalled();
 });

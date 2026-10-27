@@ -42,7 +42,7 @@ export default function LoadError({ what = 'this page', onRetry, busy = false, c
     ? 'You appear to be offline. Reconnect, then try again.'
     : attempts > 0
       ? `Still can\u2019t reach FloraGrove (tried ${attempts + 1} times). Your plants are safe. Try again in a minute.`
-      : 'We could not reach FloraGrove. Check your connection, then try again. If it keeps happening, it is on our side.';
+      : 'We couldn\u2019t reach FloraGrove. Check your connection and try again. If it keeps happening, it\u2019s on our side.';
   const status = (
     <span role="status" className="sr-only" data-testid="load-retry-status">
       {trying ? 'Trying again' : attempts > 0 ? `Still can\u2019t reach FloraGrove. Tried ${attempts + 1} times` : ''}

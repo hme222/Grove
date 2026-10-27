@@ -17,6 +17,7 @@ import ToxicityBadge from '../components/ToxicityBadge';
 import NextLessonCard from '../components/NextLessonCard';
 import LightPromptCard from '../components/LightPromptCard';
 import PipNoteCard from '../components/PipNoteCard';
+import PhotoBand from '../components/PhotoBand';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
@@ -110,7 +111,7 @@ export default function CarePage() {
       await userAPI.updateMe({ care_text_detail: mode });
     } catch {
       if (updateUser) updateUser({ care_text_detail: previous });
-      toast.error("Couldn't save that setting. Try again.");
+      toast.error("Couldn’t save that setting. Try again.");
     } finally {
       setSavingTextMode(false);
     }
@@ -200,7 +201,7 @@ export default function CarePage() {
       if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: [plant.id] });
       handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending });
     } catch {
-      toast.error("Couldn't save that. Check your connection and try again.");
+      toast.error("Couldn’t save that. Check your connection and try again.");
     }
   };
 
@@ -339,7 +340,7 @@ export default function CarePage() {
                   className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-pill ${style.dot}`}
                 />
 
-                <div className="flex gap-3 px-4 py-3">
+                <div className="flex flex-wrap gap-3 px-4 py-3">
                   <AppLink
                     to={`/plants/${plant.id}`}
                     state={{ name: plant.nickname || plant.common_name }}
@@ -347,7 +348,7 @@ export default function CarePage() {
                     aria-label={`Open ${plant.nickname || plant.common_name}`}
                   >
                     {plant.photo_url ? (
-                      <img src={getFileUrl(plant.photo_url)} alt="" className="h-full w-full object-cover" />
+                      <PhotoBand src={getFileUrl(plant.photo_url)} aspect="thumb" className="h-full w-full rounded-none" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Leaf className="h-7 w-7 text-grove-sprout opacity-40" />
@@ -355,10 +356,10 @@ export default function CarePage() {
                     )}
                   </AppLink>
 
-                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                  <div className="flex min-w-0 flex-1 basis-40 flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className={`inline-block w-2 h-2 rounded-full ${style.dot}`} aria-hidden="true" />
+                        <span className={`inline-block w-2 h-2 rounded-pill ${style.dot}`} aria-hidden="true" />
                         <h2 className="font-plant text-grove-cream text-base font-semibold truncate">
                           {plant.nickname || plant.common_name}
                         </h2>
@@ -388,12 +389,12 @@ export default function CarePage() {
                       </p>
                     </div>
 
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2">
                       <button
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
                         aria-label={`Log care for ${plant.nickname || plant.common_name}`}
-                        className={cn(buttonVariants(), "relative flex-1 overflow-hidden")}
+                        className={cn(buttonVariants(), "relative min-w-0 flex-1 overflow-hidden")}
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
@@ -402,7 +403,7 @@ export default function CarePage() {
                         onClick={(e) => handleWateredOne(plant, e.currentTarget)}
                         aria-label={`Mark ${plant.nickname || plant.common_name} watered`}
                         data-testid="care-mark-done"
-                        className={cn(buttonVariants({ variant: 'outline' }), "relative shrink-0 overflow-hidden")}
+                        className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-0 flex-1 overflow-hidden")}
                       >
                         <Check className="h-4 w-4" aria-hidden="true" />
                         Watered
@@ -472,7 +473,7 @@ export default function CarePage() {
           className="fixed left-0 right-0 bottom-nav z-nav mx-auto max-w-column px-3"
         >
           <div className="rounded-small border-hairline border-grove-fernLine bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-grove-lime flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-pill bg-grove-lime flex items-center justify-center flex-shrink-0">
               <Sparkles className="h-4 w-4 text-grove-root" aria-hidden="true" />
             </div>
             <div className="flex-1 min-w-0">
@@ -485,9 +486,11 @@ export default function CarePage() {
               onClick={endSession}
               aria-label="End session"
               data-testid="care-session-end"
-              className="w-8 h-8 rounded-full border-hairline border-grove-root text-grove-root hover:bg-grove-root hover:text-grove-lime flex items-center justify-center"
+              className="group flex h-touch w-touch items-center justify-center"
             >
-              <X className="h-4 w-4" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-root text-grove-root group-hover:bg-grove-root group-hover:text-grove-lime">
+                <X className="h-4 w-4" />
+              </span>
             </button>
           </div>
         </div>
@@ -552,7 +555,7 @@ function NamedPlantEmptyState({ plants }) {
       data-testid="care-empty-named"
       className="rounded-small border-hairline border-grove-moss bg-grove-canopy p-5 text-center max-w-md mx-auto"
     >
-      <div className="w-12 h-12 mx-auto rounded-full bg-grove-moss flex items-center justify-center mb-3">
+      <div className="w-12 h-12 mx-auto rounded-pill bg-grove-moss flex items-center justify-center mb-3">
         <Sparkles className="h-5 w-5 text-grove-sprout" />
       </div>
       <p className="font-plant text-grove-cream text-base">All caught up.</p>
@@ -593,7 +596,7 @@ function ScheduleReviewBanner() {
       className="mt-3 rounded-control border-hairline border-grove-moss bg-grove-sun/15 p-3 flex items-start gap-3"
       data-testid="schedule-review-banner"
     >
-      <span className="w-8 h-8 rounded-full bg-grove-sun/25 flex items-center justify-center flex-shrink-0">
+      <span className="w-8 h-8 rounded-pill bg-grove-sun/25 flex items-center justify-center flex-shrink-0">
         <Sparkles className="h-4 w-4 text-grove-sun" />
       </span>
       <div className="flex-1 min-w-0">
