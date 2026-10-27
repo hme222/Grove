@@ -2,16 +2,22 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 
 jest.mock('@/components/PhotoBand', () => ({ __esModule: true, default: () => null, photoSrc: (p) => p }), { virtual: true });
-import { WelcomeScreen, isCompact } from './WelcomeScreen';
+import { WelcomeScreen, isCompact, stageScaleFor } from './WelcomeScreen';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-test('the flow layout takes over below 360px or when the scaled body text would be under 14px', () => {
-  expect(isCompact(390, 390 / 430)).toBe(false); // an iPhone: 17px text scales to about 15.4px
-  expect(isCompact(430, 1)).toBe(false);
-  expect(isCompact(359, 0.9)).toBe(true);
-  expect(isCompact(195, 195 / 430)).toBe(true);
-  expect(isCompact(390, 0.8)).toBe(true); // a short window: 13.6px
+test('the flow layout takes over only below 360px', () => {
+  expect(isCompact(359)).toBe(true);
+  expect(isCompact(195)).toBe(true);
+  expect(isCompact(360)).toBe(false);
+  expect(isCompact(1420)).toBe(false);
+});
+
+test('the stage scales to fit but never below the size where its body text is 14px', () => {
+  expect(stageScaleFor(430, 932)).toBe(1);
+  expect(stageScaleFor(390, 844)).toBeCloseTo(844 / 932, 5); // an iPhone fits
+  expect(stageScaleFor(1420, 682)).toBeCloseTo(14 / 17, 5); // a laptop window keeps the picture and scrolls
+  expect(stageScaleFor(360, 500)).toBeCloseTo(14 / 17, 5);
 });
 
 const render = async (width, height) => {
@@ -44,6 +50,14 @@ test('wide: the 430 x 932 stage, above the tab bar', async () => {
   expect(welcome.getAttribute('data-layout')).toBeNull();
   expect(welcome.className).toContain('gw');
   expect(welcome.className).toContain('z-intro');
+  expect(container.querySelector('.gw-stage')).not.toBeNull();
+  done();
+});
+
+test('a short desktop window still gets the stage, not the flow page', async () => {
+  const { container, done } = await render(1420, 682);
+  const welcome = container.querySelector('[data-testid="onboarding-welcome"]');
+  expect(welcome.getAttribute('data-layout')).toBeNull();
   expect(container.querySelector('.gw-stage')).not.toBeNull();
   done();
 });

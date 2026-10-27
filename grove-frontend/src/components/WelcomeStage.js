@@ -40,14 +40,21 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
         A <b className="gw-serif-bold">grove</b> is a small group of trees growing closely together
       </p>
 
-      <img className="gw-a gw-forest" src={photoSrc('/photos/welcome-forest.jpg')} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
+      <img className="gw-a gw-forest" src={photoSrc('/photos/welcome-forest-edited.jpg')} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
 
       <p className="gw-a gw-lower gw-safe" style={{ left: 103, top: 650 }}>
         FloraGrove is a <b>safe space</b> to learn about plants.
       </p>
 
       <p className="gw-a gw-lower gw-tools" style={{ left: 103, top: 726, width: 310 }}>
-        Providing tools to help you feel confident in caring for your plants
+        Providing tools to help you feel confident in{' '}
+        <span className="gw-caring">
+          caring
+          <svg className="gw-caring-ring" viewBox="306 725 86 19" preserveAspectRatio="none" aria-hidden="true">
+            <path className="gw-redraw gw-redraw-fade gw-slot-4" fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.3" strokeOpacity="0.5" vectorEffect="non-scaling-stroke" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
+          </svg>
+        </span>{' '}
+        for your plants
       </p>
 
       <svg className="gw-lines" viewBox={`0 0 ${STAGE_W} ${STAGE_H}`} width={STAGE_W} height={STAGE_H} aria-hidden="true">
@@ -63,20 +70,19 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
             <stop offset="1" stopColor="white" stopOpacity="0" />
           </linearGradient>
           <mask id="gw-mask-1" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <rect className="gw-wipe gw-wipe-1" x="0" y={WIPE_1.top} width={STAGE_W} height={WIPE_1.h} fill="url(#gw-wipe-1)" style={{ '--gw-from': `-${WIPE_1.h}px` }} />
+            <rect className="gw-wipe gw-wipe-1 gw-redraw gw-redraw-wipe gw-slot-0" x="0" y={WIPE_1.top} width={STAGE_W} height={WIPE_1.h} fill="url(#gw-wipe-1)" style={{ '--gw-from': `-${WIPE_1.h}px` }} />
           </mask>
           <mask id="gw-mask-2" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <rect className="gw-wipe gw-wipe-2" x="0" y={WIPE_2.top} width={STAGE_W} height={WIPE_2.h} fill="url(#gw-wipe-2)" style={{ '--gw-from': `-${WIPE_2.h}px` }} />
+            <rect className="gw-wipe gw-wipe-2 gw-redraw gw-redraw-wipe gw-slot-1" x="0" y={WIPE_2.top} width={STAGE_W} height={WIPE_2.h} fill="url(#gw-wipe-2)" style={{ '--gw-from': `-${WIPE_2.h}px` }} />
           </mask>
         </defs>
         <g fill="var(--grove-lime)">
           <path className="gw-line" mask="url(#gw-mask-1)" d={LINE_1} />
           <path className="gw-line" mask="url(#gw-mask-2)" d={LINE_2} />
-          <path className="gw-a gw-lower" d={LINE_3} />
+          <path className="gw-a gw-lower gw-redraw gw-redraw-fade gw-slot-2" d={LINE_3} />
         </g>
         <g fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round">
-          <path className="gw-a gw-lower" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
-          <path className="gw-a gw-lower" strokeWidth="1.3" strokeOpacity="0.5" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
+          <path className="gw-a gw-lower gw-redraw gw-redraw-fade gw-slot-3" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
         </g>
         <g className="gw-a gw-stars" fill="var(--grove-sun)">
           <Sparkle cx={277} cy={133} r={5.5} i={1} />

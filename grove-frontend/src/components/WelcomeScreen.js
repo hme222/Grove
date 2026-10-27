@@ -13,21 +13,28 @@ import './WelcomeScreen.css';
 // Motion plays once, in order: the wordmark + "Welcome to FloraGrove", the stars (then they twinkle),
 // the first line wiping down, the definition, the second line, then the photo with the rest.
 // Tapping the screen while it builds skips to the finished screen.
+// When the window is shorter than the picture, the page scrolls.
 // With reduced motion, everything is shown at once and nothing moves.
 
-// Below this width, or when the scaled body text (17px on the stage) would be under 14px, the picture is
-// not scaled down: the same words come as a normal-flow page (headline, photo band, text, Continue).
+// Below this width the picture is not scaled down: the same words come as a normal-flow page (headline, photo band, text, Continue).
+// At or above it the picture always shows. It is scaled to fit the window, but never below the size where its 17px body text is 14px:
+// on a short window (a laptop browser) it is that size and the page scrolls, so the hand-drawn lines and stars stay.
 const COMPACT_W = 360;
 const MIN_BODY_PX = 14;
 const STAGE_BODY_PX = 17;
+const MIN_SCALE = MIN_BODY_PX / STAGE_BODY_PX;
 
-export function isCompact(width, scale) {
-  return width < COMPACT_W || STAGE_BODY_PX * scale < MIN_BODY_PX;
+export function isCompact(width) {
+  return width < COMPACT_W;
+}
+
+export function stageScaleFor(width, height) {
+  return Math.max(Math.min(width / STAGE_W, height / STAGE_H), MIN_SCALE);
 }
 
 function stageScale() {
   if (typeof window === 'undefined') return 1;
-  return Math.min(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+  return stageScaleFor(window.innerWidth, window.innerHeight);
 }
 
 function useStageScale() {
@@ -71,7 +78,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
         <p className="mt-3 font-ui text-base leading-relaxed text-grove-cream">
           A <b className="font-plant text-lg font-bold">grove</b> is a small group of trees growing closely together
         </p>
-        <PhotoBand src="/photos/welcome-forest.jpg" ratio="photo" eager className="mt-6" />
+        <PhotoBand src="/photos/welcome-forest-edited.jpg" ratio="photo" eager className="mt-6" />
         <p className="mt-6 font-ui text-base text-grove-cream">
           FloraGrove is a <b className="font-bold">safe space</b> to learn about plants.
         </p>
@@ -99,7 +106,7 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
   const [done, setDone] = useState(false);
   const width = typeof window === 'undefined' ? STAGE_W : window.innerWidth;
 
-  if (isCompact(width, scale)) {
+  if (isCompact(width)) {
     return <CompactWelcome onContinue={onContinue} onSkip={onSkip} disabled={disabled} showSkip={showSkip} />;
   }
 
