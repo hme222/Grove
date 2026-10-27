@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Phase 14C.3.c — Grove Chat Backend Tests
@@ -15,10 +16,10 @@ from typing import Optional
 BASE_URL = "http://localhost:8000/api"
 
 # Test credentials from review_request
-CLARE = {"email": "clare.testing@grove.app", "password": "GroveTesting2025!"}
-MAYA = {"email": "maya.testing@grove.app", "password": "GroveTesting2025!"}
-JAMES = {"email": "james.testing@grove.app", "password": "GroveTesting2025!"}
-GROVELING = {"email": "groveling.testing@grove.app", "password": "GroveTesting2025!"}
+CLARE = {"email": "clare.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
+MAYA = {"email": "maya.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
+JAMES = {"email": "james.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
+GROVELING = {"email": "groveling.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
 
 # Test grove (Clare is owner/admin)
 TEST_GROVE_ID = "fb7a60cf-d5a2-4596-8e2d-770df396c5d3"

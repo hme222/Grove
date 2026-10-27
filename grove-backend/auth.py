@@ -1,12 +1,25 @@
 import os
+import secrets
 import jwt
 import bcrypt
 from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException, Depends, Request
 from typing import Optional
 
-JWT_SECRET = os.environ.get('JWT_SECRET', 'grove-jwt-secret-key-2024')
-JWT_REFRESH_SECRET = os.environ.get('JWT_REFRESH_SECRET', 'grove-jwt-refresh-secret-key-2024')
+def _secret(name: str) -> str:
+    """A signing secret from the environment. There is no built-in default: a default in a public repo would let
+    anyone forge sign-in tokens. Without the variable, production refuses to start and any other environment
+    gets a random secret for this process only (sessions end when the server restarts)."""
+    value = os.environ.get(name, '').strip()
+    if value:
+        return value
+    if os.environ.get('APP_ENV', '').strip().lower() == 'production':
+        raise RuntimeError(f'{name} must be set when APP_ENV=production')
+    return secrets.token_urlsafe(48)
+
+
+JWT_SECRET = _secret('JWT_SECRET')
+JWT_REFRESH_SECRET = _secret('JWT_REFRESH_SECRET')
 JWT_ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 REFRESH_TOKEN_EXPIRE_DAYS = 30

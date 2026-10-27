@@ -49,7 +49,6 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
-  testLogin: () => api.post('/auth/test-login'),
   // Which optional sign-up pieces the server has switched on.
   config: () => api.get('/auth/config'),
   sso: (provider, data) => api.post(`/auth/sso/${provider}`, data),

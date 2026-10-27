@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Phase 14C.3.a Backend Test Suite
@@ -13,10 +14,10 @@ BASE_URL = "http://localhost:8000/api"
 
 # Test credentials
 TEST_USERS = {
-    "maya": {"email": "maya.testing@grove.app", "password": "GroveTesting2025!"},
-    "james": {"email": "james.testing@grove.app", "password": "GroveTesting2025!"},
-    "clare": {"email": "clare.testing@grove.app", "password": "GroveTesting2025!"},
-    "groveling": {"email": "groveling.testing@grove.app", "password": "GroveTesting2025!"},
+    "maya": {"email": "maya.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]},
+    "james": {"email": "james.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]},
+    "clare": {"email": "clare.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]},
+    "groveling": {"email": "groveling.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]},
 }
 
 

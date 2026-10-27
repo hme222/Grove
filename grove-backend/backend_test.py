@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Phase 14B.2 Backend Test Suite
@@ -441,7 +442,7 @@ class Phase14B2Tester:
         self.log("=" * 60, "INFO")
         
         # Login
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             self.log("Login failed - cannot proceed with authenticated tests", "FAIL")
             return 1
         

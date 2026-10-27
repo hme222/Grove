@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Phase 14A.2 Regression Tests with Clean Slate User
@@ -286,7 +287,7 @@ def main():
     tester = RegressionTester()
     
     # Login with clean slate user
-    if not tester.login("groveling.testing@grove.app", "GroveTesting2025!"):
+    if not tester.login("groveling.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
         print("❌ Login failed")
         return 1
     

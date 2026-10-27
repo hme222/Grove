@@ -582,14 +582,19 @@ async def refresh_token(input: RefreshInput):
 # Testing bypass endpoint
 @api_router.post("/auth/test-login")
 async def test_login():
-    """Bypass login for testing - creates/gets a test user"""
+    """Bypass login for local testing - creates/gets a test user.
+
+    Off unless ENABLE_TEST_LOGIN=1 is set in the server's environment (never set it on a deployed server):
+    without the flag the route does not exist, so nobody can get a session without credentials."""
+    if os.environ.get("ENABLE_TEST_LOGIN", "").strip() != "1":
+        raise HTTPException(status_code=404, detail="Not found")
     test_email = "test@grove.app"
     user = await db.users.find_one({"email": test_email})
     if not user:
         user_id = str(uuid.uuid4())
         user = {
             "id": user_id, "username": "testuser", "email": test_email,
-            "password_hash": hash_password("test123"),
+            "password_hash": hash_password(secrets.token_urlsafe(24)),
             "display_name": "Test Grower", "bio": "Testing Grove",
             "avatar_url": "", "location": "Portland, OR",
             "profile_public": True, "care_public": True,

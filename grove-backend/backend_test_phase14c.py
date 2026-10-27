@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Phase 14C.1 + 14C.2 Backend Test Suite
@@ -230,7 +231,7 @@ class Phase14CTester:
         self.log("\n=== Testing User Location Zone Auto-Derivation ===", "INFO")
         
         # Login as Maya first
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             self.log("Cannot test location zone derivation - login failed", "FAIL")
             return
         
@@ -269,19 +270,19 @@ class Phase14CTester:
         self.log("\n=== Testing Phase 14C.2: Admin Verification ===", "INFO")
         
         # First, login as Maya (admin)
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             self.log("Cannot test admin verification - Maya login failed", "FAIL")
             return
         
         # Get Groveling's user_id
-        groveling_login = self.login("groveling.testing@grove.app", "GroveTesting2025!")
+        groveling_login = self.login("groveling.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"])
         if not groveling_login:
             self.log("Cannot get Groveling's user_id", "FAIL")
             return
         groveling_id = self.user_id
         
         # Switch back to Maya (admin)
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             return
         
         # Test 10: POST /api/admin/users/{user_id}/verify as admin
@@ -347,14 +348,14 @@ class Phase14CTester:
             self.log("Could not create temp user for non-admin test", "WARN")
         
         # Switch back to Maya for remaining tests
-        self.login("maya.testing@grove.app", "GroveTesting2025!")
+        self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"])
     
     def test_swap_eligibility(self):
         """Test Phase 14C.2 - Swap eligibility"""
         self.log("\n=== Testing Phase 14C.2: Swap Eligibility ===", "INFO")
         
         # Test 12: GET /api/swaps/eligibility for Clare (verified+pro+old account)
-        if not self.login("clare.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("clare.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             self.log("Cannot test Clare's swap eligibility - login failed", "FAIL")
             return
         
@@ -377,7 +378,7 @@ class Phase14CTester:
                     f"account_age={data.get('account_age_days')} days", "INFO")
         
         # Test 13: GET /api/swaps/eligibility for Maya (recent account, admin but check eligibility)
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             return
         
         success, data = self.test(
@@ -400,7 +401,7 @@ class Phase14CTester:
         self.log("\n=== Testing Phase 14C.2: Want List ===", "INFO")
         
         # Login as Maya
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             return
         
         # First, get a species to add to want list
@@ -490,7 +491,7 @@ class Phase14CTester:
         self.log("\n=== Testing Phase 14C.2: AI Schedule Review Nudges ===", "INFO")
         
         # Login as Maya
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             return
         
         # Test 20: GET /api/notifications/schedule-reviews (should work even if empty)
@@ -581,7 +582,7 @@ class Phase14CTester:
         self.log("\n=== Testing Phase 14B.2 Regressions ===", "INFO")
         
         # Login as Maya
-        if not self.login("maya.testing@grove.app", "GroveTesting2025!"):
+        if not self.login("maya.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"]):
             return
         
         # Get species list

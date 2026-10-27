@@ -1,3 +1,4 @@
+import os
 """Focused test for badge earning logic"""
 import requests
 import sys
@@ -22,7 +23,7 @@ def test_earning_logic():
     print("=" * 80)
     
     # Login as James
-    token = login("james.testing@grove.app", "GroveTesting2025!")
+    token = login("james.testing@grove.app", os.environ["GROVE_TEST_PASSWORD"])
     if not token:
         print("❌ Failed to login")
         return 1

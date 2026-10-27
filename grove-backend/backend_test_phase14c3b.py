@@ -1,3 +1,4 @@
+import os
 # STALE: this live-API script predates the weekly check-ins change and still asserts the old daily streak and the
 # day-7 / day-30 unlocks. Those rules are gone (see check_ins.py and tests/test_check_ins.py). Do not rely on its streak results.
 """Phase 14C.3.b — 177-Badge Catalog Backend Test Suite
@@ -19,10 +20,10 @@ from typing import Dict, List, Optional
 BASE_URL = "http://localhost:8000/api"
 
 # Test credentials from review_request
-CLARE = {"email": "clare.testing@grove.app", "password": "GroveTesting2025!"}
-MAYA = {"email": "maya.testing@grove.app", "password": "GroveTesting2025!"}
-JAMES = {"email": "james.testing@grove.app", "password": "GroveTesting2025!"}
-GROVELING = {"email": "groveling.testing@grove.app", "password": "GroveTesting2025!"}
+CLARE = {"email": "clare.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
+MAYA = {"email": "maya.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
+JAMES = {"email": "james.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
+GROVELING = {"email": "groveling.testing@grove.app", "password": os.environ["GROVE_TEST_PASSWORD"]}
 
 
 class BadgeCatalogTester:

@@ -28,7 +28,12 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 # Common test password
-TEST_PASSWORD = "GroveTesting2025!"
+def test_password() -> str:
+    """The shared password for the seeded test accounts, from GROVE_TEST_PASSWORD (not stored in the repo)."""
+    value = os.environ.get("GROVE_TEST_PASSWORD", "").strip()
+    if len(value) < 12:
+        raise RuntimeError("Set GROVE_TEST_PASSWORD (at least 12 characters) in grove-backend/.env before seeding test accounts.")
+    return value
 
 async def clear_test_account(db, username):
     """Clear all data for a test account (cascading delete across all Grove collections)."""
@@ -172,7 +177,7 @@ async def seed_maya(db):
         "id": user_id,
         "username": "mayagreens",
         "email": "maya.testing@grove.app",
-        "password_hash": hash_password(TEST_PASSWORD),
+        "password_hash": hash_password(test_password()),
         "display_name": "Maya Chen",
         "bio": "New to plants. Trying not to kill them 🌱",
         "location": "Brooklyn, NY",
@@ -418,7 +423,7 @@ async def seed_maya(db):
     )
     print(f"  ✓ Featured 3 badges on profile")
     
-    print(f"✅ Maya Chen complete: @mayagreens / {TEST_PASSWORD}")
+    print(f"✅ Maya Chen complete: @mayagreens / (password: GROVE_TEST_PASSWORD)")
     return user_id
 
 async def seed_james(db):
@@ -433,7 +438,7 @@ async def seed_james(db):
         "id": user_id,
         "username": "rootsandstems",
         "email": "james.testing@grove.app",
-        "password_hash": hash_password(TEST_PASSWORD),
+        "password_hash": hash_password(test_password()),
         "display_name": "James Okafor",
         "bio": "Aroid obsessive. Propagation enthusiast. North London.",
         "location": "London, UK",
@@ -777,7 +782,7 @@ async def seed_james(db):
     await db.posts.insert_one(james_post)
     print(f"  ✓ Seeded 1 feed post")
     
-    print(f"✅ James Okafor complete: @rootsandstems / {TEST_PASSWORD}")
+    print(f"✅ James Okafor complete: @rootsandstems / (password: GROVE_TEST_PASSWORD)")
     return user_id
 
 async def seed_clare(db):
@@ -792,7 +797,7 @@ async def seed_clare(db):
         "id": user_id,
         "username": "clarenolan_studio",
         "email": "clare.testing@grove.app",
-        "password_hash": hash_password(TEST_PASSWORD),
+        "password_hash": hash_password(test_password()),
         "display_name": "Clare Nolan",
         "bio": "Floral designer. 18 years. London. Weddings, events, editorial.",
         "location": "London, UK",
@@ -1060,7 +1065,7 @@ async def seed_clare(db):
     await db.posts.insert_one(clare_post)
     print(f"  ✓ Seeded 1 feed post")
 
-    print(f"✅ Clare Nolan complete: @clarenolan_studio / {TEST_PASSWORD}")
+    print(f"✅ Clare Nolan complete: @clarenolan_studio / (password: GROVE_TEST_PASSWORD)")
     return user_id
 
 async def seed_supporting_accounts(db):
@@ -1077,7 +1082,7 @@ async def seed_supporting_accounts(db):
             "id": user_id,
             "username": username,
             "email": f"{username}@grove.app",
-            "password_hash": hash_password(TEST_PASSWORD),
+            "password_hash": hash_password(test_password()),
             "display_name": username.title().replace("and", " & "),
             "bio": "Plant enthusiast 🌿",
             "location": ["London", "Brooklyn", "Manchester"][len(username) % 3],
@@ -1139,7 +1144,7 @@ async def seed_groveling(db):
         "id": user_id,
         "username": "groveling",
         "email": "groveling.testing@grove.app",
-        "password_hash": hash_password(TEST_PASSWORD),
+        "password_hash": hash_password(test_password()),
         "display_name": "Groveling",
         "bio": "Just signed up.",
         "location": "",
@@ -1207,7 +1212,7 @@ async def main():
     # `python3 seed_testing.py groveling` reseeds only the first-run user (no plants, onboarding not done).
     if len(sys.argv) > 1 and sys.argv[1] == "groveling":
         await seed_groveling(db)
-        print("\nGroveling reset: sign in as groveling.testing@grove.app (password: see TEST_PASSWORD above) to walk the whole first run.")
+        print("\nGroveling reset: sign in as groveling.testing@grove.app (password: GROVE_TEST_PASSWORD) to walk the whole first run.")
         return
 
     # Seed accounts
@@ -1223,15 +1228,15 @@ async def main():
     print("\n📋 Test Account Credentials:")
     print("   Username: mayagreens")
     print("   Email: maya.testing@grove.app")
-    print(f"   Password: {TEST_PASSWORD}")
+    print("   Password: the value of GROVE_TEST_PASSWORD")
     print("")
     print("   Username: rootsandstems")
     print("   Email: james.testing@grove.app")
-    print(f"   Password: {TEST_PASSWORD}")
+    print("   Password: the value of GROVE_TEST_PASSWORD")
     print("")
     print("   Username: clarenolan_studio")
     print("   Email: clare.testing@grove.app")
-    print(f"   Password: {TEST_PASSWORD}")
+    print("   Password: the value of GROVE_TEST_PASSWORD")
     print("\n🔐 All accounts have admin access to demo panel")
     print("="*60 + "\n")
 
