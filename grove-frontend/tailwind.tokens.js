@@ -44,12 +44,22 @@ module.exports = {
     "card": "22px",
     "phone": "56px",
     "phoneScreen": "45px",
-    "pill": "9999px"
+    "pill": "999px"
   },
   "borderWidth": {
     "hairline": "0.5px",
     "strong": "1.5px",
     "accent": "3px"
+  },
+  "aspectRatio": {
+    "wide": "2 / 1",
+    "band": "5 / 2",
+    "short": "3 / 1",
+    "photo": "4 / 3",
+    "portrait": "4 / 5",
+    "tall": "5 / 4",
+    "square": "1 / 1",
+    "room": "8 / 5"
   },
   "maxWidth": {
     "page": "1100px",
@@ -72,13 +82,15 @@ module.exports = {
     "screen": "100dvh",
     "hero": "220px",
     "field": "60px",
+    "media-row": "168px",
     "nav": "calc(var(--nav-height) + env(safe-area-inset-bottom))"
   },
   "maxHeight": {
     "sheet": "85vh",
     "panel": "70vh",
     "hero": "420px",
-    "viewport": "calc(100dvh - 2rem)"
+    "viewport": "calc(100dvh - 2rem)",
+    "screen": "100dvh"
   },
   "minWidth": {
     "touch": "44px",
@@ -177,6 +189,14 @@ module.exports = {
         "opacity": "0"
       }
     },
+    "soft-pulse": {
+      "0%, 100%": {
+        "opacity": "1"
+      },
+      "50%": {
+        "opacity": "0.55"
+      }
+    },
     "popin": {
       "from": {
         "transform": "scale(0.6)",
@@ -190,7 +210,8 @@ module.exports = {
   },
   "animation": {
     "petal": "petal 1.8s ease-out forwards",
-    "popin": "popin 350ms ease-out"
+    "popin": "popin 350ms ease-out",
+    "soft-pulse": "soft-pulse 2.4s ease-in-out infinite"
   },
   "fontFamily": {
     "sans": "'Alegreya Sans', Optima, Candara, sans-serif",

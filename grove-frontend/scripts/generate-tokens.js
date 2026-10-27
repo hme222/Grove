@@ -40,8 +40,9 @@ function build() {
   const px = (n) => `${n}px`;
   const theme = {
     colors: { grove: tokens.color },
-    borderRadius: Object.fromEntries(Object.entries(tokens.radius).map(([k, v]) => [k, v === 999 ? '9999px' : px(v)])),
+    borderRadius: Object.fromEntries(Object.entries(tokens.radius).map(([k, v]) => [k, px(v)])),
     borderWidth: tokens.borderWidth,
+    aspectRatio: tokens.aspectRatio,
     maxWidth: tokens.maxWidth,
     minHeight: { ...tokens.minHeight, nav: 'calc(var(--nav-height) + env(safe-area-inset-bottom))' },
     maxHeight: tokens.maxHeight,
@@ -72,8 +73,8 @@ function build() {
   };
   const js = `${banner.replace('/*', '//').replace(' */', '')}\nmodule.exports = ${JSON.stringify(theme, null, 2)};\n`;
   // Token utility names for tailwind-merge (src/lib/utils.js), so `rounded-small` can replace `rounded-card`.
-  const names = { borderRadius: theme.borderRadius, borderWidth: theme.borderWidth, maxWidth: theme.maxWidth, maxHeight: theme.maxHeight, boxShadow: theme.boxShadow, zIndex: theme.zIndex };
-  const namesJs = `${banner.replace('/*', '//').replace(' */', '')}\nexport const tokenNames = ${JSON.stringify(Object.fromEntries(Object.entries(names).map(([k, v]) => [k, Object.keys(v)])), null, 2)};\n`;
+  const names = { aspectRatio: theme.aspectRatio, borderRadius: theme.borderRadius, borderWidth: theme.borderWidth, maxWidth: theme.maxWidth, maxHeight: theme.maxHeight, boxShadow: theme.boxShadow, zIndex: theme.zIndex };
+  const namesJs = `${banner.replace('/*', '//').replace(' */', '')}\nexport const tokenNames = ${JSON.stringify(Object.fromEntries(Object.entries(names).map(([k, v]) => [k, Object.keys(v)])), null, 2)};\nexport const aspectRatios = ${JSON.stringify(theme.aspectRatio, null, 2)};\n`;
   return { css, js, namesJs };
 }
 

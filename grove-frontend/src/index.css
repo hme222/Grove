@@ -93,3 +93,7 @@
   font-size: var(--text-sm) !important;
   height: var(--touch-min) !important;
 }
+
+/* One scrollbar-free scroller for swipe rows (photo guide cards, nook plant tiles). */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

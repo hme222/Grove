@@ -1,5 +1,15 @@
 // GENERATED from design/tokens.json by scripts/generate-tokens.js. Do not edit by hand.
 export const tokenNames = {
+  "aspectRatio": [
+    "wide",
+    "band",
+    "short",
+    "photo",
+    "portrait",
+    "tall",
+    "square",
+    "room"
+  ],
   "borderRadius": [
     "hairline",
     "tag",
@@ -37,7 +47,8 @@ export const tokenNames = {
     "sheet",
     "panel",
     "hero",
-    "viewport"
+    "viewport",
+    "screen"
   ],
   "boxShadow": [
     "rest",
@@ -58,4 +69,14 @@ export const tokenNames = {
     "toast",
     "sticky"
   ]
+};
+export const aspectRatios = {
+  "wide": "2 / 1",
+  "band": "5 / 2",
+  "short": "3 / 1",
+  "photo": "4 / 3",
+  "portrait": "4 / 5",
+  "tall": "5 / 4",
+  "square": "1 / 1",
+  "room": "8 / 5"
 };

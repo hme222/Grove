@@ -37,7 +37,42 @@
   {
     "file": "src/components/WelcomeStage.js",
     "rule": "inline-style-number",
-    "match": "*",
+    "match": "width: 236",
+    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeStage.js",
+    "rule": "inline-style-number",
+    "match": "width: 402",
+    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeStage.js",
+    "rule": "inline-style-number",
+    "match": "height: 272",
+    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeStage.js",
+    "rule": "inline-style-number",
+    "match": "width: 310",
+    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeStage.js",
+    "rule": "inline-style-number",
+    "match": "width: 390",
+    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeStage.js",
+    "rule": "inline-style-number",
+    "match": "height: 46",
     "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
     "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
   },
@@ -51,35 +86,224 @@
   {
     "file": "src/components/WelcomeScreen.css",
     "rule": "css-px",
-    "match": "*",
+    "match": "font-size: 26px",
+    "reason": "Type sizes inside the welcome stage, a 430pt composition canvas scaled as one picture; a size has no meaning outside that coordinate space.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeScreen.css",
+    "rule": "css-px",
+    "match": "font-size: 29px",
+    "reason": "Type sizes inside the welcome stage, a 430pt composition canvas scaled as one picture; a size has no meaning outside that coordinate space.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeScreen.css",
+    "rule": "css-px",
+    "match": "font-size: 17px",
+    "reason": "Type sizes inside the welcome stage, a 430pt composition canvas scaled as one picture; a size has no meaning outside that coordinate space.",
+    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
+  },
+  {
+    "file": "src/components/WelcomeScreen.css",
+    "rule": "css-px",
+    "match": "font-size: 18px",
     "reason": "Type sizes inside the welcome stage, a 430pt composition canvas scaled as one picture; a size has no meaning outside that coordinate space.",
     "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
   },
   {
     "file": "src/pages/WaitlistPage.css",
     "rule": "css-px",
-    "match": "*",
+    "match": "font-size: clamp(28px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "max-width: 400px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 1px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 1px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "min-height: 360px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 760px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 560px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 364px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 763px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 4px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 31px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "border-radius: 2px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 57px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 90px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "border-radius: 0 2px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 342px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 741px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 430px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 932px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "width: 126px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "height: 37px",
+    "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
+    "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
+  },
+  {
+    "file": "src/pages/WaitlistPage.css",
+    "rule": "css-px",
+    "match": "border-radius: 20px",
     "reason": "Marketing page: the desktop iPhone preview (device metrics from design/tokens.json phoneFrame, 430x932 stage), its glow and side buttons, plus the one-off form column widths and the 1px visually-hidden clip.",
     "retireWhen": "the phoneFrame metrics move into tokens.json as a width/height/inset scale, or the waitlist page is removed."
   },
   {
     "file": "src/lib/microAnimations.css",
     "rule": "css-px",
-    "match": "*",
+    "match": "width: 6px",
+    "reason": "Droplet and leaf-burst particles: tiny decorative art sized in px for the keyframes, not layout.",
+    "retireWhen": "the particles are drawn as SVG with a viewBox."
+  },
+  {
+    "file": "src/lib/microAnimations.css",
+    "rule": "css-px",
+    "match": "height: 10px",
+    "reason": "Droplet and leaf-burst particles: tiny decorative art sized in px for the keyframes, not layout.",
+    "retireWhen": "the particles are drawn as SVG with a viewBox."
+  },
+  {
+    "file": "src/lib/microAnimations.css",
+    "rule": "css-px",
+    "match": "width: 12px",
+    "reason": "Droplet and leaf-burst particles: tiny decorative art sized in px for the keyframes, not layout.",
+    "retireWhen": "the particles are drawn as SVG with a viewBox."
+  },
+  {
+    "file": "src/lib/microAnimations.css",
+    "rule": "css-px",
+    "match": "height: 12px",
     "reason": "Droplet and leaf-burst particles: tiny decorative art sized in px for the keyframes, not layout.",
     "retireWhen": "the particles are drawn as SVG with a viewBox."
   },
   {
     "file": "src/App.css",
     "rule": "css-px",
-    "match": "*",
+    "match": "width: 6px",
     "reason": "Scrollbar track thickness is browser chrome with no token role.",
     "retireWhen": "a scrollbar size token exists, or the custom scrollbar is dropped."
   },
   {
     "file": "src/index.css",
     "rule": "css-px",
-    "match": "*",
+    "match": "font-size: 16px",
     "reason": "iOS Safari zooms a focused field under 16px, so the floor must be a literal 16px, not a rem that follows the reader's text size.",
     "retireWhen": "iOS stops zooming on focus or the app locks viewport scale deliberately."
   },

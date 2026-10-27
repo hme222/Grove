@@ -19,7 +19,24 @@ const SPACE_PX = new Set([0, ...tokens.space]);
 const ALPHA = new Set(tokens.alpha.map(String));
 
 const SKIP = [/\.generated\./, /\.test\.jsx?$/];
+const ASPECTS = new Set(Object.keys(tokens.aspectRatio));
+const SMALL_STEP = (n) => parseFloat(n) * 4 < tokens.touchTarget.min;
 const FILES = /\.(js|jsx|css)$/;
+
+// Raw <img> in src/pages and src/components. PhotoBand is the one photo component (fixed token ratio, lazy
+// loading, the moss tile on failure). A file may keep its raw <img> only if it is listed here with the exact
+// number of tags and the reason; a count that no longer matches fails, so the list cannot go stale.
+const RAW_IMG_ALLOWED = {
+  'src/components/PhotoBand.jsx': { count: 1, reason: 'the photo component itself' },
+  'src/components/ThumbStrip.jsx': { count: 1, reason: 'thumbnail strip: a tiny square with its own leaf fallback' },
+  'src/components/PhotoViewer.jsx': { count: 1, reason: 'full-screen viewer: the photo keeps its natural size and ratio (object-contain), no fixed band' },
+  'src/pages/FeedPage.js': { count: 1, reason: 'lightbox: the enlarged picture keeps its natural size (object-contain)' },
+  'src/components/GroveChat.js': { count: 2, reason: 'chat attachments: a 40px composer preview and a message image at its natural ratio, up to max-h-72' },
+  'src/components/PlantImage.js': { count: 1, reason: 'older tone-fallback image used by the collection tiles; retire by moving its callers to PhotoBand' },
+  'src/components/WelcomeStage.js': { count: 1, reason: 'absolutely placed art in the welcome scene (not a content photo)' },
+  'src/pages/SwapMatchesPage.js': { count: 1, reason: 'pending conversion to PhotoBand (file not in this pass)' },
+  'src/pages/PublicBouquetPage.js': { count: 1, reason: 'pending conversion to PhotoBand (file not in this pass)' },
+};
 
 const RULES = [
   { id: 'hex', re: /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, why: 'raw hex colour' },
@@ -86,8 +103,67 @@ const RULES = [
   { id: 'bare-border-width', re: /(?<![\w:.-])(?:border|border-[trblxy]|divide-[xy])(?=[\s"'`]|$)(?![\w-])/g, jsOnly: true, why: 'bare border/divide/ring is 1px or 3px (use border-hairline, border-strong or divide-y-hairline)' },
   { id: 'stock-border-width', re: /(?<![\w:.-])(?:border(?:-[trblxy])?|divide-[xy])-(?:2|4|8)(?![\w-])/g, jsOnly: true, why: 'stock 2/4/8px border (use border-hairline, border-strong or border-accent)' },
   { id: 'border-px-string', re: /[`'"]\s*\d*\.?\d+px\s+(?:solid|dashed|dotted)\b/g, jsOnly: true, why: 'hand-typed border width (use the border-hairline / border-strong classes)' },
+  { id: 'rounded-full', re: /(?<![\w-])rounded(?:-[trblse]{1,2})?-full(?![\w-])/g, why: 'rounded-full computes to 9999px: use rounded-pill (tokens.json radius.pill)' },
+  {
+    id: 'arbitrary-aspect',
+    re: /(?<![\w-])aspect-(?:\[[^\]]+\]|video)(?![\w-])/g,
+    why: `hand-typed aspect ratio (use aspect-${[...ASPECTS].join('|aspect-')} from tokens.json aspectRatio)`,
+  },
+  {
+    // Stock Tailwind has its own aspect-square; it is only allowed while tokens.json aspectRatio defines `square`,
+    // which makes the class token-backed (1 / 1). Dropping that token makes every aspect-square a hit again.
+    id: 'stock-aspect-square',
+    re: /(?<![\w-])aspect-(?:square|auto)(?![\w-])/g,
+    filter: (m) => m[0] === 'aspect-auto' || !ASPECTS.has('square'),
+    why: 'stock aspect class that is not a token (add it to tokens.json aspectRatio or use PhotoBand ratio)',
+  },
+  {
+    id: 'raw-img',
+    re: /<img\b/g,
+    jsOnly: true,
+    pathOnly: /^src\/(?:pages|components)\//,
+    why: 'raw <img> (use PhotoBand; a tag that must stay is listed with a reason in RAW_IMG_ALLOWED in scripts/check-tokens.js)',
+  },
+  {
+    // PhotoBand's ratio prop takes the token name. A literal such as "5 / 2" or "3/1" is a shape that is not in the system.
+    id: 'photoband-ratio-literal',
+    re: /<PhotoBand\b[^<]*?\bratio=(?:"([^"]*)"|\{\s*['"`]([^'"`]*)['"`]\s*\})/g,
+    filter: (m) => !ASPECTS.has(m[1] !== undefined ? m[1] : m[2]),
+    label: (m) => `ratio=${m[0].split('ratio=')[1]}`,
+    jsOnly: true,
+    why: `PhotoBand ratio must be a token name (${[...ASPECTS].join(', ')})`,
+  },
+  {
+    // A button or link sized below the touch target by w-N/h-N/size-N (N * 4 < 44px). Put the hit area on the control
+    // (w-touch h-touch, or min-h-touch min-w-touch) and draw the smaller visual on an inner span. sr-only and a class that
+    // is overridden by w-touch/h-touch/min-w-touch/min-h-touch on the same axis are fine; svg and icon classes are not on the tag.
+    id: 'sub-touch-control',
+    re: /<(?:button|a|AppLink|Link|NavLink)\b[^<]{0,900}/g,
+    jsOnly: true,
+    filter: (m) => subTouch(m[0]).length > 0,
+    label: (m) => `<${m[0].match(/^<\w+/)[0].slice(1)}> ${subTouch(m[0]).join(' ')}`,
+    why: 'control below the 44px touch target (use w-touch h-touch or min-h-touch min-w-touch; keep a smaller visual on an inner span)',
+  },
   { id: 'arbitrary-color-util', re: /(?<![\w-])(?:bg|fill|stroke|ring|from|to|via|shadow)-\[#[^\]]+\]/g, why: 'hand-typed colour' },
 ];
+
+
+// Classes in a tag head's className (string literals after `className=`) that size a control below the touch target.
+function subTouch(head) {
+  const ci = head.indexOf('className=');
+  if (ci < 0) return [];
+  const cls = [...head.slice(ci).matchAll(/"([^"]*)"|'([^']*)'|`([^`]*)`/g)].map((x) => x[1] || x[2] || x[3] || '').join(' ');
+  if (/(?<![\w-])sr-only(?![\w-])/.test(cls)) return [];
+  const has = (re) => re.test(cls);
+  const out = [];
+  for (const x of cls.matchAll(/(?<![\w:.-])(w|h|size)-(\d+(?:\.\d+)?)(?![\w./-])/g)) {
+    if (!SMALL_STEP(x[2])) continue;
+    const axis = x[1];
+    const covered = (axis === 'w' && has(/(?<![\w-])min-w-touch(?![\w-])/)) || (axis === 'h' && has(/(?<![\w-])min-h-touch(?![\w-])/));
+    if (!covered) out.push(x[0]);
+  }
+  return out;
+}
 
 // Blanks comments but leaves string, template and attribute literals alone, so a `/*` inside
 // accept="image/*" or a URL's `//` cannot open a fake comment and hide the rest of the file.
@@ -149,6 +225,7 @@ function walk(dir, out = []) {
 }
 
 const used = new Set();
+const usedImg = new Set();
 const failures = [];
 for (const file of walk(srcDir)) {
   const rel = path.relative(root, file);
@@ -156,14 +233,25 @@ for (const file of walk(srcDir)) {
   for (const rule of RULES) {
     if (rule.jsOnly && file.endsWith('.css')) continue;
     if (rule.cssOnly && !file.endsWith('.css')) continue;
+    if (rule.pathOnly && !rule.pathOnly.test(rel.split(path.sep).join('/'))) continue;
     // Some rules only apply inside a part of the file (an inline style object).
     const hits = [];
     if (rule.within) {
       for (const scope of text.matchAll(rule.within)) {
-        for (const m of scope[0].matchAll(rule.re)) if (!rule.filter || rule.filter(m)) hits.push({ 0: m[0], index: scope.index + m.index });
+        for (const m of scope[0].matchAll(rule.re)) if (!rule.filter || rule.filter(m)) hits.push({ 0: rule.label ? rule.label(m) : m[0], index: scope.index + m.index });
       }
     } else {
-      for (const m of text.matchAll(rule.re)) if (!rule.filter || rule.filter(m)) hits.push({ 0: m[0], index: m.index });
+      for (const m of text.matchAll(rule.re)) if (!rule.filter || rule.filter(m)) hits.push({ 0: rule.label ? rule.label(m) : m[0], index: m.index });
+    }
+    if (rule.id === 'raw-img') {
+      const key = rel.split(path.sep).join('/');
+      const allowed = RAW_IMG_ALLOWED[key];
+      if (allowed) {
+        usedImg.add(key);
+        if (hits.length === allowed.count) continue;
+        failures.push(`${rel}: ${hits.length} raw <img> but RAW_IMG_ALLOWED lists ${allowed.count} (${allowed.reason}). Use PhotoBand or update the list.`);
+        continue;
+      }
     }
     for (const m of hits) {
       const line = text.slice(0, m.index).split('\n').length;
@@ -175,6 +263,7 @@ for (const file of walk(srcDir)) {
     }
   }
 }
+for (const k of Object.keys(RAW_IMG_ALLOWED)) if (!usedImg.has(k)) failures.push(`RAW_IMG_ALLOWED lists ${k} but it has no raw <img> any more. Remove it.`);
 exceptions.forEach((e, i) => { if (!used.has(i)) failures.push(`scripts/token-exceptions.json: unused exception for ${e.file} (${e.rule} ${e.match}). Remove it.`); });
 for (const e of exceptions) if (!e.reason || !e.retireWhen) failures.push(`scripts/token-exceptions.json: ${e.file} needs a reason and retireWhen`);
 

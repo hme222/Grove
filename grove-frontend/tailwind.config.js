@@ -15,6 +15,7 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       borderWidth: tokens.borderWidth,
+      aspectRatio: tokens.aspectRatio,
       maxWidth: tokens.maxWidth,
       minHeight: tokens.minHeight,
       maxHeight: tokens.maxHeight,
