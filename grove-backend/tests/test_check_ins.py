@@ -390,3 +390,10 @@ def test_twelve_weeks_earns_the_third(make_client):
         start = MONDAY - timedelta(weeks=week * 2)
         db.care_logs.docs += [_log(start), _log(start + timedelta(days=1)), _log(start + timedelta(days=2))]
     assert _award(db) == {"checkin_first", "checkin_weeks_4", "checkin_weeks_12"}
+
+
+def test_light_reader_is_earned_by_the_old_tooltip_or_the_window_map_lesson():
+    assert badge_progress.light_reader_earned(["lighting"])
+    assert badge_progress.light_reader_earned(["collection", "lesson:window-map"])
+    assert not badge_progress.light_reader_earned(["lesson:light-basics"])
+    assert not badge_progress.light_reader_earned(None)

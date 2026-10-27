@@ -114,6 +114,15 @@ def _account_age_days(user: dict) -> int:
         return 0
 
 
+
+# "Light reader" is earned by the short lighting tooltip tutorial (older accounts) or by finishing the
+# Window Map light lesson, the second half of Pip's light lessons.
+LIGHT_READER_ENTRIES = ("lighting", "lesson:window-map")
+
+
+def light_reader_earned(tutorials_seen) -> bool:
+    return any(entry in set(tutorials_seen or []) for entry in LIGHT_READER_ENTRIES)
+
 async def collect_user_snapshot(db, user_id: str) -> dict:
     """Compute every metric we need for goal progress in one batch.
 
@@ -182,7 +191,7 @@ async def collect_user_snapshot(db, user_id: str) -> dict:
         "swaps_completed": swaps_completed,
         "plants_at_100": plants_at_100,
         "rescued_plants": rescued_plants,
-        "lighting_tutorial_seen": 1 if "lighting" in tutorials_seen else 0,
+        "lighting_tutorial_seen": 1 if light_reader_earned(tutorials_seen) else 0,
         "is_verified_flag": 1 if user.get("is_verified") or user.get("verified_user") else 0,
         "account_age_days": _account_age_days(user),
     }

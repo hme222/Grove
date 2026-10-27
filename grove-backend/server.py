@@ -416,7 +416,7 @@ async def check_and_award_badges(user_id: str):
     maybe("swap_first", swaps_completed >= 1)
 
     # --- Tutorial (1) ---
-    maybe("light_reader", "lighting" in tutorials_seen)
+    maybe("light_reader", light_reader_earned(tutorials_seen))
 
     # --- Time milestones (3) ---
     maybe("grove_1_month",  age_days >= 30)
@@ -1378,6 +1378,7 @@ async def set_displayed_badges(
 #   - Pin/unpin via dedicated endpoints; not via PATCH /users/me
 
 from badge_progress import (
+    light_reader_earned,
     BADGE_PROGRESS_RULES, can_be_pinned_as_goal,
     collect_user_snapshot, progress_for,
 )
