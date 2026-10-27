@@ -166,7 +166,6 @@ describe('the lesson quizzes', () => {
   test('cards that name plants toxic to pets say so, and no card calls every succulent a whole-pot-dry plant', () => {
     const cards = LESSON_CARDS;
     const joined = (id) => cards[id].map((c) => c.body).join(' ');
-    expect(joined('window-blueprint')).toMatch(/toxic to cats and dogs if chewed/);
     expect(joined('habit-stacking')).toMatch(/Monstera is toxic to cats and dogs/);
     Object.keys(cards).forEach((id) => {
       expect(joined(id)).not.toMatch(/(?<!Desert )[Ss]ucculents and cacti want the whole pot dry/);
@@ -174,9 +173,11 @@ describe('the lesson quizzes', () => {
     expect(joined('plant-er')).not.toMatch(/kill plants faster|within days/);
   });
 
-  test('every window lesson card that names a direction carries the hemisphere note', () => {
-    const note = 'Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.';
-    LESSON_CARDS['window-blueprint']
+  test('every light lesson card that names a direction carries the hemisphere note', () => {
+    // The window lessons ask which hemisphere the person is in, on the window pick card, and swap
+    // north and south from there, so a card naming a direction in plain text must say so too.
+    const note = 'Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.';
+    [...LESSON_CARDS['light-basics'], ...LESSON_CARDS['window-map']]
       .filter((c) => /\b(north|south|east|west)\b|which direction/i.test(c.body))
       .forEach((c) => expect(c.body).toContain(note));
   });

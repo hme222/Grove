@@ -83,7 +83,8 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       const meta = res.data?._meta;
       if (meta?.soil_coaching) toast.message(meta.soil_coaching);
       success(submitBtnRef.current || e.currentTarget);
-      const label = count === 1 ? selectedArr[0] : `${count} actions`;
+      const tile = CARE_ACTIONS.find((action) => action.value === selectedArr[0]);
+      const label = count === 1 ? (tile ? tile.label : selectedArr[0]) : `${count} actions`;
       toast.success(`${label} logged for ${plantName}`);
       handleReset();
       onLogged?.(meta);

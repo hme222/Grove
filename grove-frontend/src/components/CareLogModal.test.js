@@ -142,3 +142,37 @@ test('a failed save keeps the modal open and shows the existing error toast', as
   expect(toast.error).toHaveBeenCalledWith('Failed to log care action');
   expect(onClose).not.toHaveBeenCalled();
 });
+
+test('offers Light check and Wipe leaves tiles that log those actions', async () => {
+  await mount();
+  expect(q('care-action-light_check').textContent).toBe('Light check');
+  expect(q('care-action-clean').textContent).toBe('Wipe leaves');
+  await click(q('care-action-light_check'));
+  await click(q('care-action-clean'));
+  await click(q('care-log-submit'));
+  await flush();
+  expect(careAPI.createLog).toHaveBeenCalledWith('p1', { actions: ['light_check', 'clean'], notes: '' });
+});
+
+test('the success toast uses the tile name, not the stored action id', async () => {
+  await mount();
+  await click(q('care-action-soil_check'));
+  await click(q('care-soil-outcome-dry'));
+  await click(q('care-log-submit'));
+  await flush();
+  expect(toast.success).toHaveBeenCalledWith('Soil test logged for Monty');
+});
+
+test('a single wipe is named in words, and several actions are counted', async () => {
+  await mount();
+  await click(q('care-action-clean'));
+  await click(q('care-log-submit'));
+  await flush();
+  expect(toast.success).toHaveBeenCalledWith('Wipe leaves logged for Monty');
+  await mount();
+  await click(q('care-action-water'));
+  await click(q('care-action-mist'));
+  await click(q('care-log-submit'));
+  await flush();
+  expect(toast.success).toHaveBeenCalledWith('2 actions logged for Monty');
+});

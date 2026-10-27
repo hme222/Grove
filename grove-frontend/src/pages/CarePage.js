@@ -15,7 +15,10 @@ import DailyMissionCard from '../components/DailyMissionCard';
 import SetupNote from '../components/SetupNote';
 import ToxicityBadge from '../components/ToxicityBadge';
 import NextLessonCard from '../components/NextLessonCard';
+import LightPromptCard from '../components/LightPromptCard';
+import PipNoteCard from '../components/PipNoteCard';
 import FirstCareCelebration from '../components/FirstCareCelebration';
+import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
 import WorkingTowardSection from '../components/WorkingTowardSection';
 import DailyTriviaCard from '../components/DailyTriviaCard';
@@ -90,7 +93,7 @@ export default function CarePage() {
   const [exiting, setExiting] = useState(new Set()); // plant ids currently animating out
   const [sessionCount, setSessionCount] = useState(0); // session = plants logged this visit
   const [sessionPlants, setSessionPlants] = useState([]); // { id, name } of each plant tended this visit
-  const [showFirstCare, setShowFirstCare] = useState(false);
+  const firstCare = useFirstCareCelebration(user, updateUser);
   const [allPlants, setAllPlants] = useState([]); // for named-plant empty state
   const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
   const [undoing, setUndoing] = useState(false);
@@ -149,14 +152,7 @@ export default function CarePage() {
     return [...prev, ...list.filter((x) => !seen.has(x.id)).map((x) => ({ id: x.id, name: plantName(x) }))];
   });
 
-  const maybeCelebrateFirstCare = (firstCarePending) => {
-    if (firstCarePending && user && !user.first_care_celebrated) {
-      setShowFirstCare(true);
-      // Optimistically mark on client so the overlay only fires once even if
-      // server sync is delayed.
-      if (updateUser) updateUser({ first_care_celebrated: true });
-    }
-  };
+  const maybeCelebrateFirstCare = firstCare.celebrate;
 
   const filteredPlants = useMemo(() => (
     filter === 'all' ? plants
@@ -443,9 +439,10 @@ export default function CarePage() {
       <section aria-labelledby="pip-heading" className="max-w-content mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
         <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
+          <LightPromptCard embedded />
           <DailyMissionCard embedded />
           <NextLessonCard embedded />
-          <DailyTriviaCard embedded />
+          {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
         <WorkingTowardSection />
         <div className="pt-1">
@@ -523,8 +520,8 @@ export default function CarePage() {
       )}
 
       <FirstCareCelebration
-        open={showFirstCare}
-        onClose={() => setShowFirstCare(false)}
+        open={firstCare.open}
+        onClose={firstCare.close}
       />
     </div>
   );

@@ -4,15 +4,42 @@ import BackButton from '../components/BackButton';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 
+const clampIndex = (value, count) => (Number.isInteger(value) ? Math.max(0, Math.min(value, count - 1)) : 0);
+
 // Steps through a lesson's cards. The last card hands over to
 // `renderFinalCard`, which holds the lesson's "your turn" action. Card text
 // comes from Grove's own lesson files and may contain simple HTML.
-export default function LessonPlayer({ cards, renderFinalCard, onExit, sources }) {
-  const [index, setIndex] = useState(0);
+//   initialIndex  the card to open on, for resuming
+//   onAdvance     called with the new card number after the person moves
+//   renderCard    (card, { next, back, index, isLast }) => node | null. A node replaces the
+//                 card's next button (and the final-card hook on the last card).
+//   host          shown above the card (Pip, for people who turned the nook on)
+export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExit, sources, host, initialIndex, onAdvance }) {
+  const [index, setIndex] = useState(() => clampIndex(initialIndex, cards.length));
   const headingRef = useRef(null);
   const card = cards[index];
   const isLast = index === cards.length - 1;
   const Icon = card.icon;
+
+  const go = (target) => {
+    const next = clampIndex(target, cards.length);
+    if (next === index) return;
+    setIndex(next);
+    if (onAdvance) onAdvance(next);
+  };
+  const next = () => go(index + 1);
+  const back = () => go(index - 1);
+  const custom = renderCard ? renderCard(card, { next, back, index, isLast }) : null;
+  const backButton = index > 0 && (
+    <button
+      type="button"
+      onClick={back}
+      className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1")}
+      data-testid="lesson-back"
+    >
+      <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
+    </button>
+  );
 
   // Move focus to the new card's headline so keyboard and screen reader users land on it.
   useEffect(() => {
@@ -29,6 +56,12 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit, sources }
           </p>
         </div>
 
+        {host && (
+          <div className="mb-3" data-testid="lesson-host">
+            {host}
+          </div>
+        )}
+
         <div className={`rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
           <p className="text-xs font-ui text-grove-cream mb-2">{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
@@ -44,23 +77,19 @@ export default function LessonPlayer({ cards, renderFinalCard, onExit, sources }
         </div>
 
         <div className="mt-4">
-          {isLast && renderFinalCard ? (
+          {custom ? (
+            <>
+              {custom}
+              {index > 0 && <div className="mt-2">{backButton}</div>}
+            </>
+          ) : isLast && renderFinalCard ? (
             renderFinalCard(card)
           ) : (
             <div className="flex gap-2">
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setIndex((i) => i - 1)}
-                  className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1")}
-                  data-testid="lesson-back"
-                >
-                  <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
-                </button>
-              )}
+              {backButton}
               <button
                 type="button"
-                onClick={() => setIndex((i) => Math.min(i + 1, cards.length - 1))}
+                onClick={next}
                 className={cn(buttonVariants(), "flex-1 flex")}
                 data-testid="lesson-next"
               >
