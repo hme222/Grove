@@ -20,7 +20,7 @@ let mockUser = {};
 jest.mock('../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser, updateUser: mockUpdateUser }) }));
 // Jest here cannot load react-router-dom v7 or the `@/` alias.
 jest.mock('react-router-dom', () => ({ useNavigate: () => jest.fn() }), { virtual: true });
-jest.mock('@/constants/emptyStates', () => ({ EMPTY_STATES: {} }), { virtual: true });
+jest.mock('@/constants/emptyStates', () => ({ EMPTY_STATES: { care_all_done: { heading: 'All caught up!' }, collection_zero_plants: { heading: 'Your grove starts here' } } }), { virtual: true });
 jest.mock('../components/PageHeader', () => ({
   PageHeader: ({ rightContent, children }) => <header>{rightContent}{children}</header>,
   HeaderAction: ({ children, icon: _icon, pressed: _pressed, ...p }) => <button type="button" {...p}>{children}</button>,
@@ -38,7 +38,7 @@ jest.mock('../components/ui/alert-dialog', () => {
     AlertDialogCancel: ({ children, ...p }) => <button type="button" {...p}>{children}</button>,
   };
 });
-jest.mock('../components/EmptyState', () => ({ EmptyState: () => <div data-testid="empty-state" /> }));
+jest.mock('../components/EmptyState', () => ({ EmptyState: ({ config }) => <div data-testid="empty-state">{config?.heading}</div> }));
 jest.mock('../components/CareLogModal', () => () => null);
 jest.mock('../components/DailyMissionCard', () => () => null);
 jest.mock('../components/NextLessonCard', () => () => null);
@@ -228,6 +228,22 @@ describe('end-of-round summary', () => {
     } finally {
       jest.useRealTimers();
     }
+  });
+
+  test('an account with no plants is invited to add one, not told it is thriving', async () => {
+    careAPI.getDueToday.mockResolvedValue({ data: [] });
+    plantAPI.getAll.mockResolvedValue({ data: { plants: [] } });
+    await mount();
+    expect(container.textContent).toContain('Your grove starts here');
+    expect(container.textContent).not.toMatch(/thriving|All caught up/);
+  });
+
+  test('if the collection cannot be read, an empty due list still reads as caught up', async () => {
+    careAPI.getDueToday.mockResolvedValue({ data: [] });
+    plantAPI.getAll.mockRejectedValue(new Error('network'));
+    await mount();
+    expect(container.textContent).toContain('All caught up');
+    expect(container.textContent).not.toContain('Your grove starts here');
   });
 
   test('no summary when nothing was logged this visit', async () => {

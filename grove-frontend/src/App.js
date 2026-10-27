@@ -201,9 +201,10 @@ function AppRoutes() {
   const showQuiz = !flowOpen && !quizDone && (replayFirstRun || shouldShowQuiz(user));
 
   const handleQuizDone = (data) => {
-    updateUser({ primary_track: data.primary_track });
     setQuizDone(true);
     setReplayFirstRun(false);
+    if (data.skipped) return;
+    updateUser({ primary_track: data.primary_track });
     const first = data.queue && data.queue[0];
     if (first) navigate(lessonPath(first));
   };

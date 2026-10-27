@@ -85,7 +85,16 @@ test('skipping sends an empty list', async () => {
   await click(q('quiz-skip'));
   await flush();
   expect(lessonAPI.submitQuiz).toHaveBeenCalledWith([]);
-  expect(onDone).toHaveBeenCalledWith(PAYLOAD);
+  expect(onDone).toHaveBeenCalledWith({ skipped: true });
+});
+
+test('skipping still closes the quiz when the save fails', async () => {
+  lessonAPI.submitQuiz.mockRejectedValueOnce(new Error('network'));
+  const onDone = await mount();
+  await click(q('quiz-skip'));
+  await flush();
+  expect(onDone).toHaveBeenCalledWith({ skipped: true });
+  expect(q('quiz-error')).toBeNull();
 });
 
 test('a failed save shows an error, keeps the picks, and can be retried', async () => {

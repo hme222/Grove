@@ -95,3 +95,12 @@ test('daily limit defaults to one and can be raised', async () => {
   expect(notificationAPI.updatePreferences).toHaveBeenCalledWith({ care_daily_cap: 3 });
   expect(q('pref-care-cap-3').checked).toBe(true);
 });
+
+test('a failed save puts the switch back and says the change was undone', async () => {
+  notificationAPI.updatePreferences.mockRejectedValueOnce(new Error('network'));
+  expect(q('pref-toggle-push_care_due').getAttribute('aria-checked')).toBe('true');
+  await act(async () => { q('pref-toggle-push_care_due').click(); });
+  expect(q('pref-toggle-push_care_due').getAttribute('aria-checked')).toBe('true');
+  const { toast } = require('sonner');
+  expect(toast.error.mock.calls[0][0]).toMatch(/undone/);
+});

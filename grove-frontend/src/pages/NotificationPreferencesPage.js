@@ -67,15 +67,15 @@ export default function NotificationPreferencesPage() {
 
   const update = async (partial) => {
     setSaving(Object.keys(partial)[0]);
+    const before = prefs;
     const optimistic = { ...prefs, ...partial };
     setPrefs(optimistic);
     try {
       const res = await notificationAPI.updatePreferences(partial);
       setPrefs(res.data);
     } catch (e) {
-      toast.error('Save failed');
-      // revert
-      setPrefs((prev) => ({ ...prev }));
+      setPrefs(before);
+      toast.error('Couldn\u2019t save that. Your change was undone. Check your connection and try again.');
     } finally {
       setSaving(null);
     }

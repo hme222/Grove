@@ -44,10 +44,10 @@ export default function FirstSessionBanner() {
     >
       <div className="relative overflow-hidden rounded-small border-hairline border-grove-fernLine/40 bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
         <div className="w-10 h-10 rounded-pill bg-grove-lime flex items-center justify-center flex-shrink-0">
-          <Sprout className="h-5 w-5 text-grove-sprout" />
+          <Sprout className="h-5 w-5 text-grove-root" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-ui text-xs font-medium text-grove-sprout">
+          <p className="font-ui text-xs font-medium text-grove-root">
             Welcome to FloraGrove, {displayName}
           </p>
           <p className="font-ui text-sm leading-snug">
@@ -61,7 +61,7 @@ export default function FirstSessionBanner() {
           data-testid="first-session-banner-dismiss"
           className="group relative flex h-touch w-touch flex-shrink-0 items-center justify-center overflow-hidden"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-lime/25 text-grove-sprout group-hover:bg-grove-sprout">
+          <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-root/40 text-grove-root group-hover:bg-grove-root/15">
             <X className="h-4 w-4" />
           </span>
         </button>

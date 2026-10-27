@@ -36,6 +36,14 @@ export default function QuizFlow({ onDone }) {
     }
   };
 
+  // Skipping never waits on the network and never opens a lesson. The save is best effort; if it fails the quiz simply comes back next session.
+  const skip = () => {
+    if (submitting.current) return;
+    submitting.current = true;
+    lessonAPI.submitQuiz([]).catch(() => {});
+    onDone({ skipped: true });
+  };
+
   const start = () => {
     if (picked.length === 0) {
       setError('Pick at least one, or skip for now.');
@@ -98,7 +106,7 @@ export default function QuizFlow({ onDone }) {
         </button>
         <button
           type="button"
-          onClick={() => submit([])}
+          onClick={skip}
           className="mt-3 w-full text-center text-xs font-ui text-grove-cream underline underline-offset-2"
           data-testid="quiz-skip"
         >

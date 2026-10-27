@@ -96,6 +96,7 @@ export default function CarePage() {
   const [sessionPlants, setSessionPlants] = useState([]); // { id, name } of each plant tended this visit
   const firstCare = useFirstCareCelebration(user, updateUser);
   const [allPlants, setAllPlants] = useState([]); // for named-plant empty state
+  const [allPlantsLoaded, setAllPlantsLoaded] = useState(false); // false until the collection really loaded, so a failed fetch is never read as zero plants
   const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
   const [undoing, setUndoing] = useState(false);
   const textMode = careTextMode(user);
@@ -133,6 +134,7 @@ export default function CarePage() {
     try {
       const res = await plantAPI.getAll({});
       setAllPlants(res.data?.plants || []);
+      setAllPlantsLoaded(true);
     } catch {
       // silent \u2014 only used for empty state copy
     }
@@ -317,7 +319,7 @@ export default function CarePage() {
                 onDone={() => { endSession(); document.getElementById('main-content')?.focus(); }}
               />
             ) : (
-              <NamedPlantEmptyState plants={allPlants} />
+              <NamedPlantEmptyState plants={allPlants} collectionLoaded={allPlantsLoaded} />
             )}
           </div>
         ) : (
@@ -531,7 +533,10 @@ export default function CarePage() {
 }
 
 // ----- Named-plant empty state for the care list -----
-function NamedPlantEmptyState({ plants }) {
+function NamedPlantEmptyState({ plants, collectionLoaded }) {
+  if (collectionLoaded && (!plants || plants.length === 0)) {
+    return <EmptyState config={EMPTY_STATES.collection_zero_plants} />;
+  }
   if (!plants || plants.length === 0) {
     return <EmptyState config={EMPTY_STATES.care_all_done} />;
   }
