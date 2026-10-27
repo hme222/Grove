@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles, Check, X } from 'lucide-react';
+import ThumbStrip from './ThumbStrip';
 
 // --- Illustrated do/don't SVGs. Simple, stylized, on-brand. ---
 
@@ -194,6 +195,13 @@ const CARDS = [
   },
 ];
 
+// One preview per card: the good example, or the hero shot on the last card.
+const THUMBS = CARDS.map((c, i) => ({
+  id: `guide-${i}`,
+  node: c.hero ? <HeroShot /> : <c.Good />,
+  label: `Show card ${i + 1} of ${CARDS.length}: ${c.title}`,
+}));
+
 export default function PhotoGuideCards({ defaultIndex = 0 }) {
   const [index, setIndex] = useState(defaultIndex);
   const scrollerRef = useRef(null);
@@ -273,41 +281,35 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
         ))}
       </div>
 
-      {/* Dots + arrows */}
-      <div className="flex items-center justify-center gap-3 mt-1" data-testid="photo-guide-pagination">
+      {/* Thumbnail strip + arrows */}
+      <div className="mt-1 flex items-center gap-1" data-testid="photo-guide-pagination">
         <button
           type="button"
           onClick={() => setIndex((i) => Math.max(0, i - 1))}
           aria-label="Previous card"
           data-testid="photo-guide-prev"
           disabled={index === 0}
-          className="w-7 h-7 rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream flex items-center justify-center disabled:opacity-40"
+          className="flex h-touch min-h-touch w-touch min-w-touch shrink-0 items-center justify-center rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream disabled:opacity-40"
         >
-          <ChevronLeft className="h-3.5 w-3.5" />
+          <ChevronLeft className="h-4 w-4" />
         </button>
-        <div className="flex items-center gap-1.5">
-          {CARDS.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              aria-label={`Go to card ${i + 1}`}
-              data-testid={`photo-guide-dot-${i}`}
-              onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all duration-200 ${
-                i === index ? 'w-5 bg-grove-lime' : 'w-1.5 bg-grove-moss'
-              }`}
-            />
-          ))}
-        </div>
+        <ThumbStrip
+          className="min-w-0 flex-1 no-scrollbar"
+          testId="photo-guide-thumbs"
+          label="Photo guide cards"
+          items={THUMBS}
+          activeIndex={index}
+          onSelect={setIndex}
+        />
         <button
           type="button"
           onClick={() => setIndex((i) => Math.min(CARDS.length - 1, i + 1))}
           aria-label="Next card"
           data-testid="photo-guide-next"
           disabled={index === CARDS.length - 1}
-          className="w-7 h-7 rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream flex items-center justify-center disabled:opacity-40"
+          className="flex h-touch min-h-touch w-touch min-w-touch shrink-0 items-center justify-center rounded-full border-hairline border-grove-moss bg-grove-forest text-grove-cream disabled:opacity-40"
         >
-          <ChevronRight className="h-3.5 w-3.5" />
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
 

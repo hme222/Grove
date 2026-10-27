@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertCircle, Check, CheckCircle2, Clock, Leaf } from 'lucide-react';
 import { getFileUrl } from '../lib/api';
 import { CONDITION_LABELS } from './nookCopy';
 import { PAPER_BUTTON_QUIET } from './paperStyles';
+import ThumbStrip from '../components/ThumbStrip';
 
 // Status is a word and an icon, never color alone.
 const CONDITION_ICONS = {
@@ -32,8 +33,56 @@ const SCROLL_FOCUS = { tabIndex: 0 };
 // One light tile per plant, in a row that swipes sideways and snaps to each tile. The region is
 // focusable so a keyboard user can scroll it with the arrow keys.
 export default function PlantTiles({ plants, onToggleLooksOff }) {
+  const regionRef = useRef(null);
+  const [current, setCurrent] = useState(0);
+
+  // The thumbnail strip follows whichever tile is at the start of the row.
+  useEffect(() => {
+    const el = regionRef.current;
+    if (!el) return undefined;
+    const onScroll = () => {
+      const tiles = Array.from(el.querySelectorAll('li'));
+      if (!tiles.length) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1 && el.scrollLeft > 0) {
+        setCurrent(tiles.length - 1);
+        return;
+      }
+      const edge = el.getBoundingClientRect().left;
+      let best = 0;
+      let bestGap = Infinity;
+      tiles.forEach((li, i) => {
+        const gap = Math.abs(li.getBoundingClientRect().left - edge);
+        if (gap < bestGap) { best = i; bestGap = gap; }
+      });
+      setCurrent(best);
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const items = useMemo(
+    () => plants.map((p, i) => ({
+      id: p.id,
+      src: p.photo_url ? getFileUrl(p.photo_url) : null,
+      label: `Show plant ${i + 1} of ${plants.length}: ${p.name}`,
+    })),
+    [plants],
+  );
+
+  const jumpTo = (i) => {
+    setCurrent(i);
+    const el = regionRef.current;
+    const tile = el && el.querySelectorAll('li')[i];
+    if (!tile || typeof el.scrollTo !== 'function') return;
+    const reduced = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const delta = tile.getBoundingClientRect().left - el.getBoundingClientRect().left;
+    el.scrollTo({ left: el.scrollLeft + delta, behavior: reduced ? 'auto' : 'smooth' });
+  };
+
   return (
+    <>
     <div
+      ref={regionRef}
       role="region"
       aria-label="Your plants"
       {...SCROLL_FOCUS}
@@ -73,5 +122,17 @@ export default function PlantTiles({ plants, onToggleLooksOff }) {
         })}
       </ul>
     </div>
+    {plants.length > 1 && (
+      <ThumbStrip
+        variant="paper"
+        testId="nook-thumbs"
+        label="Jump to a plant"
+        items={items}
+        activeIndex={current}
+        onSelect={jumpTo}
+        className="-mx-2"
+      />
+    )}
+    </>
   );
 }
