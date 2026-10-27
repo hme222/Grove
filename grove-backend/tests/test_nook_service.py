@@ -153,6 +153,16 @@ def test_a_low_health_score_marks_a_plant_as_needing_attention():
     assert result["plants"][0]["condition"] == "needs-attention"
 
 
+def test_each_plant_row_carries_its_cover_photo_or_none():
+    plants = [
+        {"id": "p1", "created_at": stamp(1), "photo_url": "/uploads/a.jpg"},
+        {"id": "p2", "created_at": stamp(2), "photo_url": ""},
+        {"id": "p3", "created_at": stamp(3)},
+    ]
+    rows = state(make_db(plants=plants))["plants"]
+    assert [r["photo_url"] for r in rows] == ["/uploads/a.jpg", None, None]
+
+
 def test_plants_use_their_species_template_and_their_nickname():
     plants = [{"id": "p1", "created_at": stamp(1), "common_name": "Snake Plant", "nickname": "Sid"}]
     plant = state(make_db(plants=plants))["plants"][0]

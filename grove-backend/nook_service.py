@@ -92,6 +92,8 @@ async def build_state(
             "group": nook.species_group(plant.get("common_name"), plant.get("latin_name")),
             "condition": condition,
             "looks_off": bool(plant.get("looks_off")),
+            # The plant's cover photo, the same field the Plants API returns.
+            "photo_url": plant.get("photo_url") or None,
         })
 
     # Quiet mode looks at every active plant. Only the list the page shows is capped.
