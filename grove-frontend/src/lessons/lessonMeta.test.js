@@ -3,10 +3,11 @@ import { LESSON_META, QUIZ_OPTIONS, NOTE_CHIPS, lessonPath } from './lessonMeta'
 test('lesson ids match the backend list', () => {
   expect(Object.keys(LESSON_META).sort()).toEqual([
     'habit-stacking',
+    'light-basics',
     'plant-er',
     'plant-parent-reset',
     'soil-finger-test',
-    'window-blueprint',
+    'window-map',
   ]);
 });
 

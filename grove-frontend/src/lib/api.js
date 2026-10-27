@@ -109,6 +109,26 @@ export const lessonAPI = {
   submitPlan: (plan_answers) => api.post('/users/me/quiz', { plan_answers }),
 };
 
+// The light lessons
+export const lightAPI = {
+  setWindow: (body) => api.post('/users/me/window', body),
+  setReading: (reading) => api.post('/users/me/light-reading', { reading }),
+  progress: (lessonId, card) => api.post(`/lessons/${lessonId}/progress`, { card }),
+  prompt: (action) => api.post('/users/me/light-prompt', { action }),
+  fits: () => api.get('/light/fits'),
+  guide: (hemisphere, view) => api.get('/light/guide', { params: { hemisphere, view } }),
+};
+
+// Pip's nook
+export const nookAPI = {
+  state: () => api.get('/nook/state'),
+  seen: () => api.post('/nook/seen'),
+  settings: (data) => api.post('/users/me/nook', data),
+  startReadiness: (speciesId) => api.post('/nook/readiness', { species_id: speciesId }),
+  completeStep: (stepId) => api.post(`/nook/readiness/steps/${stepId}`),
+  looksOff: (plantId, looksOff) => api.post(`/plants/${plantId}/looks-off`, { looks_off: looksOff }),
+};
+
 // Plants
 export const plantAPI = {
   getAll: (params) => api.get('/plants', { params }),

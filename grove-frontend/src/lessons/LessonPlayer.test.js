@@ -96,3 +96,82 @@ test('a lesson with no sources shows no panel', () => {
   render({});
   expect(q('lesson-sources')).toBeNull();
 });
+
+test('shows a host above the card when one is given, and nothing when not', () => {
+  render({ host: <div data-testid="the-host">Pip</div> });
+  expect(q('lesson-host').textContent).toBe('Pip');
+  expect(q('lesson-host').nextElementSibling.querySelector('[data-testid="lesson-headline"]')).not.toBeNull();
+  render({ host: null });
+  expect(q('lesson-host')).toBeNull();
+});
+
+const THREE = [...CARDS, { header: 'Card 3 of 3', headline: 'Third', body: 'Body three.', cta: 'Done' }];
+
+test('initialIndex opens that card and is clamped to the cards there are', () => {
+  render({ cards: THREE, initialIndex: 2 });
+  expect(q('lesson-progress').textContent).toBe('Card 3 of 3');
+  render({ cards: THREE, initialIndex: 99 });
+  expect(q('lesson-progress').textContent).toBe('Card 3 of 3');
+});
+
+test('a bad initialIndex opens the first card', () => {
+  [-4, undefined, NaN, 'x'].forEach((value) => {
+    root.unmount();
+    root = createRoot(container);
+    render({ cards: THREE, initialIndex: value });
+    expect(q('lesson-progress').textContent).toBe('Card 1 of 3');
+  });
+});
+
+test('onAdvance hears the new card number on next and back, and not when nothing moves', () => {
+  const onAdvance = jest.fn();
+  render({ cards: THREE, onAdvance });
+  click('lesson-next');
+  click('lesson-next');
+  click('lesson-back');
+  expect(onAdvance.mock.calls).toEqual([[1], [2], [1]]);
+  onAdvance.mockClear();
+  root.unmount();
+  root = createRoot(container);
+  render({ cards: CARDS, onAdvance, initialIndex: 1 });
+  click('lesson-next');
+  expect(onAdvance).not.toHaveBeenCalled();
+});
+
+test('a rendered card replaces the next button and can move the lesson on', () => {
+  const seen = [];
+  const renderCard = (card, helpers) => {
+    seen.push({ index: helpers.index, isLast: helpers.isLast });
+    return card.headline === 'First headline' ? (
+      <button type="button" data-testid="step-go" onClick={helpers.next}>step</button>
+    ) : null;
+  };
+  render({ cards: THREE, renderCard });
+  expect(q('lesson-next')).toBeNull();
+  expect(q('step-go')).not.toBeNull();
+  click('step-go');
+  expect(q('lesson-headline').textContent).toBe('North & south');
+  expect(q('lesson-next')).not.toBeNull();
+  expect(q('lesson-back')).not.toBeNull();
+  expect(seen[0]).toEqual({ index: 0, isLast: false });
+});
+
+test('a rendered card keeps the back button from card two on', () => {
+  const renderCard = (card, helpers) =>
+    helpers.index === 1 ? <button type="button" data-testid="step-go" onClick={helpers.back}>back</button> : null;
+  render({ cards: THREE, renderCard });
+  click('lesson-next');
+  expect(q('step-go')).not.toBeNull();
+  expect(q('lesson-back')).not.toBeNull();
+  expect(q('lesson-next')).toBeNull();
+});
+
+test('a rendered last card wins over the final-card hook, and a null result falls back to it', () => {
+  render({ cards: THREE, initialIndex: 2, renderCard: () => <div data-testid="step-last">custom</div>, renderFinalCard: () => <div data-testid="final-card">final</div> });
+  expect(q('step-last')).not.toBeNull();
+  expect(q('final-card')).toBeNull();
+  root.unmount();
+  root = createRoot(container);
+  render({ cards: THREE, initialIndex: 2, renderCard: () => null, renderFinalCard: () => <div data-testid="final-card">final</div> });
+  expect(q('final-card')).not.toBeNull();
+});

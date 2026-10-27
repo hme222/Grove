@@ -29,6 +29,9 @@ import LessonPage from "./pages/LessonPage";
 import QuizFlow from "./components/QuizFlow";
 import { shouldShowQuiz } from "./lessons/quizGate";
 import { lessonPath } from "./lessons/lessonMeta";
+import NookPage from "./pages/NookPage";
+import NookOfferCard from "./nook/NookOfferCard";
+import { shouldShowNookOffer } from "./nook/offerGate";
 // Phase 14C.4 — GoalsPage deprecated. Goals are now pinned locked badges
 // surfaced on /care/today. /care/goals redirects to /care/today.
 import ChallengesPage from "./pages/ChallengesPage";
@@ -171,6 +174,7 @@ function AppRoutes() {
     setShowOnboarding(true);
     navigate('/', { replace: true });
   }, [location.pathname, loading, user, navigate]);
+  const [offerDone, setOfferDone] = useState(false);
 
   useEffect(() => {
     if (!loading && user && user.onboarding_complete === false) {
@@ -204,6 +208,14 @@ function AppRoutes() {
     if (first) navigate(lessonPath(first));
   };
 
+  // Pip's nook is offered once, after a new user's first real action. It waits for the first-run flow and the quiz.
+  const showOffer = !flowOpen && !showQuiz && !offerDone && shouldShowNookOffer(user);
+
+  const handleOfferDone = (saved) => {
+    updateUser(saved);
+    setOfferDone(true);
+  };
+
   if (loading) return <LoadingScreen />;
 
   if (bootError && !user) {
@@ -218,6 +230,7 @@ function AppRoutes() {
     <>
       {flowOpen && <Onboarding onComplete={handleOnboardingComplete} replay={replayFirstRun} />}
       {showQuiz && <QuizFlow onDone={handleQuizDone} />}
+      {showOffer && <NookOfferCard onDone={handleOfferDone} />}
       <Routes>
         {/* Outside every shell: signed-out pages, the public bouquet and the first-run replay. */}
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
@@ -241,6 +254,7 @@ function AppRoutes() {
           <Route path="/help-my-plant" element={<HelpMyPlantPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/lessons" element={<LessonsPage />} />
+          <Route path="/nook" element={<NookPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/plants" element={<CollectionPage />} />
           <Route element={<CareShell />}>

@@ -7,20 +7,25 @@ from typing import Iterable, List, Optional, Set
 
 TRACKS = ("reset", "rebirth", "rescue", "steady_sprout", "seedling")
 
-LESSON_IDS = (
+# The lessons a person can start.
+LIBRARY_LESSON_IDS = (
     "soil-finger-test",
     "plant-parent-reset",
     "plant-er",
     "habit-stacking",
-    "window-blueprint",
+    "light-basics",
+    "window-map",
 )
+# Retired lessons. Their records are still read, so nook growth and badges already earned stay.
+LEGACY_LESSON_IDS = ("window-blueprint",)
+LESSON_IDS = LIBRARY_LESSON_IDS + LEGACY_LESSON_IDS
 
 TRACK_LESSON = {
     "reset": "plant-parent-reset",
     "rebirth": "soil-finger-test",
     "rescue": "plant-er",
     "steady_sprout": "habit-stacking",
-    "seedling": "window-blueprint",
+    "seedling": "light-basics",
 }
 
 QUIZ_OPTION_TRACK = {
@@ -65,6 +70,17 @@ def build_lesson_queue(primary_track: Optional[str], completed: Optional[Iterabl
     second = REBIRTH_SECOND_LESSON if first == SOIL_LESSON else SOIL_LESSON
     done = set(completed or [])
     return [lesson for lesson in (first, second) if lesson not in done]
+
+
+def with_legacy_credit(done: Iterable[str]) -> List[str]:
+    """Show Part 1 of the light lessons as done for anyone who finished the retired lesson.
+
+    This is for display and queueing only. Nothing is written, so no growth is added.
+    """
+    credited = list(done or [])
+    if "window-blueprint" in credited and "light-basics" not in credited:
+        credited.append("light-basics")
+    return credited
 
 
 def lesson_tutorial_id(lesson_id: str) -> str:

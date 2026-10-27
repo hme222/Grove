@@ -152,9 +152,11 @@ describe('the lesson quizzes', () => {
     expect(text).not.toMatch(/<strong>Always<\/strong> use a pot/);
   });
 
-  test('every window lesson card that names a direction carries the hemisphere note', () => {
+  test('every light lesson card that names a direction carries the hemisphere note', () => {
+    // The window lessons ask which hemisphere the person is in, on the window pick card, and swap
+    // north and south from there, so a card naming a direction in plain text must say so too.
     const note = 'Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.';
-    LESSON_CARDS['window-blueprint']
+    [...LESSON_CARDS['light-basics'], ...LESSON_CARDS['window-map']]
       .filter((c) => /\b(north|south|east|west)\b|which direction/i.test(c.body))
       .forEach((c) => expect(c.body).toContain(note));
   });

@@ -161,7 +161,7 @@ def test_queue_defaults_to_the_rebirth_track(make_client):
     assert body["primary_track"] == "rebirth"
     assert body["queue"] == ["soil-finger-test", "plant-parent-reset"]
     assert body["has_plant"] is True
-    assert len(body["library"]) == 5
+    assert len(body["library"]) == 6
 
 
 def test_quiz_picks_a_track_and_stores_only_known_answers(make_client):
@@ -234,3 +234,44 @@ def test_a_refused_lesson_is_not_a_check_in(make_client):
     assert client.post("/api/lessons/soil-finger-test/complete").status_code == 409
     assert client.post("/api/lessons/not-a-lesson/complete").status_code == 404
     assert db.check_ins_recorded == []
+
+
+# ---------- the light lessons ----------
+
+def test_the_queue_suggests_part_two_after_part_one(make_client):
+    db, client = make_client()
+    assert client.get("/api/lessons/queue").json()["up_next"] is None
+    db.users.docs[0]["tutorials_seen"] = ["lesson:light-basics"]
+    assert client.get("/api/lessons/queue").json()["up_next"] == "window-map"
+    db.users.docs[0]["tutorials_seen"] = ["lesson:light-basics", "lesson:window-map"]
+    assert client.get("/api/lessons/queue").json()["up_next"] is None
+
+
+def test_the_queue_credits_the_old_lesson_without_writing(make_client):
+    db, client = make_client()
+    db.users.docs[0]["tutorials_seen"] = ["lesson:window-blueprint"]
+    body = client.get("/api/lessons/queue").json()
+    assert "light-basics" in body["completed"]
+    assert body["up_next"] == "window-map"
+    assert db.users.docs[0]["tutorials_seen"] == ["lesson:window-blueprint"]
+
+
+def test_the_queue_returns_saved_progress(make_client):
+    db, client = make_client()
+    assert client.get("/api/lessons/queue").json()["progress"] == {}
+    db.users.docs[0]["lesson_progress"] = {"window-map": 2}
+    assert client.get("/api/lessons/queue").json()["progress"] == {"window-map": 2}
+
+
+def test_the_retired_lesson_cannot_be_completed(make_client):
+    _, client = make_client()
+    assert client.post("/api/lessons/window-blueprint/complete").status_code == 404
+
+
+def test_the_new_lessons_can_be_completed_with_a_time_stamp(make_client):
+    db, client = make_client()
+    assert client.post("/api/lessons/light-basics/complete").status_code == 200
+    user = db.users.docs[0]
+    assert "lesson:light-basics" in user["tutorials_seen"]
+    # This file's small fake keeps a dotted path as a plain key.
+    assert "lesson_completed_at.light-basics" in user

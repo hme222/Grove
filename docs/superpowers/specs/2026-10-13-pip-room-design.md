@@ -9,6 +9,11 @@ nook is Plan 2.
 
 ## Revision notes
 
+**v5.3 (2026-10-14)**: Plan 2 differences. The nook offer follows a first care log
+or a first finished lesson, because the readiness plant lives inside the nook.
+Sprites are 15 pixels wide and up to 24 tall. Level badges are awarded on opt-in
+and are not pinned as goals. The decor catalog moves to Plan 3.
+
 **v5.2 (2026-10-14)**: Pip's note slot shows a thumbnail of the nook and opens
 it. The founder approved this spec for planning.
 

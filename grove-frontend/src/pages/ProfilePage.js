@@ -17,6 +17,7 @@ import { LogOut, Sparkles, Leaf, Droplets, Sprout, HelpCircle, RefreshCw, Bell, 
 import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
+import NookSettings from '../components/NookSettings';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -321,6 +322,8 @@ export default function ProfilePage() {
           <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Tutorials and tips</h3>
           <TutorialsAndTipsControls />
         </div>
+
+        <NookSettings />
 
         {/* About FloraGrove */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
