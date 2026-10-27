@@ -41,7 +41,7 @@
 }
 /* The stage is one picture drawn in 430pt units and scaled by --stage-scale (set on .gw), so a
    46pt button lands at about 35 CSS px. Grow the hit area so it is never under --touch-min on
-   screen, keeping the button's centre where the artwork puts it. */
+   screen, keeping the button's center where the artwork puts it. */
 .gw-stage > .gw-cta {
   --cta-h: max(46px, calc(var(--touch-min) / var(--stage-scale, 1)));
   min-height: var(--cta-h);

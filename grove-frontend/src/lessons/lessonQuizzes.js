@@ -3,7 +3,7 @@
 // reason, shown the moment it is picked, so a wrong pick teaches instead of scoring.
 // Facts are limited to what the lesson cards and sources state.
 
-const NORTH_SOUTH_NOTE = 'Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.';
+const NORTH_SOUTH_NOTE = 'Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.';
 
 export const LESSON_QUIZZES = {
   'plant-parent-reset': [
@@ -20,7 +20,7 @@ export const LESSON_QUIZZES = {
       id: 'cachepot',
       prompt: 'You love a decorative pot, but it has no drainage hole. How do you use it?',
       options: [
-        { id: 'a', label: 'Keep the plant in its nursery pot, set it inside, and empty the outer pot after watering.', correct: true, why: 'The nursery pot has holes, so water can drain, and emptying the outer pot keeps the roots out of standing water.' },
+        { id: 'a', label: 'Keep the plant in its nursery pot inside it. Lift the plant out to water, let it drain, then put it back.', correct: true, why: 'The nursery pot has holes, so water can drain, and lifting the plant out to water keeps the roots out of standing water.' },
         { id: 'b', label: 'Plant straight into it and water a little at a time.', why: 'Without a hole the water has nowhere to go. Pots need drainage holes, however carefully you water.' },
         { id: 'c', label: 'Plant straight into it and water on a fixed day.', why: 'Without a hole the water has nowhere to go. Pots need drainage holes, and a fixed day adds to the risk.' },
       ],
@@ -31,7 +31,7 @@ export const LESSON_QUIZZES = {
       options: [
         { id: 'a', label: 'A spot where you can read a book without a lamp.', why: 'Being able to read is not a reliable test of plant light. Look at where the spot sits instead.' },
         { id: 'b', label: 'On a sill in hot midday sun, touching the glass.', why: 'That is direct light, which can scorch leaves. Indirect means out of the direct midday sun.' },
-        { id: 'c', label: 'A few feet back from a window, or a bright spot out of direct midday sun.', correct: true, why: 'That is bright and indirect: plenty of daylight without the sun landing on the leaves.' },
+        { id: 'c', label: 'A spot close to a bright window, within about 3 feet (1 meter), where the sun does not land on the leaves.', correct: true, why: 'That is bright and indirect: strong daylight without the sun landing on the leaves.' },
       ],
     },
   ],
@@ -41,7 +41,7 @@ export const LESSON_QUIZZES = {
       prompt: 'You inherit a plant in a pot with no drainage holes. What is a safe next step?',
       options: [
         { id: 'a', label: 'Water it a little at a time so it never pools.', why: 'Even small amounts collect at the bottom when there is no hole. Pots need drainage holes.' },
-        { id: 'b', label: 'Keep the plant in a pot with holes, such as its nursery pot, and empty any outer pot after watering.', correct: true, why: 'Water can drain through the holes, and emptying the outer pot keeps the roots out of standing water.' },
+        { id: 'b', label: 'Keep the plant in a pot with holes, such as its nursery pot. If it sits in an outer pot, lift the plant out to water, let it drain, then put it back.', correct: true, why: 'Water can drain through the holes, and lifting the plant out to water keeps the roots out of standing water.' },
         { id: 'c', label: 'Water it well, then tip it out later.', why: 'Water that sits against the roots is the risk, and tipping it later leaves it there in the meantime.' },
       ],
     },
@@ -51,16 +51,16 @@ export const LESSON_QUIZZES = {
       options: [
         { id: 'a', label: 'Give it a drink, because drooping means thirsty.', why: 'With wet soil, drooping is usually a sign of overwatering, so more water would add to the problem.' },
         { id: 'b', label: 'Hold off watering and let the soil dry out.', correct: true, why: 'A drooping plant with wet soil is usually overwatered. Let it dry, then check the soil again.' },
-        { id: 'c', label: 'Repot it into fresh soil today.', why: 'A plant in distress has enough to cope with. Repotting adds stress, so steady it first.' },
+        { id: 'c', label: 'Repot it into fresh soil today.', why: 'Repotting is for when the roots are mushy or smell sour. Start by letting the soil dry out and checking the roots.' },
       ],
     },
     {
       id: 'feed',
-      prompt: 'The plant looks stressed. Should you fertilise it to help it recover?',
+      prompt: 'The plant looks stressed. Should you fertilize it to help it recover?',
       options: [
-        { id: 'a', label: 'Yes, a feed gives it energy to recover.', why: 'Do not fertilise a stressed plant. Feeding adds to the load on the roots.' },
-        { id: 'b', label: 'No. Sort out the basics first and leave the fertiliser.', correct: true, why: 'Do not fertilise a stressed, newly potted or dormant plant. Light, drainage and watering come first.' },
-        { id: 'c', label: 'Only if it was repotted recently.', why: 'A recently potted plant is also one not to fertilise, so that is no reason to feed it.' },
+        { id: 'a', label: 'Yes, a feed gives it energy to recover.', why: 'Do not fertilize a stressed plant. Feeding adds to the load on the roots.' },
+        { id: 'b', label: 'No. Sort out the basics first and leave the fertilizer.', correct: true, why: 'Do not fertilize a stressed, newly potted or dormant plant. Light, drainage and watering come first.' },
+        { id: 'c', label: 'Only if it was repotted recently.', why: 'A recently potted plant is also one not to fertilize, so that is no reason to feed it.' },
       ],
     },
   ],
@@ -85,11 +85,11 @@ export const LESSON_QUIZZES = {
     },
     {
       id: 'succulent',
-      prompt: 'The plant at your desk is a succulent. When does it want water?',
+      prompt: 'The plant at your desk is a desert succulent, an aloe. When does it want water?',
       options: [
-        { id: 'a', label: 'Whenever the top of the soil feels dry.', why: 'Succulents and cacti want the whole pot dry, not just the top.' },
-        { id: 'b', label: 'Every time you do your habit.', why: 'A habit is a time to check, not to water. Succulents and cacti want the whole pot dry first.' },
-        { id: 'c', label: 'When the whole pot is dry.', correct: true, why: 'Succulents and cacti want the whole pot dry before the next drink.' },
+        { id: 'a', label: 'Whenever the top of the soil feels dry.', why: 'Desert succulents and cacti want the whole pot dry, not just the top.' },
+        { id: 'b', label: 'Every time you do your habit.', why: 'A habit is a time to check, not to water. Desert succulents and cacti want the whole pot dry first.' },
+        { id: 'c', label: 'When the whole pot is dry.', correct: true, why: 'Desert succulents want the whole pot dry before the next drink. A finger cannot test a whole pot, so lift it: a light pot is a dry pot.' },
       ],
     },
   ],
@@ -117,7 +117,7 @@ export const LESSON_QUIZZES = {
       prompt: 'A friend says a spot is bright enough if you can read there without a lamp. Is that a good test?',
       options: [
         { id: 'a', label: 'Yes, if you can read there, a plant will be happy.', why: 'Reading ability is not a reliable test of how bright a spot is for a plant.' },
-        { id: 'b', label: 'No. Look at how far it is from the window and whether it avoids direct midday sun.', correct: true, why: 'Bright indirect light is a few feet from a window, or a bright spot out of direct midday sun.' },
+        { id: 'b', label: 'No. Look at how far it is from the window and whether it avoids direct midday sun.', correct: true, why: 'Bright, indirect light is close to a bright window, within about 3 feet (1 meter), where the sun does not land on the leaves.' },
         { id: 'c', label: 'Only in the afternoon.', why: 'The time of day does not make reading a reliable test. Distance from the window and direct midday sun are better guides.' },
       ],
     },

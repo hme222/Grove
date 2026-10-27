@@ -207,7 +207,7 @@ export default function SpeciesDetailPage() {
                 </span>
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
                 <p className="mt-1.5 font-ui text-xs text-grove-sage" data-testid="species-safety-line">
-                  Based on ASPCA listings for cats and dogs. Any plant can upset a stomach. If something was eaten, see Help my plant for who to call.
+                  Based on ASPCA listings for cats and dogs. Even non-toxic plants can upset a stomach, and small children should not chew any plant. If something was eaten, see Help my plant for who to call.
                 </p>
               </div>
             </div>

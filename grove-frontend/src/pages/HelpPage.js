@@ -29,7 +29,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'status-marks',
     title: 'Status marks',
-    content: 'Each plant has a colour and a symbol. A check mark means all good. A drop means water soon. An exclamation mark means it needs a check. Waves mean it is propagating. You can scan your collection without opening each plant.',
+    content: 'Each plant has a color and a symbol. A check mark means all good. A drop means water soon. An exclamation mark means it needs a check. Waves mean it is propagating. You can scan your collection without opening each plant.',
   },
   {
     id: 'bulk-water',

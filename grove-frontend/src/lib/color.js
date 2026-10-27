@@ -1,10 +1,10 @@
-// Colour helpers that work with design-token variables (var(--grove-*)) as well as plain colours.
+// Color helpers that work with design-token variables (var(--grove-*)) as well as plain colors.
 
-// A translucent tint of a colour. Appending an alpha to a hex string does not work for a variable.
+// A translucent tint of a color. Appending an alpha to a hex string does not work for a variable.
 export const tint = (color, percent) => `color-mix(in srgb, ${color} ${percent}%, transparent)`;
 
-// Each themed guild takes its accent from the palette. The guild's own colour in the database is ignored,
-// so a guild can never bring a colour that is not a token.
+// Each themed guild takes its accent from the palette. The guild's own color in the database is ignored,
+// so a guild can never bring a color that is not a token.
 const GUILD_ACCENT = {
   'low-light-hallway': 'sage',
   'cut-flower-border': 'lichen',

@@ -9,7 +9,7 @@ const statusColors = {
   dormant: 'bg-grove-sage',
 };
 
-// Two channels per state: colour and a distinct glyph, so the meaning survives colour blindness
+// Two channels per state: color and a distinct glyph, so the meaning survives color blindness
 // and a glance in sunlight.
 const statusIcons = {
   healthy: Check,

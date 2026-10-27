@@ -1,5 +1,6 @@
 import LoadError from '../components/LoadError';
 import Loading from '../components/Loading';
+import { checkInterval } from '../lib/careCopy';
 import { buttonVariants } from '../components/ui/button';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -89,7 +90,7 @@ export default function WantListPage() {
                           )}
                           {s.default_watering_days && (
                             <span className="inline-flex items-center gap-1">
-                              <Droplets className="h-2.5 w-2.5" /> Every {s.default_watering_days} days
+                              <Droplets className="h-2.5 w-2.5" /> {checkInterval(s.default_watering_days)}
                             </span>
                           )}
                           {s.flags?.native_to_na && (

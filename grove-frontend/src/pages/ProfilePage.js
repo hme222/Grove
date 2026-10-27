@@ -984,7 +984,7 @@ function ProfileFeaturedBadges({ allBadges = [] }) {
       >
         <p className="font-ui text-grove-cream text-sm font-medium">Pick up to 3 to display</p>
         <p className="font-latin italic text-xs text-grove-sage mt-0.5">
-          You've earned {catalog.earned_count} of {catalog.total} badges. Choose your favourites.
+          You've earned {catalog.earned_count} of {catalog.total} badges. Choose your favorites.
         </p>
       </button>
     );

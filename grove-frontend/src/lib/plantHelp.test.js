@@ -26,6 +26,21 @@ describe('plantHelp', () => {
   test('has a pet and child safety note', () => {
     expect(SAFETY_NOTE).toMatch(/pet|child/i);
   });
+  test('the safety note says when to call emergency services and keeps the ASPCA line', () => {
+    expect(SAFETY_NOTE).toMatch(/collapses, has a seizure, has trouble breathing or cannot be woken, call 911/);
+    expect(SAFETY_NOTE).toContain('US poison help line 1-800-222-1222, or poison.org online');
+    expect(SAFETY_NOTE).toContain('Outside the US, ask your local vet or poison center.');
+    expect(SAFETY_NOTE).toContain('(888) 426-4435');
+    expect(SAFETY_NOTE).toMatch(/a fee may apply/);
+  });
+  test('sun scorch is a cause, succulents get their own soil line, and bug treatments keep pets away', () => {
+    const scorch = SYMPTOMS.flatMap((s) => s.causes).find((c) => c.title === 'Sun scorch');
+    expect(scorch.check).toMatch(/tan or bleached/i);
+    expect(scorch.fix).toMatch(/back from the glass/i);
+    expect(SOIL_CHECK.dry).toMatch(/Succulents and cacti: wait until the whole pot is dry\./);
+    const bugs = SYMPTOMS.find((s) => s.id === 'bugs');
+    expect(bugs.causes.filter((c) => /away from pets while the (soap|alcohol) dries/.test(c.fix))).toHaveLength(2);
+  });
 });
 
 describe('search', () => {

@@ -1,4 +1,4 @@
-// Lesson cards for "Habit Stacking". The text is used exactly as written; colours are design tokens.
+// Lesson cards for "Habit Stacking". The text is used exactly as written; colors are design tokens.
 import { Coffee, Link as LinkIcon, Cat, Bell, Repeat } from "lucide-react";
 
 export const CARDS = [
@@ -34,7 +34,7 @@ export const CARDS = [
     eyebrow: "The Morning Grind",
     headline: "Coffee grinder \u2192 Monstera.",
     body:
-      "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes 8 seconds and the smell of coffee becomes your daily cue.",
+      "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes 8 seconds and the smell of coffee becomes your daily cue. Monstera is toxic to cats and dogs if chewed, so keep it out of reach, or check the plant&rsquo;s pet-safety label first.",
     cta: "Love this one",
     icon: Coffee,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -47,7 +47,7 @@ export const CARDS = [
     eyebrow: "The Furry Friend",
     headline: "Cat bowl \u2192 desk plant.",
     body:
-      "&ldquo;Right after I feed my cat (like Luna, who keeps things grounded), I will touch the soil of my desk plant.&rdquo; Two little rituals, one shared moment. Push a finger in to the first knuckle in a small pot, or the second in a pot 6 in (15 cm) or bigger, and water only if it&rsquo;s dry. Succulents and cacti want the whole pot dry.",
+      "&ldquo;Right after I feed my cat (like Luna, who keeps things grounded), I will touch the soil of my desk plant.&rdquo; Two little rituals, one shared moment. Push a finger in to the first knuckle in a small pot, or the second in a pot 6 in (15 cm) or bigger, and water only if it&rsquo;s dry. Desert succulents and cacti (aloe, jade, echeveria, opuntia) want the whole pot dry. Rainforest cacti such as Christmas cactus want it lightly moist. A finger cannot test a whole pot, so lift it: a light pot is a dry pot.",
     cta: "This one too",
     icon: Cat,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

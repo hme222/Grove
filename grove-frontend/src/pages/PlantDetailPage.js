@@ -1,5 +1,6 @@
 import { LoadErrorPage } from '../components/LoadError';
 import Loading from '../components/Loading';
+import { checkInterval } from '../lib/careCopy';
 import NotFoundPage from './NotFoundPage';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
@@ -464,7 +465,7 @@ export default function PlantDetailPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-ui text-xs text-grove-cream">Watering frequency</span>
-                  <span className="font-latin text-xs text-grove-cream">Every {plant.watering_frequency_days} days</span>
+                  <span className="font-latin text-xs text-grove-cream">{checkInterval(plant.watering_frequency_days)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-ui text-xs text-grove-cream">Added to collection</span>

@@ -9,7 +9,7 @@ const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
       rounded: [{ rounded: tokenNames.borderRadius }],
-      // Without this, `border-strong` is read as a border colour and a later `border-grove-*` deletes it.
+      // Without this, `border-strong` is read as a border color and a later `border-grove-*` deletes it.
       "border-w": [{ border: tokenNames.borderWidth }],
       "max-w": [{ "max-w": tokenNames.maxWidth }],
       "max-h": [{ "max-h": tokenNames.maxHeight }],

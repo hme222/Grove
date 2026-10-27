@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Design tokens are generated from design/tokens.json into styles/tokens.generated.css
-   (colours as --grove-*, radii as --radius-*, and the shadcn RGB variables). Dark forest is the primary look. */
+   (colors as --grove-*, radii as --radius-*, and the shadcn RGB variables). Dark forest is the primary look. */
 
 @layer base {
   html {
@@ -23,7 +23,7 @@
     font-family: var(--font-ui), system-ui, sans-serif;
     font-size: 1.0625rem; /* 17px at the default size. Alegreya Sans runs small; this matches a 16px system face's x-height, and scales with the reader's text size */
     -webkit-font-smoothing: antialiased;
-    /* Behave like an installed app on a phone: no rubber-band bounce, no grey tap flash, clear the notch in landscape. */
+    /* Behave like an installed app on a phone: no rubber-band bounce, no gray tap flash, clear the notch in landscape. */
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;

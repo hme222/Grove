@@ -477,7 +477,7 @@ test('every question has four to six options, a reason, and sentence-case text',
   });
 });
 
-test('the flow source holds no raw colour and no day-7 promise', () => {
+test('the flow source holds no raw color and no day-7 promise', () => {
   const dir = path.resolve(__dirname, 'onboarding');
   const files = [path.resolve(__dirname, 'Onboarding.js'), ...fs.readdirSync(dir).map((f) => path.join(dir, f))];
   files.forEach((file) => {

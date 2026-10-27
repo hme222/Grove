@@ -1,7 +1,7 @@
 import React, { useId } from 'react';
 
 // A setting that is on or off. The whole row is the control (44px or taller), the track is only a
-// picture of the state, and the state is also written out ("On" / "Off") so colour is never alone.
+// picture of the state, and the state is also written out ("On" / "Off") so color is never alone.
 export default function SwitchRow({ label, help, checked, onChange, disabled = false, testId, rowTestId, className = '' }) {
   const helpId = useId();
   return (

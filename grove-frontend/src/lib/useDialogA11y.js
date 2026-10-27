@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 const FOCUSABLE = 'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-// Keyboard and screen-reader behaviour every dialog needs: move focus in when it opens, keep Tab
+// Keyboard and screen-reader behavior every dialog needs: move focus in when it opens, keep Tab
 // inside it, close on Escape, and return focus to what opened it. Attach `ref` to the dialog
 // element and give that element tabIndex={-1}.
 export function useDialogA11y(ref, onClose, active = true) {

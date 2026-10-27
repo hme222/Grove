@@ -22,7 +22,7 @@ import { PageHeader } from '../components/PageHeader';
  */
 
 // Each tier has one accent from the palette; the chip is a tint of it. The tier is also named in words,
-// so the colour is never the only signal.
+// so the color is never the only signal.
 const TIER_ACCENT = {
   bronze: 'var(--grove-sun)',
   silver: 'var(--grove-sage)',

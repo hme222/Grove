@@ -82,13 +82,13 @@ test('a lesson with sources lists each one with what it supports, and says what 
   render({
     sources: {
       sources: [{ publisher: 'RHS', title: 'How plants absorb water', url: 'https://example.org/a', supports: 'Feel the soil first.' }],
-      gaps: ['No page was found for draughts.'],
+      gaps: ['No page was found for drafts.'],
     },
   });
   const panel = q('lesson-sources');
   expect(panel.textContent).toContain('RHS: How plants absorb water');
   expect(panel.textContent).toContain('Feel the soil first.');
-  expect(panel.textContent).toContain('No page was found for draughts.');
+  expect(panel.textContent).toContain('No page was found for drafts.');
   expect(panel.querySelector('a').getAttribute('target')).toBe('_blank');
 });
 

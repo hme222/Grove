@@ -1,4 +1,4 @@
-// Lesson cards for "Soil Finger-Test". The text is used exactly as written; colours are design tokens.
+// Lesson cards for "Soil Finger-Test". The text is used exactly as written; colors are design tokens.
 import { Hand, Timer, Cookie, Waves, Heart } from "lucide-react";
 
 export const CARDS = [
@@ -31,7 +31,7 @@ export const CARDS = [
     header: "Card 3 of 5 · The Walk Away",
     headline: "Is it damp?",
     body:
-      "If the soil feels <strong>damp and cool</strong> &mdash; like a wrung-out sponge &mdash; walk away. <strong>No water today.</strong> Your plant is quietly drinking what it already has.",
+      "If the soil feels <strong>damp and cool</strong> &mdash; like a wrung-out sponge &mdash; walk away. <strong>No water today.</strong> Your plant is quietly drinking what it already has. A few plants, such as peace lily and ferns, like to stay lightly moist.",
     cta: "Walk away &mdash; got it",
     icon: Waves,
     accent: "from-grove-sage/15 via-grove-sage/10 to-grove-lime/10",
@@ -44,7 +44,7 @@ export const CARDS = [
     header: "Card 4 of 5 · The Water Sign",
     headline: "Is it dry?",
     body:
-      "If the soil feels <strong>dry and dusty</strong> &mdash; like cake crumbs falling off your finger &mdash; it&rsquo;s ready for a thorough drink. Water slowly until it runs from the drainage hole.",
+      "If the soil feels <strong>dry and dusty</strong> &mdash; like cake crumbs falling off your finger &mdash; it&rsquo;s ready for a thorough drink. Water slowly until it runs from the drainage hole. Succulents and cacti: wait until the whole pot is dry. A few plants, such as peace lily and ferns, like to stay lightly moist, so water them as the top starts to dry.",
     cta: "Give it a drink &mdash; got it",
     icon: Cookie,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

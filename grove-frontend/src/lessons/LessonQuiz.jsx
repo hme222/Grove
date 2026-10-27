@@ -6,7 +6,7 @@ import { buttonVariants } from '../components/ui/button';
 // A short situational quiz. One question at a time, one correct answer each. Picking an option
 // answers at once and says why, in a calm voice. A wrong pick can be followed by another pick as
 // often as needed: no hearts, no score. The quiz is done when each question has been answered right.
-// The right and wrong marks are an icon and a word, never colour alone.
+// The right and wrong marks are an icon and a word, never color alone.
 export default function LessonQuiz({ questions, onComplete }) {
   const [index, setIndex] = useState(0);
   const [pickedId, setPickedId] = useState(null);

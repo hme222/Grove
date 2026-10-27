@@ -145,7 +145,7 @@ export default function SwapsPage() {
             <li>• Cuttings from your established plants — Pothos, Monstera, String of Pearls.</li>
             <li>• Divisions of clumping perennials — Snake Plant pups, Spider Plant runners.</li>
             <li>• Seeds you saved — Black-eyed Susan and Coneflower for native pollinator beds.</li>
-            <li>• Bulbs and corms in season — Anemone, Dahlia tubers in autumn.</li>
+            <li>• Bulbs and corms in season — Anemone, Dahlia tubers in fall.</li>
           </ul>
           <p className="font-latin italic text-xs text-grove-lichen mt-3 leading-snug">
             All trades are between verified growers. FloraGrove never handles money or shipping.

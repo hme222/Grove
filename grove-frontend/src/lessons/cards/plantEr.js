@@ -1,4 +1,4 @@
-// Lesson cards for "Plant ER". The text is used exactly as written; colours are design tokens.
+// Lesson cards for "Plant ER". The text is used exactly as written; colors are design tokens.
 import { Droplets, Thermometer, LifeBuoy, Scale, ClipboardCheck } from "lucide-react";
 
 export const CARDS = [
@@ -22,7 +22,7 @@ export const CARDS = [
     eyebrow: "Draft Defense",
     headline: "Move it away from drafts.",
     body:
-      "Keep your plant away from direct AC vents, radiators, and doors that keep opening. Extreme temperature swings kill plants faster than almost anything else. A calm corner is a safe corner.",
+      "Keep your plant away from direct AC vents, radiators, and doors that keep opening. Cold drafts and heat from vents can scorch or chill leaves. A calm corner is a safe corner.",
     cta: "Draft-safe spot &mdash; got it",
     icon: Thermometer,
     accent: "from-grove-sage/15 via-grove-sage/10 to-grove-lime/10",
@@ -36,7 +36,7 @@ export const CARDS = [
     eyebrow: "Escape Route",
     headline: "Check for drainage.",
     body:
-      "Lift the pot. Does it have drainage holes at the bottom? If it doesn&rsquo;t, <strong>don&rsquo;t pour water into it yet</strong> &mdash; water will pool and rot the roots within days. Keep the plant in a pot with holes, such as its nursery pot, and if it sits in a decorative pot, empty the outer pot after watering.",
+      "Lift the pot. Does it have drainage holes at the bottom? If it doesn&rsquo;t, <strong>don&rsquo;t pour water into it yet</strong> &mdash; water will pool and rot the roots within weeks. Keep the plant in a pot with holes, such as its nursery pot. If it sits in a decorative pot, lift the plant out to water, let it drain, then put it back.",
     cta: "Checked the bottom &mdash; got it",
     icon: Droplets,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -50,7 +50,7 @@ export const CARDS = [
     eyebrow: "Moisture Check",
     headline: "Assess the weight.",
     body:
-      "Push a finger into the soil (to the second knuckle in a pot 6 in or 15 cm or bigger, the first in a small pot) and lift the pot. If it&rsquo;s soaking wet, <strong>do nothing</strong>. If the pot feels feather-light and the soil is pulling away from the edges, take it to the sink for a thorough soak. If water runs straight through, let the pot sit in a basin for 20 minutes, then drain fully.<br/><br/>If the plant is in distress, don&rsquo;t repot or fertilise it. Steady it first.",
+      "Push a finger into the soil (to the second knuckle in a pot 6 in or 15 cm or bigger, the first in a small pot) and lift the pot. If it&rsquo;s soaking wet, <strong>do nothing</strong>. If the pot feels feather-light and the soil is pulling away from the edges, take it to the sink for a thorough soak. If water runs straight through, let the pot sit in a basin for 20 minutes, then drain fully.<br/><br/>If the plant is in distress, don&rsquo;t fertilize it or give it a bigger pot. If the roots are mushy or smell sour, unpot it and repot into fresh, dry mix.",
     cta: "Weight-check &mdash; got it",
     icon: Scale,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

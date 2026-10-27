@@ -41,7 +41,7 @@ const FILTERS = [
 
 // Urgency visual tokens (kept on-brand, no raw reds/greens/blues).
 const URGENCY_STYLES = {
-  // Calm on purpose: a coloured stripe and dot mark the plant, the words say what happened.
+  // Calm on purpose: a colored stripe and dot mark the plant, the words say what happened.
   urgent: {
     border: 'border-grove-bloom/40',
     bg: 'bg-grove-canopy',
@@ -458,7 +458,7 @@ export default function CarePage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Water {filteredPlants.length === 1 ? 'this plant' : `all ${filteredPlants.length} plants`}?</AlertDialogTitle>
             <AlertDialogDescription>
-              This logs a watering for {filteredPlants.length === 1 ? 'the plant' : 'every plant'} on the list you are looking at, including ones you have not checked. You can undo it right after.
+              This logs a watering for {filteredPlants.length === 1 ? 'the plant' : 'every plant'} on the list you are looking at, including ones you have not checked. Only water the ones that felt dry. You can undo it right after.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

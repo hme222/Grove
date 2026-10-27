@@ -1,4 +1,4 @@
-// Lesson cards for "Window Blueprint". The text is used exactly as written; colours are design tokens.
+// Lesson cards for "Window Blueprint". The text is used exactly as written; colors are design tokens.
 import { Sparkles, Sun, MapPin, Sunrise, Cloud } from "lucide-react";
 
 export const CARDS = [
@@ -22,7 +22,7 @@ export const CARDS = [
     eyebrow: "The Sun Zone",
     headline: "South / West windows.",
     body:
-      "These catch intense, direct afternoon sun. This is the absolute survival zone for <strong>succulents and cacti</strong> &mdash; anything that thrives on heat and drought.<br/><br/><em>Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.</em>",
+      "These catch intense, direct afternoon sun. This is the best spot for <strong>desert succulents and cacti</strong> such as aloe, jade and echeveria. Haworthia and Christmas cactus prefer bright light without hot direct sun.<br/><br/><em>Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.</em>",
     cta: "Got it &mdash; South/West is bright",
     icon: Sun,
     dir: "SW",
@@ -36,7 +36,7 @@ export const CARDS = [
     eyebrow: "The Sweet Spot",
     headline: "East windows.",
     body:
-      "These get gentle, cool morning light &mdash; strong enough to feed, soft enough to forgive. It\u2019s the sweet spot for tropicals like <strong>Monsteras, Pothos, Philodendrons</strong>.<br/><br/><em>Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.</em>",
+      "These get gentle, cool morning light &mdash; strong enough to feed, soft enough to forgive. It\u2019s the sweet spot for tropicals like <strong>Monsteras, Pothos, Philodendrons</strong>.<br/><br/>Monstera, Pothos and Philodendron are toxic to cats and dogs if chewed. Keep them out of reach, or check the plant&rsquo;s pet-safety label first.<br/><br/><em>Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.</em>",
     cta: "Got it &mdash; East is tropical-friendly",
     icon: Sunrise,
     dir: "E",
@@ -50,7 +50,7 @@ export const CARDS = [
     eyebrow: "Low Light + Wisdom",
     headline: "North windows &amp; the Golden Rule.",
     body:
-      "North windows offer low, indirect light &mdash; ideal for low-maintenance <strong>Pothos or Snake plants</strong>.<br/><br/><strong>The Golden Rule:</strong> bright, indirect light is a few feet back from a window, or a bright spot out of direct midday sun. Being able to read there is not a reliable test.<br/><br/><em>Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.</em>",
+      "North windows give low light. <strong>Pothos and Snake plant</strong> tolerate it, but they will grow slowly and may need a brighter spot in winter. Pothos and Snake plant are toxic to cats and dogs if chewed. Keep them out of reach, or check the plant&rsquo;s pet-safety label first.<br/><br/><strong>The Golden Rule:</strong> bright, indirect light is a spot close to a bright window, within about 3 feet (1 meter), where daylight is strong but the sun does not land on the leaves. Being able to read there is not a reliable test.<br/><br/><em>Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.</em>",
     cta: "Golden Rule locked in",
     icon: Cloud,
     dir: "N",
@@ -64,7 +64,7 @@ export const CARDS = [
     eyebrow: "60-Second Action",
     headline: "Pick your first lighting zone.",
     body:
-      "Choose one empty surface where you want a plant. Look at the nearest window. Which direction does it face?<br/><br/><em>Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.</em>",
+      "Choose one empty surface where you want a plant. Look at the nearest window. Which direction does it face?<br/><br/><em>Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.</em>",
     cta: "Set my first lighting zone",
     icon: MapPin,
     dir: "action",

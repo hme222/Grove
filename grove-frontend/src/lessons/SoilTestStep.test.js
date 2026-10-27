@@ -67,7 +67,7 @@ describe('SoilTestStep without a plant', () => {
 });
 
 describe('SoilTestStep with plants', () => {
-  test('offers a plant picker only when there is more than one plant, labelled like Care Today', async () => {
+  test('offers a plant picker only when there is more than one plant, labeled like Care Today', async () => {
     await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
     const options = Array.from(q('soil-step-plant').querySelectorAll('option')).map((o) => o.textContent);
     expect(options).toEqual(['Monty', 'Pothos']);

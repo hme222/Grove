@@ -152,8 +152,30 @@ describe('the lesson quizzes', () => {
     expect(text).not.toMatch(/<strong>Always<\/strong> use a pot/);
   });
 
+  test('the desert succulent question says desert, and every quiz still has one right answer', () => {
+    const q = LESSON_QUIZZES['habit-stacking'].find((item) => item.id === 'succulent');
+    expect(q.prompt).toContain('desert succulent, an aloe');
+    expect(q.options.filter((o) => o.correct)).toHaveLength(1);
+    expect(q.options.find((o) => o.correct).label).toBe('When the whole pot is dry.');
+    const light = LESSON_QUIZZES['plant-parent-reset'].find((item) => item.id === 'light');
+    expect(light.options.find((o) => o.correct).label).toMatch(/within about 3 feet \(1 meter\)/);
+    const droop = LESSON_QUIZZES['plant-er'].find((item) => item.id === 'wet-droop');
+    expect(droop.options.find((o) => o.id === 'c').why).toMatch(/mushy or smell sour/);
+  });
+
+  test('cards that name plants toxic to pets say so, and no card calls every succulent a whole-pot-dry plant', () => {
+    const cards = LESSON_CARDS;
+    const joined = (id) => cards[id].map((c) => c.body).join(' ');
+    expect(joined('window-blueprint')).toMatch(/toxic to cats and dogs if chewed/);
+    expect(joined('habit-stacking')).toMatch(/Monstera is toxic to cats and dogs/);
+    Object.keys(cards).forEach((id) => {
+      expect(joined(id)).not.toMatch(/(?<!Desert )[Ss]ucculents and cacti want the whole pot dry/);
+    });
+    expect(joined('plant-er')).not.toMatch(/kill plants faster|within days/);
+  });
+
   test('every window lesson card that names a direction carries the hemisphere note', () => {
-    const note = 'Window directions assume the northern hemisphere; in the southern hemisphere swap north and south.';
+    const note = 'Window directions assume the northern hemisphere outside the tropics; in the southern hemisphere swap north and south.';
     LESSON_CARDS['window-blueprint']
       .filter((c) => /\b(north|south|east|west)\b|which direction/i.test(c.body))
       .forEach((c) => expect(c.body).toContain(note));

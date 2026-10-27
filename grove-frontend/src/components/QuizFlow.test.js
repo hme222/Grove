@@ -137,7 +137,7 @@ test('a double tap on skip sends once', async () => {
   expect(onDone).toHaveBeenCalledTimes(1);
 });
 
-test('is a labelled modal dialog that takes focus and sits above the bottom nav', async () => {
+test('is a labeled modal dialog that takes focus and sits above the bottom nav', async () => {
   await mount();
   const dialog = q('quiz-flow');
   const heading = container.querySelector('h1');

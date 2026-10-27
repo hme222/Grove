@@ -1,5 +1,6 @@
 import { tint, guildAccent } from '../lib/color';
 import Loading from '../components/Loading';
+import { checkInterval } from '../lib/careCopy';
 import ToxicityBadge from '../components/ToxicityBadge';
 import NotFoundPage from './NotFoundPage';
 import { guildIcon } from '../lib/guildIcon';
@@ -118,7 +119,7 @@ export default function GuildDetailPage() {
                       <Sun className="h-3 w-3" /> {LIGHT_LABEL[s.default_light_level] || s.default_light_level || '—'}
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <Droplets className="h-3 w-3" /> Every {s.default_watering_days || '—'} days
+                      <Droplets className="h-3 w-3" /> {checkInterval(s.default_watering_days)}
                     </span>
                     {s.flags?.native_to_na && (
                       <span className="inline-flex items-center gap-1 text-grove-sprout">

@@ -24,7 +24,7 @@ export const AllStatusesWithLabels = {
   ),
 };
 
-// Dot-only is how the plant grid uses it. Colour is the only channel here,
+// Dot-only is how the plant grid uses it. Color is the only channel here,
 // so it should always sit next to text that names the status.
 export const DotsOnly = {
   render: (args) => (
