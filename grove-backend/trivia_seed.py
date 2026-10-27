@@ -16,7 +16,7 @@ TRIVIA_CARDS = [
     # ---------------- Care (5) ----------------
     {
         "headline": "Most houseplants want less water than you think.",
-        "body": "The majority of indoor-plant deaths are from overwatering, not underwatering. Let the top inch dry out — your finger is the most reliable moisture meter you own.",
+        "body": "The majority of indoor-plant deaths are from overwatering, not underwatering. For most leafy plants, let the top inch dry out; succulents want the whole pot dry. Your finger is a good first moisture meter, and lifting the pot helps too.",
         "category": "care",
         "linked_species_slug": None,
     },
@@ -28,7 +28,7 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "Yellow leaves usually mean the roots are stressed.",
-        "body": "Yellowing from the bottom up is most often overwatering or compacted soil. Yellowing from the tips inward usually points to nutrient lock-out from old soil.",
+        "body": "Yellowing from the bottom up is most often overwatering or too little light. Browning at the tips usually points to dry air, dry soil or minerals in the water.",
         "category": "care",
         "linked_species_slug": None,
     },
@@ -54,13 +54,13 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "Stomata open and close on the underside of every leaf.",
-        "body": "These microscopic pores let CO₂ in and water vapour out. In hot, bright conditions plants close their stomata — which is why misting at noon does almost nothing.",
+        "body": "These microscopic pores let CO₂ in and water vapour out. On hot, dry days plants can close them to save water. Misting leaves does little for most houseplants.",
         "category": "biology",
         "linked_species_slug": None,
     },
     {
         "headline": "A Monstera's holes are a structural feature, not a defect.",
-        "body": "Mature monsteras develop fenestrations to let wind pass through the leaf without tearing it, and to scatter light to lower foliage in dense canopies.",
+        "body": "Mature monsteras develop fenestrations, and these may help wind pass through the leaf without tearing it and let light reach lower foliage in dense canopies.",
         "category": "biology",
         "linked_species_slug": "monstera-deliciosa",
     },
@@ -86,7 +86,7 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "Most native bee species in the US are solitary.",
-        "body": "Of the ~4,000 native bee species, about 70% nest alone in soil or hollow stems. Leaving stem stubs in your garden through winter gives them a place to overwinter.",
+        "body": "Of the ~4,000 native bee species, about 70% nest in the ground, and many of the rest use hollow stems. Leaving stem stubs in your garden through winter gives them a place to overwinter.",
         "category": "native",
         "linked_species_slug": None,
     },
@@ -111,19 +111,19 @@ TRIVIA_CARDS = [
 
     # ---------------- Propagation (5) ----------------
     {
-        "headline": "Most cuttings root faster in water — but transition slowly to soil.",
+        "headline": "Many cuttings root in water — but transition slowly to soil.",
         "body": "Water roots and soil roots are different structures. A cutting that's lived in water for a month may sulk for two weeks after potting up. Move it to a damp medium gradually.",
         "category": "propagation",
         "linked_species_slug": None,
     },
     {
-        "headline": "Always cut just below a node.",
-        "body": "The node — the small bump where leaves and roots emerge — is where the rooting hormones concentrate. A cutting taken between nodes will rarely root.",
+        "headline": "Cut just below a node.",
+        "body": "The node is the small bump where leaves and roots emerge. This is true for pothos and other aroids: a cutting taken between nodes will rarely root.",
         "category": "propagation",
         "linked_species_slug": None,
     },
     {
-        "headline": "Cinnamon makes a decent rooting hormone.",
+        "headline": "Cinnamon can help keep a cut from rotting.",
         "body": "Standard ground cinnamon has antifungal properties and helps prevent rot at the cut site. It won't speed rooting on its own, but it gives the cutting a fighting chance.",
         "category": "propagation",
         "linked_species_slug": None,
@@ -144,7 +144,7 @@ TRIVIA_CARDS = [
     # ---------------- Light (5) ----------------
     {
         "headline": "Bright indirect light is the most lied-about phrase in plant care.",
-        "body": "It means: close to a bright window, where the plant gets plenty of daylight but the sun does not land on its leaves. Most rooms are darker than this; a light meter app will show you.",
+        "body": "It means a spot close to a bright window, within about 3 feet (1 meter), where daylight is strong but the sun does not land on the leaves. Most rooms are darker than this; a light meter app will show you.",
         "category": "light",
         "linked_species_slug": None,
     },
@@ -156,7 +156,7 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "North-facing windows are real growing spaces, just slower.",
-        "body": "North light is gentle and consistent — perfect for ferns, calatheas, and African violets. They won't grow fast, but they won't burn or stretch either.",
+        "body": "North-facing windows (south-facing in the southern hemisphere) give gentle, steady light that suits ferns, calatheas and African violets in summer. In winter they can be too dim, so watch for stretching.",
         "category": "light",
         "linked_species_slug": None,
     },
@@ -168,15 +168,15 @@ TRIVIA_CARDS = [
     },
     {
         "headline": "New growth points to the strongest light.",
-        "body": "Watch where the freshest leaves emerge — they always orient toward the brightest source. That's a free, free reading of how your plant feels about its current spot.",
+        "body": "Watch where the freshest leaves emerge — they always orient toward the brightest source. That's a free reading of how your plant feels about its current spot.",
         "category": "light",
         "linked_species_slug": None,
     },
 
     # ---------------- Pollinator (5) ----------------
     {
-        "headline": "Hummingbirds choose red because most insects can't see it well.",
-        "body": "Insect eyes peak in the UV–blue range and miss most of the red end. Plants with red tubular flowers effectively reserve their nectar for hummingbirds.",
+        "headline": "Hummingbirds choose red because many insects can't see it well.",
+        "body": "Many insect eyes peak in the UV–blue range and see little red, though butterflies do see it. Plants with red tubular flowers effectively reserve their nectar for hummingbirds.",
         "category": "pollinator",
         "linked_species_slug": None,
     },
@@ -208,13 +208,13 @@ TRIVIA_CARDS = [
     # ---------------- Bonus (3) ----------------
     {
         "headline": "Plants communicate through their roots.",
-        "body": "Connected by mycorrhizal fungi, trees in a forest share sugars and even chemical warning signals. Indoor plants don't get this network — which is one reason a thriving plant in the wild often struggles indoors.",
+        "body": "Connected by mycorrhizal fungi, trees in a forest can share sugars and even chemical warning signals. Researchers are still working out how much this matters.",
         "category": "biology",
         "linked_species_slug": None,
     },
     {
         "headline": "Repotting is least stressful at the start of the growing season.",
-        "body": "A plant about to put on new roots doesn't mind a fresh pot. The same operation in November can stall growth for months. Spring is the universal answer.",
+        "body": "A plant about to put on new roots doesn't mind a fresh pot. The same operation in November can stall growth for months. Spring is usually best.",
         "category": "care",
         "linked_species_slug": None,
     },

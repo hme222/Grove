@@ -39,7 +39,7 @@ def test_plant_owners_get_the_plant_check_in_on_most_days():
     assert set(missions.PLANT_OWNER_ROTATION) <= set(missions.MISSION_COPY)
 
 
-# ---------- behaviour, against a tiny in-memory db ----------
+# ---------- behavior, against a tiny in-memory db ----------
 
 def _matches(doc, flt):
     for key, value in flt.items():

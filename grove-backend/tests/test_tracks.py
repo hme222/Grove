@@ -133,3 +133,9 @@ def test_plan_confident_answers_alone_fall_back_to_default():
 def test_plan_resolves_to_a_real_first_lesson():
     out = tracks.resolve_plan({"q4": "blank_slate"})
     assert tracks.build_lesson_queue(out["primary_track"], [])[0] == "window-blueprint"
+
+
+def test_plan_reaching_for_fertilizer_meets_plant_er():
+    out = tracks.resolve_plan({"q2": "nutrients"})
+    assert out["primary_track"] == "rescue"
+    assert out["matched"] == [{"question": "q2", "answer": "nutrients"}]

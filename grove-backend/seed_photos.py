@@ -126,7 +126,7 @@ PHOTOS = {'Aloe Vera': {'url': 'https://upload.wikimedia.org/wikipedia/commons/t
 # Photos for seeded bouquets, florist portfolio pieces and posts. Keys are
 # "bouquet:<name>", "portfolio:<title>" and "post:<username>". Clare's portfolio
 # and bouquets share a few photos on purpose: they are the same studio's work.
-SCENES = {'bouquet:Birthday flowers from mum': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg/960px-Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg',
+SCENES = {'bouquet:Birthday flowers from mom': {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg/960px-Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg',
                                        'credit': 'Missvain / Wikimedia Commons, CC BY 4.0',
                                        'source': 'https://commons.wikimedia.org/wiki/File:Birthday_flower_bouquet_-_2021-08-26_-_Sarah_Stierch.jpg'},
  "bouquet:Partner's birthday": {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Flickr_-_ronsaunders47_-_Birthday_bouquet..jpg/960px-Flickr_-_ronsaunders47_-_Birthday_bouquet..jpg',

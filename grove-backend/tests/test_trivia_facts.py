@@ -24,3 +24,15 @@ def test_standing_water_is_not_said_to_remove_fluoride():
 def test_no_unsourced_light_figures_or_book_test():
     assert "without a lamp" not in TEXT
     assert "25%" not in TEXT and "ppfd" not in TEXT
+
+
+def test_trivia_softened_claims_stay_softened():
+    assert "cinnamon can help keep a cut from rotting" in TEXT
+    assert "makes a decent rooting hormone" not in TEXT
+    assert "most insects can't see" not in TEXT
+    assert "free, free" not in TEXT
+    assert "one reason a thriving plant" not in TEXT
+    assert "nutrient lock-out" not in TEXT
+    assert "succulents want the whole pot dry" in TEXT
+    assert "south-facing in the southern hemisphere" in TEXT
+    assert "within about 3 feet (1 meter)" in TEXT

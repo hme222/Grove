@@ -8,7 +8,7 @@ Usage:
     python find_plant_photos.py "Hoya kerrii"   # just these
 
 Output (grove/tmp/plant_photo_candidates/):
-    sheet-<n>.png      labelled contact sheets, candidates numbered 1..N per plant
+    sheet-<n>.png      labeled contact sheets, candidates numbered 1..N per plant
     candidates.json    file title, thumbnail URL, size, license and author per candidate
 """
 import asyncio

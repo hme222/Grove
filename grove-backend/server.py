@@ -817,7 +817,7 @@ async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_
             # Infer system from zone string ("H1"/"H2" etc are RHS, otherwise USDA)
             zone_val = (updates['hardiness_zone'] or '').upper()
             updates['hardiness_zone_system'] = 'RHS' if zone_val.startswith('H') else 'USDA'
-    # A US zip we recognise is in the northern hemisphere. An explicit choice always wins.
+    # A US zip we recognize is in the northern hemisphere. An explicit choice always wins.
     if location_changed and 'hemisphere' not in updates:
         existing = await db.users.find_one({"id": current_user['user_id']}) or {}
         derived = hemisphere_for_zip(
@@ -2016,9 +2016,16 @@ async def ai_schedule(plant_id: str, current_user: dict = Depends(get_current_us
     user = await db.users.find_one({"id": current_user['user_id']})
     location = user.get('location', 'Unknown') if user else 'Unknown'
     try:
+        # Anchor the answer on the guide's default interval, and say whether it is a houseplant or a garden plant.
+        guide = None
+        if plant.get('latin_name'):
+            guide = await db.species.find_one({"latin_name": plant['latin_name']}, {"_id": 0, "default_watering_days": 1, "flags": 1})
+        flags = (guide or {}).get('flags') or {}
+        indoors = None if guide is None else not (flags.get('native_to_na') or flags.get('cut_flower'))
         result = await suggest_watering_schedule(
             plant.get('common_name', ''), plant.get('latin_name', ''),
-            plant.get('grow_medium', 'soil'), location, (user or {}).get('hemisphere')
+            plant.get('grow_medium', 'soil'), location, (user or {}).get('hemisphere'),
+            default_days=(guide or {}).get('default_watering_days'), indoors=indoors,
         )
         await db.plants.update_one(
             {"id": plant_id},

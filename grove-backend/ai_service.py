@@ -108,15 +108,32 @@ def clamp_watering_days(value, default: int = 7) -> int:
 
 
 def build_schedule_prompt(species_name: str, latin_name: str, grow_medium: str, location: str = "Unknown",
-                          hemisphere=None, now=None) -> str:
-    """The watering-schedule prompt, with the month and hemisphere so the season is real, not guessed."""
+                          hemisphere=None, now=None, default_days=None, indoors=None) -> str:
+    """The watering-schedule prompt, with the month and hemisphere so the season is real, not guessed.
+
+    `default_days` (the species guide's default_watering_days) anchors the answer. `indoors` is True for a
+    houseplant, False for a garden plant and None when unknown (the prompt then says neither).
+    """
     now = now or datetime.now(timezone.utc)
     hemi = normalize_hemisphere(hemisphere)
     month = now.strftime("%B")
+    if indoors is True:
+        setting = "kept indoors"
+    elif indoors is False:
+        setting = "grown in the garden"
+    else:
+        setting = ""
+    where = f"{setting} in {location}".strip() if setting else f"in {location}"
+    anchor = ""
+    if default_days:
+        anchor = (f"The species guide suggests about every {int(default_days)} days as a starting point; "
+                  "adjust it for the season and the setting. ")
     return (
-        f"Suggest how often to check the soil of {species_name} ({latin_name}) grown in {grow_medium} in {location}. "
+        f"Suggest how often to check the soil of {species_name} ({latin_name}) grown in {grow_medium} {where}. "
+        f"{anchor}"
         f"It is {month} in the {hemi}ern hemisphere, so allow for the season (plants usually need water less often in "
-        f"winter and more often in summer). Answer in whole days between {MIN_WATERING_DAYS} and {MAX_WATERING_DAYS}.\n"
+        f"winter and more often in summer). Answer in whole days between {MIN_WATERING_DAYS} and {MAX_WATERING_DAYS}. "
+        "For a desert succulent or cactus, say how often to check, not how often to water.\n"
         'Return ONLY valid JSON: { "days": <number>, "reason": "<string max 100 words>", "confidence": "high"|"medium"|"low" }'
     )
 
@@ -130,9 +147,10 @@ def finish_schedule(result: dict) -> dict:
 
 
 async def suggest_watering_schedule(species_name: str, latin_name: str, grow_medium: str, location: str = "Unknown",
-                                    hemisphere=None) -> dict:
+                                    hemisphere=None, default_days=None, indoors=None) -> dict:
     system = "You are a botanical expert. Always respond with valid JSON only, no markdown formatting or code blocks."
-    prompt = build_schedule_prompt(species_name, latin_name, grow_medium, location, hemisphere)
+    prompt = build_schedule_prompt(species_name, latin_name, grow_medium, location, hemisphere,
+                                   default_days=default_days, indoors=indoors)
     response = await call_claude(system, prompt)
     return finish_schedule(parse_json_response(response))
 

@@ -26,7 +26,7 @@ CURATED_GUILDS = [
             "same pollinator guild (native bees, butterflies, and later goldfinches feeding on "
             "spent seed heads), and want exactly the same conditions: full sun, average garden "
             "soil, no fertilizer, and a hands-off approach to deadheading so the seed heads can "
-            "feed birds through autumn. "
+            "feed birds through fall. "
             "\n\nThis guild is intentionally short. Two species are enough to establish a real "
             "ecological relationship — adding more should be a deliberate choice based on your "
             "specific region's native flora. Ask your local native plant nursery for region-"
@@ -51,17 +51,18 @@ CURATED_GUILDS = [
             "anthurium-warocqueanum",
         ],
         "description": (
-            "These four tropical plants all originate from forest understory or cloud forest "
-            "habitats where ambient humidity sits at 70%+. Indoors they sulk in dry winter air. "
+            "These four tropical plants come from forest understory or wet forest habitats and "
+            "need more humidity than a dry heated room gives. Indoors they sulk in dry winter air. "
             "Grouped together — ideally on a pebble tray or inside an enclosed plant cabinet — "
             "they create their own microclimate: each leaf transpires moisture that the others "
-            "absorb, raising local humidity 10–20% above the room average. "
+            "absorb, raising local humidity a little above the room average. "
             "\n\nThe Boston Fern is the workhorse — it transpires the most water and acts as a "
             "living humidifier for the more demanding Calathea Orbifolia and Anthurium "
             "warocqueanum. Peace Lily is the visual anchor and the most forgiving when humidity "
             "briefly drops. Together they need filtered medium light (no direct sun), evenly "
-            "moist soil, and tap-water-free irrigation for the Calathea — fluoride and chlorine "
-            "burn its silver-banded edges."
+            "moist soil, and filtered or rain water for the Calathea — fluoride and minerals in tap "
+            "water can burn its silver-banded edges. "
+            "\n\nPets: Peace Lily and Anthurium are toxic to cats and dogs if chewed; Calathea and Boston Fern are not."
         ),
         "design_notes": (
             "Tier the cluster vertically — Anthurium hanging or staked at the back, Calathea "
@@ -85,15 +86,18 @@ CURATED_GUILDS = [
         "description": (
             "Five species that bloom in succession from cool-season into late summer, giving a "
             "cutting border that supplies bouquets continuously. Plant the Anemone corms in "
-            "autumn for early-spring bloom; Lisianthus and Rose 'Juliet' carry the late spring "
+            "fall for early-spring bloom in mild-winter areas (roughly zones 7–10), or in spring "
+            "where winters are cold; Lisianthus and Rose 'Juliet' carry the late spring "
             "and early summer; Café au Lait Dahlias take over from midsummer through frost; "
-            "Silver Dollar Eucalyptus provides the foliage backbone year-round. "
+            "Silver Dollar Eucalyptus provides the foliage backbone year-round in warm zones (roughly 8–9); "
+            "in colder areas treat it as an annual or grow it in a pot. "
             "\n\nThis is the bouquet that has dominated weddings for the last decade — there's a "
             "reason. The blush palette of Juliet and Café au Lait against silver eucalyptus "
             "reads as 'designed' even when assembled by a beginner, and the bloom succession "
             "means you'll have material on hand whenever you need to cut. "
             "Disbud the rose for fewer, larger blooms (the standard florist trick), and sear "
-            "anemone stems briefly in hot water after cutting to extend vase life."
+            "anemone stems briefly in hot water after cutting to extend vase life. "
+            "\n\nPets: eucalyptus is toxic to cats and dogs if chewed, and anemone and dahlia can irritate the mouth and skin."
         ),
         "design_notes": (
             "Plant the eucalyptus along the back as the structural spine; rose and dahlias mid-"
@@ -123,7 +127,7 @@ CURATED_GUILDS = [
             "leaves or rhizomes and forgive a few missed weeks, which makes them the safest picks if "
             "you travel. Pothos is the trailing softener: let it drape from a high shelf or climb a "
             "moss pole. Peace Lily flowers best in medium light, so expect fewer blooms in the dimmest spot. "
-            "\n\nCheck the soil rather than the calendar: about every two weeks for the Snake Plant "
+            "\n\nCheck the soil rather than the calendar: every two to four weeks for the Snake Plant "
             "and ZZ, weekly for the Pothos, and every five days or so for the Peace Lily, and less often "
             "in winter. A Peace Lily droops when it is thirsty, but do not wait for that every time; "
             "check the top inch and water when it starts to dry. "
@@ -131,8 +135,8 @@ CURATED_GUILDS = [
             "or stand out of reach, or choose a pet-safe set such as Cast Iron Plant."
         ),
         "design_notes": (
-            "Place the upright Snake Plant and ZZ at eye level on a console or sturdy shelf, with "
-            "Pothos trailing from above and Peace Lily on a high stand, out of reach of pets. The vertical rhythm makes "
+            "Put the Snake Plant and ZZ on a high stand or shelf where pets cannot reach, or swap in "
+            "Cast Iron Plant if you have cats or dogs. Keep Pothos trailing from above and Peace Lily on a high stand. The vertical rhythm makes "
             "the hallway feel intentional rather than 'wherever the plants fit'."
         ),
     },

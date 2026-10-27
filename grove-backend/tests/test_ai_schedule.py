@@ -47,3 +47,18 @@ def test_finished_schedule_is_clamped_with_the_fixed_reason():
     assert out["reason"] == SCHEDULE_REASON
     assert out["confidence"] == "high"
     assert "Check the soil first" in out["reason"] and "not a command" in out["reason"]
+
+
+def test_prompt_anchors_on_the_default_and_names_the_setting():
+    indoor = build_schedule_prompt("Pothos", "Epipremnum aureum", "soil", "Ohio", None, now=JULY,
+                                   default_days=7, indoors=True)
+    assert "about every 7 days" in indoor and "kept indoors in Ohio" in indoor
+    garden = build_schedule_prompt("Dahlia", "Dahlia", "soil", "Ohio", None, now=JULY, indoors=False)
+    assert "grown in the garden in Ohio" in garden and "about every" not in garden
+    unknown = build_schedule_prompt("Pothos", "Epipremnum aureum", "soil", "Ohio", None, now=JULY)
+    assert "kept indoors" not in unknown and "in the garden" not in unknown
+
+
+def test_prompt_asks_succulents_for_a_check_rhythm_not_a_watering_rhythm():
+    text = build_schedule_prompt("Aloe", "Aloe vera", "soil", "Ohio", None, now=JULY)
+    assert "how often to check, not how often to water" in text

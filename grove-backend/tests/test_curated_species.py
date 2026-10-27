@@ -87,7 +87,7 @@ def test_entry_text_has_no_native_to_cultivar_grammar_and_no_doubled_names():
 
 def test_origin_text_for_hybrid_and_uncertain_species():
     assert _sp("schlumbergera-buckleyi")["native_range"].startswith("Hybrid of two southeastern Brazilian rainforest species")
-    assert "S. truncata" in _sp("schlumbergera-buckleyi")["native_range"]
+    assert "S. truncata" in _sp("schlumbergera-buckleyi")["origin_note"]
     assert _sp("aspidistra-elatior")["native_range"] == "Origin uncertain; long cultivated in China and Japan"
 
 
@@ -130,3 +130,24 @@ def test_every_species_has_synonyms_and_the_snake_plant_keeps_its_old_name():
     assert "Sansevieria trifasciata" in _sp("dracaena-trifasciata")["synonyms"]
     assert "Haworthia fasciata" in _sp("haworthiopsis-fasciata")["synonyms"]
     assert "Senecio rowleyanus" in _sp("curio-rowleyanus")["synonyms"]
+
+
+def test_a_care_summary_does_not_contradict_the_light_ideal():
+    for s in CURATED_SPECIES:
+        text = s["care_summary"].lower().replace(",", "")
+        if "bright indirect" in text:
+            assert s["light_ideal"] != "bright_direct", s["slug"]
+        if "bright direct" in text:
+            assert s["light_ideal"] == "bright_direct", s["slug"]
+
+
+def test_horticulturist_review_fixes_in_species_data():
+    assert _sp("epipremnum-aureum")["sun_sensitive"] is True
+    assert _sp("curio-rowleyanus")["light_ideal"] == "bright_indirect"
+    assert _sp("sedum-morganianum")["light_ideal"] == "bright_indirect"
+    anemone = _sp("anemone-coronaria")
+    assert anemone["toxicity"] == "toxic" and "wear gloves" in anemone["care_summary"]
+    assert "top two inches" in _sp("dracaena-fragrans")["care_summary"]
+    assert "native_habitat" not in _sp("strelitzia-reginae")
+    assert len(_sp("schlumbergera-buckleyi")["native_range"]) < 80
+    assert "Wet forests" in _sp("anthurium-warocqueanum")["native_range"]

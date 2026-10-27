@@ -286,7 +286,7 @@ async def seed_maya(db):
     bouquet = {
         "id": bouquet_id,
         "user_id": user_id,
-        "name": "Birthday flowers from mum",
+        "name": "Birthday flowers from mom",
         "occasion": "gift",
         "received_date": days_ago(21),
         "vase_life_expected": 8,
@@ -314,7 +314,7 @@ async def seed_maya(db):
     posts_data = [
         {"caption": "She's growing so fast! Third new leaf this week", "plant": "Rudy", "kudos": 4, "days_ago": 14},
         {"caption": "Percy is thriving in his corner. Never expected to love a plant this much", "plant": "Percy", "kudos": 7, "days_ago": 7},
-        {"caption": "Birthday flowers from mum - hoping to keep them alive longer than usual!", "bouquet": True, "kudos": 11, "days_ago": 21},
+        {"caption": "Birthday flowers from mom - hoping to keep them alive longer than usual!", "bouquet": True, "kudos": 11, "days_ago": 21},
     ]
 
     for pdata in posts_data:
@@ -398,7 +398,7 @@ async def seed_maya(db):
     maya_badges = [
         "plant_first", "plant_5",            # 6 plants
         "watering_first",                    # ~25 care logs
-        "streak_7", "streak_14",             # 12-day streak with seeded history up to 14
+        "checkin_first",                     # a soil check and a photo in the seeded history
         "kudos_received_first",              # community engagement
         "prop_first",                        # started propagating
         "grove_joined_first",                # Phase 14 badge unification
@@ -413,7 +413,7 @@ async def seed_maya(db):
     await db.users.update_one(
         {"id": user_id},
         {"$set": {"displayed_badges": [
-            "plant_5", "streak_14", "prop_first"
+            "plant_5", "checkin_first", "prop_first"
         ]}}
     )
     print(f"  ✓ Featured 3 badges on profile")
@@ -656,8 +656,8 @@ async def seed_james(db):
     # multiple types, 5 groves, verified, 1 year on Grove, kudos given +
     # received, etc. Pre-seeded so the gallery has substance from session 1.
     james_badges = [
-        # Streak family (5 of 9)
-        "streak_7", "streak_14", "streak_30", "streak_60", "streak_100",
+        # Check-in family (3 of 3)
+        "checkin_first", "checkin_weeks_4", "checkin_weeks_12",
         # Watering (3 of 6)
         "watering_first", "watering_10", "watering_50",
         # Fertilizing (2 of 4)
@@ -697,7 +697,7 @@ async def seed_james(db):
     await db.users.update_one(
         {"id": user_id},
         {"$set": {"displayed_badges": [
-            "plant_collector_gold", "streak_100", "aroid_enthusiast"
+            "plant_collector_gold", "checkin_weeks_12", "aroid_enthusiast"
         ]}}
     )
     print(f"  ✓ Featured 3 badges on profile")
@@ -948,8 +948,8 @@ async def seed_clare(db):
     # bouquets tracked (we seed 6 here but the gallery shows the full
     # production set), 8 plants, all 5 tutorials read, multi-month streak.
     clare_badges = [
-        # Streak family (4 of 9) — 60-day current covers streak_60
-        "streak_7", "streak_14", "streak_30", "streak_60",
+        # Check-in family (2 of 3)
+        "checkin_first", "checkin_weeks_4",
         # Watering (3 of 6)
         "watering_first", "watering_10", "watering_50",
         # Fertilizing (1 of 4)

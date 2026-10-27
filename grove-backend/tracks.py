@@ -105,7 +105,7 @@ PLAN_QUESTIONS = {
         "feel_guilty": "reset",
         "water_or_sun": "rebirth",
         "check_roots": None,
-        "nutrients": None,
+        "nutrients": "rescue",
         "no_plant": "seedling",
     },
     "q3": {

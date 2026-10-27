@@ -2,7 +2,7 @@
 
 Additive and safe to re-run: it never deletes anything and never touches a species that already
 exists, so their photos and illustrations stay. The full seed in seed.py wipes and rebuilds the
-catalogue when its version changes; use this script to grow the catalogue without that.
+catalog when its version changes; use this script to grow the catalog without that.
 
 Usage (reads MONGO_URL and DB_NAME from .env):
     python3 add_species.py

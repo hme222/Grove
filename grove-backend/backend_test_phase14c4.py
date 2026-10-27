@@ -1,3 +1,5 @@
+# STALE: this live-API script predates the weekly check-ins change and still asserts the old daily streak and the
+# day-7 / day-30 unlocks. Those rules are gone (see check_ins.py and tests/test_check_ins.py). Do not rely on its streak results.
 """
 Phase 14C.4 Backend Testing — Goals/Badges Unification + Daily Trivia
 

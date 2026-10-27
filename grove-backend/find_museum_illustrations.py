@@ -41,7 +41,7 @@ MET_OBJECT = "https://collectionapi.metmuseum.org/public/collection/v1/objects/{
 SI_SEARCH = "https://api.si.edu/openaccess/api/v1.0/search"
 
 # slug -> (search names, words one of which must appear in the record's title/tags).
-# Synonyms and older names are included because museums catalogue under the name
+# Synonyms and older names are included because museums catalog under the name
 # in use when the plate was made.
 SPECIES = {
     "monstera-deliciosa": (["Monstera deliciosa", "Monstera"], ["monstera"]),

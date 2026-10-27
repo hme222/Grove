@@ -18,13 +18,13 @@ COMPANIONS = {
     # 2. Pothos
     "epipremnum-aureum": [
         {"slug": "monstera-deliciosa", "reasoning": "Climbing aroid pair — Monstera goes up the pole, Pothos trails down the planter edge."},
-        {"slug": "dracaena-trifasciata", "reasoning": "Snake Plant and Pothos share the most forgiving low-light shelf in the house — a low-stress beginner cluster."},
-        {"slug": "zamioculcas-zamiifolia", "reasoning": "ZZ's structural upright form anchors the trailing Pothos; both tolerate low light and missed waterings."},
+        {"slug": "dracaena-trifasciata", "reasoning": "Snake Plant and Pothos share the most forgiving low-light shelf in the house — a low-stress beginner cluster. Water each by its own check: Pothos shows thirst sooner than Snake Plant."},
+        {"slug": "zamioculcas-zamiifolia", "reasoning": "ZZ's structural upright form anchors the trailing Pothos; both tolerate low light, but Pothos wilts sooner when dry, so water each by its own check."},
     ],
     # 3. Snake Plant
     "dracaena-trifasciata": [
         {"slug": "zamioculcas-zamiifolia", "reasoning": "Two architectural low-water uprights — ideal for a forget-to-water hallway."},
-        {"slug": "epipremnum-aureum", "reasoning": "Pothos trailing past Snake Plant's vertical sword-leaves is a low-light interior staple."},
+        {"slug": "epipremnum-aureum", "reasoning": "Pothos trailing past Snake Plant's vertical sword-leaves is a low-light interior staple. Water each by its own check."},
         {"slug": "crassula-ovata", "reasoning": "Both store water in their tissues and like to dry out between waterings, though Jade wants much more light."},
     ],
     # 4. Spider Plant
@@ -34,7 +34,7 @@ COMPANIONS = {
     ],
     # 5. Aloe vera
     "aloe-vera": [
-        {"slug": "crassula-ovata", "reasoning": "Two dry-climate succulents that share the brightest windowsill and a 14-day check."},
+        {"slug": "crassula-ovata", "reasoning": "Two dry-climate succulents that share the brightest windowsill and both dry out fully between drinks."},
         {"slug": "curio-rowleyanus", "reasoning": "Trailing String of Pearls beside upright Aloe makes a sun-loving succulent shelf."},
     ],
     # 6. Peace Lily
@@ -52,12 +52,12 @@ COMPANIONS = {
     "anthurium-warocqueanum": [
         {"slug": "goeppertia-orbifolia", "reasoning": "Two humidity-dependent specimens — pair them inside an enclosed cabinet to stabilize 70%+ humidity."},
         {"slug": "philodendron-pink-princess", "reasoning": "Both want the same chunky aroid mix and bright-indirect light — share substrate, share microclimate."},
-        {"slug": "nephrolepis-exaltata", "reasoning": "Boston Fern under the Queen Anthurium acts as a living humidifier."},
+        {"slug": "nephrolepis-exaltata", "reasoning": "Boston Fern beside the Queen Anthurium shares its need for humid air. Grouping them helps a little, but a fern will not humidify a room."},
     ],
     # 9. ZZ Plant
     "zamioculcas-zamiifolia": [
         {"slug": "dracaena-trifasciata", "reasoning": "Both store water in rhizomes and tolerate low light — the most forgiving shelf in any home."},
-        {"slug": "epipremnum-aureum", "reasoning": "ZZ structures the upright; Pothos drapes — both forgive forgetful watering."},
+        {"slug": "epipremnum-aureum", "reasoning": "ZZ structures the upright; Pothos drapes. ZZ forgives forgetful watering and Pothos shows thirst sooner, so water each by its own check."},
     ],
     # 10. Rubber Plant
     "ficus-elastica": [
@@ -130,7 +130,7 @@ COMPANIONS = {
     ],
     # 24. Jade Plant
     "crassula-ovata": [
-        {"slug": "aloe-vera", "reasoning": "Classic succulent pair — both want the brightest window and a 14-day soak."},
+        {"slug": "aloe-vera", "reasoning": "Classic succulent pair — both want the brightest window and dry out fully between drinks."},
         {"slug": "curio-rowleyanus", "reasoning": "Upright Jade with trailing Pearls makes a sculptural succulent shelf."},
     ],
     # 25. Dahlia 'Café au Lait'

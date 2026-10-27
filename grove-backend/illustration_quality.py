@@ -4,7 +4,7 @@ Heuristic quality scoring for botanical illustration images.
 Used by find_museum_illustrations.py (rank new candidates) and
 audit_illustrations.py (flag the weakest current images).
 
-The score is a screen, not a judgement: it catches text pages, tiny or blurry
+The score is a screen, not a judgment: it catches text pages, tiny or blurry
 scans, dark scan borders and near-empty sheets. A person still picks the final
 plate from the contact sheet.
 """
@@ -19,7 +19,7 @@ MIN_SHORT_SIDE = 600  # px on the source image; below this it blurs on the speci
 
 
 def _paper_color(rgb):
-    """Estimate paper tone as the median colour of a thin border strip."""
+    """Estimate paper tone as the median color of a thin border strip."""
     h, w, _ = rgb.shape
     m = max(2, int(min(h, w) * 0.02))
     strip = np.concatenate([
@@ -43,7 +43,7 @@ def analyze(image_bytes, source_size=None):
     rgb = np.asarray(img, dtype=np.float32)
     gray = rgb.mean(axis=2)
 
-    # Sharpness: variance of a 4-neighbour Laplacian.
+    # Sharpness: variance of a 4-neighbor Laplacian.
     lap = (-4 * gray[1:-1, 1:-1] + gray[:-2, 1:-1] + gray[2:, 1:-1]
            + gray[1:-1, :-2] + gray[1:-1, 2:])
     sharpness = float(lap.var())
@@ -54,7 +54,7 @@ def analyze(image_bytes, source_size=None):
     ink = diff > 40
     coverage = float(ink.mean())
 
-    # Colour: plates are painted; text pages are grey. Saturation of the inked pixels.
+    # Color: plates are painted; text pages are gray. Saturation of the inked pixels.
     mx, mn = rgb.max(axis=2), rgb.min(axis=2)
     sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1), 0)
     colorfulness = float(sat[ink].mean()) if ink.any() else 0.0

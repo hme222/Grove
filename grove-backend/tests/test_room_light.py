@@ -65,7 +65,8 @@ def test_direct_sun_is_too_bright_for_sun_sensitive_plants_and_two_steps_over():
 
 def test_direct_sun_for_a_tolerant_plant_one_step_over_is_a_soft_note_not_too_bright():
     assert light_fit("bright_direct", plant("dracaena-trifasciata")) == "bright"
-    assert light_fit("bright_direct", plant("epipremnum-aureum")) == "bright"
+    # Pothos scorches in direct sun, so it is flagged sun-sensitive and direct sun is too bright for it.
+    assert light_fit("bright_direct", plant("epipremnum-aureum")) == "too_bright"
 
 
 def test_a_species_with_no_band_falls_back_to_its_default_level():
@@ -87,7 +88,7 @@ def test_every_species_has_a_valid_band():
         assert LEVELS.index(sp["light_min"]) <= LEVELS.index(sp["light_ideal"]), sp["slug"]
     for slug in ("phalaenopsis", "schlumbergera-buckleyi", "haworthiopsis-fasciata", "chamaedorea-elegans",
                  "chlorophytum-comosum", "hoya-carnosa", "goeppertia-orbifolia", "peperomia-obtusifolia",
-                 "anthurium-warocqueanum", "philodendron-pink-princess"):
+                 "anthurium-warocqueanum", "philodendron-pink-princess", "epipremnum-aureum"):
         assert plant(slug)["sun_sensitive"] is True, slug
     assert plant("dracaena-trifasciata")["default_light_level"] == "medium"
     assert plant("zamioculcas-zamiifolia")["default_light_level"] == "medium"

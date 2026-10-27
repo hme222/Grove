@@ -9,21 +9,19 @@ STEPS = {
     "top_two_inches": "Check the top two inches of soil. Water if they're dry.",
     "fully_dry": "Feel the whole pot. Water only when the soil is dry all the way down, or the pot feels light.",
     "evenly_moist": "Check the top inch. Water when it just starts to dry. It should never go bone dry or sit wet.",
-    "roots": "Look at the roots. Silvery means water; green means wait. Let the bark mix drain fully.",
+    "roots": "Look at the roots through a clear pot. Silvery means water; green means wait. Let the bark mix drain fully.",
 }
 
 GROUPS = {
     "top_inch": ["epipremnum-aureum", "chlorophytum-comosum", "monstera-deliciosa", "philodendron-pink-princess",
-                 "hoya-carnosa", "chamaedorea-elegans", "peperomia-obtusifolia", "hedera-helix",
-                 "aglaonema-modestum", "aspidistra-elatior"],
+                 "chamaedorea-elegans", "peperomia-obtusifolia", "aglaonema-modestum", "aspidistra-elatior"],
     "top_two_inches": ["ficus-elastica", "ficus-lyrata", "strelitzia-reginae", "dracaena-fragrans",
-                       "dracaena-marginata", "dracaena-trifasciata", "zamioculcas-zamiifolia",
-                       "pachira-aquatica", "beaucarnea-recurvata"],
+                       "dracaena-marginata", "pachira-aquatica", "hoya-carnosa"],
     "fully_dry": ["aloe-vera", "crassula-ovata", "haworthiopsis-fasciata", "echeveria-elegans",
                   "sedum-morganianum", "curio-rowleyanus", "opuntia-microdasys", "kalanchoe-blossfeldiana",
-                  "schlumbergera-buckleyi"],
+                  "zamioculcas-zamiifolia", "dracaena-trifasciata", "beaucarnea-recurvata"],
     "evenly_moist": ["spathiphyllum-wallisii", "goeppertia-orbifolia", "nephrolepis-exaltata",
-                     "anthurium-warocqueanum"],
+                     "anthurium-warocqueanum", "schlumbergera-buckleyi", "hedera-helix"],
     "roots": ["phalaenopsis"],
 }
 
