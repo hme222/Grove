@@ -22,6 +22,7 @@ import TabStrip from '../components/TabStrip';
 // Phase 14A.2 — bulk multi-action set. Matches the single-plant CareLogModal.
 
 const BULK_WARN_THRESHOLD = 20;
+const BULK_BATCH_SIZE = 100;
 
 export default function CollectionPage() {
   const navigate = useNavigate();
@@ -97,13 +98,15 @@ export default function CollectionPage() {
     setBulkRunning(true);
     try {
       const actions = Array.from(bulkActions);
-      const res = await careAPI.bulkLog({
-        plant_ids: Array.from(selected),
-        actions,
-        notes: 'Bulk care',
-      });
-      const logged = res.data?.logged ?? 0;
-      const affected = res.data?.plants_affected ?? selected.size;
+      // The server takes up to 100 plants per request, so a bigger selection goes in batches.
+      const ids = Array.from(selected);
+      let logged = 0;
+      let affected = 0;
+      for (let i = 0; i < ids.length; i += BULK_BATCH_SIZE) {
+        const res = await careAPI.bulkLog({ plant_ids: ids.slice(i, i + BULK_BATCH_SIZE), actions, notes: 'Bulk care' });
+        logged += res.data?.logged ?? 0;
+        affected += res.data?.plants_affected ?? 0;
+      }
       const actionLabel = actions.length === 1 ? actions[0] : `${actions.length} actions`;
       toast.success(`${actionLabel} logged for ${affected} plant${affected === 1 ? '' : 's'} (${logged} total)`);
       exitSelectionMode();

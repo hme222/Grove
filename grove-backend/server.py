@@ -1,5 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, UploadFile, File, Form, Query, Response, Request
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,7 +10,7 @@ import re
 import uuid
 from datetime import datetime, timezone, timedelta, date
 from typing import List, Optional, Dict, Literal
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, field_validator, model_validator
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent
@@ -40,6 +41,7 @@ import check_ins as check_ins_mod
 import notification_policy
 import tracks as tracks_mod
 import auth_flow
+import input_limits as limits
 import sso as sso_mod
 import nook as nook_mod
 import nook_service
@@ -54,6 +56,13 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'grove_db')]
 
 app = FastAPI(title="Grove API")
+
+
+@app.exception_handler(RequestValidationError)
+async def _validation_error(request: Request, exc: RequestValidationError):
+    # Echo what was wrong, but never the submitted value: it can be raw upload bytes that cannot be JSON-encoded.
+    errors = [{"loc": e.get("loc"), "msg": e.get("msg"), "type": e.get("type")} for e in exc.errors()]
+    return JSONResponse(status_code=422, content={"detail": errors})
 api_router = APIRouter(prefix="/api")
 
 # Configure logging
@@ -478,10 +487,18 @@ async def get_user_stats(user_id: str) -> dict:
 # ============ AUTH ROUTES ============
 
 class RegisterInput(BaseModel):
-    username: Optional[str] = None  # left out by the sign-up flow: made from the email
+    username: Optional[str] = Field(None, max_length=limits.MAX_USERNAME)  # left out by the sign-up flow: made from the email
     email: str
-    password: str
-    display_name: Optional[str] = None
+    password: str = Field(min_length=6, max_length=limits.MAX_PASSWORD)
+    display_name: Optional[str] = Field(None, max_length=60)
+
+    @field_validator('email')
+    @classmethod
+    def _email_shape(cls, v: str) -> str:
+        v = v.strip()
+        if not limits.looks_like_email(v):
+            raise ValueError('That email doesn’t look right.')
+        return v
 
 class LoginInput(BaseModel):
     email: str
@@ -770,9 +787,9 @@ async def get_me(current_user: dict = Depends(get_current_user)):
     return user_safe
 
 class UserUpdate(BaseModel):
-    display_name: Optional[str] = None
-    bio: Optional[str] = None
-    location: Optional[str] = None
+    display_name: Optional[str] = Field(None, max_length=60)
+    bio: Optional[str] = Field(None, max_length=500)
+    location: Optional[str] = Field(None, max_length=100)
     profile_public: Optional[bool] = None
     care_public: Optional[bool] = None
     collection_public: Optional[bool] = None
@@ -1791,7 +1808,7 @@ async def search_species(q: str = ""):
     if not q or len(q) < 2:
         species = await db.species.find({}, {"_id": 0}).sort("common_name", 1).limit(50).to_list(50)
         return [serialize_doc(s) for s in species]
-    regex = {"$regex": q, "$options": "i"}
+    regex = {"$regex": re.escape(q[:limits.MAX_SEARCH_QUERY]), "$options": "i"}
     species = await db.species.find(
         {"$or": [{"common_name": regex}, {"latin_name": regex}]}, {"_id": 0}
     ).limit(20).to_list(20)
@@ -1842,16 +1859,16 @@ async def get_species(species_id: str):
 # ============ PLANT ROUTES ============
 
 class PlantCreate(BaseModel):
-    common_name: str
-    latin_name: Optional[str] = None
+    common_name: str = Field(min_length=1, max_length=120)
+    latin_name: Optional[str] = Field(None, max_length=120)
     species_id: Optional[str] = None
-    nickname: Optional[str] = None
-    room: Optional[str] = None
+    nickname: Optional[str] = Field(None, max_length=60)
+    room: Optional[str] = Field(None, max_length=60)
     grow_medium: str = "soil"
-    notes: Optional[str] = None
+    notes: Optional[str] = Field(None, max_length=2000)
     acquired_date: Optional[str] = None
-    acquired_from: Optional[str] = None
-    watering_frequency_days: Optional[int] = None
+    acquired_from: Optional[str] = Field(None, max_length=120)
+    watering_frequency_days: Optional[int] = Field(None, ge=1, le=limits.MAX_WATERING_DAYS)
     photo_url: Optional[str] = None
     # If True, user is creating without a photo now (e.g. bulk import). A
     # "needs photo" state will be stored and surfaced later. Default: False.
@@ -1865,13 +1882,13 @@ class PlantCreate(BaseModel):
     ai_species_confirmed: Optional[bool] = False
 
 class PlantUpdate(BaseModel):
-    common_name: Optional[str] = None
-    latin_name: Optional[str] = None
-    nickname: Optional[str] = None
-    room: Optional[str] = None
+    common_name: Optional[str] = Field(None, min_length=1, max_length=120)
+    latin_name: Optional[str] = Field(None, max_length=120)
+    nickname: Optional[str] = Field(None, max_length=60)
+    room: Optional[str] = Field(None, max_length=60)
     grow_medium: Optional[str] = None
-    notes: Optional[str] = None
-    watering_frequency_days: Optional[int] = None
+    notes: Optional[str] = Field(None, max_length=2000)
+    watering_frequency_days: Optional[int] = Field(None, ge=1, le=limits.MAX_WATERING_DAYS)
     is_archived: Optional[bool] = None
     # Phase 13 — when user manually edits species name, set ai_species_confirmed=True
     ai_species_confirmed: Optional[bool] = None
@@ -2264,21 +2281,21 @@ async def gen_biography(plant_id: str, current_user: dict = Depends(get_current_
 class CareLogCreate(BaseModel):
     # Phase 14A.2: support either a single `action` (legacy) OR `actions[]` for
     # multi-action logging in one sweep (e.g. water + mist + rotate).
-    action: Optional[str] = None
-    actions: Optional[List[str]] = None
-    notes: Optional[str] = None
-    root_length_cm: Optional[float] = None
-    water_level_pct: Optional[int] = None
+    action: Optional[str] = Field(None, max_length=40)
+    actions: Optional[List[str]] = Field(None, max_length=20)
+    notes: Optional[str] = Field(None, max_length=2000)
+    root_length_cm: Optional[float] = Field(None, ge=0, le=1000)
+    water_level_pct: Optional[int] = Field(None, ge=0, le=100)
     # Soil test (action "soil_check"): what the user felt and what they chose.
     soil_outcome: Optional[str] = None
     soil_decision: Optional[str] = None
 
 class BulkCareLogCreate(BaseModel):
-    plant_ids: List[str]
+    plant_ids: List[str] = Field(max_length=limits.MAX_BULK_PLANTS)
     # Phase 14A.2: support either a single `action` (legacy) OR `actions[]`.
-    action: Optional[str] = None
-    actions: Optional[List[str]] = None
-    notes: Optional[str] = None
+    action: Optional[str] = Field(None, max_length=40)
+    actions: Optional[List[str]] = Field(None, max_length=20)
+    notes: Optional[str] = Field(None, max_length=2000)
 
 # Phase 14A.2 — recognized care actions (validation + UI hints)
 VALID_CARE_ACTIONS = {
@@ -2300,6 +2317,8 @@ def _normalize_actions(single: Optional[str], many: Optional[List[str]]) -> List
         a = (a or '').strip()
         if not a or a in seen:
             continue
+        if a not in limits.CARE_ACTIONS:
+            raise HTTPException(status_code=400, detail=f"Unknown care action: {a[:40]}")
         seen.add(a)
         out.append(a)
     return out
@@ -2454,15 +2473,20 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
     if ext.lower() not in allowed:
         raise HTTPException(status_code=400, detail=f"File type .{ext} not allowed")
     data = await file.read()
-    if len(data) > 10 * 1024 * 1024:
+    if not data:
+        raise HTTPException(status_code=400, detail="That file is empty")
+    if len(data) > limits.MAX_UPLOAD_BYTES:
         raise HTTPException(status_code=400, detail="File too large (max 10MB)")
+    sniffed = limits.sniff_image_type(data)
+    if not sniffed:
+        raise HTTPException(status_code=400, detail="That file isn't a supported image (JPEG, PNG, WebP or GIF)")
     path = generate_storage_path(current_user['user_id'], ext.lower())
     try:
-        result = put_object(path, data, file.content_type or "image/png")
+        result = put_object(path, data, sniffed)
         file_doc = {
             "id": str(uuid.uuid4()), "storage_path": result["path"],
             "original_filename": file.filename,
-            "content_type": file.content_type, "size": result["size"],
+            "content_type": sniffed, "size": result["size"],
             "user_id": current_user['user_id'], "is_deleted": False,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
@@ -2821,11 +2845,11 @@ async def scan_room(input: IdentifyPlantInput, current_user: dict = Depends(get_
 
 
 class BatchPlantItem(BaseModel):
-    common_name: str
-    latin_name: Optional[str] = None
-    nickname: Optional[str] = None
+    common_name: str = Field(min_length=1, max_length=120)
+    latin_name: Optional[str] = Field(None, max_length=120)
+    nickname: Optional[str] = Field(None, max_length=60)
     grow_medium: str = "soil"
-    watering_frequency_days: Optional[int] = None
+    watering_frequency_days: Optional[int] = Field(None, ge=1, le=limits.MAX_WATERING_DAYS)
     photo_url: str  # already-uploaded storage path
     ai_identified: bool = True
     ai_confidence: Optional[float] = None
@@ -2834,7 +2858,7 @@ class BatchPlantItem(BaseModel):
 
 
 class BatchPlantsInput(BaseModel):
-    plants: List[BatchPlantItem]
+    plants: List[BatchPlantItem] = Field(max_length=50)
     room: Optional[str] = None
 
 
@@ -3498,18 +3522,31 @@ async def get_public_bouquet(slug: str):
 
 class PostCreate(BaseModel):
     post_type: str = "plant_update"  # plant_update | bouquet | propagation | milestone | swap_complete
-    caption: Optional[str] = None
+    caption: Optional[str] = Field(None, max_length=2000)
     plant_id: Optional[str] = None
     bouquet_id: Optional[str] = None
     photo_url: Optional[str] = None
     milestone_type: Optional[str] = None
 
+    @field_validator('post_type')
+    @classmethod
+    def _known_post_type(cls, v: str) -> str:
+        if v not in limits.POST_TYPES:
+            raise ValueError('Unknown post type.')
+        return v
+
+    @model_validator(mode='after')
+    def _not_empty(self):
+        if not any([(self.caption or '').strip(), self.photo_url, self.plant_id, self.bouquet_id, self.milestone_type]):
+            raise ValueError('A post needs a caption, a photo, or something attached.')
+        return self
+
 class CommentCreate(BaseModel):
-    body: str
+    body: str = Field(min_length=1, max_length=2000)
     photo_url: Optional[str] = None
 
 @api_router.get("/feed")
-async def get_feed(current_user: dict = Depends(get_current_user), page: int = 1, limit: int = 20):
+async def get_feed(current_user: dict = Depends(get_current_user), page: int = Query(1, ge=1, le=10000), limit: int = Query(20, ge=1, le=limits.MAX_FEED_PAGE_SIZE)):
     skip = (page - 1) * limit
     # Get user's grove memberships
     memberships = await db.grove_members.find({"user_id": current_user['user_id']}).to_list(50)
@@ -3575,6 +3612,15 @@ async def get_feed(current_user: dict = Depends(get_current_user), page: int = 1
 async def create_post(input: PostCreate, current_user: dict = Depends(get_current_user)):
     await require_can_take_part(current_user['user_id'])
     now = datetime.now(timezone.utc)
+    if input.plant_id and not await db.plants.find_one({"id": input.plant_id, "user_id": current_user['user_id']}, {"_id": 0, "id": 1}):
+        raise HTTPException(status_code=404, detail="Plant not found")
+    repeat = await db.posts.find_one({
+        "user_id": current_user['user_id'], "post_type": input.post_type, "caption": input.caption or "",
+        "plant_id": input.plant_id, "bouquet_id": input.bouquet_id, "photo_url": input.photo_url or "",
+        "created_at": {"$gte": (now - timedelta(seconds=30)).isoformat()},
+    }, {"_id": 0})
+    if repeat:
+        return serialize_doc(repeat)
     post = {
         "id": str(uuid.uuid4()), "user_id": current_user['user_id'],
         "plant_id": input.plant_id, "bouquet_id": input.bouquet_id,
@@ -3799,8 +3845,8 @@ async def create_comment(post_id: str, input: CommentCreate, current_user: dict 
 # ============ GROVES ROUTES (Phase 4) ============
 
 class GroveCreate(BaseModel):
-    name: str
-    description: Optional[str] = None
+    name: str = Field(min_length=1, max_length=80)
+    description: Optional[str] = Field(None, max_length=500)
     is_private: bool = False
 
 @api_router.get("/groves")
@@ -4167,17 +4213,31 @@ async def shutdown():
 # ============ GOALS ROUTES ============
 
 class GoalCreate(BaseModel):
-    title: str
-    description: Optional[str] = None
+    title: str = Field(min_length=1, max_length=120)
+    description: Optional[str] = Field(None, max_length=500)
     goal_type: str  # 'streak_days', 'care_logs_count', 'plant_count', 'bouquet_vase_life', 'custom'
-    target_value: int
+    target_value: int = Field(ge=1, le=1_000_000)
     end_date: Optional[str] = None
 
+    @field_validator('goal_type')
+    @classmethod
+    def _known_goal_type(cls, v: str) -> str:
+        if v not in limits.GOAL_TYPES:
+            raise ValueError('Unknown goal type.')
+        return v
+
 class GoalUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    current_value: Optional[int] = None
+    title: Optional[str] = Field(None, min_length=1, max_length=120)
+    description: Optional[str] = Field(None, max_length=500)
+    current_value: Optional[int] = Field(None, ge=0, le=1_000_000)
     status: Optional[str] = None
+
+    @field_validator('status')
+    @classmethod
+    def _known_status(cls, v):
+        if v is not None and v not in limits.GOAL_STATUSES:
+            raise ValueError('Unknown goal status.')
+        return v
 
 @api_router.get("/goals")
 async def get_goals(status: Optional[str] = None, current_user: dict = Depends(get_current_user)):
@@ -4189,6 +4249,12 @@ async def get_goals(status: Optional[str] = None, current_user: dict = Depends(g
 
 @api_router.post("/goals")
 async def create_goal(input: GoalCreate, current_user: dict = Depends(get_current_user)):
+    repeat = await db.goals.find_one({
+        "user_id": current_user['user_id'], "title": input.title, "goal_type": input.goal_type,
+        "target_value": input.target_value, "status": "active",
+    })
+    if repeat:
+        return serialize_doc(repeat)
     goal_id = str(uuid.uuid4())
     goal = {
         "id": goal_id,
@@ -4410,6 +4476,13 @@ class NotificationPreferencesInput(BaseModel):
     quiet_hours_start: Optional[str] = None
     quiet_hours_end: Optional[str] = None
     care_daily_cap: Optional[int] = Field(None, ge=1, le=3)
+
+    @field_validator('quiet_hours_start', 'quiet_hours_end')
+    @classmethod
+    def _clock_time(cls, v):
+        if v is not None and not re.fullmatch(r'([01]\d|2[0-3]):[0-5]\d', v):
+            raise ValueError('Use a time like 21:00.')
+        return v
 
 
 @api_router.get("/users/me/notification-preferences")
