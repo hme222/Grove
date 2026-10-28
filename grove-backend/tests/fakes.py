@@ -76,5 +76,5 @@ class Collection:
 
 class FakeDb:
     def __init__(self):
-        for name in ("users", "plants", "care_logs", "user_missions", "user_badges", "badges", "species"):
+        for name in ("users", "plants", "care_logs", "user_missions", "user_badges", "badges", "species", "experiment_events"):
             setattr(self, name, Collection())

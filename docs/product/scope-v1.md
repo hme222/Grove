@@ -43,7 +43,7 @@ Three tiers:
 | **Community** (feed, Groves, swaps, saved cuttings, kudos) | Needs people to fill it, and it needs moderation tools (report, block) for user posts. Survey: 7th of the dealbreakers, 6 of 37 have zero interest | The trigger below. Flag: `REACT_APP_COMMUNITY=on` |
 | **Badges and challenges** | The strategy says no gamification as the core loop | A decision that they are optional extras |
 | **Home-wide light map** | The per-spot light lesson and check are in v1. A map of every window and room, light meters and glass types are the spec's own non-goals. Strongest paid candidate | Finish it as a whole feature, likely the paid tier |
-| **Photo AI diagnosis** | #3 dealbreaker (18 of 37) and the most trusted AI feature, so v1 ships the rule-based triage above. A photo can't show soil moisture or roots, where most houseplant problems start, so a confident photo diagnosis risks sending people to water a plant that is already overwatered. Needs the Anthropic key and a way to correct it | The key, a soil-check question before any photo diagnosis, and a test in Study 001's follow-up |
+| **Photo AI diagnosis** | Built as an A/B test, off by default (`EXPERIMENT_HELP_DIAGNOSIS=off`). It's the #3 dealbreaker (18 of 37), but a photo can't show soil moisture or roots, where most houseplant problems start, so a confident photo answer risks sending someone to water a plant that is already overwatered. The test arm asks the soil question first, shows confidence in words, and has a one-tap "None of these fit". Needs the Anthropic key | Turn it on with `split` once the key is in. Decide what result ships before you look at the numbers (see "Photo check A/B test") |
 | **Zip and hardiness zone** | Zone describes outdoor winter lows and changes nothing about indoor care. Hemisphere and month already set the season. Flag: `REACT_APP_ZIP_ZONE=on` | Outdoor or patio plants, frost advice, or recommending species by region |
 | **Themed guilds** | A second way to browse before a new owner has used the first. Flag: `REACT_APP_GUILDS=on` | After Greenhouse search is shown to be used |
 | **Florists** (dashboard, QR care pages, public bouquet page work) | Florist n=3, a later audience | A florist discovery study. Cheap safety fixes (pet line, "vase life varies") are worth doing anyway |
@@ -60,6 +60,14 @@ Organic community forms outside the app first, so v1 gives people ways to carry 
 3. **Shareable plant card** ("my plant's first month," from the memory journal). Not built; it needs a design pass, so it is the next candidate.
 
 **Trigger to bring community in-app.** Set the numbers before you look at them. A starting proposal, to change as you see fit: bring it back when weekly active users reach 500, at least 30 people have asked for it in feedback or in your waitlist space, and you have a way to review reports within a day. Until all three are true, it stays dormant.
+
+## Photo check A/B test
+
+- **Arms.** Control is the symptom list. Treatment is the same list plus "Check with a photo." A person stays in their arm (assigned by a stable hash of their user id).
+- **Modes.** `EXPERIMENT_HELP_DIAGNOSIS` is `off` (default, everyone sees control), `split` (50/50) or `on` (everyone sees the photo check, for internal testing). Without the Anthropic key nobody is put in the photo check, so a missing key can't make it look worse.
+- **Guardrails, enforced on the server.** The photo can't be sent without a soil answer ("dry," "slightly damp," "wet"). "I haven't checked" never calls the model. Control users get a 403 from the endpoint.
+- **Events recorded** (`experiment_events`): `exposure`, `triage_symptom_picked`, `photo_check_started`, `photo_check_result` (with confidence and soil answer), `photo_check_none_fit`, `photo_check_failed`.
+- **Honest limits.** With a few hundred users this won't reach statistical significance. Read it as direction, alongside Study 001 sessions. Write down before you start what would make you ship it, for example: more people reach a next step in the photo arm, "None of these fit" stays low, and no one in either arm reports watering a plant after a "wet" soil answer.
 
 ## Designer pushback, and what I did with it
 

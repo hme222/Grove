@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
 import { SYMPTOMS, SAFETY_INTRO, SAFETY_CONTACTS, SAFETY_STEPS, SOIL_CHECK } from '../lib/plantHelp';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
+import { experimentAPI } from '../lib/api';
+import PhotoCheck from '../components/PhotoCheck';
 
 export default function HelpMyPlantPage() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const symptom = SYMPTOMS.find((s) => s.id === selected);
+
+  // The help_diagnosis experiment. Anyone we can't place, or if the call fails, gets the plain symptom list.
+  const [arm, setArm] = useState('control');
+  useEffect(() => {
+    let alive = true;
+    experimentAPI.helpDiagnosisArm()
+      .then((res) => {
+        if (!alive) return;
+        setArm(res.data.arm);
+        experimentAPI.event('help_diagnosis', 'exposure').catch(() => {});
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+  const pickSymptom = (id, active) => {
+    setSelected(active ? null : id);
+    if (!active) experimentAPI.event('help_diagnosis', 'triage_symptom_picked', { symptom: id }).catch(() => {});
+  };
 
   return (
     <div className="pb-24">
@@ -17,6 +37,7 @@ export default function HelpMyPlantPage() {
         back
       />
       <div className="max-w-column mx-auto px-4 py-5 space-y-6">
+        {arm === 'photo_check' && <PhotoCheck />}
         <section aria-labelledby="symptom-heading">
           <h2 id="symptom-heading" className="font-plant text-xl font-semibold text-grove-cream">What do you see?</h2>
           <p className="mt-1 font-ui text-sm text-grove-sage">Pick the closest match. These are common causes and quick checks, not a diagnosis.</p>
@@ -28,7 +49,7 @@ export default function HelpMyPlantPage() {
                   key={s.id}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setSelected(active ? null : s.id)}
+                  onClick={() => pickSymptom(s.id, active)}
                   data-testid={`symptom-${s.id}`}
                   className={buttonVariants({ variant: 'chip' })}
                     aria-pressed={active}

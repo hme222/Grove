@@ -156,11 +156,17 @@ export const plantAPI = {
   validatePhoto: (path) => api.post('/plants/validate-photo', { path }),
   // Phase 13 — AI identification
   identify: (data) => api.post('/plants/identify', data),
+  diagnosePhoto: (data) => api.post('/plants/diagnose-photo', data),
   scanRoom: (data) => api.post('/plants/scan-room', data),
   batchCreate: (data) => api.post('/plants/batch', data),
 };
 
 // Care Logs
+export const experimentAPI = {
+  helpDiagnosisArm: () => api.get('/experiments/help-diagnosis'),
+  event: (experiment, event, props = {}) => api.post('/experiments/events', { experiment, event, props }),
+};
+
 export const careAPI = {
   getLogs: (plantId) => api.get(`/plants/${plantId}/care-logs`),
   createLog: (plantId, data) => api.post(`/plants/${plantId}/care-logs`, data),

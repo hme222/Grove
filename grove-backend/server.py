@@ -2628,6 +2628,65 @@ async def _resolve_image_b64(payload: IdentifyPlantInput) -> str:
     raise HTTPException(status_code=400, detail="Provide either `path` or `image_base64`.")
 
 
+# ---------- Help my plant: the help_diagnosis experiment ----------
+
+import experiments  # noqa: E402
+import photo_diagnosis  # noqa: E402
+
+
+class ExperimentEventInput(BaseModel):
+    experiment: str
+    event: str
+    props: Dict[str, str] = Field(default_factory=dict)
+
+
+class DiagnosePhotoInput(IdentifyPlantInput):
+    soil_answer: Literal["dry", "damp", "wet", "not_checked"]
+
+
+async def _log_experiment_event(user_id: str, experiment: str, event: str, props: dict = None):
+    await db.experiment_events.insert_one({
+        "user_id": user_id, "experiment": experiment, "arm": experiments.assign(user_id, experiment),
+        "event": event, "props": props or {}, "at": datetime.now(timezone.utc).isoformat(),
+    })
+
+
+@api_router.get("/experiments/help-diagnosis")
+async def get_help_diagnosis_arm(current_user: dict = Depends(get_current_user)):
+    return {"arm": experiments.assign(current_user["user_id"])}
+
+
+@api_router.post("/experiments/events")
+async def post_experiment_event(body: ExperimentEventInput, current_user: dict = Depends(get_current_user)):
+    if not experiments.valid_event(body.experiment, body.event):
+        raise HTTPException(status_code=422, detail="Unknown experiment event")
+    props = {str(k)[:40]: str(v)[:80] for k, v in list(body.props.items())[:5]}
+    await _log_experiment_event(current_user["user_id"], body.experiment, body.event, props)
+    return {"ok": True}
+
+
+@api_router.post("/plants/diagnose-photo")
+async def diagnose_photo(body: DiagnosePhotoInput, current_user: dict = Depends(get_current_user)):
+    """The photo check. Only people in the photo_check arm can use it, and only after a soil answer."""
+    if experiments.assign(current_user["user_id"]) != "photo_check":
+        raise HTTPException(status_code=403, detail="The photo check isn't available")
+    if body.soil_answer == "not_checked":
+        return {"needsSoilCheck": True, "message": "Check the soil first: push a finger in two knuckles deep, then tell us how it feels."}
+    img_b64 = await _resolve_image_b64(body)
+    try:
+        response = await call_claude_vision(
+            photo_diagnosis.DIAGNOSIS_SYSTEM, photo_diagnosis.build_prompt(body.soil_answer), img_b64)
+        result = photo_diagnosis.finish(parse_json_response(response))
+    except Exception:
+        logger.exception("diagnose_photo Claude error")
+        await _log_experiment_event(current_user["user_id"], experiments.HELP_DIAGNOSIS, "photo_check_failed")
+        return {"error": "diagnosis_unavailable", "message": "The photo check isn't available right now. The symptom list still works."}
+    await _log_experiment_event(
+        current_user["user_id"], experiments.HELP_DIAGNOSIS, "photo_check_result",
+        {"confidence": result["confidence"], "soil": body.soil_answer})
+    return result
+
+
 IDENTIFY_SYSTEM = (
     "You are a botanist and plant health expert analyzing a plant photograph "
     "for the FloraGrove app. Always answer in warm American English, never punitive. "
