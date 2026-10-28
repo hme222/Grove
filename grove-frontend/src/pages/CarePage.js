@@ -145,6 +145,8 @@ export default function CarePage() {
 
   // When the list empties, read the plants again so "Next up" reflects what was just logged.
   const dueCount = plants.length;
+  // The banner's job is getting a first plant in; once there is one it steps aside.
+  const showBanner = isFirstSessionBannerShown(user) && !(allPlantsLoaded && allPlants.length > 0);
   useEffect(() => {
     if (!loading && dueCount === 0 && sessionPlants.length > 0) fetchAllPlantsLite();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -266,7 +268,7 @@ export default function CarePage() {
       <PageHeader title="Today">
         <CareTabs />
       </PageHeader>
-      <FirstSessionBanner />
+      {showBanner && <FirstSessionBanner />}
 
       <div className="max-w-content mx-auto px-4 pt-4 pb-4 space-y-3">
         {!loadError && filterChips.length > 1 && (
@@ -445,7 +447,7 @@ export default function CarePage() {
         <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <LightPromptCard embedded />
-          {!(allPlantsLoaded && allPlants.length === 0) && !isFirstSessionBannerShown(user) && <DailyMissionCard embedded />}
+          {!(allPlantsLoaded && allPlants.length === 0) && !showBanner && <DailyMissionCard embedded />}
           <NextLessonCard embedded />
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Check } from 'lucide-react';
 import { lessonAPI } from '../lib/api';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
@@ -78,12 +79,13 @@ export default function QuizFlow({ onDone }) {
                 role="checkbox"
                 aria-checked={on}
                 onClick={() => toggle(option.id)}
-                className={`w-full text-left rounded-inset border-hairline px-4 py-3 text-sm font-ui text-grove-cream ${
+                className={`flex w-full items-center justify-between gap-3 text-left rounded-inset border-hairline px-4 py-3 text-sm font-ui text-grove-cream ${
                   on ? 'border-grove-fernLine bg-grove-moss ring-1 ring-grove-lime/25' : 'border-grove-moss bg-grove-canopy hover:border-grove-fernLine'
                 }`}
                 data-testid={`quiz-option-${option.id}`}
               >
-                {option.label}
+                <span>{option.label}</span>
+                {on && <Check className="h-4 w-4 flex-shrink-0 text-grove-lime" strokeWidth={3} aria-hidden="true" />}
               </button>
             );
           })}

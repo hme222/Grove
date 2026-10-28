@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Droplet, CircleAlert, Waves, Moon } from 'lucide-react';
+import { Check, Droplet, CircleAlert, CircleDashed, Waves, Moon } from 'lucide-react';
 
 const statusColors = {
   healthy: 'bg-grove-lime',
@@ -7,6 +7,7 @@ const statusColors = {
   urgent: 'bg-grove-bloom',
   propagating: 'bg-grove-sage',
   dormant: 'bg-grove-sage',
+  unchecked: 'bg-grove-sage',
 };
 
 // Two channels per state: color and a distinct glyph, so the meaning survives color blindness
@@ -17,6 +18,7 @@ const statusIcons = {
   urgent: CircleAlert,
   propagating: Waves,
   dormant: Moon,
+  unchecked: CircleDashed,
 };
 
 // The one visible vocabulary for a plant's state. Every surface that shows a status word reads it
@@ -27,6 +29,7 @@ export const STATUS_LABELS = {
   urgent: 'Needs a check',
   propagating: 'Propagating',
   dormant: 'Dormant',
+  unchecked: 'No checks yet',
 };
 const statusLabels = STATUS_LABELS;
 

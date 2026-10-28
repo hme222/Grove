@@ -123,6 +123,13 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
     return () => clearTimeout(t);
   }, [revealed]);
   const ctaReady = revealed || done;
+  // A keyboard user cannot tap to skip the build, so any key press shows the finished screen and Continue.
+  useEffect(() => {
+    if (ctaReady) return undefined;
+    const onKey = () => setDone(true);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [ctaReady]);
   const width = typeof window === 'undefined' ? STAGE_W : window.innerWidth;
   const height = typeof window === 'undefined' ? STAGE_H : window.innerHeight;
   const pinned = shouldPinContinue(scale, height);

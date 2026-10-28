@@ -255,7 +255,7 @@ export default function PlantDetailPage() {
           <div className="max-w-page mx-auto flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <StatusDot status={plant.status || 'healthy'} size="lg" showLabel />
+                <StatusDot status={(plant.status || 'healthy') === 'healthy' && !(timeline || []).length ? 'unchecked' : (plant.status || 'healthy')} size="lg" showLabel />
               </div>
               <h1 id="page-title" className="font-plant text-grove-cream text-2xl mt-1">
                 <InlineText
