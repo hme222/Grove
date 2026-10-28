@@ -98,6 +98,15 @@
 .gw-done .gw-redraw-wipe { animation: gw-redraw-wipe var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
 .gw-done .gw-redraw-fade { animation: gw-redraw-fade var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
 
+/* Pinned Continue: fixed above the sign-in bar, with room under the scrolling picture for both. */
+.gw-pinned { padding-bottom: calc(var(--touch-min) * 2 + 1.5rem); }
+.gw-pin {
+  position: fixed; left: 0; right: 0; bottom: var(--touch-min); z-index: 2;
+  padding: 0.5rem 1.25rem; display: flex; justify-content: center;
+  background: linear-gradient(to top, var(--grove-forest) 70%, transparent);
+}
+.gw-pin-cta { width: 100%; max-width: 28rem; min-height: var(--touch-min); }
+
 /* The hand-drawn circle belongs to the word "caring" and follows it, whatever the font wraps. */
 .gw-caring { position: relative; display: inline-block; }
 .gw-caring-ring { position: absolute; left: -0.5em; top: -0.05em; width: calc(100% + 1em); height: calc(100% + 0.2em); overflow: visible; pointer-events: none; }

@@ -2,7 +2,7 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 
 jest.mock('@/components/PhotoBand', () => ({ __esModule: true, default: () => null, photoSrc: (p) => p }), { virtual: true });
-import { WelcomeScreen, isCompact, stageScaleFor } from './WelcomeScreen';
+import { WelcomeScreen, isCompact, stageScaleFor, shouldPinContinue } from './WelcomeScreen';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -59,5 +59,29 @@ test('a short desktop window still gets the stage, not the flow page', async () 
   const welcome = container.querySelector('[data-testid="onboarding-welcome"]');
   expect(welcome.getAttribute('data-layout')).toBeNull();
   expect(container.querySelector('.gw-stage')).not.toBeNull();
+  done();
+});
+
+test('Continue is pinned when the stage would put it below the fold or behind the sign-in bar', () => {
+  expect(shouldPinContinue(1, 932)).toBe(false); // a full 430 x 932 screen
+  expect(shouldPinContinue(stageScaleFor(390, 844), 844)).toBe(false); // an iPhone as a home-screen app
+  expect(shouldPinContinue(stageScaleFor(390, 664), 664)).toBe(true); // an iPhone in Safari
+  expect(shouldPinContinue(stageScaleFor(1420, 682), 682)).toBe(true); // a laptop window
+});
+
+test('short screen: one Continue button, outside the stage, pinned', async () => {
+  const { container, done } = await render(390, 664);
+  const buttons = container.querySelectorAll('[data-testid="onboarding-continue"]');
+  expect(buttons).toHaveLength(1);
+  expect(container.querySelector('.gw-stage [data-testid="onboarding-continue"]')).toBeNull();
+  expect(container.querySelector('.gw-pin [data-testid="onboarding-continue"]')).not.toBeNull();
+  done();
+});
+
+test('tall screen: one Continue button, inside the stage', async () => {
+  const { container, done } = await render(430, 932);
+  expect(container.querySelectorAll('[data-testid="onboarding-continue"]')).toHaveLength(1);
+  expect(container.querySelector('.gw-stage [data-testid="onboarding-continue"]')).not.toBeNull();
+  expect(container.querySelector('.gw-pin')).toBeNull();
   done();
 });

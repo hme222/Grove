@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { WelcomeStage, STAGE_W, STAGE_H } from '@/components/WelcomeStage';
+import { WelcomeStage, STAGE_W, STAGE_H, CTA_BOTTOM } from '@/components/WelcomeStage';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 import PhotoBand from '@/components/PhotoBand';
 import { buttonVariants } from '@/components/ui/button';
@@ -26,6 +26,14 @@ const MIN_SCALE = MIN_BODY_PX / STAGE_BODY_PX;
 
 export function isCompact(width) {
   return width < COMPACT_W;
+}
+
+// The sign-in bar under the screen is one touch target tall. If the stage's own Continue button would sit
+// behind it or below the fold, Continue is pinned above the bar instead and the picture scrolls behind it.
+const SIGN_IN_BAR_PX = 44;
+
+export function shouldPinContinue(scale, height) {
+  return scale * CTA_BOTTOM + SIGN_IN_BAR_PX > height;
 }
 
 export function stageScaleFor(width, height) {
@@ -105,6 +113,8 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
   const scale = useStageScale();
   const [done, setDone] = useState(false);
   const width = typeof window === 'undefined' ? STAGE_W : window.innerWidth;
+  const height = typeof window === 'undefined' ? STAGE_H : window.innerHeight;
+  const pinned = shouldPinContinue(scale, height);
 
   if (isCompact(width)) {
     return <CompactWelcome onContinue={onContinue} onSkip={onSkip} disabled={disabled} showSkip={showSkip} />;
@@ -112,7 +122,7 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
 
   return (
     <div
-      className={`gw z-intro ${done ? 'gw-done' : ''}`}
+      className={`gw z-intro ${done ? 'gw-done' : ''} ${pinned ? 'gw-pinned' : ''}`}
       style={{ '--stage-scale': scale }}
       data-testid="onboarding-welcome"
       onPointerDown={() => setDone(true)}
@@ -121,9 +131,17 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
 
       <div className="gw-stage-wrap" style={{ width: STAGE_W * scale, height: STAGE_H * scale }}>
         <div className="gw-stage" style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${scale})` }}>
-          <WelcomeStage onContinue={onContinue} disabled={disabled} />
+          <WelcomeStage pinContinue={pinned} onContinue={onContinue} disabled={disabled} />
         </div>
       </div>
+
+      {pinned && (
+        <div className="gw-pin gw-a gw-lower">
+          <button type="button" className="gw-cta gw-pin-cta" onClick={onContinue} disabled={disabled} data-testid="onboarding-continue">
+            {disabled ? 'Loading…' : 'Continue'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
