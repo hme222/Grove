@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { saveErrorMessage } from '../lib/errors';
 import { Spinner } from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -139,7 +140,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       toast.success(`${form.nickname || form.common_name} joined your grove`);
       navigate('/plants');
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Failed to add plant');
+      toast.error(saveErrorMessage(err));
     } finally {
       setSaving(false);
     }

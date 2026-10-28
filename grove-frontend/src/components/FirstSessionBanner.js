@@ -8,6 +8,12 @@ import { impactLight } from '../lib/haptics';
 //   - user.created_at within last 24 hours
 //   - user.first_session_banner_dismissed is not true
 // Server-persisted dismissal so it doesn't reappear on other devices.
+export function isFirstSessionBannerShown(user) {
+  if (!user || user.first_session_banner_dismissed || user.first_care_celebrated) return false;
+  const ageMs = Date.now() - (user.created_at ? new Date(user.created_at).getTime() : 0);
+  return ageMs >= 0 && ageMs <= 24 * 60 * 60 * 1000;
+}
+
 export default function FirstSessionBanner() {
   const { user, updateUser } = useAuth();
   const [hidden, setHidden] = useState(false);

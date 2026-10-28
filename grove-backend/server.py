@@ -684,6 +684,56 @@ async def resend_confirmation(current_user: dict = Depends(get_current_user)):
     return {"sent": True}
 
 
+class ForgotPasswordBody(BaseModel):
+    email: str = Field(max_length=limits.MAX_EMAIL)
+
+
+class ResetPasswordBody(BaseModel):
+    token: str = Field(min_length=1, max_length=200)
+    password: str = Field(min_length=6, max_length=limits.MAX_PASSWORD)
+
+
+@api_router.post("/auth/password/forgot")
+async def forgot_password(body: ForgotPasswordBody):
+    """Ask for a reset link. The answer is the same whether or not the address has an account, so this can't
+    be used to find out who has one. A repeat within a minute is quietly skipped."""
+    answer = {"sent": True}
+    email = body.email.strip()
+    user = await db.users.find_one({"email": email}) if limits.looks_like_email(email) else None
+    if not user or not user.get("password_hash"):
+        return answer
+    if auth_flow.seconds_until_resend(user.get("password_reset_sent_at")):
+        return answer
+    raw, hashed = auth_flow.new_token()
+    now = datetime.now(timezone.utc).isoformat()
+    await db.password_reset_tokens.insert_one({
+        "token_hash": hashed, "user_id": user["id"],
+        "expires_at": auth_flow.reset_expiry(), "used_at": None, "created_at": now,
+    })
+    await db.users.update_one({"id": user["id"]}, {"$set": {"password_reset_sent_at": now}})
+    try:
+        auth_flow.send_password_reset_email(user["email"], auth_flow.reset_link(raw))
+    except Exception:
+        logger.exception("Could not send the password reset email")
+    return answer
+
+
+@api_router.post("/auth/password/reset")
+async def reset_password(body: ResetPasswordBody):
+    """Open from the link in the email. Needs no sign-in. A link works once."""
+    invalid = HTTPException(status_code=400, detail="This link has expired or was already used. Ask for a new one.")
+    record = await db.password_reset_tokens.find_one({"token_hash": auth_flow.hash_token(body.token)})
+    if not record or record.get("used_at") or auth_flow.is_expired(record.get("expires_at")):
+        raise invalid
+    user = await db.users.find_one({"id": record["user_id"]})
+    if not user:
+        raise invalid
+    now = datetime.now(timezone.utc).isoformat()
+    await db.password_reset_tokens.update_many({"user_id": user["id"], "used_at": None}, {"$set": {"used_at": now}})
+    await db.users.update_one({"id": user["id"]}, {"$set": {"password_hash": hash_password(body.password), "updated_at": now}})
+    return {"reset": True}
+
+
 class EmailConfirmBody(BaseModel):
     token: str
 

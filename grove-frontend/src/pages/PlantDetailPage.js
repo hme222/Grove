@@ -15,6 +15,9 @@ import StatusDot from '../components/StatusDot';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { confidenceText } from '../lib/aiTrust';
 import CareLogModal from '../components/CareLogModal';
+import FirstCareCelebration from '../components/FirstCareCelebration';
+import { useAuth } from '../contexts/AuthContext';
+import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -32,6 +35,8 @@ export default function PlantDetailPage() {
   const { plantId } = useParams();
   const knownName = useLocation().state?.name;
   const navigate = useNavigate();
+  const { user, updateUser } = useAuth();
+  const firstCare = useFirstCareCelebration(user, updateUser);
   const [plant, setPlant] = useState(null);
   const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -506,8 +511,10 @@ export default function PlantDetailPage() {
         onClose={() => setCareModalOpen(false)}
         plantId={plantId}
         plantName={plant.nickname || plant.common_name}
-        onLogged={fetchPlant}
+        onLogged={(meta) => { fetchPlant(); firstCare.celebrate(meta?.first_care_pending); }}
       />
+
+      <FirstCareCelebration open={firstCare.open} onClose={firstCare.close} />
 
       <PhotoViewer
         open={viewerStart != null}

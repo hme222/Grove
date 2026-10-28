@@ -12,7 +12,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
-import FirstSessionBanner from '../components/FirstSessionBanner';
+import FirstSessionBanner, { isFirstSessionBannerShown } from '../components/FirstSessionBanner';
 import SetupNote from '../components/SetupNote';
 import ToxicityBadge from '../components/ToxicityBadge';
 import NextLessonCard from '../components/NextLessonCard';
@@ -321,7 +321,7 @@ export default function CarePage() {
                 onDone={() => { endSession(); document.getElementById('main-content')?.focus(); }}
               />
             ) : (
-              <NamedPlantEmptyState plants={allPlants} collectionLoaded={allPlantsLoaded} />
+              <NamedPlantEmptyState plants={allPlants} collectionLoaded={allPlantsLoaded} firstCare={!user?.first_care_celebrated} onLogCare={setCareModalPlant} />
             )}
           </div>
         ) : (
@@ -445,7 +445,7 @@ export default function CarePage() {
         <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <LightPromptCard embedded />
-          {!(allPlantsLoaded && allPlants.length === 0) && <DailyMissionCard embedded />}
+          {!(allPlantsLoaded && allPlants.length === 0) && !isFirstSessionBannerShown(user) && <DailyMissionCard embedded />}
           <NextLessonCard embedded />
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
@@ -535,7 +535,7 @@ export default function CarePage() {
 }
 
 // ----- Named-plant empty state for the care list -----
-function NamedPlantEmptyState({ plants, collectionLoaded }) {
+function NamedPlantEmptyState({ plants, collectionLoaded, firstCare, onLogCare }) {
   if (collectionLoaded && (!plants || plants.length === 0)) {
     return <EmptyState config={EMPTY_STATES.collection_zero_plants} />;
   }
@@ -565,11 +565,25 @@ function NamedPlantEmptyState({ plants, collectionLoaded }) {
       <div className="w-12 h-12 mx-auto rounded-pill bg-grove-moss flex items-center justify-center mb-3">
         <Sparkles className="h-5 w-5 text-grove-sprout" />
       </div>
-      <p className="font-plant text-grove-cream text-base">All caught up.</p>
-      <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
-        {nextName} is the next one up — due to be watered <span className="text-grove-cream">{dueLabel}</span>.
-        Take a slow scroll through your collection while you're here.
-      </p>
+      {firstCare ? (
+        <>
+          <p className="font-plant text-grove-cream text-base">Ready for your first care?</p>
+          <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
+            {nextName} isn’t due to be watered until <span className="text-grove-cream">{dueLabel}</span>. Log a first care now to start its journal.
+          </p>
+          <button type="button" onClick={() => onLogCare(next)} className={cn(buttonVariants(), 'mt-4')} data-testid="care-first-log">
+            Log care for {nextName}
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="font-plant text-grove-cream text-base">All caught up.</p>
+          <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
+            {nextName} is the next one up — due to be watered <span className="text-grove-cream">{dueLabel}</span>.
+            Take a slow scroll through your collection while you're here.
+          </p>
+        </>
+      )}
     </div>
   );
 }

@@ -26,7 +26,7 @@ function Sparkle({ cx, cy, r, i }) {
   return <path className={`gw-twinkle gw-twinkle-${i}`} d={d} />;
 }
 
-export function WelcomeStage({ decorative = false, pinContinue = false, onContinue, disabled }) {
+export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady = true, onContinue, disabled }) {
   return (
     <>
       <div className="gw-a gw-brand" style={{ left: 20, top: 40 }}>
@@ -106,6 +106,8 @@ export function WelcomeStage({ decorative = false, pinContinue = false, onContin
           className="gw-a gw-lower gw-cta"
           onClick={onContinue}
           disabled={disabled}
+          tabIndex={ctaReady ? undefined : -1}
+          aria-hidden={ctaReady ? undefined : true}
           data-testid="onboarding-continue"
           style={{ left: 20, top: 804, width: 390, height: 46 }}
         >

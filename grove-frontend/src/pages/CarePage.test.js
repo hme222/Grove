@@ -246,6 +246,26 @@ describe('end-of-round summary', () => {
     expect(container.textContent).not.toContain('Your grove starts here');
   });
 
+  test('a new owner whose plant is not due yet is offered a first care, not "all caught up"', async () => {
+    const later = { id: 'p9', common_name: 'Pothos', next_water_due: new Date(Date.now() + 7 * 86400000).toISOString() };
+    careAPI.getDueToday.mockResolvedValue({ data: [] });
+    plantAPI.getAll.mockResolvedValue({ data: { plants: [later] } });
+    await mount();
+    expect(container.textContent).toContain('Ready for your first care?');
+    expect(q('care-first-log').textContent).toBe('Log care for Pothos');
+    expect(container.textContent).not.toContain('All caught up');
+  });
+
+  test('once the first care is done the same screen reads as caught up', async () => {
+    mockUser = { first_care_celebrated: true };
+    const later = { id: 'p9', common_name: 'Pothos', next_water_due: new Date(Date.now() + 7 * 86400000).toISOString() };
+    careAPI.getDueToday.mockResolvedValue({ data: [] });
+    plantAPI.getAll.mockResolvedValue({ data: { plants: [later] } });
+    await mount();
+    expect(container.textContent).toContain('All caught up');
+    expect(q('care-first-log')).toBeNull();
+  });
+
   test('no summary when nothing was logged this visit', async () => {
     careAPI.getDueToday.mockResolvedValue({ data: [] });
     await mount();

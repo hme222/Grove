@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { saveErrorMessage } from '../lib/errors';
 import { Spinner } from '../components/Loading';
 import LoadError from '../components/LoadError';
 import { useNavigate } from 'react-router-dom';
@@ -180,7 +181,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
       toast.success(`${formData.nickname || formData.common_name} added to your collection`);
       navigate('/plants');
     } catch (e) {
-      toast.error(e.response?.data?.detail || 'Failed to add plant');
+      toast.error(saveErrorMessage(e));
     } finally {
       setSaving(false);
     }

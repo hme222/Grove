@@ -109,9 +109,20 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
   );
 }
 
+// Continue fades in at 7.9s over 1.4s (WelcomeScreen.css). Until it is on screen it is out of the tab order.
+const CTA_REVEAL_MS = 9300;
+const prefersReducedMotion = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true }) {
   const scale = useStageScale();
   const [done, setDone] = useState(false);
+  const [revealed, setRevealed] = useState(prefersReducedMotion);
+  useEffect(() => {
+    if (revealed) return undefined;
+    const t = setTimeout(() => setRevealed(true), CTA_REVEAL_MS);
+    return () => clearTimeout(t);
+  }, [revealed]);
+  const ctaReady = revealed || done;
   const width = typeof window === 'undefined' ? STAGE_W : window.innerWidth;
   const height = typeof window === 'undefined' ? STAGE_H : window.innerHeight;
   const pinned = shouldPinContinue(scale, height);
@@ -131,13 +142,13 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
 
       <div className="gw-stage-wrap" style={{ width: STAGE_W * scale, height: STAGE_H * scale }}>
         <div className="gw-stage" style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${scale})` }}>
-          <WelcomeStage pinContinue={pinned} onContinue={onContinue} disabled={disabled} />
+          <WelcomeStage pinContinue={pinned} ctaReady={ctaReady} onContinue={onContinue} disabled={disabled} />
         </div>
       </div>
 
       {pinned && (
         <div className="gw-pin gw-a gw-lower">
-          <button type="button" className="gw-cta gw-pin-cta" onClick={onContinue} disabled={disabled} data-testid="onboarding-continue">
+          <button type="button" className="gw-cta gw-pin-cta" onClick={onContinue} disabled={disabled} tabIndex={ctaReady ? undefined : -1} aria-hidden={ctaReady ? undefined : true} data-testid="onboarding-continue">
             {disabled ? 'Loading…' : 'Continue'}
           </button>
         </div>

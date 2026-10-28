@@ -54,6 +54,8 @@ export const authAPI = {
   sso: (provider, data) => api.post(`/auth/sso/${provider}`, data),
   sendConfirmation: () => api.post('/auth/email/send'),
   confirmEmail: (token) => api.post('/auth/email/confirm', { token }),
+  forgotPassword: (email) => api.post('/auth/password/forgot', { email }),
+  resetPassword: (token, password) => api.post('/auth/password/reset', { token, password }),
   changeEmail: (email) => api.post('/auth/email/change', { email }),
 };
 

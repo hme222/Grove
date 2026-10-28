@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 // Say what went wrong: a wrong password is the person's to fix, a dropped connection or a server fault is not.
@@ -99,8 +99,20 @@ export default function LoginPage() {
                 </div>
               </div>
               {error && (
-                <p role="alert" className="font-ui text-sm text-destructive" data-testid="auth-login-error">{error}</p>
+                <p role="alert" className="flex items-start gap-2 font-ui text-sm text-grove-cream" data-testid="auth-login-error">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
+                  {error}
+                </p>
               )}
+              <div className="-mt-2 text-right">
+                <Link
+                  to="/forgot-password"
+                  className="inline-flex min-h-touch items-center px-2 font-ui text-sm text-grove-sprout underline underline-offset-2"
+                  data-testid="auth-forgot-password"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
               <button
                 type="submit"
                 disabled={loading}
