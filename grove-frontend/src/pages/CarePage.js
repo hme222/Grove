@@ -569,7 +569,7 @@ function NamedPlantEmptyState({ plants, collectionLoaded, firstCare, onLogCare }
         <>
           <p className="font-plant text-grove-cream text-base">Ready for your first care?</p>
           <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
-            {nextName} isn’t due to be watered until <span className="text-grove-cream">{dueLabel}</span>. Log a first care now to start its journal.
+            {nextName} isn’t due for water <span className="text-grove-cream">{dueLabel}</span>. Log a first care now to start its journal.
           </p>
           <button type="button" onClick={() => onLogCare(next)} className={cn(buttonVariants(), 'mt-4')} data-testid="care-first-log">
             Log care for {nextName}

@@ -252,6 +252,8 @@ describe('end-of-round summary', () => {
     plantAPI.getAll.mockResolvedValue({ data: { plants: [later] } });
     await mount();
     expect(container.textContent).toContain('Ready for your first care?');
+    expect(container.textContent).toContain('isn’t due for water in 7 days');
+    expect(container.textContent).not.toContain('until in');
     expect(q('care-first-log').textContent).toBe('Log care for Pothos');
     expect(container.textContent).not.toContain('All caught up');
   });

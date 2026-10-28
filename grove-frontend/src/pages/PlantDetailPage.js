@@ -237,7 +237,7 @@ export default function PlantDetailPage() {
       {/* Header with photo */}
       <div className="relative">
         <div className="w-full bg-grove-moss overflow-hidden relative">
-          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none" testId="plant-detail-hero" />
+          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-hero" testId="plant-detail-hero" />
           {/* Back button */}
           <BackButton variant="overlay" testId="plant-detail-back" className="absolute left-3 top-3" />
           {/* Upload photo */}
