@@ -5,6 +5,8 @@ import { buttonVariants } from './ui/button';
 import { userAPI } from '../lib/api';
 import { success, impactLight } from '../lib/haptics';
 import { tint } from '../lib/color';
+import { shareInvite } from '../lib/share';
+import { toast } from 'sonner';
 
 // One-time overlay shown the first time a user logs ANY care action.
 // Triggered by parent when a care log response includes _meta.first_care_pending=true.
@@ -28,6 +30,12 @@ export default function FirstCareCelebration({ open, onClose }) {
   const handleClose = (e) => {
     impactLight(e?.currentTarget || document.body);
     onClose && onClose();
+  };
+
+  const handleShare = async () => {
+    const result = await shareInvite();
+    if (result === 'copied') toast.success('Link copied');
+    else if (result === 'failed') toast.error('Couldn’t share. Try again.');
   };
 
   // Generate a few burst leaves at random angles for the celebration
@@ -103,6 +111,14 @@ export default function FirstCareCelebration({ open, onClose }) {
             className={cn(buttonVariants(), "relative overflow-hidden mt-5 transition-colors duration-150")}
           >
             Keep going
+          </button>
+          <button
+            type="button"
+            onClick={handleShare}
+            data-testid="first-care-celebration-share"
+            className="mt-2 min-h-touch px-4 font-ui text-sm text-grove-sprout underline underline-offset-4"
+          >
+            Tell a friend
           </button>
         </div>
       </div>

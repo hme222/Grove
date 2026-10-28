@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import AppLink from './AppLink';
 import { Leaf, Sun, Users, BookOpen } from 'lucide-react';
+import { COMMUNITY_ENABLED } from '../lib/features';
 
 const tabs = [
   { path: '/care/today', match: (p) => p === '/' || p.startsWith('/care') || p.startsWith('/help-my-plant') || p.startsWith('/search'), icon: Sun, label: 'Today', testid: 'bottom-tab-care' },
@@ -12,12 +13,13 @@ const tabs = [
 
 export default function BottomNav() {
   const location = useLocation();
+  const visibleTabs = COMMUNITY_ENABLED ? tabs : tabs.filter((tab) => tab.testid !== 'bottom-tab-grove');
 
   return (
     <nav id="main-nav" tabIndex={-1} aria-label="Main" className="fixed bottom-0 left-0 right-0 z-nav box-border min-h-nav bg-grove-forest border-t-hairline border-grove-moss pb-safe" data-testid="bottom-nav">
       <div className="mx-auto max-w-page px-4">
-        <div className="grid grid-cols-4">
-          {tabs.map(({ path, match, icon: Icon, label, testid }) => {
+        <div className={visibleTabs.length === 4 ? 'grid grid-cols-4' : 'grid grid-cols-3'}>
+          {visibleTabs.map(({ path, match, icon: Icon, label, testid }) => {
             const isActive = match(location.pathname);
             return (
               <AppLink

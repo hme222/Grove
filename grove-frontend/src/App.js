@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Spinner } from './components/Loading';
 import "@/App.css";
 import "@/lib/microAnimations.css";
+import { COMMUNITY_ENABLED } from "./lib/features";
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TooltipProvider } from "./contexts/TooltipContext";
@@ -120,6 +121,9 @@ function ProtectedFullScreen() {
 
 // The one shell: a layout route, so the tab bar and the page frame stay mounted while the
 // route inside changes, instead of remounting on every navigation.
+// Community routes send people to Today until the flag is on (see lib/features.js).
+const communityOnly = (page) => (COMMUNITY_ENABLED ? page : <Navigate to="/care/today" replace />);
+
 function ProtectedShell() {
   useFocusMainOnRoute();
   return (
@@ -264,25 +268,25 @@ function AppRoutes() {
           </Route>
           <Route path="/greenhouse" element={<EncyclopediaPage />} />
           <Route path="/wants" element={<WantListPage />} />
-          <Route path="/swaps" element={<SwapsPage />} />
+          <Route path="/swaps" element={communityOnly(<SwapsPage />)} />
           <Route path="/badges" element={<BadgesPage />} />
           <Route path="/rooms" element={<RoomPage />} />
-          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/feed" element={communityOnly(<FeedPage />)} />
           <Route path="/plants/:plantId" element={<PlantDetailPage />} />
           <Route path="/add-plant" element={<AddPlantPage />} />
           <Route path="/bouquets" element={<BouquetsPage />} />
           <Route path="/bouquets/new" element={<AddBouquetPage />} />
           <Route path="/bouquets/:bouquetId" element={<BouquetDetailPage />} />
-          <Route path="/groves" element={<GrovesPage />} />
-          <Route path="/groves/:groveId" element={<GroveDetailPage />} />
+          <Route path="/groves" element={communityOnly(<GrovesPage />)} />
+          <Route path="/groves/:groveId" element={communityOnly(<GroveDetailPage />)} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/florist" element={<FloristDashboard />} />
           <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/swap" element={<SwapPage />} />
-          <Route path="/swaps/matches" element={<SwapMatchesPage />} />
-          <Route path="/swaps/:swapId" element={<SwapChatPage />} />
-          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/swap" element={communityOnly(<SwapPage />)} />
+          <Route path="/swaps/matches" element={communityOnly(<SwapMatchesPage />)} />
+          <Route path="/swaps/:swapId" element={communityOnly(<SwapChatPage />)} />
+          <Route path="/wishlist" element={communityOnly(<WishlistPage />)} />
           <Route path="/settings/notifications" element={<NotificationPreferencesPage />} />
           {/* Anything else that signed-in people type or follow lands here, with a way home. */}
           <Route path="*" element={<NotFoundPage />} />
