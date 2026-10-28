@@ -4,6 +4,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI } from '../lib/api';
+import { useFirstRunBlocking } from '../lib/firstRunGate';
 import { Leaf, Droplets, Users, BookOpen, Sun, X } from 'lucide-react';
 
 /**
@@ -54,20 +55,21 @@ export const TUTORIAL_COPY = {
 export default function SectionTutorial({ tutorialId, autoShow = true }) {
   const { user, refreshUser } = useAuth();
   const [open, setOpen] = useState(false);
+  const firstRunBlocking = useFirstRunBlocking();
 
   const tutorialsSeen = user?.tutorials_seen;
   const seen = useMemo(() => tutorialsSeen || [], [tutorialsSeen]);
   const copy = TUTORIAL_COPY[tutorialId];
 
   useEffect(() => {
-    if (!autoShow || !user || !copy) return;
+    if (!autoShow || !user || !copy || firstRunBlocking) return;
     // Only show if not already seen
     if (!seen.includes(tutorialId)) {
       // Brief delay so the page renders before the overlay appears.
       const t = setTimeout(() => setOpen(true), 350);
       return () => clearTimeout(t);
     }
-  }, [autoShow, user, copy, tutorialId, seen]);
+  }, [autoShow, user, copy, tutorialId, seen, firstRunBlocking]);
 
   const dismiss = useCallback(async () => {
     setOpen(false);

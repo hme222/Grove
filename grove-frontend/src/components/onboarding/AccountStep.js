@@ -43,7 +43,10 @@ export default function AccountStep({ config, onBack, onDone }) {
     }
     if (password.length < 6) next.password = 'Use at least 6 characters.';
     setErrors(next);
-    if (Object.keys(next).length) return;
+    if (Object.keys(next).length) {
+      document.getElementById(next.email ? 'signup-email' : 'signup-password')?.focus();
+      return;
+    }
     setBusy(true);
     try {
       const data = await register(undefined, email.trim(), password, nameFromEmail(email) || undefined);

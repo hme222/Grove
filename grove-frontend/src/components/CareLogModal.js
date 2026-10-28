@@ -23,6 +23,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
   const [soilOutcome, setSoilOutcome] = useState('');
   const [soilDecision, setSoilDecision] = useState('');
   const [soilError, setSoilError] = useState('');
+  const [logError, setLogError] = useState('');
   const submitBtnRef = useRef(null);
 
   const selectedArr = useMemo(() => Array.from(selected), [selected]);
@@ -63,6 +64,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
     setSoilOutcome('');
     setSoilDecision('');
     setSoilError('');
+    setLogError('');
   };
 
   const handleLog = async (e) => {
@@ -73,6 +75,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       return;
     }
     setSoilError('');
+    setLogError('');
     setLogging(true);
     try {
       const res = await careAPI.createLog(plantId, {
@@ -91,7 +94,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       onClose();
     } catch (_err) {
       spawnRipple(submitBtnRef.current, { tone: 'warm' });
-      toast.error('Failed to log care action');
+      setLogError('Couldn’t save that. Nothing was lost. Check your connection and try again.');
     } finally {
       setLogging(false);
     }
@@ -209,6 +212,11 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
         />
 
         <div className="mt-2 flex flex-col gap-2">
+          {logError && (
+            <p role="alert" className="font-ui text-sm text-destructive" data-testid="care-log-error">
+              {logError}
+            </p>
+          )}
           <button
             ref={submitBtnRef}
             onClick={handleLog}

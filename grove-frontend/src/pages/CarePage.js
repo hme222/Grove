@@ -12,6 +12,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
+import FirstSessionBanner from '../components/FirstSessionBanner';
 import SetupNote from '../components/SetupNote';
 import ToxicityBadge from '../components/ToxicityBadge';
 import NextLessonCard from '../components/NextLessonCard';
@@ -265,6 +266,7 @@ export default function CarePage() {
       <PageHeader title="Today">
         <CareTabs />
       </PageHeader>
+      <FirstSessionBanner />
 
       <div className="max-w-content mx-auto px-4 pt-4 pb-4 space-y-3">
         {!loadError && filterChips.length > 1 && (
@@ -443,7 +445,7 @@ export default function CarePage() {
         <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <LightPromptCard embedded />
-          <DailyMissionCard embedded />
+          {!(allPlantsLoaded && allPlants.length === 0) && <DailyMissionCard embedded />}
           <NextLessonCard embedded />
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>

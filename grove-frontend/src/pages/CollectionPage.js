@@ -149,8 +149,8 @@ export default function CollectionPage() {
   return (
     <div>
       <SectionTutorial tutorialId="collection" />
-      <FirstSessionBanner />
       <PageHeader title="Plants" />
+      <FirstSessionBanner />
 
       <div className="max-w-page mx-auto px-4 py-4">
         {!loadError && (
@@ -161,7 +161,7 @@ export default function CollectionPage() {
                 : ''}
             </p>
             <div className="flex items-center gap-2">
-            {!showingBouquets && (
+            {!showingBouquets && !isEmpty && (
               <HeaderAction
                 onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
                 data-testid="collection-select-button"
@@ -170,9 +170,11 @@ export default function CollectionPage() {
                 {selectionMode ? 'Cancel' : 'Select'}
               </HeaderAction>
             )}
-            <HeaderAction icon={Plus} onClick={() => setShowTypePicker(true)} data-testid="collection-add-button">
-              Add
-            </HeaderAction>
+            {!isEmpty && (
+              <HeaderAction icon={Plus} onClick={() => setShowTypePicker(true)} data-testid="collection-add-button">
+                Add
+              </HeaderAction>
+            )}
             </div>
           </div>
         )}

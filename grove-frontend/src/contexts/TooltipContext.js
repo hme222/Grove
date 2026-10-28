@@ -3,6 +3,7 @@ import { TOOLTIPS } from '@/constants/tooltips';
 import { X } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { userAPI } from '../lib/api';
+import { useFirstRunBlocking } from '../lib/firstRunGate';
 
 const TooltipContext = createContext();
 
@@ -48,22 +49,27 @@ function Tooltip({ tooltip, targetRect, onDismiss }) {
     };
   }, [onDismiss]);
 
-  let style = { position: 'fixed' };
-  const viewportW = typeof window !== 'undefined' ? window.innerWidth : 0;
+  // Center on the target, then keep the whole box (not just its center) inside the viewport.
+  const [left, setLeft] = React.useState(8);
+  React.useLayoutEffect(() => {
+    const width = tipRef.current?.offsetWidth || 0;
+    const viewportW = window.innerWidth;
+    const center = targetRect.left + targetRect.width / 2;
+    setLeft(Math.max(8, Math.min(viewportW - width - 8, center - width / 2)));
+  }, [targetRect]);
 
-  if (position === 'top') {
-    style.left = Math.max(8, Math.min(viewportW - 8, targetRect.left + targetRect.width / 2));
-    style.top = targetRect.top - 12;
-    style.transform = 'translate(-50%, -100%)';
-  } else if (position === 'bottom') {
-    style.left = Math.max(8, Math.min(viewportW - 8, targetRect.left + targetRect.width / 2));
+  const style = { position: 'fixed', left };
+  if (position === 'bottom') {
     style.top = targetRect.bottom + 12;
-    style.transform = 'translate(-50%, 0)';
+  } else {
+    style.top = targetRect.top - 12;
+    style.transform = 'translateY(-100%)';
   }
 
   return (
     <div
       ref={tipRef}
+      role="status"
       className="z-tip max-w-tip rounded-chip border-hairline border-grove-moss bg-grove-root p-3"
       style={style}
       data-testid={`tooltip-${tooltip.id}`}
@@ -95,6 +101,7 @@ export function TooltipProvider({ children }) {
   const [serverDismissed, setServerDismissed] = useState([]);
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [targetRect, setTargetRect] = useState(null);
+  const firstRunBlocking = useFirstRunBlocking();
 
   useEffect(() => {
     if (user?.tooltips_dismissed) {
@@ -118,8 +125,10 @@ export function TooltipProvider({ children }) {
   }, [serverDismissed]);
 
   const showTooltip = useCallback((tooltipId) => {
-    if (!tooltipsActive) return;
+    if (!tooltipsActive || firstRunBlocking) return;
     if (dismissedSet.has(tooltipId)) return;
+    // Never over a dialog (the section tutorial, a sheet): one thing to read at a time.
+    if (document.querySelector('[role="dialog"]')) return;
 
     const tooltip = TOOLTIPS.find(t => t.id === tooltipId);
     if (!tooltip) return;
@@ -130,7 +139,7 @@ export function TooltipProvider({ children }) {
     const rect = targetElement.getBoundingClientRect();
     setTargetRect(rect);
     setActiveTooltip(tooltip);
-  }, [tooltipsActive, dismissedSet]);
+  }, [tooltipsActive, dismissedSet, firstRunBlocking]);
 
   const dismissTooltip = useCallback(async (tooltipId) => {
     // Optimistic local persistence first
