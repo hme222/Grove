@@ -66,7 +66,11 @@ export default function SectionTutorial({ tutorialId, autoShow = true }) {
     // Only show if not already seen
     if (!seen.includes(tutorialId)) {
       // Brief delay so the page renders before the overlay appears.
-      const t = setTimeout(() => setOpen(true), 350);
+      const t = setTimeout(() => {
+        // The welcome banner is the greeting while it is up; the section card comes on a later visit.
+        if (document.querySelector('[data-testid="first-session-banner"]')) return;
+        setOpen(true);
+      }, 350);
       return () => clearTimeout(t);
     }
   }, [autoShow, user, copy, tutorialId, seen, firstRunBlocking]);

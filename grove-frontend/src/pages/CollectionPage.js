@@ -11,7 +11,6 @@ import PlantImage from '../components/PlantImage';
 import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
-import FirstSessionBanner from '../components/FirstSessionBanner';
 import SectionTutorial from '../components/SectionTutorial';
 import { Plus, Check, Leaf, Flower2, AlertTriangle, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
@@ -153,7 +152,6 @@ export default function CollectionPage() {
     <div>
       <SectionTutorial tutorialId="collection" />
       <PageHeader title="Plants" />
-      <FirstSessionBanner />
 
       <div className="max-w-page mx-auto px-4 py-4">
         {!loadError && (

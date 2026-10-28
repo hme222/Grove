@@ -5,12 +5,16 @@ import { buttonVariants } from './ui/button';
 import { userAPI } from '../lib/api';
 import { success, impactLight } from '../lib/haptics';
 import { tint } from '../lib/color';
+import { holdFirstRun } from '../lib/firstRunGate';
 
 // One-time overlay shown the first time a user logs ANY care action.
 // Triggered by parent when a care log response includes _meta.first_care_pending=true.
 // On confirm/dismiss, we POST /users/me/celebrate-first-care to mark it permanently.
 export default function FirstCareCelebration({ open, onClose }) {
   const hasFiredHaptic = useRef(false);
+
+  // Coach tips and tutorials wait while this is on screen.
+  useEffect(() => (open ? holdFirstRun() : undefined), [open]);
 
   useEffect(() => {
     if (!open || hasFiredHaptic.current) return;

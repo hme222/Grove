@@ -19,6 +19,7 @@ export function useTooltips() {
 // Day 0 = signup. Tooltips show for 30 days, individually dismissable. On day
 // 31 they all auto-disable. A Settings toggle re-enables (and clears dismissed).
 const TOOLTIP_WINDOW_DAYS = 30;
+const TIP_VISIBLE_MS = 8000;
 
 function daysSinceSignup(user) {
   if (!user?.created_at) return Infinity;
@@ -33,6 +34,12 @@ function daysSinceSignup(user) {
 function Tooltip({ tooltip, targetRect, onDismiss }) {
   const position = tooltip.position || 'top';
   const tipRef = React.useRef(null);
+
+  // A tip is a passing hint: it goes by itself, and counts as seen, so it never comes back over the page.
+  React.useEffect(() => {
+    const t = setTimeout(onDismiss, TIP_VISIBLE_MS);
+    return () => clearTimeout(t);
+  }, [onDismiss]);
 
   // Dismiss on any tap/keypress anywhere (except inside the tooltip itself).
   React.useEffect(() => {
@@ -129,6 +136,8 @@ export function TooltipProvider({ children }) {
     if (dismissedSet.has(tooltipId)) return;
     // Never over a dialog (the section tutorial, a sheet): one thing to read at a time.
     if (document.querySelector('[role="dialog"]')) return;
+    // The welcome banner is the greeting while it is up; tips come after it.
+    if (document.querySelector('[data-testid="first-session-banner"]')) return;
 
     const tooltip = TOOLTIPS.find(t => t.id === tooltipId);
     if (!tooltip) return;
@@ -167,11 +176,19 @@ export function TooltipProvider({ children }) {
     }
   }, [user]);
 
-  const handleDismiss = () => {
+  // A first-run layer opening takes the screen: drop the tip without marking it seen.
+  useEffect(() => {
+    if (firstRunBlocking) {
+      setActiveTooltip(null);
+      setTargetRect(null);
+    }
+  }, [firstRunBlocking]);
+
+  const handleDismiss = useCallback(() => {
     if (activeTooltip) {
       dismissTooltip(activeTooltip.id);
     }
-  };
+  }, [activeTooltip, dismissTooltip]);
 
   const value = useMemo(() => ({
     showTooltip,

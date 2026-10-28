@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { setFirstRunBlocking } from "./lib/firstRunGate";
+import { holdFirstRun } from "./lib/firstRunGate";
 import { Spinner } from './components/Loading';
 import "@/App.css";
 import "@/lib/microAnimations.css";
@@ -220,8 +220,8 @@ function AppRoutes() {
 
   const firstRunOpen = flowOpen || showQuiz || showOffer;
   useEffect(() => {
-    setFirstRunBlocking(firstRunOpen);
-    return () => setFirstRunBlocking(false);
+    if (!firstRunOpen) return undefined;
+    return holdFirstRun();
   }, [firstRunOpen]);
 
   if (loading) return <LoadingScreen />;

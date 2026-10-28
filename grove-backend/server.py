@@ -783,6 +783,10 @@ async def get_me(current_user: dict = Depends(get_current_user)):
     user = await db.users.find_one({"id": current_user['user_id']})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    # Someone who already has plants has plainly started: don't send them back through first-run on sign-in.
+    if user.get('onboarding_complete') is not True and await db.plants.count_documents({"user_id": user['id'], "is_archived": {"$ne": True}}) > 0:
+        await db.users.update_one({"id": user['id']}, {"$set": {"onboarding_complete": True}})
+        user['onboarding_complete'] = True
     user_safe = serialize_doc({k: v for k, v in user.items() if k != 'password_hash'})
     return user_safe
 

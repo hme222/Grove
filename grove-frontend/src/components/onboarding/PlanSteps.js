@@ -111,12 +111,11 @@ export function PlanStep({ name, result, busy, error, onStart, onExplore }) {
     <StepScreen
       heading={name ? `Welcome, ${name}` : 'Welcome to FloraGrove'}
       testId="onboarding-plan"
-      bleed={<PhotoBand src="/photos/onboarding-sprouts.jpg" ratio="tall" eager className="rounded-none" testId="hero-image" />}
+      bleed={<PhotoBand src={queue[0] === 'soil-finger-test' ? '/photos/onboarding-soil.jpg' : '/photos/onboarding-sprouts.jpg'} ratio="band" eager className="rounded-none" testId="hero-image" />}
     >
       <div className="mt-6 flex flex-1 flex-col">
         {first && (
           <section aria-labelledby="plan-first" className="rounded-card border-hairline border-grove-fernLine bg-grove-canopy p-5" data-testid="plan-card">
-            {queue[0] === 'soil-finger-test' && <PhotoBand src="/photos/onboarding-soil.jpg" ratio="photo" className="mb-4 rounded-small" testId="hero-image" />}
             <p id="plan-first" className="font-ui text-sm text-grove-sage">Your first lesson</p>
             <h2 className="mt-1 font-plant text-2xl leading-tight text-grove-cream" data-testid="plan-lesson-title">{first.title}</h2>
             <p className="mt-1 font-ui text-sm text-grove-cream">{first.blurb}</p>

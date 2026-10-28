@@ -53,7 +53,11 @@ export default function AccountStep({ config, onBack, onDone }) {
       onDone({ user: data.user, name: nameFromEmail(email) });
     } catch (err) {
       const detail = err.response && err.response.data && err.response.data.detail;
-      setErrors({ form: typeof detail === 'string' ? detail : 'We couldn’t create your account. Check your connection and try again.' });
+      let form = 'We couldn’t create your account. Check your connection and try again.';
+      if (typeof detail === 'string') form = detail;
+      else if (err.response && err.response.status >= 500) form = 'Something went wrong on our side. Try again in a moment.';
+      else if (err.response) form = 'Check your email and password, then try again.';
+      setErrors({ form });
       setBusy(false);
     }
   };

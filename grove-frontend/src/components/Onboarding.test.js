@@ -536,7 +536,7 @@ test('a photo that fails to load is replaced by a designed tile of the same shap
   expect(photo().style.aspectRatio).toBe('4 / 3');
 });
 
-test('the quiz intro and the plan screen carry their photos, and the soil photo shows only for the soil lesson', async () => {
+test('the quiz intro and the plan screen carry their photos, and the soil lesson uses the soil photo as its one hero', async () => {
   signedIn({ hemisphere: 'north' });
   lessonAPI.submitPlan.mockResolvedValue({ data: { primary_track: 'rebirth', queue: ['soil-finger-test', 'plant-parent-reset'], matched: [], plan_answers: {} } });
   await mount();
@@ -545,10 +545,10 @@ test('the quiz intro and the plan screen carry their photos, and the soil photo 
   await click(q('quiz-intro-skip'));
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
   const photos = [...container.querySelectorAll('[data-testid="hero-image"]')].map((el) => el.getAttribute('data-photo'));
-  expect(photos).toEqual(['/photos/onboarding-sprouts.jpg', '/photos/onboarding-soil.jpg']);
+  expect(photos).toEqual(['/photos/onboarding-soil.jpg']);
 });
 
-test('a plan for another lesson has the sprouts hero but no soil photo', async () => {
+test('a plan for another lesson has the sprouts hero', async () => {
   signedIn({ hemisphere: 'north' });
   await mount();
   await click(q('zone-skip'));

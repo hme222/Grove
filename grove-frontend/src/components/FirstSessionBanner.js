@@ -17,7 +17,7 @@ export default function FirstSessionBanner() {
   }, [user?.id]);
 
   if (!user || hidden) return null;
-  if (user.first_session_banner_dismissed) return null;
+  if (user.first_session_banner_dismissed || user.first_care_celebrated) return null;
 
   const createdAt = user.created_at ? new Date(user.created_at).getTime() : 0;
   const ageMs = Date.now() - createdAt;
