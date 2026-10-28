@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Spinner } from './components/Loading';
 import "@/App.css";
 import "@/lib/microAnimations.css";
-import { COMMUNITY_ENABLED } from "./lib/features";
+import { COMMUNITY_ENABLED, GUILDS_ENABLED } from "./lib/features";
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TooltipProvider } from "./contexts/TooltipContext";
@@ -123,6 +123,8 @@ function ProtectedFullScreen() {
 // route inside changes, instead of remounting on every navigation.
 // Community routes send people to Today until the flag is on (see lib/features.js).
 const communityOnly = (page) => (COMMUNITY_ENABLED ? page : <Navigate to="/care/today" replace />);
+
+const guildsOnly = (page) => (GUILDS_ENABLED ? page : <Navigate to="/greenhouse" replace />);
 
 function ProtectedShell() {
   useFocusMainOnRoute();
@@ -249,7 +251,7 @@ function AppRoutes() {
         <Route element={<ProtectedFullScreen />}>
           <Route path="/lessons/:lessonId" element={<LessonPage />} />
           <Route path="/greenhouse/:speciesId" element={<SpeciesDetailPage />} />
-          <Route path="/guilds/:slug" element={<GuildDetailPage />} />
+          <Route path="/guilds/:slug" element={guildsOnly(<GuildDetailPage />)} />
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/admin/demo" element={<AdminDemoPage />} />
         </Route>

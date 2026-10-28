@@ -15,12 +15,17 @@ import { QuizIntroStep, QuestionStep } from './onboarding/QuizSteps';
 import { BuildingStep, PlanStep } from './onboarding/PlanSteps';
 import StepScreen, { StepActions } from './onboarding/StepScreen';
 import PhotoBand from './PhotoBand';
+import * as features from '@/lib/features';
 
 // The first-run flow, from the Figma file "Grove App" (Full Onboarding, with the Sill-style additions):
 //   welcome, three intro slides, create account (1 of 3), [check email], where you grow (2 of 3),
 //   four quick questions (3 of 3), building your plan, welcome with your plan.
 // Someone who is already signed in (a replay, or a sign-up that was left half done) starts after the account step.
 // Everything after the intro slides is optional and can be skipped.
+
+// The step after the account (and the email check) is the zip step, or, with that held back, the hemisphere
+// question when we don't know it yet, or the quiz.
+const setupStage = (user) => (features.ZIP_ZONE_ENABLED ? 'zone' : user && user.hemisphere ? 'quiz-intro' : 'hemisphere');
 
 const OFF = { email_verification: false, sso: {} };
 
@@ -114,7 +119,7 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
 
 export function Onboarding({ onComplete, replay = false }) {
   const { user, updateUser } = useAuth();
-  const [stage, setStage] = useState(() => (user && !replay ? 'zone' : 'welcome'));
+  const [stage, setStage] = useState(() => (user && !replay ? setupStage(user) : 'welcome'));
   const [config, setConfig] = useState(null);
   const [name, setName] = useState('');
   const [answers, setAnswers] = useState({});
@@ -197,11 +202,11 @@ export function Onboarding({ onComplete, replay = false }) {
     setName(firstName(given));
     if (sso && created && created.onboarding_complete) { onComplete(); return; }
     if (!sso && config && config.email_verification && created && created.email_confirmed === false) setStage('check-email');
-    else setStage('zone');
+    else setStage(setupStage(created));
   };
 
   const goConfirmed = useCallback(() => setStage('confirmed'), []);
-  const goZone = useCallback(() => setStage('zone'), []);
+  const goZone = useCallback(() => setStage(setupStage(user)), [user]);
 
   const afterZone = (saved) => {
     if (saved && updateUser) updateUser(saved);
@@ -247,7 +252,7 @@ export function Onboarding({ onComplete, replay = false }) {
         key={stage}
         index={index}
         onBack={() => setStage(index === 0 ? 'welcome' : `intro-${index - 1}`)}
-        onNext={() => (index < SLIDES.length - 1 ? setStage(`intro-${index + 1}`) : user ? setStage('zone') : setStage('account'))}
+        onNext={() => (index < SLIDES.length - 1 ? setStage(`intro-${index + 1}`) : user ? setStage(setupStage(user)) : setStage('account'))}
         onSkip={skipIntro}
       />
     );
@@ -266,11 +271,11 @@ export function Onboarding({ onComplete, replay = false }) {
       />
     );
   } else if (stage === 'hemisphere') {
-    body = <HemisphereStep onBack={() => setStage('zone')} onDone={(saved) => { if (saved && updateUser) updateUser(saved); setStage('quiz-intro'); }} />;
+    body = <HemisphereStep onBack={() => setStage(features.ZIP_ZONE_ENABLED ? 'zone' : `intro-${SLIDES.length - 1}`)} onDone={(saved) => { if (saved && updateUser) updateUser(saved); setStage('quiz-intro'); }} />;
   } else if (stage === 'quiz-intro') {
     body = (
       <QuizIntroStep
-        onBack={() => setStage('zone')}
+        onBack={() => setStage(features.ZIP_ZONE_ENABLED ? 'zone' : 'hemisphere')}
         onStart={() => { setQIndex(0); setStage('question'); }}
         onSkip={() => { setAnswers({}); setStage('building'); }}
       />

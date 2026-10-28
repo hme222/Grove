@@ -15,6 +15,8 @@ jest.mock('@/lib/api', () => ({
   zoneAPI: { lookup: jest.fn() },
   lessonAPI: { submitPlan: jest.fn() },
 }));
+let mockZip = true;
+jest.mock('@/lib/features', () => ({ get ZIP_ZONE_ENABLED() { return mockZip; } }));
 jest.mock('@/contexts/AuthContext', () => ({ useAuth: jest.fn() }));
 jest.mock('./WelcomeScreen', () => ({
   WelcomeScreen: ({ onContinue, onSkip, showSkip }) => (
@@ -57,6 +59,7 @@ const ON = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockZip = true;
   authAPI.config.mockResolvedValue({ data: OFF });
   userAPI.updateMe.mockImplementation((data) => Promise.resolve({ data: { ...data } }));
   zoneAPI.lookup.mockResolvedValue({ data: { zone: '7b', source: 'zip-prefix', description: '5 to 10°F', hemisphere: 'north' } });
@@ -722,4 +725,28 @@ test('Space and Enter choose the focused option (a native button click)', async 
   await click(q('option-q1-gift'));
   expect(q('option-q1-gift').getAttribute('aria-checked')).toBe('true');
   expect(q('option-q1-gift').getAttribute('tabindex')).toBe('0');
+});
+
+// ---------- the zip step held back (the v1 default) ----------
+
+test('with the zip step held back, a new account goes straight to the hemisphere question', async () => {
+  mockZip = false;
+  auth.register.mockResolvedValue({ user: { id: 'u', onboarding_complete: false } });
+  await mount();
+  await toAccount();
+  await type(q('signup-email'), 'maya.r88@gmail.com');
+  await type(q('signup-password'), 'secret1');
+  await click(q('signup-submit'));
+  await flush();
+  expect(q('onboarding-zone')).toBeNull();
+  expect(q('onboarding-hemisphere')).not.toBeNull();
+});
+
+test('with the zip step held back, someone who already has a hemisphere starts at the quiz', async () => {
+  mockZip = false;
+  signedIn({ hemisphere: 'north' });
+  await mount();
+  expect(q('onboarding-zone')).toBeNull();
+  expect(q('onboarding-hemisphere')).toBeNull();
+  expect(text()).toContain('quick');
 });

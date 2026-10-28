@@ -2,6 +2,7 @@ import LoadError from '../components/LoadError';
 import { LoadingList } from '../components/Loading';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { guildIcon } from '../lib/guildIcon';
+import { GUILDS_ENABLED } from '../lib/features';
 import React, { useState, useEffect } from 'react';
 import AppLink from '../components/AppLink';
 import { encyclopediaAPI, guildAPI } from '../lib/api';
@@ -49,6 +50,7 @@ export default function EncyclopediaPage() {
 
   // Phase 14B.2 — load guilds once for the curated row above the species list.
   useEffect(() => {
+    if (!GUILDS_ENABLED) { setGuildsLoading(false); return undefined; }
     let alive = true;
     (async () => {
       try {

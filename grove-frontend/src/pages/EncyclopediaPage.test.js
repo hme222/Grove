@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import EncyclopediaPage from './EncyclopediaPage';
 import { encyclopediaAPI, guildAPI } from '../lib/api';
 
+jest.mock('../lib/features', () => ({ GUILDS_ENABLED: true }));
 jest.mock('../lib/api', () => ({
   encyclopediaAPI: { getSpecies: jest.fn() },
   guildAPI: { list: jest.fn() },
