@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FRAME_KEY, PHONE, fitScale, clockText, shouldFrame, frameChoice } from '../lib/phoneFrame';
+import { FRAME_KEY, PHONE, fitScale, clockText, shouldFrame } from '../lib/phoneFrame';
 
-const read = (k) => { try { return window.localStorage.getItem(k); } catch { return null; } };
-const write = (k, v) => { try { if (v == null) window.localStorage.removeItem(k); else window.localStorage.setItem(k, v); } catch { /* storage can be blocked */ } };
+const forgetHiddenFrame = () => { try { window.localStorage.removeItem(FRAME_KEY); } catch { /* storage can be blocked */ } };
 
 function StatusBar() {
   const [now, setNow] = useState(() => clockText());
@@ -29,12 +28,10 @@ export default function PhonePreviewShell({ children }) {
   const framed = useMemo(() => {
     const embedded = window.self !== window.top;
     const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
-    const search = window.location.search;
-    // An explicit ?frame= choice is remembered, so it survives navigation inside the preview.
-    const p = new URLSearchParams(search).get('frame');
-    if (p === 'off') write(FRAME_KEY, 'off'); else if (p === 'on') write(FRAME_KEY, null);
-    return shouldFrame({ embedded, standalone, width, search, stored: read(FRAME_KEY) });
+    return shouldFrame({ embedded, standalone, width });
   }, [width]);
+
+  useEffect(forgetHiddenFrame, []);
 
   useEffect(() => {
     const onResize = () => { setWidth(window.innerWidth); setHeight(window.innerHeight); };
@@ -53,15 +50,13 @@ export default function PhonePreviewShell({ children }) {
     return () => window.removeEventListener('message', onMessage);
   }, [framed]);
 
-  const initialSrc = useMemo(() => `${window.location.pathname}${window.location.search.replace(/[?&]frame=(on|off)/, '')}${window.location.hash}`, []);
+  const initialSrc = useMemo(() => `${window.location.pathname}${window.location.search}${window.location.hash}`, []);
 
   if (!framed) return children;
 
   const scale = fitScale(height);
   const deviceH = PHONE.height + 28;
   const screenH = PHONE.height - PHONE.statusBar - PHONE.homeBar;
-
-  const hide = () => { write(FRAME_KEY, 'off'); window.location.reload(); };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-grove-night px-4 py-8" data-testid="phone-preview">
@@ -78,11 +73,9 @@ export default function PhonePreviewShell({ children }) {
         </div>
       </div>
       <p className="mt-4 text-center font-ui text-xs text-grove-sage">
-        iPhone preview. Open FloraGrove on your phone for the real thing.{' '}
-        <button type="button" onClick={hide} className="underline underline-offset-2 hover:text-grove-cream" data-testid="phone-preview-hide">Hide the phone frame</button>
+        iPhone preview. Open FloraGrove on your phone for the real thing.
       </p>
     </div>
   );
 }
 
-export { frameChoice };

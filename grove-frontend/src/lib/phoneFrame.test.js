@@ -1,8 +1,8 @@
-import { frameChoice, shouldFrame, fitScale, clockText } from './phoneFrame';
+import { shouldFrame, fitScale, clockText } from './phoneFrame';
 
 describe('phone frame', () => {
-  const desktop = { embedded: false, standalone: false, width: 1440, search: '', stored: null };
-  test('frames wide desktop windows by default', () => {
+  const desktop = { embedded: false, standalone: false, width: 1440 };
+  test('frames every wide desktop window', () => {
     expect(shouldFrame(desktop)).toBe(true);
   });
   test('never frames phones, installed apps or the preview itself', () => {
@@ -10,11 +10,8 @@ describe('phone frame', () => {
     expect(shouldFrame({ ...desktop, standalone: true })).toBe(false);
     expect(shouldFrame({ ...desktop, embedded: true })).toBe(false);
   });
-  test('respects an explicit choice, and the URL wins over what was stored', () => {
-    expect(frameChoice('?frame=off', null)).toBe('off');
-    expect(frameChoice('', 'off')).toBe('off');
-    expect(frameChoice('?frame=on', 'off')).toBe('on');
-    expect(shouldFrame({ ...desktop, stored: 'off' })).toBe(false);
+  test('a desktop window cannot turn the frame off, by URL or by a stored choice', () => {
+    expect(shouldFrame({ ...desktop, search: '?frame=off', stored: 'off' })).toBe(true);
   });
   test('shrinks to fit short windows but never above full size', () => {
     expect(fitScale(2000)).toBe(1);
