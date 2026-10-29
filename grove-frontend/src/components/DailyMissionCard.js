@@ -84,7 +84,7 @@ export default function DailyMissionCard({ embedded = false }) {
           </h3>
           <p className="font-ui text-xs text-grove-sage mt-0.5 line-clamp-2">
             {completed
-              ? 'Nice work — see you tomorrow.'
+              ? 'Nice work. See you tomorrow.'
               : mission.subtitle}
           </p>
         </div>

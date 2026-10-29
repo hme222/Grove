@@ -156,7 +156,7 @@ export default function SpeciesDetailPage() {
 
   const badges = useMemo(() => (species ? buildBadges(species) : []), [species]);
 
-  if (notFound) return <NotFoundPage title="Plant not found" heading="We can't find that plant" message="It may have been renamed or removed from the guide." to="/greenhouse" toLabel="Back to Learn" />;
+  if (notFound) return <NotFoundPage title="Plant not found" heading="We can’t find that plant" message="It may have been renamed or removed from the guide." to="/greenhouse" toLabel="Back to Learn" />;
   if (loadError) {
     return <LoadErrorPage back title={knownName || 'Species'} what={knownName ? `${knownName} in the plant guide` : undefined} onRetry={() => window.location.reload()} />;
   }

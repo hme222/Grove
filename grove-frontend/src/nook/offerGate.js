@@ -1,3 +1,5 @@
+import { hadFirstCareThisSession } from '../lib/firstRunGate';
+
 export function hasFinishedALesson(user) {
   return (user?.tutorials_seen || []).some((entry) => typeof entry === 'string' && entry.startsWith('lesson:'));
 }
@@ -9,5 +11,7 @@ export function shouldShowNookOffer(user) {
   if (user.onboarding_complete !== true) return false;
   if (!user.primary_track) return false;
   if (user.nook_offered_at) return false;
+  // Not on top of the first-care celebration: ask on the next visit.
+  if (hadFirstCareThisSession()) return false;
   return user.first_care_celebrated === true || hasFinishedALesson(user);
 }

@@ -1,19 +1,13 @@
-// On a desktop browser the app is shown inside an iPhone-sized preview so the layout and the status
-// bar feel like the phone. Phones, installed apps and the embedded preview itself are never framed.
+// FloraGrove is a phone app. On a desktop browser it is shown only as an iPhone-sized phone, with no
+// full-width layout and no way to turn the frame off. Phones, installed apps and the embedded preview
+// itself are never framed.
+// FRAME_KEY is the retired "hide the frame" preference; it is cleared if an earlier visit stored one.
 export const FRAME_KEY = 'grove-phone-frame';
 export const PHONE = { width: 390, height: 844, statusBar: 54, homeBar: 34 };
 
-export function frameChoice(search, stored) {
-  const p = new URLSearchParams(search || '').get('frame');
-  if (p === 'off') return 'off';
-  if (p === 'on') return 'on';
-  return stored === 'off' ? 'off' : 'on';
-}
-
-export function shouldFrame({ embedded, standalone, width, search, stored }) {
+export function shouldFrame({ embedded, standalone, width }) {
   if (embedded || standalone) return false;
-  if (width < 900) return false;
-  return frameChoice(search, stored) === 'on';
+  return width >= 900;
 }
 
 export function fitScale(viewportHeight, deviceHeight = PHONE.height + 28) {

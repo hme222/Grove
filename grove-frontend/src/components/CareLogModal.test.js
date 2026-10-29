@@ -132,14 +132,15 @@ test('other care actions send no soil fields at all', async () => {
   expect(toast.message).not.toHaveBeenCalled();
 });
 
-test('a failed save keeps the modal open and shows the existing error toast', async () => {
+test('a failed save keeps the modal open and says what to do next', async () => {
   careAPI.createLog.mockRejectedValue(new Error('network'));
   const { onClose } = await mount();
   await click(q('care-action-soil_check'));
   await click(q('care-soil-outcome-dry'));
   await click(q('care-log-submit'));
   await flush();
-  expect(toast.error).toHaveBeenCalledWith('Failed to log care action');
+  expect(q('care-log-error').textContent).toMatch(/Nothing was lost.*try again/);
+  expect(q('care-log-error').getAttribute('role')).toBe('alert');
   expect(onClose).not.toHaveBeenCalled();
 });
 

@@ -1,4 +1,4 @@
-import { CARE_ACTIONS } from '../lib/careActions';
+import { CARE_ACTIONS, careLoggedMessage } from '../lib/careActions';
 import React, { useState, useRef, useMemo } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
@@ -23,6 +23,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
   const [soilOutcome, setSoilOutcome] = useState('');
   const [soilDecision, setSoilDecision] = useState('');
   const [soilError, setSoilError] = useState('');
+  const [logError, setLogError] = useState('');
   const submitBtnRef = useRef(null);
 
   const selectedArr = useMemo(() => Array.from(selected), [selected]);
@@ -63,6 +64,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
     setSoilOutcome('');
     setSoilDecision('');
     setSoilError('');
+    setLogError('');
   };
 
   const handleLog = async (e) => {
@@ -73,6 +75,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       return;
     }
     setSoilError('');
+    setLogError('');
     setLogging(true);
     try {
       const res = await careAPI.createLog(plantId, {
@@ -83,15 +86,13 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       const meta = res.data?._meta;
       if (meta?.soil_coaching) toast.message(meta.soil_coaching);
       success(submitBtnRef.current || e.currentTarget);
-      const tile = CARE_ACTIONS.find((action) => action.value === selectedArr[0]);
-      const label = count === 1 ? (tile ? tile.label : selectedArr[0]) : `${count} actions`;
-      toast.success(`${label} logged for ${plantName}`);
+      toast.success(careLoggedMessage(selectedArr, plantName));
       handleReset();
-      onLogged?.(meta);
+      onLogged?.(meta, { plantName, actions: selectedArr });
       onClose();
     } catch (_err) {
       spawnRipple(submitBtnRef.current, { tone: 'warm' });
-      toast.error('Failed to log care action');
+      setLogError('Couldn’t save that. Nothing was lost. Check your connection and try again.');
     } finally {
       setLogging(false);
     }
@@ -108,7 +109,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             Log care for {plantName}
           </DialogTitle>
           <p className="mt-1 text-sm font-ui text-grove-sage">
-            Tap every action you just did — they&apos;ll log together as one sweep.
+            Tap every action you just did. They&apos;ll log together as one sweep.
           </p>
         </DialogHeader>
 
@@ -209,6 +210,11 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
         />
 
         <div className="mt-2 flex flex-col gap-2">
+          {logError && (
+            <p role="alert" className="font-ui text-sm text-destructive" data-testid="care-log-error">
+              {logError}
+            </p>
+          )}
           <button
             ref={submitBtnRef}
             onClick={handleLog}

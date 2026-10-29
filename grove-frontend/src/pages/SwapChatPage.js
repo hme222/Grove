@@ -308,7 +308,7 @@ export default function SwapChatPage() {
         open={pending != null}
         onOpenChange={(o) => { if (!o) setPending(null); }}
         title="Cancel this swap?"
-        description="The swap ends and the other grower is notified. This can't be undone."
+        description="The swap ends and the other grower is notified. This can’t be undone."
         confirmLabel="Cancel swap"
         cancelLabel="Keep swap"
         testId="swap-cancel-confirm"

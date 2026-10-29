@@ -38,7 +38,7 @@ const TOGGLE_GROUPS = [
     icon: Mail,
     desc: 'Daily digests and important events via email.',
     keys: [
-      { key: 'email_digest', label: 'Daily digest', help: 'One calm summary email at 7am — only if you skipped the app.' },
+      { key: 'email_digest', label: 'Daily digest', help: 'One calm summary email at 7am, only if you skipped the app.' },
       { key: 'email_swap_match', label: 'Swap match emails', help: 'Immediate email when you match with another grower.' },
     ],
   },

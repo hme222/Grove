@@ -27,6 +27,7 @@ from typing import Optional, Tuple
 logger = logging.getLogger(__name__)
 
 TOKEN_TTL_HOURS = 24
+RESET_TTL_HOURS = 1
 RESEND_AFTER_SECONDS = 60
 
 
@@ -107,6 +108,15 @@ def seconds_until_resend(sent_at: Optional[str], now: Optional[datetime] = None)
     return max(0, int(wait + 0.999))
 
 
+def reset_expiry(now: Optional[datetime] = None) -> str:
+    return ((now or datetime.now(timezone.utc)) + timedelta(hours=RESET_TTL_HOURS)).isoformat()
+
+
+def reset_link(raw_token: str) -> str:
+    base = os.environ.get("APP_BASE_URL", "http://localhost:3000").rstrip("/")
+    return f"{base}/reset-password?token={raw_token}"
+
+
 def confirmation_link(raw_token: str) -> str:
     base = os.environ.get("APP_BASE_URL", "http://localhost:3000").rstrip("/")
     return f"{base}/confirm-email?token={raw_token}"
@@ -126,6 +136,46 @@ def _message(to: str, link: str) -> EmailMessage:
         "you can ignore this message.\n"
     )
     return msg
+
+
+def _reset_message(to: str, link: str) -> EmailMessage:
+    msg = EmailMessage()
+    msg["Subject"] = "Reset your FloraGrove password"
+    msg["From"] = os.environ.get("EMAIL_FROM", "FloraGrove <no-reply@localhost>")
+    msg["To"] = to
+    msg.set_content(
+        "Tap the link to choose a new FloraGrove password:\n\n"
+        f"{link}\n\n"
+        f"The link works for {RESET_TTL_HOURS} hour and only once. If you did not ask for this, "
+        "you can ignore this message and your password stays as it is.\n"
+    )
+    return msg
+
+
+def _deliver(msg: EmailMessage, what: str, to: str, link: str) -> str:
+    host = os.environ.get("EMAIL_SMTP_HOST", "").strip()
+    if not host:
+        if os.environ.get("APP_ENV", "").strip().lower() == "production":
+            raise RuntimeError("EMAIL_SMTP_HOST is not set")
+        logger.warning("%s link for %s (no sender configured): %s", what, to, link)
+        return "logged"
+    port = int(os.environ.get("EMAIL_SMTP_PORT", "587"))
+    user = os.environ.get("EMAIL_SMTP_USER")
+    password = os.environ.get("EMAIL_SMTP_PASSWORD")
+    with smtplib.SMTP(host, port, timeout=15) as smtp:
+        smtp.ehlo()
+        if port != 25:
+            smtp.starttls()
+            smtp.ehlo()
+        if user and password:
+            smtp.login(user, password)
+        smtp.send_message(msg)
+    return "sent"
+
+
+def send_password_reset_email(to: str, link: str) -> str:
+    """Same sender rules as the confirmation email: logged outside production when no SMTP host is set."""
+    return _deliver(_reset_message(to, link), "Password reset", to, link)
 
 
 def send_confirmation_email(to: str, link: str) -> str:

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { WelcomeStage, STAGE_W, STAGE_H } from '@/components/WelcomeStage';
+import { WelcomeStage, STAGE_W, STAGE_H, CTA_BOTTOM } from '@/components/WelcomeStage';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 import PhotoBand from '@/components/PhotoBand';
 import { buttonVariants } from '@/components/ui/button';
@@ -13,21 +13,36 @@ import './WelcomeScreen.css';
 // Motion plays once, in order: the wordmark + "Welcome to FloraGrove", the stars (then they twinkle),
 // the first line wiping down, the definition, the second line, then the photo with the rest.
 // Tapping the screen while it builds skips to the finished screen.
+// When the window is shorter than the picture, the page scrolls.
 // With reduced motion, everything is shown at once and nothing moves.
 
-// Below this width, or when the scaled body text (17px on the stage) would be under 14px, the picture is
-// not scaled down: the same words come as a normal-flow page (headline, photo band, text, Continue).
+// Below this width the picture is not scaled down: the same words come as a normal-flow page (headline, photo band, text, Continue).
+// At or above it the picture always shows. It is scaled to fit the window, but never below the size where its 17px body text is 14px:
+// on a short window (a laptop browser) it is that size and the page scrolls, so the hand-drawn lines and stars stay.
 const COMPACT_W = 360;
 const MIN_BODY_PX = 14;
 const STAGE_BODY_PX = 17;
+const MIN_SCALE = MIN_BODY_PX / STAGE_BODY_PX;
 
-export function isCompact(width, scale) {
-  return width < COMPACT_W || STAGE_BODY_PX * scale < MIN_BODY_PX;
+export function isCompact(width) {
+  return width < COMPACT_W;
+}
+
+// The sign-in bar under the screen is one touch target tall. If the stage's own Continue button would sit
+// behind it or below the fold, Continue is pinned above the bar instead and the picture scrolls behind it.
+const SIGN_IN_BAR_PX = 44;
+
+export function shouldPinContinue(scale, height) {
+  return scale * CTA_BOTTOM + SIGN_IN_BAR_PX > height;
+}
+
+export function stageScaleFor(width, height) {
+  return Math.max(Math.min(width / STAGE_W, height / STAGE_H), MIN_SCALE);
 }
 
 function stageScale() {
   if (typeof window === 'undefined') return 1;
-  return Math.min(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+  return stageScaleFor(window.innerWidth, window.innerHeight);
 }
 
 function useStageScale() {
@@ -71,7 +86,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
         <p className="mt-3 font-ui text-base leading-relaxed text-grove-cream">
           A <b className="font-plant text-lg font-bold">grove</b> is a small group of trees growing closely together
         </p>
-        <PhotoBand src="/photos/welcome-forest.jpg" ratio="photo" eager className="mt-6" />
+        <PhotoBand src="/photos/welcome-forest-edited.jpg" ratio="photo" eager className="mt-6" />
         <p className="mt-6 font-ui text-base text-grove-cream">
           FloraGrove is a <b className="font-bold">safe space</b> to learn about plants.
         </p>
@@ -94,18 +109,38 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
   );
 }
 
+// Continue fades in at 7.9s over 1.4s (WelcomeScreen.css). Until it is on screen it is out of the tab order.
+const CTA_REVEAL_MS = 9300;
+const prefersReducedMotion = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true }) {
   const scale = useStageScale();
   const [done, setDone] = useState(false);
+  const [revealed, setRevealed] = useState(prefersReducedMotion);
+  useEffect(() => {
+    if (revealed) return undefined;
+    const t = setTimeout(() => setRevealed(true), CTA_REVEAL_MS);
+    return () => clearTimeout(t);
+  }, [revealed]);
+  const ctaReady = revealed || done;
+  // A keyboard user cannot tap to skip the build, so any key press shows the finished screen and Continue.
+  useEffect(() => {
+    if (ctaReady) return undefined;
+    const onKey = () => setDone(true);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [ctaReady]);
   const width = typeof window === 'undefined' ? STAGE_W : window.innerWidth;
+  const height = typeof window === 'undefined' ? STAGE_H : window.innerHeight;
+  const pinned = shouldPinContinue(scale, height);
 
-  if (isCompact(width, scale)) {
+  if (isCompact(width)) {
     return <CompactWelcome onContinue={onContinue} onSkip={onSkip} disabled={disabled} showSkip={showSkip} />;
   }
 
   return (
     <div
-      className={`gw z-intro ${done ? 'gw-done' : ''}`}
+      className={`gw z-intro ${done ? 'gw-done' : ''} ${pinned ? 'gw-pinned' : ''}`}
       style={{ '--stage-scale': scale }}
       data-testid="onboarding-welcome"
       onPointerDown={() => setDone(true)}
@@ -114,9 +149,17 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
 
       <div className="gw-stage-wrap" style={{ width: STAGE_W * scale, height: STAGE_H * scale }}>
         <div className="gw-stage" style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${scale})` }}>
-          <WelcomeStage onContinue={onContinue} disabled={disabled} />
+          <WelcomeStage pinContinue={pinned} ctaReady={ctaReady} onContinue={onContinue} disabled={disabled} />
         </div>
       </div>
+
+      {pinned && (
+        <div className="gw-pin gw-a gw-lower">
+          <button type="button" className="gw-cta gw-pin-cta" onClick={onContinue} disabled={disabled} tabIndex={ctaReady ? undefined : -1} aria-hidden={ctaReady ? undefined : true} data-testid="onboarding-continue">
+            {disabled ? 'Loading…' : 'Continue'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

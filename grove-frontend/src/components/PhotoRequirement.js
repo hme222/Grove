@@ -144,7 +144,7 @@ export default function PhotoRequirement({ plantName, onPhotoReady, onSkip }) {
           className="rounded-control border-hairline border-grove-bloom/40 bg-grove-bloom/15 p-3"
           data-testid="photo-validation-feedback"
         >
-          <p className="font-ui text-grove-cream text-sm font-medium">We couldn't quite see the plant clearly</p>
+          <p className="font-ui text-grove-cream text-sm font-medium">We couldn’t quite see the plant clearly</p>
           <p className="italic font-ui text-xs text-grove-sage mt-1">"{photoFeedback}"</p>
           <div className="mt-3 flex items-center gap-2">
             <button

@@ -12,6 +12,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import CareLogModal from '../components/CareLogModal';
 import DailyMissionCard from '../components/DailyMissionCard';
+import FirstSessionBanner, { isFirstSessionBannerShown } from '../components/FirstSessionBanner';
 import SetupNote from '../components/SetupNote';
 import ToxicityBadge from '../components/ToxicityBadge';
 import NextLessonCard from '../components/NextLessonCard';
@@ -144,6 +145,8 @@ export default function CarePage() {
 
   // When the list empties, read the plants again so "Next up" reflects what was just logged.
   const dueCount = plants.length;
+  // The banner's job is getting a first plant in; once there is one it steps aside.
+  const showBanner = isFirstSessionBannerShown(user) && !(allPlantsLoaded && allPlants.length > 0);
   useEffect(() => {
     if (!loading && dueCount === 0 && sessionPlants.length > 0) fetchAllPlantsLite();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,7 +204,7 @@ export default function CarePage() {
       const res = await waterAPI.logRound([plant.id]);
       const watered = res.data.watered || 0;
       if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: [plant.id] });
-      handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending });
+      handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending }, { plantName: plantName(plant), actions: ['water'] });
     } catch {
       toast.error("Couldn’t save that. Check your connection and try again.");
     }
@@ -219,7 +222,7 @@ export default function CarePage() {
       toast.success('Water round undone');
       fetchDue();
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Couldn't undo that. Try again.");
+      toast.error(err?.response?.data?.detail || "Couldn’t undo that. Try again.");
     } finally {
       setUndoing(false);
       setLastRound(null);
@@ -227,16 +230,16 @@ export default function CarePage() {
   };
 
   // Called when a per-plant care action is logged via the modal.
-  const handlePlantLogged = (plantId, meta) => {
+  const handlePlantLogged = (plantId, meta, logged) => {
     setSessionCount((c) => c + 1);
-    const logged = plants.find((p) => p.id === plantId);
-    if (logged) addToSession([logged]);
+    const loggedPlant = plants.find((p) => p.id === plantId);
+    if (loggedPlant) addToSession([loggedPlant]);
     setExiting((prev) => {
       const next = new Set(prev);
       next.add(plantId);
       return next;
     });
-    if (meta) maybeCelebrateFirstCare(meta.first_care_pending);
+    if (meta) maybeCelebrateFirstCare(meta.first_care_pending, logged);
     window.dispatchEvent(new Event('grove:mission-refresh'));
     setTimeout(() => {
       setExiting((prev) => {
@@ -265,6 +268,7 @@ export default function CarePage() {
       <PageHeader title="Today">
         <CareTabs />
       </PageHeader>
+      {showBanner && <FirstSessionBanner />}
 
       <div className="max-w-content mx-auto px-4 pt-4 pb-4 space-y-3">
         {!loadError && filterChips.length > 1 && (
@@ -319,7 +323,7 @@ export default function CarePage() {
                 onDone={() => { endSession(); document.getElementById('main-content')?.focus(); }}
               />
             ) : (
-              <NamedPlantEmptyState plants={allPlants} collectionLoaded={allPlantsLoaded} />
+              <NamedPlantEmptyState plants={allPlants} collectionLoaded={allPlantsLoaded} firstCare={!user?.first_care_celebrated} onLogCare={setCareModalPlant} />
             )}
           </div>
         ) : (
@@ -443,7 +447,7 @@ export default function CarePage() {
         <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <LightPromptCard embedded />
-          <DailyMissionCard embedded />
+          {!(allPlantsLoaded && allPlants.length === 0) && !showBanner && <DailyMissionCard embedded />}
           <NextLessonCard embedded />
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
@@ -516,10 +520,10 @@ export default function CarePage() {
           onClose={() => setCareModalPlant(null)}
           plantId={careModalPlant.id}
           plantName={careModalPlant.nickname || careModalPlant.common_name}
-          onLogged={(meta) => {
+          onLogged={(meta, logged) => {
             const pid = careModalPlant.id;
             setCareModalPlant(null);
-            handlePlantLogged(pid, meta);
+            handlePlantLogged(pid, meta, logged);
           }}
         />
       )}
@@ -527,13 +531,14 @@ export default function CarePage() {
       <FirstCareCelebration
         open={firstCare.open}
         onClose={firstCare.close}
+        logged={firstCare.details}
       />
     </div>
   );
 }
 
 // ----- Named-plant empty state for the care list -----
-function NamedPlantEmptyState({ plants, collectionLoaded }) {
+function NamedPlantEmptyState({ plants, collectionLoaded, firstCare, onLogCare }) {
   if (collectionLoaded && (!plants || plants.length === 0)) {
     return <EmptyState config={EMPTY_STATES.collection_zero_plants} />;
   }
@@ -563,11 +568,25 @@ function NamedPlantEmptyState({ plants, collectionLoaded }) {
       <div className="w-12 h-12 mx-auto rounded-pill bg-grove-moss flex items-center justify-center mb-3">
         <Sparkles className="h-5 w-5 text-grove-sprout" />
       </div>
-      <p className="font-plant text-grove-cream text-base">All caught up.</p>
-      <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
-        {nextName} is the next one up — due to be watered <span className="text-grove-cream">{dueLabel}</span>.
-        Take a slow scroll through your collection while you're here.
-      </p>
+      {firstCare ? (
+        <>
+          <p className="font-plant text-grove-cream text-base">Ready for your first care?</p>
+          <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
+            {nextName} isn’t due for water <span className="text-grove-cream">{dueLabel}</span>. Log a first care now to start its journal.
+          </p>
+          <button type="button" onClick={() => onLogCare(next)} className={cn(buttonVariants(), 'mt-4')} data-testid="care-first-log">
+            Log care for {nextName}
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="font-plant text-grove-cream text-base">All caught up.</p>
+          <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
+            {nextName} is the next one up, due to be watered <span className="text-grove-cream">{dueLabel}</span>.
+            Take a slow scroll through your collection while you're here.
+          </p>
+        </>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI } from '../lib/api';
+import { useFirstRunBlocking, claimTutorialSlot, tutorialSlotTaken } from '../lib/firstRunGate';
 import { Leaf, Droplets, Users, BookOpen, Sun, X } from 'lucide-react';
 
 /**
@@ -22,13 +23,13 @@ export const TUTORIAL_COPY = {
   collection: {
     title: 'Welcome to Plants',
     icon: Leaf,
-    body: "Every plant you grow lives here. Tap a tile to open its full record — care, photos, growth. Long press a tile, or tap Select, to log care across many plants at once.",
+    body: "Every plant you grow lives here. Tap a tile to open its full record: care, photos, growth. Long press a tile, or tap Select, to log care across many plants at once.",
     accent: 'var(--grove-lime)',
   },
   care: {
     title: 'Welcome to Today',
     icon: Droplets,
-    body: "This is your daily rhythm. To do shows what's due now and the badges you're working toward. Progress tracks change over time. Each tap is a small act of attention.",
+    body: "This is your daily rhythm. To do shows what’s due now and the badges you’re working toward. Progress tracks change over time. Each tap is a small act of attention.",
     accent: 'var(--grove-lime)',
   },
   grove: {
@@ -40,7 +41,7 @@ export const TUTORIAL_COPY = {
   greenhouse: {
     title: 'Welcome to Learn',
     icon: BookOpen,
-    body: "Your library of plant knowledge. Hand-curated species with native ranges, citations, and care guides. Browse to learn — or tap a species in your Collection to jump straight to its entry.",
+    body: "Your library of plant knowledge. Hand-curated species with native ranges, citations, and care guides. Browse to learn, or tap a species in your Collection to jump straight to its entry.",
     accent: 'var(--grove-sun)',
   },
   lighting: {
@@ -54,20 +55,26 @@ export const TUTORIAL_COPY = {
 export default function SectionTutorial({ tutorialId, autoShow = true }) {
   const { user, refreshUser } = useAuth();
   const [open, setOpen] = useState(false);
+  const firstRunBlocking = useFirstRunBlocking();
 
   const tutorialsSeen = user?.tutorials_seen;
   const seen = useMemo(() => tutorialsSeen || [], [tutorialsSeen]);
   const copy = TUTORIAL_COPY[tutorialId];
 
   useEffect(() => {
-    if (!autoShow || !user || !copy) return;
+    if (!autoShow || !user || !copy || firstRunBlocking) return;
     // Only show if not already seen
-    if (!seen.includes(tutorialId)) {
+    if (!seen.includes(tutorialId) && !tutorialSlotTaken()) {
       // Brief delay so the page renders before the overlay appears.
-      const t = setTimeout(() => setOpen(true), 350);
+      const t = setTimeout(() => {
+        // The welcome banner is the greeting while it is up; the section card comes on a later visit.
+        if (document.querySelector('[data-testid="first-session-banner"]')) return;
+        if (!claimTutorialSlot()) return;
+        setOpen(true);
+      }, 350);
       return () => clearTimeout(t);
     }
-  }, [autoShow, user, copy, tutorialId, seen]);
+  }, [autoShow, user, copy, tutorialId, seen, firstRunBlocking]);
 
   const dismiss = useCallback(async () => {
     setOpen(false);

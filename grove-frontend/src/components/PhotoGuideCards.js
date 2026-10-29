@@ -162,7 +162,7 @@ const CARDS = [
   },
   {
     title: 'Show the whole plant',
-    body: "Step back enough to include all leaves and the pot. Leave a little space around the edges. Don't crop the top.",
+    body: "Step back enough to include all leaves and the pot. Leave a little space around the edges. Don’t crop the top.",
     BadLabel: 'Cropped',
     GoodLabel: 'Full plant',
     Bad: CropBad, Good: CropGood,
@@ -176,7 +176,7 @@ const CARDS = [
   },
   {
     title: 'Angle matters',
-    body: "Shoot at the plant's height or slightly above. Looking down at a 45° angle shows the full shape beautifully.",
+    body: "Shoot at the plant’s height or slightly above. Looking down at a 45° angle shows the full shape beautifully.",
     BadLabel: 'From below',
     GoodLabel: 'Eye level',
     Bad: AngleBad, Good: AngleGood,
@@ -190,7 +190,7 @@ const CARDS = [
   },
   {
     title: 'Make it theirs',
-    body: "This photo will be the first entry in your plant's story. Take a moment to make it a good one — you'll be glad you did when you look back in a year.",
+    body: "This photo will be the first entry in your plant’s story. Take a moment to make it a good one. You’ll be glad you did when you look back in a year.",
     hero: true,
   },
 ];

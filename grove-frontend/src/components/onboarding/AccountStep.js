@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { authAPI } from '@/lib/api';
 import { getProviderToken, CANCELLED } from '@/lib/sso';
 import { looksLikeEmail, suggestEmail, nameFromEmail } from '@/lib/emailSuggest';
+import PasswordField from '../PasswordField';
 import StepScreen from './StepScreen';
 
 const inputClass = 'w-full rounded-inset border-hairline border-grove-fernLine bg-grove-canopy px-4 py-3 font-ui text-sm text-grove-cream placeholder:text-grove-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime aria-[invalid=true]:border-destructive';
@@ -26,7 +27,6 @@ export default function AccountStep({ config, onBack, onDone }) {
   const { register, acceptSession } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [ssoBusy, setSsoBusy] = useState('');
@@ -43,14 +43,21 @@ export default function AccountStep({ config, onBack, onDone }) {
     }
     if (password.length < 6) next.password = 'Use at least 6 characters.';
     setErrors(next);
-    if (Object.keys(next).length) return;
+    if (Object.keys(next).length) {
+      document.getElementById(next.email ? 'signup-email' : 'signup-password')?.focus();
+      return;
+    }
     setBusy(true);
     try {
       const data = await register(undefined, email.trim(), password, nameFromEmail(email) || undefined);
       onDone({ user: data.user, name: nameFromEmail(email) });
     } catch (err) {
       const detail = err.response && err.response.data && err.response.data.detail;
-      setErrors({ form: typeof detail === 'string' ? detail : 'We couldn’t create your account. Check your connection and try again.' });
+      let form = 'We couldn’t create your account. Check your connection and try again.';
+      if (typeof detail === 'string') form = detail;
+      else if (err.response && err.response.status >= 500) form = 'Something went wrong on our side. Try again in a moment.';
+      else if (err.response) form = 'Check your email and password, then try again.';
+      setErrors({ form });
       setBusy(false);
     }
   };
@@ -143,31 +150,18 @@ export default function AccountStep({ config, onBack, onDone }) {
           </div>
 
           <div>
-            <label htmlFor="signup-password" className="mb-1.5 block font-ui text-sm text-grove-cream">Password</label>
-            <div className="flex gap-2">
-              <input
-                id="signup-password"
-                type={show ? 'text' : 'password'}
-                autoComplete="new-password"
-                value={password}
-                onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors((x) => ({ ...x, password: undefined })); }}
-                aria-invalid={errors.password ? 'true' : 'false'}
-                aria-describedby={errors.password ? 'signup-password-error' : undefined}
-                placeholder="At least 6 characters"
-                data-testid="signup-password"
-                className={inputClass}
-              />
-              <button
-                type="button"
-                onClick={() => setShow((s) => !s)}
-                aria-pressed={show}
-                data-testid="signup-password-toggle"
-                className="min-h-touch min-w-touch rounded-control px-2 font-ui text-sm text-grove-cream underline underline-offset-2"
-              >
-                {show ? 'Hide' : 'Show'}
-                <span className="sr-only"> password</span>
-              </button>
-            </div>
+            <PasswordField
+              id="signup-password"
+              label="Password"
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors((x) => ({ ...x, password: undefined })); }}
+              autoComplete="new-password"
+              placeholder="At least 6 characters"
+              testId="signup-password"
+              toggleTestId="signup-password-toggle"
+              invalid={!!errors.password}
+              describedBy={errors.password ? 'signup-password-error' : undefined}
+            />
             {errors.password && <FieldError id="signup-password-error">{errors.password}</FieldError>}
           </div>
         </div>

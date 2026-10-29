@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { holdFirstRun } from "./lib/firstRunGate";
 import { Spinner } from './components/Loading';
 import "@/App.css";
 import "@/lib/microAnimations.css";
@@ -10,6 +11,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { Onboarding } from "./components/Onboarding";
 import LoginPage from "./pages/LoginPage";
 import ConfirmEmailPage from "./pages/ConfirmEmailPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import CollectionPage from "./pages/CollectionPage";
 import CarePage from "./pages/CarePage";
 import CareGrowthPage from "./pages/CareGrowthPage";
@@ -223,6 +226,12 @@ function AppRoutes() {
     setOfferDone(true);
   };
 
+  const firstRunOpen = flowOpen || showQuiz || showOffer;
+  useEffect(() => {
+    if (!firstRunOpen) return undefined;
+    return holdFirstRun();
+  }, [firstRunOpen]);
+
   if (loading) return <LoadingScreen />;
 
   if (bootError && !user) {
@@ -243,6 +252,8 @@ function AppRoutes() {
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : null} />
         <Route path="/confirm-email" element={<ConfirmEmailPage />} />
+        <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/bouquet/:slug" element={<PublicBouquetPage />} />
         <Route path="/first-run" element={user ? null : <Navigate to="/login" replace />} />
         <Route path="/waitlist" element={<WaitlistPage />} />

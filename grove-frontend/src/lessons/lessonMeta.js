@@ -45,16 +45,6 @@ export const LESSON_META = {
   },
 };
 
-// Ids must match `QUIZ_OPTION_TRACK` in grove-backend/tracks.py.
-// Labels describe a situation, never an identity or an internal track name.
-export const QUIZ_OPTIONS = [
-  { id: 'unwell_or_guilt', label: 'A plant of mine looks unwell, or I feel bad about one I lost' },
-  { id: 'overwater', label: "I overwater, or I don't trust my instincts" },
-  { id: 'gifted_no_instructions', label: 'Someone gave me a plant and I have no instructions' },
-  { id: 'forget', label: 'I forget to care for my plants' },
-  { id: 'design_or_no_plant', label: 'I want to design with plants, or I have none yet' },
-];
-
 // One-tap notes on a soil test. They are saved with the log.
 export const NOTE_CHIPS = ['Looked fine', 'Leaves drooping', 'New growth', 'Soil pulling away', 'Saw pests'];
 

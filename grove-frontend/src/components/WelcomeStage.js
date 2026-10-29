@@ -9,6 +9,8 @@ import './WelcomeScreen.css';
 
 export const STAGE_W = 430;
 export const STAGE_H = 932;
+// Where the Continue button ends on the stage, for deciding whether it is in view.
+export const CTA_BOTTOM = 850;
 
 // Tapered brush outlines traced from the design. Filled shapes, not strokes.
 const LINE_1 = 'M206.0 167.7 L207.2 167.8 L208.3 167.8 L209.5 167.8 L210.7 167.8 L211.8 167.8 L213.0 167.9 L214.1 167.9 L215.3 167.9 L216.5 167.9 L217.6 168.0 L218.8 168.0 L220.0 168.0 L221.1 168.0 L222.3 168.0 L223.4 168.0 L224.6 168.0 L225.7 168.1 L226.8 168.1 L228.0 168.1 L229.1 168.1 L230.2 168.1 L231.3 168.1 L232.4 168.1 L233.6 168.1 L234.6 168.1 L235.7 168.1 L236.8 168.1 L237.9 168.1 L238.9 168.1 L240.0 168.1 L241.0 168.1 L242.1 168.1 L243.1 168.1 L244.1 168.1 L245.1 168.2 L246.1 168.2 L247.1 168.2 L248.0 168.2 L249.0 168.2 L249.9 168.2 L250.8 168.3 L251.7 168.3 L252.6 168.3 L253.5 168.3 L254.3 168.3 L255.2 168.4 L256.0 168.4 L256.8 168.4 L257.6 168.5 L258.3 168.5 L259.1 168.5 L259.8 168.5 L260.5 168.6 L261.2 168.6 L261.8 168.6 L262.5 168.7 L263.1 168.7 L263.7 168.8 L264.3 168.8 L264.8 168.8 L265.0 168.9 L265.3 168.9 L265.6 169.0 L265.9 169.0 L266.1 169.1 L266.4 169.1 L266.6 169.2 L266.8 169.3 L267.0 169.4 L267.2 169.4 L267.3 169.5 L267.5 169.6 L267.6 169.7 L267.8 169.7 L267.9 169.8 L268.0 169.9 L268.1 170.0 L268.2 170.0 L268.2 170.1 L268.3 170.2 L268.3 170.3 L268.4 170.3 L268.4 170.4 L268.4 170.4 L268.5 170.5 L268.5 170.5 L268.5 170.6 L268.5 170.6 L268.5 170.7 L268.5 170.8 L268.5 170.8 L268.5 170.9 L268.5 171.0 L268.5 171.0 L268.5 171.1 L268.5 171.2 L268.4 171.3 L268.4 171.4 L268.3 171.5 L268.3 171.7 L268.2 171.8 L268.1 171.9 L268.0 172.0 L267.9 172.2 L267.8 172.3 L267.6 172.5 L267.5 172.6 L267.3 172.8 L267.1 172.9 L266.9 173.1 L266.7 173.2 L266.5 173.4 L266.3 173.5 L266.1 173.7 L265.8 173.8 L265.6 174.0 L265.3 174.1 L265.0 174.3 L264.7 174.4 L264.4 174.6 L262.6 175.4 L260.8 176.2 L258.9 177.0 L256.9 177.8 L254.8 178.6 L252.7 179.3 L250.6 180.1 L248.3 180.8 L246.0 181.5 L243.7 182.2 L241.3 183.0 L238.8 183.7 L236.3 184.4 L233.8 185.1 L231.2 185.8 L228.6 186.5 L226.0 187.3 L223.3 188.0 L220.6 188.7 L217.9 189.5 L215.1 190.2 L212.3 190.9 L209.5 191.6 L206.7 192.3 L203.9 192.9 L201.0 193.6 L198.1 194.2 L195.3 194.9 L192.4 195.5 L189.5 196.2 L186.7 196.9 L183.8 197.6 L180.9 198.3 L178.1 199.0 L175.3 199.7 L172.4 200.4 L169.6 201.2 L166.8 201.8 L164.1 202.5 L161.3 203.2 L158.6 203.8 L155.9 204.4 L153.2 205.0 L150.5 205.6 L147.9 206.2 L145.3 206.8 L142.8 207.3 L140.3 207.9 L137.8 208.5 L135.4 209.0 L133.1 209.6 L130.8 210.2 L128.5 210.7 L126.4 211.3 L124.2 211.8 L122.2 212.4 L120.2 212.9 L118.2 213.4 L116.3 213.9 L114.4 214.4 L113.5 214.9 L112.9 215.3 L112.3 215.6 L111.6 216.0 L111.0 216.4 L110.5 216.8 L109.9 217.2 L109.4 217.6 L108.8 218.0 L108.3 218.4 L107.9 218.8 L107.4 219.2 L107.0 219.6 L106.5 220.1 L106.1 220.5 L105.7 220.9 L105.4 221.4 L105.0 221.8 L104.7 222.3 L104.4 222.7 L104.1 223.2 L103.8 223.6 L103.6 224.1 L103.4 224.6 L103.2 225.1 L103.0 225.5 L102.8 226.0 L102.7 226.5 L102.6 227.0 L102.5 227.5 L102.5 228.0 L102.4 228.5 L102.4 229.0 L102.4 229.5 L102.5 230.0 L102.6 230.5 L102.7 231.0 L102.8 231.4 L102.9 231.9 L103.1 232.4 L103.3 232.9 L103.5 233.3 L103.7 233.8 L104.0 234.2 L104.3 234.7 L104.6 235.1 L104.9 235.5 L105.3 235.9 L105.7 236.3 L106.1 236.7 L106.5 237.0 L106.9 237.4 L107.4 237.7 L107.9 238.1 L108.4 238.4 L108.9 238.7 L109.4 239.0 L110.0 239.3 L110.5 239.6 L111.1 239.9 L111.9 240.2 L112.7 240.6 L113.5 240.9 L114.3 241.2 L115.2 241.5 L116.0 241.8 L116.9 242.2 L117.7 242.4 L118.6 242.7 L119.5 243.0 L120.4 243.3 L121.3 243.6 L122.3 243.8 L123.2 244.1 L124.1 244.4 L125.1 244.6 L126.0 244.8 L127.0 245.1 L128.0 245.3 L129.0 245.5 L130.0 245.8 L131.0 246.0 L132.0 246.2 L133.0 246.4 L134.0 246.6 L135.1 246.8 L136.1 247.0 L137.1 247.2 L138.2 247.4 L139.2 247.6 L140.3 247.8 L141.4 247.9 L142.5 248.1 L143.5 248.2 L144.6 248.4 L145.7 248.5 L146.8 248.7 L147.9 248.8 L149.0 249.0 L150.2 249.1 L151.3 249.2 L152.4 249.3 L153.5 249.4 L154.6 249.5 L155.8 249.6 L156.9 249.7 L158.0 249.8 L159.2 249.8 L160.3 249.9 L161.5 250.0 L162.6 250.0 L163.8 250.1 L164.9 250.1 L166.1 250.2 L167.2 250.2 L168.4 250.2 L169.5 250.3 L170.7 250.3 L171.8 250.3 L173.0 250.3 L173.0 249.7 L171.9 249.6 L170.7 249.5 L169.6 249.4 L168.4 249.3 L167.3 249.2 L166.1 249.1 L165.0 248.9 L163.9 248.8 L162.7 248.7 L161.6 248.5 L160.5 248.4 L159.3 248.3 L158.2 248.1 L157.1 247.9 L156.0 247.8 L154.9 247.6 L153.7 247.5 L152.6 247.3 L151.5 247.1 L150.4 246.9 L149.3 246.7 L148.3 246.6 L147.2 246.4 L146.1 246.2 L145.0 246.0 L144.0 245.8 L142.9 245.6 L141.8 245.4 L140.8 245.1 L139.8 244.9 L138.7 244.7 L137.7 244.5 L136.7 244.2 L135.7 244.0 L134.7 243.8 L133.7 243.5 L132.7 243.3 L131.7 243.0 L130.7 242.7 L129.8 242.5 L128.8 242.2 L127.9 241.9 L126.9 241.6 L126.0 241.3 L125.1 241.0 L124.2 240.7 L123.3 240.4 L122.5 240.1 L121.6 239.8 L120.7 239.5 L119.9 239.2 L119.1 238.8 L118.3 238.5 L117.4 238.2 L116.7 237.8 L115.9 237.5 L115.1 237.2 L114.3 236.8 L113.6 236.5 L112.9 236.1 L112.4 235.9 L111.9 235.6 L111.5 235.4 L111.0 235.1 L110.6 234.9 L110.3 234.6 L109.9 234.4 L109.5 234.1 L109.2 233.8 L108.9 233.6 L108.6 233.3 L108.4 233.0 L108.1 232.8 L107.9 232.5 L107.7 232.2 L107.5 232.0 L107.3 231.7 L107.2 231.4 L107.0 231.1 L106.9 230.9 L106.8 230.6 L106.7 230.3 L106.6 230.0 L106.6 229.7 L106.5 229.5 L106.5 229.2 L106.5 228.9 L106.4 228.6 L106.5 228.3 L106.5 228.0 L106.5 227.7 L106.6 227.4 L106.6 227.1 L106.7 226.7 L106.8 226.4 L106.9 226.1 L107.1 225.7 L107.2 225.4 L107.4 225.0 L107.6 224.7 L107.8 224.3 L108.1 224.0 L108.3 223.6 L108.6 223.3 L108.9 222.9 L109.2 222.5 L109.5 222.2 L109.9 221.8 L110.3 221.4 L110.7 221.1 L111.1 220.7 L111.5 220.3 L112.0 219.9 L112.5 219.6 L113.0 219.2 L113.5 218.9 L114.0 218.5 L114.6 218.2 L115.2 217.8 L115.6 217.6 L117.2 217.1 L119.1 216.6 L121.0 216.0 L123.0 215.5 L125.0 215.0 L127.2 214.5 L129.3 214.0 L131.6 213.4 L133.9 212.9 L136.2 212.3 L138.6 211.8 L141.1 211.2 L143.5 210.6 L146.1 210.0 L148.6 209.4 L151.3 208.8 L153.9 208.1 L156.6 207.5 L159.3 206.9 L162.0 206.3 L164.8 205.7 L167.6 205.1 L170.4 204.5 L173.2 204.0 L176.1 203.4 L179.0 202.8 L181.8 202.2 L184.7 201.6 L187.6 200.9 L190.5 200.3 L193.4 199.6 L196.2 198.9 L199.1 198.2 L201.9 197.4 L204.8 196.7 L207.6 196.0 L210.4 195.2 L213.2 194.5 L216.0 193.8 L218.8 193.0 L221.5 192.3 L224.3 191.6 L227.0 190.9 L229.6 190.1 L232.2 189.4 L234.8 188.6 L237.3 187.8 L239.8 187.0 L242.3 186.2 L244.7 185.4 L247.0 184.6 L249.3 183.8 L251.6 183.0 L253.7 182.1 L255.9 181.3 L258.0 180.5 L260.0 179.8 L261.9 179.0 L263.8 178.2 L265.6 177.4 L266.0 177.3 L266.4 177.1 L266.7 176.9 L267.0 176.8 L267.4 176.6 L267.7 176.4 L268.0 176.2 L268.3 176.0 L268.6 175.8 L268.9 175.7 L269.2 175.5 L269.4 175.3 L269.7 175.0 L269.9 174.8 L270.1 174.6 L270.3 174.4 L270.5 174.2 L270.7 173.9 L270.9 173.7 L271.1 173.5 L271.2 173.2 L271.4 173.0 L271.5 172.7 L271.6 172.4 L271.7 172.2 L271.8 171.9 L271.9 171.6 L271.9 171.3 L271.9 171.0 L272.0 170.8 L272.0 170.5 L271.9 170.2 L271.9 169.9 L271.8 169.6 L271.7 169.3 L271.6 169.0 L271.5 168.8 L271.4 168.5 L271.2 168.3 L271.0 168.0 L270.9 167.8 L270.7 167.6 L270.5 167.4 L270.2 167.2 L270.0 167.0 L269.8 166.8 L269.5 166.6 L269.2 166.5 L269.0 166.3 L268.7 166.2 L268.4 166.0 L268.1 165.9 L267.8 165.8 L267.4 165.7 L267.1 165.6 L266.7 165.5 L266.4 165.4 L266.0 165.3 L265.6 165.2 L265.2 165.2 L264.6 165.1 L264.0 165.0 L263.4 165.0 L262.7 164.9 L262.1 164.9 L261.4 164.8 L260.7 164.8 L260.0 164.8 L259.2 164.7 L258.5 164.7 L257.7 164.6 L256.9 164.6 L256.1 164.6 L255.3 164.6 L254.4 164.5 L253.6 164.5 L252.7 164.5 L251.8 164.5 L250.9 164.4 L250.0 164.4 L249.0 164.4 L248.1 164.4 L247.1 164.4 L246.1 164.4 L245.1 164.4 L244.1 164.4 L243.1 164.4 L242.1 164.4 L241.0 164.4 L240.0 164.4 L238.9 164.4 L237.9 164.4 L236.8 164.4 L235.7 164.4 L234.6 164.5 L233.5 164.5 L232.4 164.5 L231.3 164.5 L230.2 164.6 L229.0 164.6 L227.9 164.6 L226.8 164.7 L225.6 164.7 L224.5 164.8 L223.3 164.8 L222.2 164.9 L221.0 165.0 L219.9 165.0 L218.7 165.1 L217.6 165.2 L216.4 165.3 L215.2 165.4 L214.1 165.5 L212.9 165.6 L211.7 165.7 L210.6 165.8 L209.4 165.9 L208.3 166.0 L207.1 166.1 L206.0 166.3Z';
@@ -24,7 +26,7 @@ function Sparkle({ cx, cy, r, i }) {
   return <path className={`gw-twinkle gw-twinkle-${i}`} d={d} />;
 }
 
-export function WelcomeStage({ decorative = false, onContinue, disabled }) {
+export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady = true, onContinue, disabled }) {
   return (
     <>
       <div className="gw-a gw-brand" style={{ left: 20, top: 40 }}>
@@ -40,14 +42,21 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
         A <b className="gw-serif-bold">grove</b> is a small group of trees growing closely together
       </p>
 
-      <img className="gw-a gw-forest" src={photoSrc('/photos/welcome-forest.jpg')} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
+      <img className="gw-a gw-forest" src={photoSrc('/photos/welcome-forest-edited.jpg')} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
 
       <p className="gw-a gw-lower gw-safe" style={{ left: 103, top: 650 }}>
         FloraGrove is a <b>safe space</b> to learn about plants.
       </p>
 
       <p className="gw-a gw-lower gw-tools" style={{ left: 103, top: 726, width: 310 }}>
-        Providing tools to help you feel confident in caring for your plants
+        Providing tools to help you feel confident in{' '}
+        <span className="gw-caring">
+          caring
+          <svg className="gw-caring-ring" viewBox="306 725 86 19" preserveAspectRatio="none" aria-hidden="true">
+            <path className="gw-redraw gw-redraw-fade gw-slot-4" fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.3" strokeOpacity="0.5" vectorEffect="non-scaling-stroke" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
+          </svg>
+        </span>{' '}
+        for your plants
       </p>
 
       <svg className="gw-lines" viewBox={`0 0 ${STAGE_W} ${STAGE_H}`} width={STAGE_W} height={STAGE_H} aria-hidden="true">
@@ -63,20 +72,19 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
             <stop offset="1" stopColor="white" stopOpacity="0" />
           </linearGradient>
           <mask id="gw-mask-1" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <rect className="gw-wipe gw-wipe-1" x="0" y={WIPE_1.top} width={STAGE_W} height={WIPE_1.h} fill="url(#gw-wipe-1)" style={{ '--gw-from': `-${WIPE_1.h}px` }} />
+            <rect className="gw-wipe gw-wipe-1 gw-redraw gw-redraw-wipe gw-slot-0" x="0" y={WIPE_1.top} width={STAGE_W} height={WIPE_1.h} fill="url(#gw-wipe-1)" style={{ '--gw-from': `-${WIPE_1.h}px` }} />
           </mask>
           <mask id="gw-mask-2" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <rect className="gw-wipe gw-wipe-2" x="0" y={WIPE_2.top} width={STAGE_W} height={WIPE_2.h} fill="url(#gw-wipe-2)" style={{ '--gw-from': `-${WIPE_2.h}px` }} />
+            <rect className="gw-wipe gw-wipe-2 gw-redraw gw-redraw-wipe gw-slot-1" x="0" y={WIPE_2.top} width={STAGE_W} height={WIPE_2.h} fill="url(#gw-wipe-2)" style={{ '--gw-from': `-${WIPE_2.h}px` }} />
           </mask>
         </defs>
         <g fill="var(--grove-lime)">
           <path className="gw-line" mask="url(#gw-mask-1)" d={LINE_1} />
           <path className="gw-line" mask="url(#gw-mask-2)" d={LINE_2} />
-          <path className="gw-a gw-lower" d={LINE_3} />
+          <path className="gw-a gw-lower gw-redraw gw-redraw-fade gw-slot-2" d={LINE_3} />
         </g>
         <g fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round">
-          <path className="gw-a gw-lower" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
-          <path className="gw-a gw-lower" strokeWidth="1.3" strokeOpacity="0.5" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
+          <path className="gw-a gw-lower gw-redraw gw-redraw-fade gw-slot-3" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
         </g>
         <g className="gw-a gw-stars" fill="var(--grove-sun)">
           <Sparkle cx={277} cy={133} r={5.5} i={1} />
@@ -85,7 +93,7 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
         </g>
       </svg>
 
-      {decorative ? (
+      {pinContinue ? null : decorative ? (
         <div className="gw-a gw-lower gw-cta" aria-hidden="true" style={{ left: 20, top: 804, width: 390, height: 46 }}>
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" className="gw-cta-ring">
             <circle cx="9" cy="9" r="7" fill="none" stroke="var(--grove-fern-line)" strokeWidth="1.8" />
@@ -98,6 +106,8 @@ export function WelcomeStage({ decorative = false, onContinue, disabled }) {
           className="gw-a gw-lower gw-cta"
           onClick={onContinue}
           disabled={disabled}
+          tabIndex={ctaReady ? undefined : -1}
+          aria-hidden={ctaReady ? undefined : true}
           data-testid="onboarding-continue"
           style={{ left: 20, top: 804, width: 390, height: 46 }}
         >

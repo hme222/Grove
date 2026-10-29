@@ -47,6 +47,7 @@ export const photoCredits = [
   row('sprout-1.jpg', 'A small fern sprout in soil', WOLFGANG),
   row('window-1.jpg', 'Small plants along a windowsill', VIKA),
   row('welcome-forest.jpg', 'A sunlit path through a forest', HOWARD),
+  row('welcome-forest-edited.jpg', 'A misty forest (the edited welcome photo)', MAXX, UNVERIFIED),
   row('onboarding-forest.jpg', 'A misty forest', MAXX, UNVERIFIED),
   row('onboarding-shelf.jpg', 'A shelf of plants', MAXX, UNVERIFIED),
   row('onboarding-plants.jpg', 'Potted plants', MAXX, UNVERIFIED),

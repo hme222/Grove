@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { saveErrorMessage } from '../lib/errors';
 import { Spinner } from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -43,7 +44,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         const up = await plantAPI.upload(fd);
         path = up.data.path;
       } catch (uploadErr) {
-        toast.error("The photo didn't upload. Check your connection and choose it again.");
+        toast.error("The photo didn’t upload. Check your connection and choose it again.");
         setStep('capture');
         return;
       }
@@ -139,7 +140,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       toast.success(`${form.nickname || form.common_name} joined your grove`);
       navigate('/plants');
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Failed to add plant');
+      toast.error(saveErrorMessage(err));
     } finally {
       setSaving(false);
     }
@@ -164,7 +165,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           testId="identify-viewfinder"
         />
         <p className="font-ui text-xs text-grove-sage text-center mb-3">
-          No need to know the name — just get the whole plant in frame.
+          No need to know the name. Just get the whole plant in frame.
         </p>
         <div className="grid grid-cols-2 gap-2">
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => handleFile(e.target.files?.[0])} />
@@ -193,7 +194,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
             data-testid="identify-switch-manual"
             className="font-ui text-xs text-grove-sprout underline-offset-2 hover:underline"
           >
-            I know my plant — enter details →
+            I know my plant. Enter details →
           </button>
         </div>
       </div>

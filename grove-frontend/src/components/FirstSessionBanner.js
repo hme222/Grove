@@ -8,6 +8,12 @@ import { impactLight } from '../lib/haptics';
 //   - user.created_at within last 24 hours
 //   - user.first_session_banner_dismissed is not true
 // Server-persisted dismissal so it doesn't reappear on other devices.
+export function isFirstSessionBannerShown(user) {
+  if (!user || user.first_session_banner_dismissed || user.first_care_celebrated) return false;
+  const ageMs = Date.now() - (user.created_at ? new Date(user.created_at).getTime() : 0);
+  return ageMs >= 0 && ageMs <= 24 * 60 * 60 * 1000;
+}
+
 export default function FirstSessionBanner() {
   const { user, updateUser } = useAuth();
   const [hidden, setHidden] = useState(false);
@@ -17,7 +23,7 @@ export default function FirstSessionBanner() {
   }, [user?.id]);
 
   if (!user || hidden) return null;
-  if (user.first_session_banner_dismissed) return null;
+  if (user.first_session_banner_dismissed || user.first_care_celebrated) return null;
 
   const createdAt = user.created_at ? new Date(user.created_at).getTime() : 0;
   const ageMs = Date.now() - createdAt;
@@ -42,15 +48,16 @@ export default function FirstSessionBanner() {
       data-testid="first-session-banner"
       className="max-w-page mx-auto px-4 pt-3"
     >
-      <div className="relative overflow-hidden rounded-small border-hairline border-grove-fernLine/40 bg-grove-lime text-grove-root px-4 py-3 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-pill bg-grove-lime flex items-center justify-center flex-shrink-0">
-          <Sprout className="h-5 w-5 text-grove-root" />
+      {/* A quiet surface with a lime hairline, so the page's Add a plant button stays the only lime. */}
+      <div className="relative overflow-hidden rounded-small border-hairline border-grove-lime/40 bg-grove-canopy text-grove-cream px-4 py-3 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-pill bg-grove-moss flex items-center justify-center flex-shrink-0">
+          <Sprout className="h-5 w-5 text-grove-lime" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-ui text-xs font-medium text-grove-root">
+        <div className="flex-1 min-w-0 space-y-1">
+          <p className="font-ui text-sm font-semibold text-grove-cream">
             Welcome to FloraGrove, {displayName}
           </p>
-          <p className="font-ui text-sm leading-snug">
+          <p className="font-ui text-sm leading-snug text-grove-cream">
             Your first 90 seconds: add a plant, log one care action, take one photo. That's the loop. Everything else grows from there.
           </p>
         </div>
@@ -61,7 +68,7 @@ export default function FirstSessionBanner() {
           data-testid="first-session-banner-dismiss"
           className="group relative flex h-touch w-touch flex-shrink-0 items-center justify-center overflow-hidden"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-root/40 text-grove-root group-hover:bg-grove-root/15">
+          <span className="flex h-8 w-8 items-center justify-center rounded-pill border-hairline border-grove-fernLine text-grove-cream group-hover:bg-grove-moss">
             <X className="h-4 w-4" />
           </span>
         </button>

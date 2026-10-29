@@ -47,7 +47,7 @@ export default function GuildDetailPage() {
   useEffect(() => { run(); }, [run]);
   useEffect(() => { if (loadError && knownName) document.title = `${knownName} · FloraGrove`; }, [loadError, knownName]);
 
-  if (notFound) return <NotFoundPage title="Guild not found" heading="We can't find that guild" message="It may have been renamed or removed." to="/greenhouse" toLabel="Back to Learn" />;
+  if (notFound) return <NotFoundPage title="Guild not found" heading="We can’t find that guild" message="It may have been renamed or removed." to="/greenhouse" toLabel="Back to Learn" />;
   if (loadError) {
     return <LoadErrorPage title={knownName || 'Guild'} what={knownName ? `the ${knownName} guild` : 'this guild'} back={{ to: '/greenhouse', where: 'Learn' }} onRetry={run} />;
   }

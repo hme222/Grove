@@ -1,12 +1,14 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import QuizFlow from './QuizFlow';
-import { lessonAPI } from '../lib/api';
-import { QUIZ_OPTIONS } from '../lessons/lessonMeta';
+import { lessonAPI } from '@/lib/api';
+import { PLAN_QUESTIONS } from '../constants/onboardingQuiz';
 
-jest.mock('../lib/api', () => ({
-  lessonAPI: { submitQuiz: jest.fn() },
+jest.mock('@/lib/api', () => ({
+  lessonAPI: { submitQuiz: jest.fn(), submitPlan: jest.fn() },
 }));
+jest.mock('react-router-dom', () => ({ useNavigate: () => jest.fn() }), { virtual: true });
+jest.mock('@/components/PhotoBand', () => ({ __esModule: true, default: () => null, photoSrc: (s) => s }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -17,19 +19,18 @@ let root;
 
 const q = (id) => container.querySelector(`[data-testid="${id}"]`);
 const click = (el) => act(() => el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
-const flush = () => act(async () => {});
+const flush = () => act(async () => { await new Promise((r) => setTimeout(r, 0)); });
 
-const mount = async (props = {}) => {
-  const onDone = props.onDone || jest.fn();
-  await act(async () => {
-    root.render(<QuizFlow onDone={onDone} />);
-  });
+const mount = async () => {
+  const onDone = jest.fn();
+  await act(async () => { root.render(<QuizFlow onDone={onDone} />); });
   return onDone;
 };
 
 beforeEach(() => {
   jest.clearAllMocks();
-  lessonAPI.submitQuiz.mockResolvedValue({ data: PAYLOAD });
+  lessonAPI.submitQuiz.mockResolvedValue({ data: {} });
+  lessonAPI.submitPlan.mockResolvedValue({ data: PAYLOAD });
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -40,120 +41,54 @@ afterEach(() => {
   container.remove();
 });
 
-test('shows every option, none picked, with a way to skip', async () => {
+test('is a labeled modal dialog above the bottom nav, with no sign-up step counter', async () => {
   await mount();
-  QUIZ_OPTIONS.forEach((option) => {
-    const el = q(`quiz-option-${option.id}`);
-    expect(el.textContent).toBe(option.label);
-    expect(el.getAttribute('aria-checked')).toBe('false');
-  });
-  expect(q('quiz-skip')).not.toBeNull();
+  const dialog = q('quiz-flow');
+  expect(dialog.getAttribute('role')).toBe('dialog');
+  expect(dialog.getAttribute('aria-modal')).toBe('true');
+  expect(dialog.className).toContain('z-celebration');
+  expect(q('onboarding-progress')).toBeNull();
+  expect(q('quiz-intro-skip')).not.toBeNull();
 });
 
-test('starting with nothing picked asks for a pick and sends nothing', async () => {
-  const onDone = await mount();
-  await click(q('quiz-start'));
-  expect(q('quiz-error').textContent).toBe('Pick at least one, or skip for now.');
-  expect(lessonAPI.submitQuiz).not.toHaveBeenCalled();
-  expect(onDone).not.toHaveBeenCalled();
-});
-
-test('sends the picked answers in the order they were picked and reports the result', async () => {
-  const onDone = await mount();
-  await click(q('quiz-option-forget'));
-  await click(q('quiz-option-overwater'));
-  expect(q('quiz-option-forget').getAttribute('aria-checked')).toBe('true');
-  await click(q('quiz-start'));
-  await flush();
-  expect(lessonAPI.submitQuiz).toHaveBeenCalledWith(['forget', 'overwater']);
-  expect(onDone).toHaveBeenCalledWith(PAYLOAD);
-});
-
-test('tapping a picked option again unpicks it', async () => {
+test('asks the same four questions as first run, with no step counter', async () => {
   await mount();
-  await click(q('quiz-option-forget'));
-  await click(q('quiz-option-overwater'));
-  await click(q('quiz-option-forget'));
-  expect(q('quiz-option-forget').getAttribute('aria-checked')).toBe('false');
-  await click(q('quiz-start'));
-  await flush();
-  expect(lessonAPI.submitQuiz).toHaveBeenCalledWith(['overwater']);
+  await click(q('quiz-intro-start'));
+  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress')).toBeNull();
+  expect(container.textContent).toContain(PLAN_QUESTIONS[0].heading);
 });
 
-test('skipping sends an empty list', async () => {
+test('skipping the intro saves an empty quiz without waiting and reports skipped', async () => {
   const onDone = await mount();
-  await click(q('quiz-skip'));
-  await flush();
+  await click(q('quiz-intro-skip'));
   expect(lessonAPI.submitQuiz).toHaveBeenCalledWith([]);
   expect(onDone).toHaveBeenCalledWith({ skipped: true });
 });
 
-test('skipping still closes the quiz when the save fails', async () => {
+test('skipping still closes when the save fails', async () => {
   lessonAPI.submitQuiz.mockRejectedValueOnce(new Error('network'));
   const onDone = await mount();
-  await click(q('quiz-skip'));
+  await click(q('quiz-intro-skip'));
   await flush();
-  expect(onDone).toHaveBeenCalledWith({ skipped: true });
-  expect(q('quiz-error')).toBeNull();
+  expect(onDone).toHaveBeenCalledTimes(1);
 });
 
-test('a failed save shows an error, keeps the picks, and can be retried', async () => {
-  lessonAPI.submitQuiz.mockRejectedValueOnce(new Error('network'));
+test('answering builds the plan and hands the result back', async () => {
   const onDone = await mount();
-  await click(q('quiz-option-forget'));
-  await click(q('quiz-start'));
+  await click(q('quiz-intro-start'));
+  await click(q(`option-q1-${PLAN_QUESTIONS[0].options[0].id}`));
+  await click(q('question-next'));
+  for (let i = 0; i < 3; i += 1) await click(q('question-skip'));
   await flush();
-  expect(q('quiz-error').textContent).toBe('Couldn\u2019t save that. Try again.');
-  expect(onDone).not.toHaveBeenCalled();
-  expect(q('quiz-option-forget').getAttribute('aria-checked')).toBe('true');
-  expect(q('quiz-start').getAttribute('aria-busy')).toBe('false');
-  await click(q('quiz-start'));
-  await flush();
+  expect(lessonAPI.submitPlan).toHaveBeenCalledWith({ q1: PLAN_QUESTIONS[0].options[0].id });
+  await act(async () => { await new Promise((r) => setTimeout(r, 2500)); });
   expect(onDone).toHaveBeenCalledWith(PAYLOAD);
 });
 
-test('the error clears on the next successful try', async () => {
-  const onDone = await mount();
-  await click(q('quiz-start'));
-  expect(q('quiz-error')).not.toBeNull();
-  await click(q('quiz-option-forget'));
-  await click(q('quiz-start'));
-  await flush();
-  expect(q('quiz-error')).toBeNull();
-  expect(onDone).toHaveBeenCalled();
-});
-
-const doubleClick = (el) =>
-  act(async () => {
-    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-  });
-
-test('a double tap on start sends the quiz once and finishes once', async () => {
-  const onDone = await mount();
-  await click(q('quiz-option-forget'));
-  await doubleClick(q('quiz-start'));
-  await flush();
-  expect(lessonAPI.submitQuiz).toHaveBeenCalledTimes(1);
-  expect(onDone).toHaveBeenCalledTimes(1);
-});
-
-test('a double tap on skip sends once', async () => {
-  const onDone = await mount();
-  await doubleClick(q('quiz-skip'));
-  await flush();
-  expect(lessonAPI.submitQuiz).toHaveBeenCalledTimes(1);
-  expect(onDone).toHaveBeenCalledTimes(1);
-});
-
-test('is a labeled modal dialog that takes focus and sits above the bottom nav', async () => {
+test('Back from the first question returns to the intro', async () => {
   await mount();
-  const dialog = q('quiz-flow');
-  const heading = container.querySelector('h1');
-  expect(dialog.getAttribute('role')).toBe('dialog');
-  expect(dialog.getAttribute('aria-modal')).toBe('true');
-  expect(heading.id).not.toBe('');
-  expect(dialog.getAttribute('aria-labelledby')).toBe(heading.id);
-  expect(document.activeElement).toBe(heading);
-  expect(dialog.className).toContain('z-celebration');
+  await click(q('quiz-intro-start'));
+  await click(q('onboarding-back'));
+  expect(q('quiz-intro-start')).not.toBeNull();
 });

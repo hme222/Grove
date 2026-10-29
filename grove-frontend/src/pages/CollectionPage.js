@@ -1,6 +1,6 @@
 import LoadError from '../components/LoadError';
 import { LoadingList } from '../components/Loading';
-import { BULK_ACTIONS } from '../lib/careActions';
+import { BULK_ACTIONS, careLoggedMessage } from '../lib/careActions';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
@@ -11,7 +11,6 @@ import PlantImage from '../components/PlantImage';
 import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
-import FirstSessionBanner from '../components/FirstSessionBanner';
 import SectionTutorial from '../components/SectionTutorial';
 import { Plus, Check, Leaf, Flower2, AlertTriangle, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
@@ -22,6 +21,7 @@ import TabStrip from '../components/TabStrip';
 // Phase 14A.2 — bulk multi-action set. Matches the single-plant CareLogModal.
 
 const BULK_WARN_THRESHOLD = 20;
+const BULK_BATCH_SIZE = 100;
 
 export default function CollectionPage() {
   const navigate = useNavigate();
@@ -97,15 +97,14 @@ export default function CollectionPage() {
     setBulkRunning(true);
     try {
       const actions = Array.from(bulkActions);
-      const res = await careAPI.bulkLog({
-        plant_ids: Array.from(selected),
-        actions,
-        notes: 'Bulk care',
-      });
-      const logged = res.data?.logged ?? 0;
-      const affected = res.data?.plants_affected ?? selected.size;
-      const actionLabel = actions.length === 1 ? actions[0] : `${actions.length} actions`;
-      toast.success(`${actionLabel} logged for ${affected} plant${affected === 1 ? '' : 's'} (${logged} total)`);
+      // The server takes up to 100 plants per request, so a bigger selection goes in batches.
+      const ids = Array.from(selected);
+      let affected = 0;
+      for (let i = 0; i < ids.length; i += BULK_BATCH_SIZE) {
+        const res = await careAPI.bulkLog({ plant_ids: ids.slice(i, i + BULK_BATCH_SIZE), actions, notes: 'Bulk care' });
+        affected += res.data?.plants_affected ?? 0;
+      }
+      toast.success(careLoggedMessage(actions, affected));
       exitSelectionMode();
       fetchAll();
       // Refresh mission state if the daily mission was touched.
@@ -149,7 +148,6 @@ export default function CollectionPage() {
   return (
     <div>
       <SectionTutorial tutorialId="collection" />
-      <FirstSessionBanner />
       <PageHeader title="Plants" />
 
       <div className="max-w-page mx-auto px-4 py-4">
@@ -161,7 +159,7 @@ export default function CollectionPage() {
                 : ''}
             </p>
             <div className="flex items-center gap-2">
-            {!showingBouquets && (
+            {!showingBouquets && !isEmpty && (
               <HeaderAction
                 onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
                 data-testid="collection-select-button"
@@ -170,9 +168,11 @@ export default function CollectionPage() {
                 {selectionMode ? 'Cancel' : 'Select'}
               </HeaderAction>
             )}
-            <HeaderAction icon={Plus} onClick={() => setShowTypePicker(true)} data-testid="collection-add-button">
-              Add
-            </HeaderAction>
+            {!isEmpty && (
+              <HeaderAction icon={Plus} onClick={() => setShowTypePicker(true)} data-testid="collection-add-button">
+                Add
+              </HeaderAction>
+            )}
             </div>
           </div>
         )}
@@ -300,7 +300,7 @@ export default function CollectionPage() {
               >
                 <AlertTriangle className="h-3.5 w-3.5 text-grove-sun flex-shrink-0 mt-0.5" />
                 <span className="text-xs font-ui text-grove-cream/80 leading-snug">
-                  {selectedCount} plants selected — large sweeps can feel rushed. Double-check you&apos;ve actually cared for each one.
+                  {selectedCount} plants selected. Large sweeps can feel rushed. Double-check you&apos;ve actually cared for each one.
                 </span>
               </div>
             )}

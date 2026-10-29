@@ -5,6 +5,8 @@ import logging
 from datetime import datetime, timezone
 from typing import Optional
 import anthropic
+import base64
+from input_limits import sniff_image_type
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,14 @@ async def call_claude(system_message: str, prompt: str, model: str = "claude-son
         logger.error(f"Claude API error: {e}")
         raise
 
+def _media_type(image_base64: str) -> str:
+    """The image's real type, from its first bytes (the model rejects a type that doesn't match)."""
+    try:
+        head = base64.b64decode(image_base64[:32] + '=' * (-len(image_base64[:32]) % 4))
+    except Exception:
+        return "image/jpeg"
+    return sniff_image_type(head) or "image/jpeg"
+
 async def call_claude_vision(system_message: str, prompt: str, image_base64: str, model: str = "claude-sonnet-4-6") -> str:
     american_suffix = (
         " Write in American English. Use American spellings (color not colour, "
@@ -52,7 +62,7 @@ async def call_claude_vision(system_message: str, prompt: str, image_base64: str
                         "type": "image",
                         "source": {
                             "type": "base64",
-                            "media_type": "image/jpeg",
+                            "media_type": _media_type(image_base64),
                             "data": image_base64
                         }
                     },

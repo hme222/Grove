@@ -68,6 +68,8 @@
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: 0.005em;
+  /* The display face's default figures are old-style, so a 0 reads as the letter o. */
+  font-variant-numeric: lining-nums;
 }
 /* Scientific names: italic, as botanists set them. */
 .font-latin {

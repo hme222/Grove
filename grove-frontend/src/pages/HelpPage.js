@@ -17,7 +17,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'getting-started',
     title: 'Getting started',
-    content: "Add your first plant. You will be asked for a photo — it becomes the first entry in your plant's story. Set a watering schedule based on your grow medium (soil, leca, water). FloraGrove tracks due dates automatically.",
+    content: "Add your first plant. You will be asked for a photo. It becomes the first entry in your plant’s story. Set a watering schedule based on your grow medium (soil, leca, water). FloraGrove tracks due dates automatically.",
   },
   {
     id: 'photo-guide',
@@ -53,7 +53,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'groves',
     title: 'Groves (community groups)',
-    content: "A grove is never a single tree. Join or create groves to see what other members are growing, share updates, and swap cuttings. It's a quieter, more intentional feed.",
+    content: "A grove is never a single tree. Join or create groves to see what other members are growing, share updates, and swap cuttings. It’s a quieter, more intentional feed.",
   },
   {
     id: 'mission',

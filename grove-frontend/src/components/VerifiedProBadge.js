@@ -55,7 +55,7 @@ export default function VerifiedProBadge({
           align="center"
           className="bg-grove-lime text-grove-root text-xs font-ui px-2 py-1 rounded-hairline border-0"
         >
-          Verified Pro — manually verified by FloraGrove
+          Verified Pro: manually verified by FloraGrove
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

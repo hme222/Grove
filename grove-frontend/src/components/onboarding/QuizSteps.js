@@ -8,10 +8,10 @@ import PhotoBand from '../PhotoBand';
 const linkButton = cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2');
 
 // Step 3 of 3. Four questions, and the reason for asking them is on the first screen.
-export function QuizIntroStep({ onBack, onStart, onSkip }) {
+export function QuizIntroStep({ onBack, onStart, onSkip, step = 3 }) {
   return (
     <StepScreen
-      step={3}
+      step={step}
       stepLabel="Your plant style"
       onBack={onBack}
       heading="Four quick questions"
@@ -40,7 +40,7 @@ export function QuizIntroStep({ onBack, onStart, onSkip }) {
 // One question: pick one, or skip it. The answer is not saved until the end.
 // The options are a radio group: one tab stop (the chosen option, or the first), arrow keys move and choose,
 // Home and End jump, Space and Enter choose the focused one.
-export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack }) {
+export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, step = 3 }) {
   const question = PLAN_QUESTIONS[index];
   const last = index === PLAN_QUESTIONS.length - 1;
   const headingId = `quiz-q${index + 1}-heading`;
@@ -71,16 +71,18 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack }) {
 
   return (
     <StepScreen
-      step={3}
-      stepLabel="Your plant style"
+      step={step}
+      stepLabel={`Question ${index + 1} of ${PLAN_QUESTIONS.length}`}
       onBack={onBack}
       heading={question.heading}
       headingId={headingId}
       testId={`onboarding-${question.id}`}
     >
-      <p className="mt-1 font-ui text-sm text-grove-sage" data-testid="question-count">
-        Question {index + 1} of {PLAN_QUESTIONS.length}
-      </p>
+      {!step && (
+        <p className="mt-1 font-ui text-sm text-grove-sage" data-testid="question-count">
+          Question {index + 1} of {PLAN_QUESTIONS.length}
+        </p>
+      )}
       <div className="mt-4 flex flex-1 flex-col">
         <div role="radiogroup" aria-labelledby={headingId} className="space-y-2">
           {options.map((option, i) => {

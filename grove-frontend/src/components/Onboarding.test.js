@@ -364,7 +364,7 @@ test('the quiz intro says why it asks and offers to skip all of it', async () =>
 
 test('each question says why it is asked, needs a pick for Next, and can be skipped', async () => {
   await toQuestions();
-  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
   expect(q('question-why').textContent).toMatch(/^Why we ask:/);
   expect(q('question-next').getAttribute('aria-disabled')).toBe('true');
   expect(q('question-skip')).not.toBeNull();
@@ -389,9 +389,9 @@ test('Back returns to the previous question with its answer kept', async () => {
   await toQuestions();
   await click(q('option-q1-gift'));
   await click(q('question-next'));
-  expect(q('question-count').textContent).toBe('Question 2 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 2 of 4');
   await click(q('onboarding-back'));
-  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
   expect(q('option-q1-gift').getAttribute('aria-checked')).toBe('true');
 });
 
@@ -539,7 +539,7 @@ test('a photo that fails to load is replaced by a designed tile of the same shap
   expect(photo().style.aspectRatio).toBe('4 / 3');
 });
 
-test('the quiz intro and the plan screen carry their photos, and the soil photo shows only for the soil lesson', async () => {
+test('the quiz intro and the plan screen carry their photos, and the soil lesson uses the soil photo as its one hero', async () => {
   signedIn({ hemisphere: 'north' });
   lessonAPI.submitPlan.mockResolvedValue({ data: { primary_track: 'rebirth', queue: ['soil-finger-test', 'plant-parent-reset'], matched: [], plan_answers: {} } });
   await mount();
@@ -548,10 +548,10 @@ test('the quiz intro and the plan screen carry their photos, and the soil photo 
   await click(q('quiz-intro-skip'));
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
   const photos = [...container.querySelectorAll('[data-testid="hero-image"]')].map((el) => el.getAttribute('data-photo'));
-  expect(photos).toEqual(['/photos/onboarding-sprouts.jpg', '/photos/onboarding-soil.jpg']);
+  expect(photos).toEqual(['/photos/onboarding-soil.jpg']);
 });
 
-test('a plan for another lesson has the sprouts hero but no soil photo', async () => {
+test('a plan for another lesson has the sprouts hero', async () => {
   signedIn({ hemisphere: 'north' });
   await mount();
   await click(q('zone-skip'));
@@ -692,7 +692,7 @@ test('Next on a question stays focusable, says why, and does nothing until an op
   expect(btn.getAttribute('aria-disabled')).toBe('true');
   expect(container.querySelector(`#${btn.getAttribute('aria-describedby')}`).textContent).toBe('Choose an option to continue');
   await click(btn);
-  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
 });
 
 // ---------- the options are one radio group ----------

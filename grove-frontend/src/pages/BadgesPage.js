@@ -145,7 +145,7 @@ export default function BadgesPage() {
   const togglePin = async (item) => {
     if (item.earned) return; // earned badges aren't goals
     if (!item.earnable) {
-      toast.error("This badge is granted by FloraGrove — it can't be pinned as a goal.");
+      toast.error("This badge is granted by FloraGrove, so it can’t be pinned as a goal.");
       return;
     }
     setPinning(item.slug);
@@ -418,7 +418,7 @@ function BadgeTile({ item, compact = false, isPinned = false, pinning = false, p
               disabled={pinning || (pinDisabled && !isPinned)}
               data-testid={`badge-tile-${item.slug}-pin-btn`}
               className={cn(buttonVariants({ variant: isPinned ? 'default' : 'outline' }), 'mt-2 gap-1')}
-              title={isPinned ? 'Unpin goal' : (pinDisabled ? 'You\'ve pinned 5 goals — unpin one first.' : 'Pin as goal')}
+              title={isPinned ? 'Unpin goal' : (pinDisabled ? 'You\'ve pinned 5 goals. Unpin one first.' : 'Pin as goal')}
             >
               {pinning ? (
                 <Spinner className="h-3 w-3 border-current" />

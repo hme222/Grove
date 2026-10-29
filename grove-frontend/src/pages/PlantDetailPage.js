@@ -15,6 +15,9 @@ import StatusDot from '../components/StatusDot';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { confidenceText } from '../lib/aiTrust';
 import CareLogModal from '../components/CareLogModal';
+import FirstCareCelebration from '../components/FirstCareCelebration';
+import { useAuth } from '../contexts/AuthContext';
+import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -32,6 +35,8 @@ export default function PlantDetailPage() {
   const { plantId } = useParams();
   const knownName = useLocation().state?.name;
   const navigate = useNavigate();
+  const { user, updateUser } = useAuth();
+  const firstCare = useFirstCareCelebration(user, updateUser);
   const [plant, setPlant] = useState(null);
   const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -180,13 +185,13 @@ export default function PlantDetailPage() {
         action: {
           label: 'Undo',
           onClick: async () => {
-            try { await plantAPI.restore(plantId); toast.success('Plant restored'); } catch { toast.error("Couldn't restore it. Try again from your collection."); }
+            try { await plantAPI.restore(plantId); toast.success('Plant restored'); } catch { toast.error("Couldn’t restore it. Try again from your collection."); }
           },
         },
       });
       navigate('/plants');
     } catch (e) {
-      toast.error("Couldn't archive this plant. Check your connection and try again.");
+      toast.error("Couldn’t archive this plant. Check your connection and try again.");
     }
   };
 
@@ -232,7 +237,7 @@ export default function PlantDetailPage() {
       {/* Header with photo */}
       <div className="relative">
         <div className="w-full bg-grove-moss overflow-hidden relative">
-          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none" testId="plant-detail-hero" />
+          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-hero" testId="plant-detail-hero" />
           {/* Back button */}
           <BackButton variant="overlay" testId="plant-detail-back" className="absolute left-3 top-3" />
           {/* Upload photo */}
@@ -250,7 +255,7 @@ export default function PlantDetailPage() {
           <div className="max-w-page mx-auto flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <StatusDot status={plant.status || 'healthy'} size="lg" showLabel />
+                <StatusDot status={(plant.status || 'healthy') === 'healthy' && !(timeline || []).length ? 'unchecked' : (plant.status || 'healthy')} size="lg" showLabel />
               </div>
               <h1 id="page-title" className="font-plant text-grove-cream text-2xl mt-1">
                 <InlineText
@@ -422,7 +427,7 @@ export default function PlantDetailPage() {
               {biography ? (
                 <p className="font-ui text-sm text-grove-sprout leading-relaxed">{biography}</p>
               ) : (
-                <p className="font-ui text-xs text-grove-sage">Generate an AI biography that tells this plant's story.</p>
+                <p className="font-ui text-xs text-grove-sage">Generate an AI biography that tells this plant’s story.</p>
               )}
             </div>
           </TabsContent>
@@ -506,8 +511,10 @@ export default function PlantDetailPage() {
         onClose={() => setCareModalOpen(false)}
         plantId={plantId}
         plantName={plant.nickname || plant.common_name}
-        onLogged={fetchPlant}
+        onLogged={(meta, logged) => { fetchPlant(); firstCare.celebrate(meta?.first_care_pending, logged); }}
       />
+
+      <FirstCareCelebration open={firstCare.open} onClose={firstCare.close} logged={firstCare.details} />
 
       <PhotoViewer
         open={viewerStart != null}
