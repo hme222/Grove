@@ -1,4 +1,5 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
@@ -88,7 +89,7 @@ export default function GroveDetailPage() {
       setCaption('');
       fetchData();
     } catch (e) {
-      toast.error('Failed to post');
+      toast.error(actionErrorMessage(e, 'post that'));
     } finally {
       setPosting(false);
     }

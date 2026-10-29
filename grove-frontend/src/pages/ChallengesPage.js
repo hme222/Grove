@@ -1,4 +1,5 @@
 import LoadError from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { challengeAPI, goalAPI } from '../lib/api';
@@ -47,7 +48,7 @@ export default function ChallengesPage() {
       toast.success('Challenge started! Check your Goals.');
       fetchData();
     } catch (e) {
-      toast.error('Failed to start challenge');
+      toast.error(actionErrorMessage(e, 'start that challenge'));
     } finally {
       setStarting(null);
     }

@@ -1,4 +1,5 @@
 import { checkInterval } from '../lib/careCopy';
+import { actionErrorMessage } from '../lib/errors';
 import { LoadErrorPage } from '../components/LoadError';
 import Loading, { Spinner } from '../components/Loading';
 import { buttonVariants } from '../components/ui/button';
@@ -103,8 +104,8 @@ export default function SpeciesDetailPage() {
         setWanted(true);
         toast.success(`Added ${species.common_name} to your want list`);
       }
-    } catch {
-      toast.error('Failed to update want list');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'update your want list'));
     } finally {
       setWantBusy(false);
     }
@@ -209,8 +210,11 @@ export default function SpeciesDetailPage() {
                 </span>
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
                 <p className="mt-1.5 font-ui text-xs text-grove-sage" data-testid="species-safety-line">
-                  Based on ASPCA listings for cats and dogs. Even non-toxic plants can upset a stomach, and small children should not chew any plant. If something was eaten, see Help my plant for who to call.
+                  Based on ASPCA listings for cats and dogs. Even non-toxic plants can upset a stomach, and small children should not chew any plant. If something was eaten:
                 </p>
+                <AppLink to="/help-my-plant" className="inline-flex min-h-touch items-center font-ui text-sm text-grove-cream underline underline-offset-2" data-testid="species-poison-help">
+                  Open Help my plant for who to call
+                </AppLink>
               </div>
             </div>
           </div>

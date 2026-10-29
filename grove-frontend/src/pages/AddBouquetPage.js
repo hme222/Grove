@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { actionErrorMessage } from '../lib/errors';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
@@ -26,7 +27,7 @@ export default function AddBouquetPage() {
       toast.success('Bouquet added');
       navigate(`/bouquets/${res.data.id}`);
     } catch (e) {
-      toast.error('Failed to add bouquet');
+      toast.error(actionErrorMessage(e, 'add the bouquet'));
     } finally {
       setSaving(false);
     }

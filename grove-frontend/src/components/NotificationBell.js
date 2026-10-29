@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from './Loading';
 import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../lib/api';
@@ -74,7 +75,7 @@ export default function NotificationBell() {
       setItems(res.data.notifications || []);
       setUnread(res.data.unread_count || 0);
     } catch (e) {
-      toast.error('Failed to load notifications');
+      toast.error(actionErrorMessage(e, 'load notifications'));
     } finally {
       setLoading(false);
     }
@@ -122,7 +123,7 @@ export default function NotificationBell() {
       await notificationAPI.markAllRead();
       setItems((prev) => prev.map(i => ({ ...i, is_read: true })));
       setUnread(0);
-    } catch (e) { toast.error('Failed'); }
+    } catch (e) { toast.error(actionErrorMessage(e, 'do that')); }
   };
 
   const handleDelete = (id) => async (e) => {

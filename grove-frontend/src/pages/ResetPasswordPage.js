@@ -6,6 +6,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { authAPI } from '../lib/api';
 import { saveErrorMessage } from '../lib/errors';
+import { blockedClass } from '../components/onboarding/StepScreen';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 // The page the link in the reset email opens. It needs no sign-in, so it works from the phone's mail app.
@@ -28,6 +29,7 @@ export default function ResetPasswordPage() {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (busy || !token) return;
     if (password.length < 6) {
       setError('Use at least 6 characters.');
       document.getElementById('reset-password')?.focus();
@@ -74,7 +76,7 @@ export default function ResetPasswordPage() {
                   {error}
                 </p>
               )}
-              <button type="submit" disabled={busy || !token} aria-busy={busy} data-testid="reset-submit" className={cn(buttonVariants(), 'mt-5 w-full')}>
+              <button type="submit" aria-disabled={busy || !token} aria-busy={busy} data-testid="reset-submit" className={cn(buttonVariants(), 'mt-5 w-full', !token && blockedClass)}>
                 {busy ? 'Saving…' : 'Change password'}
               </button>
               <div className="mt-4 text-center">

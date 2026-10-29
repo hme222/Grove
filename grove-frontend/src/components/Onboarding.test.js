@@ -219,7 +219,7 @@ test('with verification on, a new unconfirmed account is sent to the check-your-
 });
 
 test('an email that is already registered offers sign in, and stays on the step', async () => {
-  auth.register.mockRejectedValue({ response: { data: { detail: 'Email already registered' } } });
+  auth.register.mockRejectedValue({ response: { status: 400, data: { detail: 'Email already registered' } } });
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');

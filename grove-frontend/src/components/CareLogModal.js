@@ -1,4 +1,5 @@
 import { CARE_ACTIONS, careLoggedMessage } from '../lib/careActions';
+import { saveErrorMessage } from '../lib/errors';
 import React, { useState, useRef, useMemo } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
@@ -86,13 +87,14 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       const meta = res.data?._meta;
       if (meta?.soil_coaching) toast.message(meta.soil_coaching);
       success(submitBtnRef.current || e.currentTarget);
-      toast.success(careLoggedMessage(selectedArr, plantName));
+      // The first-care celebration says the same thing, so it gets no toast on top of it.
+      if (!meta?.first_care_pending) toast.success(careLoggedMessage(selectedArr, plantName));
       handleReset();
       onLogged?.(meta, { plantName, actions: selectedArr });
       onClose();
-    } catch (_err) {
+    } catch (err) {
       spawnRipple(submitBtnRef.current, { tone: 'warm' });
-      setLogError('Couldn’t save that. Nothing was lost. Check your connection and try again.');
+      setLogError(saveErrorMessage(err));
     } finally {
       setLogging(false);
     }

@@ -25,7 +25,7 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
           <div className="flex min-w-0 flex-1 basis-28 items-center gap-2">
             {back && <BackButton {...(back === true ? {} : back)} />}
-            <h1 id="page-title" className="flex min-h-touch items-center font-plant text-grove-cream text-2xl leading-tight break-words"><span className="line-clamp-2 overflow-hidden">{title}</span></h1>
+            <h1 id="page-title" className="flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words"><span className="min-w-0 line-clamp-2 overflow-hidden [overflow-wrap:anywhere]">{title}</span></h1>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}

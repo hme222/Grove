@@ -1,4 +1,5 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import { checkInterval } from '../lib/careCopy';
 import NotFoundPage from './NotFoundPage';
@@ -12,6 +13,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { plantAPI, roomAPI } from '../lib/api';
 import { getFileUrl } from '../lib/api';
 import StatusDot from '../components/StatusDot';
+import AppLink from '../components/AppLink';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { confidenceText } from '../lib/aiTrust';
 import CareLogModal from '../components/CareLogModal';
@@ -29,6 +31,7 @@ import PhotoViewer from '../components/PhotoViewer';
 import PhotoBand from '../components/PhotoBand';
 import { InlineText, InlineRoom, InlineStepper } from '../components/InlineEdit';
 import { cn } from '../lib/utils';
+import { displayStatus, hasBeenCaredFor } from '../lib/careActions';
 import { buttonVariants } from '../components/ui/button';
 
 export default function PlantDetailPage() {
@@ -156,7 +159,7 @@ export default function PlantDetailPage() {
       setBiography(res.data.biography);
       toast.success('Biography generated');
     } catch (e) {
-      toast.error('Failed to generate biography');
+      toast.error(actionErrorMessage(e, 'generate the biography'));
     } finally {
       setGeneratingBio(false);
     }
@@ -234,12 +237,14 @@ export default function PlantDetailPage() {
 
   return (
     <div>
+      {/* Back stays on screen while the page scrolls: a zero-height sticky row that holds the overlay button. */}
+      <div className="sticky top-0 z-sticky h-0">
+        <BackButton variant="overlay" testId="plant-detail-back" className="absolute left-3 top-3" />
+      </div>
       {/* Header with photo */}
       <div className="relative">
         <div className="w-full bg-grove-moss overflow-hidden relative">
           <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-hero" testId="plant-detail-hero" />
-          {/* Back button */}
-          <BackButton variant="overlay" testId="plant-detail-back" className="absolute left-3 top-3" />
           {/* Upload photo */}
           <label className="absolute top-3 right-3 cursor-pointer rounded-pill focus-within:ring-2 focus-within:ring-grove-lime">
             <input type="file" accept="image/*" onChange={handlePhotoUpload} className="peer sr-only" />
@@ -252,10 +257,11 @@ export default function PlantDetailPage() {
 
         {/* Plant info bar */}
         <div className="bg-grove-moss border-b-hairline border-grove-moss px-4 py-3">
-          <div className="max-w-page mx-auto flex items-start justify-between">
-            <div>
+          {/* Wraps (the buttons drop under the name) when the reader’s text is large. */}
+          <div className="max-w-page mx-auto flex flex-wrap items-start justify-between gap-x-3 gap-y-3">
+            <div className="min-w-0 flex-1 basis-40">
               <div className="flex items-center gap-2">
-                <StatusDot status={(plant.status || 'healthy') === 'healthy' && !(timeline || []).length ? 'unchecked' : (plant.status || 'healthy')} size="lg" showLabel />
+                <StatusDot status={displayStatus(plant)} size="lg" showLabel />
               </div>
               <h1 id="page-title" className="font-plant text-grove-cream text-2xl mt-1">
                 <InlineText
@@ -303,7 +309,10 @@ export default function PlantDetailPage() {
                 </span>
               </div>
               <ToxicityBadge toxicity={plant.species_toxicity} size="sm" className="mt-1.5" testId="plant-toxicity" />
-              <p className="mt-1 font-ui text-xs text-grove-sage">If a pet or child ate any of it, see Help my plant for who to call.</p>
+              <p className="mt-1 font-ui text-xs text-grove-sage">If a pet or child ate any of it:</p>
+              <AppLink to="/help-my-plant" className="inline-flex min-h-touch items-center font-ui text-sm text-grove-cream underline underline-offset-2" data-testid="plant-poison-help">
+                Open Help my plant for who to call
+              </AppLink>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <button
@@ -405,7 +414,7 @@ export default function PlantDetailPage() {
             <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
               <h3 className="font-plant text-grove-cream text-base font-semibold  mb-1">Last watered</h3>
               <p className="font-ui text-sm text-grove-cream">
-                {plant.last_watered_at || lastWaterLog ? formatDate(plant.last_watered_at || lastWaterLog.logged_at) : 'Not logged yet'}
+                {hasBeenCaredFor(plant) || lastWaterLog ? formatDate(hasBeenCaredFor(plant) ? plant.last_watered_at : lastWaterLog.logged_at) : 'Not logged yet'}
               </p>
               <p className="font-latin text-xs text-grove-cream mt-0.5">Next due: {formatDate(plant.next_water_due)}</p>
             </div>

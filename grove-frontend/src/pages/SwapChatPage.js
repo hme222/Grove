@@ -1,4 +1,6 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { scrollBehavior } from '../lib/motion';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { buttonVariants } from '../components/ui/button';
@@ -77,7 +79,7 @@ export default function SwapChatPage() {
 
   // Auto-scroll on new messages
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    endRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: 'end' });
   }, [messages.length]);
 
   const handleSend = async () => {
@@ -105,7 +107,7 @@ export default function SwapChatPage() {
       }
       loadSwap();
     } catch (e) {
-      toast.error('Could not confirm swap');
+      toast.error(actionErrorMessage(e, 'confirm the swap'));
     }
   };
 
@@ -117,7 +119,7 @@ export default function SwapChatPage() {
       toast('Swap cancelled');
       navigate('/swaps/matches');
     } catch (e) {
-      toast.error('Could not cancel swap');
+      toast.error(actionErrorMessage(e, 'cancel the swap'));
     }
   };
 

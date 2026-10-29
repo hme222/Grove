@@ -1,4 +1,5 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { cn } from '../lib/utils';
@@ -54,7 +55,7 @@ export default function ProfilePage() {
       updateUser({ prefer_manual_plant_entry: next });
       toast.success(next ? 'Manual entry is now your default' : 'AI identification is back on');
     } catch (e) {
-      toast.error('Failed to save preference');
+      toast.error(actionErrorMessage(e, 'save that setting'));
     } finally {
       setSavingPref(false);
     }
@@ -104,7 +105,7 @@ export default function ProfilePage() {
       updateUser({ personality_title: res.data.title, personality_body: res.data.body });
       toast.success('Personality generated!');
     } catch (e) {
-      toast.error('Failed to generate personality');
+      toast.error(actionErrorMessage(e, 'generate your personality'));
     } finally {
       setGeneratingPersonality(false);
     }
@@ -426,8 +427,8 @@ function TutorialsAndTipsControls() {
       }
       if (refreshUser) await refreshUser();
       toast.success(nextEnabled ? 'Tooltips on' : 'Tooltips off');
-    } catch {
-      toast.error('Failed to save preference');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'save that setting'));
     } finally {
       setSavingTip(false);
     }
@@ -439,8 +440,8 @@ function TutorialsAndTipsControls() {
       await userAPI.replayTutorial(tutorialId);
       if (refreshUser) await refreshUser();
       toast.success(`${TUTORIAL_COPY[tutorialId].title} will show next time you open it`);
-    } catch {
-      toast.error('Failed to replay tutorial');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'replay the tutorial'));
     } finally {
       setReplayingId(null);
     }
@@ -541,8 +542,8 @@ function HardinessZoneControls() {
       toast.success('Location updated');
       setEditing(false);
       setPreview(null);
-    } catch {
-      toast.error('Failed to save location');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'save your location'));
     } finally {
       setSaving(false);
     }
@@ -568,8 +569,8 @@ function HardinessZoneControls() {
       if (refreshUser) await refreshUser();
       toast.success('Zone overridden');
       setOverriding(false);
-    } catch {
-      toast.error('Failed to override');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'change that'));
     } finally {
       setSaving(false);
     }

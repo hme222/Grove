@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-grove-forest flex">
+    <main id="main-content" className="min-h-screen bg-grove-forest flex">
       {/* Left panel - decorative (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 bg-grove-lime items-center justify-center relative overflow-hidden">
         <div className="text-center px-12">
@@ -123,6 +123,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

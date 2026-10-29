@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { scrollBehavior } from '../lib/motion';
 import { ChevronLeft, ChevronRight, Sparkles, Check, X } from 'lucide-react';
 import ThumbStrip from './ThumbStrip';
 
@@ -212,7 +213,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
     if (!el) return;
     const target = el.children[index];
     if (target && target.scrollIntoView) {
-      target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      target.scrollIntoView({ behavior: scrollBehavior(), inline: 'center', block: 'nearest' });
     }
   }, [index]);
 

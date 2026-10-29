@@ -55,7 +55,7 @@ export default function PublicBouquetPage() {
   }
 
   return (
-    <div className="min-h-screen bg-grove-bloom/15">
+    <main id="main-content" className="min-h-screen bg-grove-bloom/15">
       {/* Header */}
       <div className="bg-grove-canopy border-b-hairline border-grove-bloom/25 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -151,6 +151,6 @@ export default function PublicBouquetPage() {
           <p className="font-ui text-xs text-grove-sage mt-3">Powered by FloraGrove</p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

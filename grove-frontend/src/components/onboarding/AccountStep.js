@@ -5,6 +5,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { AppLink } from '@/components/AppLink';
 import { useAuth } from '@/contexts/AuthContext';
 import { authAPI } from '@/lib/api';
+import { saveErrorMessage } from '@/lib/errors';
 import { getProviderToken, CANCELLED } from '@/lib/sso';
 import { looksLikeEmail, suggestEmail, nameFromEmail } from '@/lib/emailSuggest';
 import PasswordField from '../PasswordField';
@@ -52,11 +53,9 @@ export default function AccountStep({ config, onBack, onDone }) {
       const data = await register(undefined, email.trim(), password, nameFromEmail(email) || undefined);
       onDone({ user: data.user, name: nameFromEmail(email) });
     } catch (err) {
-      const detail = err.response && err.response.data && err.response.data.detail;
-      let form = 'We couldn’t create your account. Check your connection and try again.';
-      if (typeof detail === 'string') form = detail;
-      else if (err.response && err.response.status >= 500) form = 'Something went wrong on our side. Try again in a moment.';
-      else if (err.response) form = 'Check your email and password, then try again.';
+      const form = err.response
+        ? saveErrorMessage(err, { fallback: 'Something went wrong on our side. Nothing was lost. Try again in a moment.' })
+        : 'We couldn’t create your account. Check your connection and try again.';
       setErrors({ form });
       setBusy(false);
     }

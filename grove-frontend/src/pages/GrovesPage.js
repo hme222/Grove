@@ -1,4 +1,5 @@
 import LoadError from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import { LoadingList } from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { cn } from '../lib/utils';
@@ -50,7 +51,7 @@ export default function GrovesPage() {
       setNewGrove({ name: '', description: '', is_private: false });
       fetchGroves();
     } catch (e) {
-      toast.error('Failed to create grove');
+      toast.error(actionErrorMessage(e, 'create the grove'));
     } finally {
       setCreating(false);
     }

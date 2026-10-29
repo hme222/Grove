@@ -1,4 +1,5 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -89,7 +90,7 @@ export default function FloristDashboard() {
       setFormData({ title: '', description: '', photo_url: '', tags: [] });
       fetchPortfolio();
     } catch (e) {
-      toast.error('Failed to add item');
+      toast.error(actionErrorMessage(e, 'add that item'));
     } finally {
       setCreating(false);
     }
@@ -103,7 +104,7 @@ export default function FloristDashboard() {
       toast.success('Item deleted');
       fetchPortfolio();
     } catch (e) {
-      toast.error('Failed to delete item');
+      toast.error(actionErrorMessage(e, 'delete that item'));
     }
   };
 

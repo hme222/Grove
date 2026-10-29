@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from './Loading';
 import { plantAPI, getFileUrl } from '../lib/api';
 import LoadError from './LoadError';
@@ -97,8 +98,8 @@ export default function PhotoGallery({ plantId, plantName, onChanged }) {
       toast.success('Cover updated');
       await fetchPhotos();
       onChanged?.();
-    } catch (_e) {
-      toast.error('Failed to update cover');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'update the cover'));
     }
   };
 

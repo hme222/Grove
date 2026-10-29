@@ -231,7 +231,7 @@ export default function CarePage() {
 
   // Called when a per-plant care action is logged via the modal.
   const handlePlantLogged = (plantId, meta, logged) => {
-    setSessionCount((c) => c + 1);
+    if (!sessionPlants.some((p) => p.id === plantId)) setSessionCount((c) => c + 1);
     const loggedPlant = plants.find((p) => p.id === plantId);
     if (loggedPlant) addToSession([loggedPlant]);
     setExiting((prev) => {

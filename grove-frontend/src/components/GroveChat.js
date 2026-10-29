@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { scrollBehavior } from '../lib/motion';
 import Loading, { Spinner } from './Loading';
 import { toast } from 'sonner';
 import { cn } from '../lib/utils';
@@ -137,7 +138,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
   // Auto-scroll to newest when messages grow
   useEffect(() => {
     if (wasNearBottomRef.current && endRef.current) {
-      endRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      endRef.current.scrollIntoView({ behavior: scrollBehavior(), block: 'end' });
     }
   }, [messages.length]);
 

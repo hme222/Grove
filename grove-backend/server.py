@@ -89,6 +89,19 @@ CARE_ACTION_MINUTES = {
     'change_water': 3, 'flush': 5, 'add_nutrients': 3
 }
 
+def watered_recently(plant: dict, now: datetime, hours: int = 12) -> bool:
+    last_raw = plant.get('last_watered_at')
+    if not (isinstance(last_raw, str) and last_raw):
+        return False
+    try:
+        last = datetime.fromisoformat(last_raw)
+    except ValueError:
+        return False
+    if not last.tzinfo:
+        last = last.replace(tzinfo=timezone.utc)
+    return timedelta(0) <= now - last < timedelta(hours=hours)
+
+
 def calculate_plant_status(plant: dict) -> str:
     if plant.get('grow_medium') in ('propagation_jar', 'water'):
         return 'propagating'
@@ -104,6 +117,10 @@ def calculate_plant_status(plant: dict) -> str:
     if not next_due.tzinfo:
         next_due = next_due.replace(tzinfo=timezone.utc)
     days_until = (next_due - now).total_seconds() / 86400
+    # A plant watered in the last 12 hours is not asking for water again, even on a one-day schedule
+    # (otherwise it stays on Today after the tap and can be logged again and again).
+    if days_until >= -1 and watered_recently(plant, now):
+        return 'healthy'
     if days_until < -1:
         return 'urgent'
     elif days_until < 1:
@@ -2512,6 +2529,8 @@ async def get_due_today(current_user: dict = Depends(get_current_user)):
         "is_archived": {"$ne": True},
         "next_water_due": {"$lte": tomorrow}
     }, {"_id": 0}).sort("next_water_due", 1).to_list(100)
+    # Someone who has just been watered is done for now; the list is what is still waiting for care.
+    plants = [p for p in plants if not watered_recently(p, now)]
     for p in plants:
         p['status'] = calculate_plant_status(p)
         p['status_reason'] = compute_status_reason(p, p['status'])

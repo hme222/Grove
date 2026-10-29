@@ -98,7 +98,7 @@ export default function CareGrowthPage() {
         {careHours && Object.keys(careHours).length > 1 && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="growth-hours-breakdown">
             <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">
-              Care time
+              Estimated care time
               <span className="ml-2 font-ui text-xs text-grove-cream">{careHours.total_hours}h total</span>
             </h3>
             <div className="space-y-2">

@@ -5,6 +5,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { authAPI } from '../lib/api';
+import { saveErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
@@ -26,10 +27,11 @@ export default function ConfirmEmailPage() {
     authAPI.confirmEmail(token)
       .then(() => { setState('done'); if (fetchUser) fetchUser(); })
       .catch((err) => {
-        const detail = err.response && err.response.data && err.response.data.detail;
-        setMessage(err.response && err.response.status < 500 && typeof detail === 'string'
-          ? detail
-          : 'We couldn’t reach FloraGrove. Check your connection, then open the link again.');
+        const status = err.response && err.response.status;
+        const expired = 'This link has expired or was already used. Ask for a new one.';
+        if (!err.response) setMessage('We couldn’t reach FloraGrove. Check your connection, then open the link again.');
+        else if (status === 404 || status === 410) setMessage(expired);
+        else setMessage(saveErrorMessage(err));
         setState('error');
       });
   }, [token, fetchUser]);

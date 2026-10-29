@@ -1,4 +1,4 @@
-import { careLoggedMessage, actionLabel, wateredToday } from './careActions';
+import { careLoggedMessage, actionLabel, wateredToday, hasBeenCaredFor, displayStatus } from './careActions';
 
 test('one action names the action and the plant', () => {
   expect(careLoggedMessage(['water'], 'Monty')).toBe('Water logged for Monty');
@@ -21,4 +21,23 @@ test('watered today compares the viewer’s own calendar day', () => {
   expect(wateredToday({ last_watered_at: new Date(2026, 9, 28, 23, 0, 0).toISOString() }, now)).toBe(false);
   expect(wateredToday({}, now)).toBe(false);
   expect(wateredToday({ last_watered_at: 'not a date' }, now)).toBe(false);
+});
+
+test('a plant saved with its creation time as the last watering has not been cared for', () => {
+  const added = '2026-10-29T10:00:00.000Z';
+  expect(hasBeenCaredFor({ created_at: added, last_watered_at: added })).toBe(false);
+  expect(hasBeenCaredFor({ created_at: added, last_watered_at: '2026-10-29T12:00:00.000Z' })).toBe(true);
+  expect(hasBeenCaredFor({ created_at: added })).toBe(false);
+});
+
+test('a new healthy plant reads No checks yet on every screen, and a cared-for one reads Healthy', () => {
+  const added = '2026-10-29T10:00:00.000Z';
+  expect(displayStatus({ status: 'healthy', created_at: added, last_watered_at: added })).toBe('unchecked');
+  expect(displayStatus({ status: 'healthy', created_at: added, last_watered_at: '2026-10-30T10:00:00.000Z' })).toBe('healthy');
+  expect(displayStatus({ status: 'urgent', created_at: added, last_watered_at: added })).toBe('urgent');
+});
+
+test('a new plant is never "watered today"', () => {
+  const now = new Date();
+  expect(wateredToday({ created_at: now.toISOString(), last_watered_at: now.toISOString() }, now)).toBe(false);
 });

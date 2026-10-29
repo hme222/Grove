@@ -5,6 +5,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { authAPI } from '../lib/api';
 import { saveErrorMessage } from '../lib/errors';
+import { blockedClass } from '../components/onboarding/StepScreen';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 // Ask for a reset link. The answer is the same for every address, so this page never says whether one has an account.
@@ -23,15 +24,18 @@ export default function ForgotPasswordPage() {
     if (sent && headingRef.current) headingRef.current.focus();
   }, [sent]);
 
+  const blocked = !email.trim();
+
   const submit = async (e) => {
     e.preventDefault();
+    if (blocked || busy) return;
     setError('');
     setBusy(true);
     try {
       await authAPI.forgotPassword(email.trim());
       setSent(true);
     } catch (err) {
-      setError(saveErrorMessage(err));
+      setError(saveErrorMessage(err, { fallback: 'We couldn’t send the link. That’s on our side. Try again in a moment.' }));
     } finally {
       setBusy(false);
     }
@@ -73,7 +77,8 @@ export default function ForgotPasswordPage() {
                   {error}
                 </p>
               )}
-              <button type="submit" disabled={busy || !email.trim()} aria-busy={busy} data-testid="forgot-submit" className={cn(buttonVariants(), 'mt-5 w-full')}>
+              {blocked && <p id="forgot-hint" className="mt-3 font-ui text-sm text-grove-cream" data-testid="forgot-hint">Enter your email to get the link.</p>}
+              <button type="submit" aria-disabled={blocked || busy} aria-describedby={blocked ? 'forgot-hint' : undefined} aria-busy={busy} data-testid="forgot-submit" className={cn(buttonVariants(), 'mt-5 w-full', blocked && blockedClass)}>
                 {busy ? 'Sending…' : 'Send reset link'}
               </button>
               <div className="mt-4 text-center">

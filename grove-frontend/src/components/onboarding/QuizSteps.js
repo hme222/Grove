@@ -115,13 +115,17 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
           })}
         </div>
         <p className="mt-3 font-ui text-sm text-grove-sage" data-testid="question-why">{question.why}</p>
-        {blocked && (
-          <p id={hintId} className="mt-6 text-center font-ui text-sm text-grove-sage" data-testid="question-hint">
-            Choose an option to continue
-          </p>
-        )}
+        {/* The hint's row is always there, so picking an answer does not move the buttons under the thumb. */}
+        <p
+          id={blocked ? hintId : undefined}
+          className={cn('mt-6 text-center font-ui text-sm text-grove-sage', !blocked && 'invisible')}
+          aria-hidden={blocked ? undefined : true}
+          data-testid="question-hint"
+        >
+          Choose an option to continue
+        </p>
         <StepActions
-          className={blocked ? 'pt-2' : undefined}
+          className="pt-2"
           primary={(
             <button
               type="button"

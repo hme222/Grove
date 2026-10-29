@@ -1,4 +1,5 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import NotFoundPage from './NotFoundPage';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -96,7 +97,7 @@ export default function BouquetDetailPage() {
       setCareNotes('');
       fetchBouquet();
     } catch (e) {
-      toast.error('Failed to log care');
+      toast.error(actionErrorMessage(e, 'log that care'));
     } finally {
       setLoggingCare(false);
     }

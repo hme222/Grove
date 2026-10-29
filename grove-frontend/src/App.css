@@ -15,9 +15,16 @@
   background: var(--grove-fern-line);
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling, only for people who have not asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* A focused control scrolls clear of the fixed bottom nav. */
 html {
-  scroll-behavior: smooth;
+  scroll-padding-bottom: calc(var(--nav-height, 72px) + 1rem);
 }
 
 /* Status dot: the soft-pulse animation token (design/tokens.json animation), still under reduced motion. */

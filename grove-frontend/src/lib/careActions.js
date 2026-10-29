@@ -21,9 +21,26 @@ export const CARE_ACTIONS = [
 
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
+// A new plant is saved with its creation time as the "last watered" time, so the schedule has a start. That is not
+// a watering someone did. A plant has been cared for only if the last watering came after it was added.
+const SAME_MOMENT_MS = 5000;
+export function hasBeenCaredFor(plant) {
+  if (!plant || !plant.last_watered_at) return false;
+  const watered = Date.parse(plant.last_watered_at);
+  if (Number.isNaN(watered)) return false;
+  const added = Date.parse(plant.created_at);
+  return Number.isNaN(added) || watered - added > SAME_MOMENT_MS;
+}
+
+// The one status every screen shows: a healthy plant nobody has cared for yet reads "No checks yet", not "Healthy".
+export function displayStatus(plant) {
+  const status = (plant && plant.status) || 'healthy';
+  return status === 'healthy' && !hasBeenCaredFor(plant) ? 'unchecked' : status;
+}
+
 // True when the last watering was today, in the viewer's own day.
 export function wateredToday(plant, now = new Date()) {
-  if (!plant || !plant.last_watered_at) return false;
+  if (!hasBeenCaredFor(plant)) return false;
   const at = new Date(plant.last_watered_at);
   return !Number.isNaN(at.getTime()) && sameDay(at, now);
 }

@@ -1,4 +1,5 @@
 import LoadError from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import { checkInterval } from '../lib/careCopy';
 import { buttonVariants } from '../components/ui/button';
@@ -47,8 +48,8 @@ export default function WantListPage() {
       await wantsAPI.remove(speciesId);
       toast.success('Removed');
       await fetchWants();
-    } catch {
-      toast.error('Failed to remove');
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'remove that'));
     }
   };
 

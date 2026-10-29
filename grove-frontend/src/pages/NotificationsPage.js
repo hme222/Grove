@@ -1,4 +1,5 @@
 import LoadError from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import { notificationAPI } from '../lib/api';
@@ -41,7 +42,7 @@ export default function NotificationsPage() {
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (e) {
-      toast.error('Failed to mark as read');
+      toast.error(actionErrorMessage(e, 'mark that as read'));
     }
   };
 
@@ -52,7 +53,7 @@ export default function NotificationsPage() {
       setUnreadCount(0);
       toast.success('All marked as read');
     } catch (e) {
-      toast.error('Failed to mark all as read');
+      toast.error(actionErrorMessage(e, 'mark them all as read'));
     }
   };
 
