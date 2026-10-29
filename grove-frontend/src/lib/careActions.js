@@ -19,5 +19,26 @@ export const CARE_ACTIONS = [
   { value: 'note', label: 'Note', icon: FileText, color: 'var(--grove-lichen)', hint: "Write what you noticed." },
 ];
 
+const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+// True when the last watering was today, in the viewer's own day.
+export function wateredToday(plant, now = new Date()) {
+  if (!plant || !plant.last_watered_at) return false;
+  const at = new Date(plant.last_watered_at);
+  return !Number.isNaN(at.getTime()) && sameDay(at, now);
+}
+
+export const actionLabel = (value) => CARE_ACTIONS.find((action) => action.value === value)?.label || value;
+
+// One sentence for "that was saved", used by every screen that logs care: "Water logged for Monty",
+// "2 actions logged for 3 plants". `actions` is the list of action values, `target` the plant name or a count of plants.
+export function careLoggedMessage(actions, target) {
+  const list = Array.isArray(actions) ? actions : [actions];
+  const tile = CARE_ACTIONS.find((action) => action.value === list[0]);
+  const label = list.length === 1 ? (tile ? tile.label : list[0]) : `${list.length} actions`;
+  const who = typeof target === 'number' ? `${target} plant${target === 1 ? '' : 's'}` : target;
+  return `${label} logged for ${who}`;
+}
+
 // Bulk logging offers the first six: the ones that make sense across many plants at once.
 export const BULK_ACTIONS = CARE_ACTIONS.slice(0, 6);

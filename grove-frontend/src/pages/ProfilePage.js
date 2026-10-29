@@ -230,12 +230,21 @@ export default function ProfilePage() {
               <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
             </button>
             <button
+              onClick={() => navigate('/notifications')}
+              data-testid="profile-inbox-button"
+              className={cn(buttonVariants({ variant: 'outline' }), "flex justify-start")}
+            >
+              <Bell className="h-4 w-4" />
+              Recent notifications
+              <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
+            </button>
+            <button
               onClick={() => navigate('/settings/notifications')}
               data-testid="profile-notifications-button"
               className={cn(buttonVariants({ variant: 'outline' }), "flex justify-start")}
             >
               <Bell className="h-4 w-4" />
-              Notification Settings
+              Notification settings
               <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
             </button>
           </div>

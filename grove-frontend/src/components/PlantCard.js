@@ -2,8 +2,9 @@ import React from 'react';
 import { AppLink } from './AppLink';
 import { StatusDot } from './StatusDot';
 import { getFileUrl } from '../lib/api';
-import { Leaf } from 'lucide-react';
+import { Leaf, Droplet } from 'lucide-react';
 import PhotoBand from './PhotoBand';
+import { wateredToday } from '../lib/careActions';
 
 export default function PlantCard({ plant, selected, onSelect, selectionMode }) {
   const photoUrl = getFileUrl(plant.photo_url);
@@ -47,6 +48,12 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
         <p className="font-plant text-base text-grove-cream truncate">
           {plant.nickname || plant.common_name}
         </p>
+        {wateredToday(plant) && (
+          <p className="flex items-center gap-1 font-ui text-xs text-grove-cream" data-testid="plant-card-cared-today">
+            <Droplet className="h-3 w-3 text-grove-lime" aria-hidden="true" />
+            Watered today
+          </p>
+        )}
         {plant.latin_name && (
           <p className="font-latin text-grove-sage text-xs truncate">
             {plant.latin_name}

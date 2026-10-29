@@ -1,6 +1,6 @@
 import LoadError from '../components/LoadError';
 import { LoadingList } from '../components/Loading';
-import { BULK_ACTIONS } from '../lib/careActions';
+import { BULK_ACTIONS, careLoggedMessage } from '../lib/careActions';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
@@ -99,15 +99,12 @@ export default function CollectionPage() {
       const actions = Array.from(bulkActions);
       // The server takes up to 100 plants per request, so a bigger selection goes in batches.
       const ids = Array.from(selected);
-      let logged = 0;
       let affected = 0;
       for (let i = 0; i < ids.length; i += BULK_BATCH_SIZE) {
         const res = await careAPI.bulkLog({ plant_ids: ids.slice(i, i + BULK_BATCH_SIZE), actions, notes: 'Bulk care' });
-        logged += res.data?.logged ?? 0;
         affected += res.data?.plants_affected ?? 0;
       }
-      const actionLabel = actions.length === 1 ? actions[0] : `${actions.length} actions`;
-      toast.success(`${actionLabel} logged for ${affected} plant${affected === 1 ? '' : 's'} (${logged} total)`);
+      toast.success(careLoggedMessage(actions, affected));
       exitSelectionMode();
       fetchAll();
       // Refresh mission state if the daily mission was touched.
@@ -303,7 +300,7 @@ export default function CollectionPage() {
               >
                 <AlertTriangle className="h-3.5 w-3.5 text-grove-sun flex-shrink-0 mt-0.5" />
                 <span className="text-xs font-ui text-grove-cream/80 leading-snug">
-                  {selectedCount} plants selected — large sweeps can feel rushed. Double-check you&apos;ve actually cared for each one.
+                  {selectedCount} plants selected. Large sweeps can feel rushed. Double-check you&apos;ve actually cared for each one.
                 </span>
               </div>
             )}

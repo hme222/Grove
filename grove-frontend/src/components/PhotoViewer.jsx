@@ -226,7 +226,7 @@ export default function PhotoViewer({ open, onOpenChange, photos, startId, plant
           open={confirming}
           onOpenChange={setConfirming}
           title="Delete this photo?"
-          description="The photo is removed from this plant's journal. This can't be undone."
+          description="The photo is removed from this plant’s journal. This can’t be undone."
           confirmLabel="Delete photo"
           testId="photo-viewer-delete-confirm"
           onConfirm={confirmDelete}

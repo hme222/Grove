@@ -204,7 +204,7 @@ export default function CarePage() {
       const res = await waterAPI.logRound([plant.id]);
       const watered = res.data.watered || 0;
       if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: [plant.id] });
-      handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending });
+      handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending }, { plantName: plantName(plant), actions: ['water'] });
     } catch {
       toast.error("Couldn’t save that. Check your connection and try again.");
     }
@@ -222,7 +222,7 @@ export default function CarePage() {
       toast.success('Water round undone');
       fetchDue();
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Couldn't undo that. Try again.");
+      toast.error(err?.response?.data?.detail || "Couldn’t undo that. Try again.");
     } finally {
       setUndoing(false);
       setLastRound(null);
@@ -230,16 +230,16 @@ export default function CarePage() {
   };
 
   // Called when a per-plant care action is logged via the modal.
-  const handlePlantLogged = (plantId, meta) => {
+  const handlePlantLogged = (plantId, meta, logged) => {
     setSessionCount((c) => c + 1);
-    const logged = plants.find((p) => p.id === plantId);
-    if (logged) addToSession([logged]);
+    const loggedPlant = plants.find((p) => p.id === plantId);
+    if (loggedPlant) addToSession([loggedPlant]);
     setExiting((prev) => {
       const next = new Set(prev);
       next.add(plantId);
       return next;
     });
-    if (meta) maybeCelebrateFirstCare(meta.first_care_pending);
+    if (meta) maybeCelebrateFirstCare(meta.first_care_pending, logged);
     window.dispatchEvent(new Event('grove:mission-refresh'));
     setTimeout(() => {
       setExiting((prev) => {
@@ -520,10 +520,10 @@ export default function CarePage() {
           onClose={() => setCareModalPlant(null)}
           plantId={careModalPlant.id}
           plantName={careModalPlant.nickname || careModalPlant.common_name}
-          onLogged={(meta) => {
+          onLogged={(meta, logged) => {
             const pid = careModalPlant.id;
             setCareModalPlant(null);
-            handlePlantLogged(pid, meta);
+            handlePlantLogged(pid, meta, logged);
           }}
         />
       )}
@@ -531,6 +531,7 @@ export default function CarePage() {
       <FirstCareCelebration
         open={firstCare.open}
         onClose={firstCare.close}
+        logged={firstCare.details}
       />
     </div>
   );
@@ -581,7 +582,7 @@ function NamedPlantEmptyState({ plants, collectionLoaded, firstCare, onLogCare }
         <>
           <p className="font-plant text-grove-cream text-base">All caught up.</p>
           <p className="font-ui text-sm text-grove-sage mt-1.5 leading-snug">
-            {nextName} is the next one up — due to be watered <span className="text-grove-cream">{dueLabel}</span>.
+            {nextName} is the next one up, due to be watered <span className="text-grove-cream">{dueLabel}</span>.
             Take a slow scroll through your collection while you're here.
           </p>
         </>

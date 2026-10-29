@@ -6,11 +6,20 @@ import { userAPI } from '../lib/api';
 import { success, impactLight } from '../lib/haptics';
 import { tint } from '../lib/color';
 import { holdFirstRun } from '../lib/firstRunGate';
+import { actionLabel } from '../lib/careActions';
 
 // One-time overlay shown the first time a user logs ANY care action.
 // Triggered by parent when a care log response includes _meta.first_care_pending=true.
 // On confirm/dismiss, we POST /users/me/celebrate-first-care to mark it permanently.
-export default function FirstCareCelebration({ open, onClose }) {
+// "Water for Monty" when we know what was logged, so the moment is about this plant and not any plant.
+function loggedSummary(logged) {
+  if (!logged || !logged.plantName) return '';
+  const actions = logged.actions || [];
+  const label = actions.length === 1 ? actionLabel(actions[0]) : actions.length > 1 ? `${actions.length} actions` : '';
+  return label ? `${label} for ${logged.plantName}` : logged.plantName;
+}
+
+export default function FirstCareCelebration({ open, onClose, logged }) {
   const hasFiredHaptic = useRef(false);
 
   // Coach tips and tutorials wait while this is on screen.
@@ -98,7 +107,9 @@ export default function FirstCareCelebration({ open, onClose }) {
             Your grove remembers.
           </h2>
           <p className="font-ui text-sm text-grove-cream mt-2 leading-relaxed">
-            That's the loop. Every drop, every photo, every small note from now on becomes part of your plant's living timeline.
+            {loggedSummary(logged)
+              ? `${loggedSummary(logged)} is the first entry in its timeline. Every drop, photo and note from now on joins it.`
+              : 'That’s the loop. Every drop, every photo, every small note from now on becomes part of your plant’s living timeline.'}
           </p>
           <button
             type="button"

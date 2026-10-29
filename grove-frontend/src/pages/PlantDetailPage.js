@@ -185,13 +185,13 @@ export default function PlantDetailPage() {
         action: {
           label: 'Undo',
           onClick: async () => {
-            try { await plantAPI.restore(plantId); toast.success('Plant restored'); } catch { toast.error("Couldn't restore it. Try again from your collection."); }
+            try { await plantAPI.restore(plantId); toast.success('Plant restored'); } catch { toast.error("Couldn’t restore it. Try again from your collection."); }
           },
         },
       });
       navigate('/plants');
     } catch (e) {
-      toast.error("Couldn't archive this plant. Check your connection and try again.");
+      toast.error("Couldn’t archive this plant. Check your connection and try again.");
     }
   };
 
@@ -427,7 +427,7 @@ export default function PlantDetailPage() {
               {biography ? (
                 <p className="font-ui text-sm text-grove-sprout leading-relaxed">{biography}</p>
               ) : (
-                <p className="font-ui text-xs text-grove-sage">Generate an AI biography that tells this plant's story.</p>
+                <p className="font-ui text-xs text-grove-sage">Generate an AI biography that tells this plant’s story.</p>
               )}
             </div>
           </TabsContent>
@@ -511,10 +511,10 @@ export default function PlantDetailPage() {
         onClose={() => setCareModalOpen(false)}
         plantId={plantId}
         plantName={plant.nickname || plant.common_name}
-        onLogged={(meta) => { fetchPlant(); firstCare.celebrate(meta?.first_care_pending); }}
+        onLogged={(meta, logged) => { fetchPlant(); firstCare.celebrate(meta?.first_care_pending, logged); }}
       />
 
-      <FirstCareCelebration open={firstCare.open} onClose={firstCare.close} />
+      <FirstCareCelebration open={firstCare.open} onClose={firstCare.close} logged={firstCare.details} />
 
       <PhotoViewer
         open={viewerStart != null}

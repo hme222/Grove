@@ -1,4 +1,4 @@
-import { CARE_ACTIONS } from '../lib/careActions';
+import { CARE_ACTIONS, careLoggedMessage } from '../lib/careActions';
 import React, { useState, useRef, useMemo } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
@@ -86,11 +86,9 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
       const meta = res.data?._meta;
       if (meta?.soil_coaching) toast.message(meta.soil_coaching);
       success(submitBtnRef.current || e.currentTarget);
-      const tile = CARE_ACTIONS.find((action) => action.value === selectedArr[0]);
-      const label = count === 1 ? (tile ? tile.label : selectedArr[0]) : `${count} actions`;
-      toast.success(`${label} logged for ${plantName}`);
+      toast.success(careLoggedMessage(selectedArr, plantName));
       handleReset();
-      onLogged?.(meta);
+      onLogged?.(meta, { plantName, actions: selectedArr });
       onClose();
     } catch (_err) {
       spawnRipple(submitBtnRef.current, { tone: 'warm' });
@@ -111,7 +109,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
             Log care for {plantName}
           </DialogTitle>
           <p className="mt-1 text-sm font-ui text-grove-sage">
-            Tap every action you just did — they&apos;ll log together as one sweep.
+            Tap every action you just did. They&apos;ll log together as one sweep.
           </p>
         </DialogHeader>
 

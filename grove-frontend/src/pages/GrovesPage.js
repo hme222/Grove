@@ -210,7 +210,7 @@ export default function GrovesPage() {
                 value={newGrove.description}
                 onChange={(e) => setNewGrove(prev => ({...prev, description: e.target.value}))}
                 className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime resize-none h-20"
-                placeholder="What's your grove about?"
+                placeholder="What’s your grove about?"
               />
             </div>
             <label className="flex items-center gap-2 cursor-pointer">

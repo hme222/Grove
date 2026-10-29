@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import PasswordField from '../components/PasswordField';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 
 // Say what went wrong: a wrong password is the person's to fix, a dropped connection or a server fault is not.
@@ -20,7 +21,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -75,29 +75,17 @@ export default function LoginPage() {
                   placeholder="you@example.com"
                 />
               </div>
-              <div>
-                <label htmlFor="login-password" className="font-ui text-xs text-grove-cream block mb-1.5">Password</label>
-                <div className="relative">
-                  <input id="login-password" aria-label="Password"
-                    type={showPassword ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    data-testid="auth-login-password"
-                    className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 pr-10 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
-                    placeholder="Your password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(s => !s)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    className="absolute right-0 top-1/2 flex h-touch w-touch -translate-y-1/2 items-center justify-center text-grove-sage hover:text-grove-cream transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
+              <PasswordField
+                id="login-password"
+                label="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                placeholder="Your password"
+                testId="auth-login-password"
+                toggleTestId="auth-login-password-toggle"
+                required
+              />
               {error && (
                 <p role="alert" className="flex items-start gap-2 font-ui text-sm text-grove-cream" data-testid="auth-login-error">
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />

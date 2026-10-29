@@ -59,7 +59,7 @@ export default function SwapPage() {
       if (direction === 'right') {
         const res = await swapsAPI.interest(card.plant_id);
         if (res.data.matched) {
-          toast.success("It's a match! You can now message each other.", { duration: 4000 });
+          toast.success("It’s a match! You can now message each other.", { duration: 4000 });
         } else {
           toast.success('Interest saved');
         }
@@ -154,8 +154,8 @@ export default function SwapPage() {
             <div className="w-16 h-16 mx-auto rounded-pill bg-grove-moss border-hairline border-grove-moss flex items-center justify-center mb-4">
               <Sparkles className="h-7 w-7 text-grove-sprout" />
             </div>
-            <p className="font-plant text-grove-cream text-lg mb-1">You've seen the current deck</p>
-            <p className="font-ui text-sm text-grove-cream mb-4">Check back soon — new cuttings are always being added.</p>
+            <p className="font-plant text-grove-cream text-lg mb-1">You’ve seen the current deck</p>
+            <p className="font-ui text-sm text-grove-cream mb-4">Check back soon. New cuttings are always being added.</p>
             <button
               onClick={() => navigate('/swaps/matches')}
               className={cn(buttonVariants(), "gap-1.5")}

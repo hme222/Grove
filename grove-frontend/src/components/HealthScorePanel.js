@@ -102,7 +102,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
                   toImprove.map((f) => (
                     <li key={f.key} className="font-ui text-xs text-grove-cream leading-snug flex gap-1.5">
                       <span className="text-grove-sprout">·</span>
-                      <span>Lift <span className="lowercase">{f.label}</span> — currently {f.score}/100.</span>
+                      <span>Lift <span className="lowercase">{f.label}</span>, currently {f.score}/100.</span>
                     </li>
                   ))
                 )}

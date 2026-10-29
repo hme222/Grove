@@ -75,7 +75,7 @@ export default function GroveDetailPage() {
       toast.success('You left the grove');
       navigate('/groves');
     } catch (e) {
-      toast.error("Couldn't leave the grove. Check your connection and try again.");
+      toast.error("Couldn’t leave the grove. Check your connection and try again.");
     }
   };
 

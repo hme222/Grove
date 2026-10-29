@@ -361,7 +361,7 @@ test('the quiz intro says why it asks and offers to skip all of it', async () =>
 
 test('each question says why it is asked, needs a pick for Next, and can be skipped', async () => {
   await toQuestions();
-  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
   expect(q('question-why').textContent).toMatch(/^Why we ask:/);
   expect(q('question-next').getAttribute('aria-disabled')).toBe('true');
   expect(q('question-skip')).not.toBeNull();
@@ -386,9 +386,9 @@ test('Back returns to the previous question with its answer kept', async () => {
   await toQuestions();
   await click(q('option-q1-gift'));
   await click(q('question-next'));
-  expect(q('question-count').textContent).toBe('Question 2 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 2 of 4');
   await click(q('onboarding-back'));
-  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
   expect(q('option-q1-gift').getAttribute('aria-checked')).toBe('true');
 });
 
@@ -689,7 +689,7 @@ test('Next on a question stays focusable, says why, and does nothing until an op
   expect(btn.getAttribute('aria-disabled')).toBe('true');
   expect(container.querySelector(`#${btn.getAttribute('aria-describedby')}`).textContent).toBe('Choose an option to continue');
   await click(btn);
-  expect(q('question-count').textContent).toBe('Question 1 of 4');
+  expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
 });
 
 // ---------- the options are one radio group ----------

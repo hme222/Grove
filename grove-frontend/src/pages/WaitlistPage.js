@@ -48,7 +48,7 @@ export default function WaitlistPage() {
     e.preventDefault();
     const value = email.trim();
     if (!EMAIL_RE.test(value)) {
-      setError("That email doesn't look quite right.");
+      setError("That email doesn’t look quite right.");
       return;
     }
     setError('');
@@ -60,7 +60,7 @@ export default function WaitlistPage() {
     } catch (err) {
       setStatus('idle');
       setError(err.response?.status === 422
-        ? "That email doesn't look quite right."
+        ? "That email doesn’t look quite right."
         : 'Something went wrong. Please try again.');
     }
   };
@@ -122,7 +122,7 @@ export default function WaitlistPage() {
             </>
           ) : (
             <div role="status" className="wl-done" data-testid="waitlist-done">
-              <div>You're on the list. We'll write to <strong>{email.trim()}</strong> in December.</div>
+              <div>You’re on the list. We’ll write to <strong>{email.trim()}</strong> in December.</div>
               {token && (
                 <button type="button" className="wl-beta" onClick={toggleBeta} aria-pressed={beta} disabled={betaSaving}>
                   {beta ? 'We’ll invite you to test early. Tap to undo.' : 'Want to test FloraGrove before launch?'}

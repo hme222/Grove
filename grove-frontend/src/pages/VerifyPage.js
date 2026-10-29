@@ -104,7 +104,7 @@ export default function VerifyPage() {
       setEmailConfirmed(true);
       toast.success('Email confirmed');
     } catch (e) {
-      toast.error('Could not confirm email — try again.');
+      toast.error('Could not confirm email. Try again.');
     } finally {
       setSubmitting(false);
     }
@@ -122,7 +122,7 @@ export default function VerifyPage() {
       setPhoneSavedOrSkipped(true);
       toast.success('Phone added');
     } catch (e) {
-      const msg = e?.response?.data?.detail || 'Could not save phone — try again.';
+      const msg = e?.response?.data?.detail || 'Could not save phone. Try again.';
       toast.error(msg);
     } finally {
       setSubmitting(false);
@@ -136,7 +136,7 @@ export default function VerifyPage() {
       setVerification(res.data);
       setPhoneSavedOrSkipped(true);
     } catch (e) {
-      toast.error('Could not skip — try again.');
+      toast.error('Could not skip. Try again.');
     } finally {
       setSubmitting(false);
     }
@@ -163,7 +163,7 @@ export default function VerifyPage() {
       const detail = e?.response?.data?.detail;
       const msg = (detail && typeof detail === 'object' && detail.message)
         || (typeof detail === 'string' ? detail : null)
-        || 'Could not complete verification — try again.';
+        || 'Could not complete verification. Try again.';
       toast.error(msg);
     } finally {
       setSubmitting(false);
@@ -327,7 +327,7 @@ function IdentityStep({
             <Mail className="h-4 w-4 text-grove-sprout mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="font-ui text-xs font-medium text-grove-cream">
-                <strong>{IDENTITY_COPY.emailLabel}</strong> — {IDENTITY_COPY.emailDescription}
+                <strong>{IDENTITY_COPY.emailLabel}</strong>: {IDENTITY_COPY.emailDescription}
               </p>
               {user?.email && (
                 <p className="font-ui text-xs text-grove-sage mt-1 break-all">{user.email}</p>
@@ -363,8 +363,7 @@ function IdentityStep({
             <div className="flex-1 min-w-0">
               <p className="font-ui text-xs font-medium text-grove-cream">
                 <strong>{IDENTITY_COPY.phoneLabel}</strong>{' '}
-                <span className="font-latin italic text-grove-lichen">{IDENTITY_COPY.phoneOptional}</span>{' '}
-                — {IDENTITY_COPY.phoneDescription}
+                <span className="font-latin italic text-grove-lichen">{IDENTITY_COPY.phoneOptional}</span>: {IDENTITY_COPY.phoneDescription}
               </p>
             </div>
             {phoneSavedOrSkipped && (
@@ -408,7 +407,7 @@ function IdentityStep({
             <p className="font-ui text-xs text-grove-sage ml-6">{verification.verification_phone}</p>
           )}
           {phoneSavedOrSkipped && verification?.verification_phone_skipped && !verification?.verification_phone && (
-            <p className="font-latin italic text-xs text-grove-lichen ml-6">Skipped — you can add this later from Profile.</p>
+            <p className="font-latin italic text-xs text-grove-lichen ml-6">Skipped. You can add this later from Profile.</p>
           )}
         </div>
       </div>

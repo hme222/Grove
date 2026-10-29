@@ -193,7 +193,7 @@ export default function NotificationBell() {
                   <Bell className="h-4 w-4 text-grove-sprout" />
                 </div>
                 <p className="font-ui text-sm text-grove-cream">Nothing new right now.</p>
-                <p className="font-latin text-xs text-grove-cream mt-0.5">We'll ping you when your grove needs attention.</p>
+                <p className="font-latin text-xs text-grove-cream mt-0.5">We’ll ping you when your grove needs attention.</p>
               </div>
             ) : (
               items.map((n) => {

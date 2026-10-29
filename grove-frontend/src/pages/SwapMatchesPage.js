@@ -62,7 +62,7 @@ export default function SwapMatchesPage() {
             </div>
             <h2 className="font-plant text-grove-cream text-base font-semibold mb-1">No matches yet</h2>
             <p className="font-ui text-sm text-grove-cream mb-4">
-              Keep swiping the deck — when someone likes your plants back, you'll match here.
+              Keep swiping the deck. When someone likes your plants back, you'll match here.
             </p>
             <button
               onClick={() => navigate('/swap')}

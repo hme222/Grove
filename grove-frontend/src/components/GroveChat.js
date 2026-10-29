@@ -366,7 +366,7 @@ export default function GroveChat({ groveId, currentUser, isAdmin = false, isSit
         open={pending != null}
         onOpenChange={(o) => { if (!o) setPending(null); }}
         title="Delete this message?"
-        description="The message is removed for everyone in this grove and replaced with a note that it was deleted. This can't be undone."
+        description="The message is removed for everyone in this grove and replaced with a note that it was deleted. This can’t be undone."
         confirmLabel="Delete message"
         testId="grove-chat-delete-confirm"
         onConfirm={() => { const t = pending; setPending(null); performDelete(t); }}

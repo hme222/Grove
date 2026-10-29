@@ -32,6 +32,17 @@ export function useFirstRunBlocking() {
   return useSyncExternalStore(subscribe, isFirstRunBlocking, isFirstRunBlocking);
 }
 
+// At most one section tutorial opens per visit. The rest wait for a later visit, and are not marked seen.
+let tutorialShownThisSession = false;
+export function claimTutorialSlot() {
+  if (tutorialShownThisSession || firstCareThisSession) return false;
+  tutorialShownThisSession = true;
+  return true;
+}
+export function tutorialSlotTaken() {
+  return tutorialShownThisSession || firstCareThisSession;
+}
+
 // The nook is not offered in the same visit as the first-care celebration.
 let firstCareThisSession = false;
 export function markFirstCareThisSession() {

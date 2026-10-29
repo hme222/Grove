@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PasswordField from '../components/PasswordField';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -12,7 +13,6 @@ export default function ResetPasswordPage() {
   const [params] = useSearchParams();
   const token = params.get('token') || '';
   const [password, setPassword] = useState('');
-  const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState(token ? '' : 'This link is missing its code. Open the link from your email again.');
@@ -60,27 +60,14 @@ export default function ResetPasswordPage() {
             <form onSubmit={submit} noValidate>
               <h1 className="mb-1 font-plant text-2xl text-grove-cream">Choose a new password</h1>
               <p className="mb-6 font-ui text-sm text-grove-cream">At least 6 characters.</p>
-              <label htmlFor="reset-password" className="mb-1.5 block font-ui text-sm text-grove-cream">New password</label>
-              <div className="flex items-center gap-1">
-                <input
-                  id="reset-password"
-                  type={show ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  data-testid="reset-password"
-                  className="w-full rounded-inset border-hairline border-grove-moss bg-grove-forest px-4 py-3 font-ui text-sm text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShow((s) => !s)}
-                  aria-pressed={show}
-                  className="min-h-touch min-w-touch rounded-control px-2 font-ui text-sm text-grove-cream underline underline-offset-2"
-                >
-                  {show ? 'Hide' : 'Show'}
-                  <span className="sr-only"> password</span>
-                </button>
-              </div>
+              <PasswordField
+                id="reset-password"
+                label="New password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+                testId="reset-password"
+              />
               {error && (
                 <p role="alert" className="mt-3 flex items-start gap-2 font-ui text-sm text-grove-cream" data-testid="reset-error">
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />

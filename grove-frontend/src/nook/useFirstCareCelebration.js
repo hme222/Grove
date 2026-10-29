@@ -5,12 +5,14 @@ import { markFirstCareThisSession } from '../lib/firstRunGate';
 // so the nook offer cannot appear underneath it.
 export function useFirstCareCelebration(user, updateUser) {
   const [open, setOpen] = useState(false);
+  const [details, setDetails] = useState(null); // { plantName, actions } of the log that opened it
   const shown = useRef(false);
 
   const celebrate = useCallback(
-    (firstCarePending) => {
+    (firstCarePending, logged) => {
       if (firstCarePending && user && !user.first_care_celebrated && !shown.current) {
         shown.current = true;
+        setDetails(logged || null);
         setOpen(true);
       }
     },
@@ -23,5 +25,5 @@ export function useFirstCareCelebration(user, updateUser) {
     if (updateUser) updateUser({ first_care_celebrated: true });
   }, [updateUser]);
 
-  return { open, celebrate, close };
+  return { open, details, celebrate, close };
 }

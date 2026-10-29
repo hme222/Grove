@@ -269,7 +269,7 @@ export default function FloristDashboard() {
         open={pending != null}
         onOpenChange={(o) => { if (!o) setPending(null); }}
         title="Delete this portfolio item?"
-        description="The item is removed from your portfolio. This can't be undone."
+        description="The item is removed from your portfolio. This can’t be undone."
         confirmLabel="Delete item"
         testId="portfolio-delete-confirm"
         onConfirm={() => { const t = pending; setPending(null); performDelete(t); }}

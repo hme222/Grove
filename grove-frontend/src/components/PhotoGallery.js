@@ -186,7 +186,7 @@ export default function PhotoGallery({ plantId, plantName, onChanged }) {
         >
           <p className="font-ui text-grove-cream text-sm font-medium">No photos yet</p>
           <p className="font-ui text-xs text-grove-sage mt-1 leading-snug">
-            Add a photo every few weeks — the timeline turns them into a visible story of growth.
+            Add a photo every few weeks. The timeline turns them into a visible story of growth.
           </p>
         </div>
       ) : (
@@ -269,7 +269,7 @@ export default function PhotoGallery({ plantId, plantName, onChanged }) {
         open={pending != null}
         onOpenChange={(o) => { if (!o) setPending(null); }}
         title="Delete this photo?"
-        description="The photo is removed from this plant's journal. This can't be undone."
+        description="The photo is removed from this plant’s journal. This can’t be undone."
         confirmLabel="Delete photo"
         testId="photo-delete-confirm"
         onConfirm={() => { const t = pending; setPending(null); performDelete(t); }}
