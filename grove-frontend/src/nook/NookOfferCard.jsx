@@ -33,7 +33,7 @@ export default function NookOfferCard({ onDone }) {
 
   return (
     <div
-      className="fixed inset-0 z-intro flex items-center justify-center bg-grove-paper/80 px-4"
+      className="fixed inset-0 z-intro flex items-center justify-center bg-grove-root/80 px-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="nook-offer-title"
