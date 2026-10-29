@@ -324,7 +324,7 @@ function App() {
       <AuthProvider>
         <TooltipProvider>
           <AppRoutes />
-          <Toaster position="top-center" />
+          <Toaster position="bottom-center" offset="calc(var(--nav-height, 4.5rem) + 0.75rem)" />
           <Analytics />
         </TooltipProvider>
       </AuthProvider>

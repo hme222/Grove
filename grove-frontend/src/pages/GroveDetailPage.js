@@ -128,14 +128,14 @@ export default function GroveDetailPage() {
         <div className="max-w-column mx-auto">
           <div className="flex items-center gap-3 mb-3">
             <BackButton to="/groves" where="groves" />
-            <div className="flex-1">
-              <h1 className="font-plant text-grove-cream text-xl">{grove?.name}</h1>
+            <div className="min-w-0 flex-1">
+              <h1 className="font-plant text-grove-cream text-xl [overflow-wrap:anywhere]">{grove?.name}</h1>
               <p className="font-ui text-xs text-grove-cream">{grove?.member_count} {grove?.member_count === 1 ? 'member' : 'members'}</p>
             </div>
             {grove?.is_member && (
               <button
                 onClick={() => setLeaveOpen(true)}
-                className="rounded-control font-ui text-xs px-3 py-2 border-hairline border-grove-moss text-grove-blush hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex items-center gap-1"
+                className="rounded-control font-ui text-xs px-3 py-2 border-hairline border-grove-moss text-grove-blush hover:bg-grove-sprout hover:text-grove-cream transition-colors duration-150 flex shrink-0 items-center gap-1"
               >
                 <LogOut className="h-3 w-3" />
                 Leave

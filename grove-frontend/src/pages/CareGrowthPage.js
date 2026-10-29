@@ -71,10 +71,15 @@ export default function CareGrowthPage() {
               <h3 className="font-plant text-grove-cream text-base font-semibold ">Watering</h3>
               <Sprout className="h-4 w-4 text-grove-sprout" aria-hidden="true" />
             </div>
-            {stats.plants_needing_water === 0 ? (
+            {stats.plants_needing_water === 0 && !(stats.total_care_logs > 0) ? (
+              <>
+                <p className="font-plant text-grove-cream text-3xl mb-1">Nothing due yet</p>
+                <p className="font-ui text-sm text-grove-cream">Your schedule starts with your first check. Log water or a note and this card begins to fill in.</p>
+              </>
+            ) : stats.plants_needing_water === 0 ? (
               <>
                 <p className="font-plant text-grove-cream text-3xl mb-1">All on schedule</p>
-                <p className="font-ui text-sm text-grove-cream">Every one of your {stats.total_plants} {stats.total_plants === 1 ? 'plant is' : 'plants are'} on its watering schedule.</p>
+                <p className="font-ui text-sm text-grove-cream">{stats.total_plants === 1 ? 'Your plant is' : `Every one of your ${stats.total_plants} plants is`} on its watering schedule.</p>
               </>
             ) : (
               <>

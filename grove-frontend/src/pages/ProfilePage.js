@@ -1,4 +1,5 @@
 import { LoadErrorPage } from '../components/LoadError';
+import { tint } from '../lib/color';
 import { actionErrorMessage } from '../lib/errors';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
@@ -482,7 +483,7 @@ function TutorialsAndTipsControls() {
               >
                 <span
                   className="w-8 h-8 rounded-inset flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: `${meta.accent}20` }}
+                  style={{ backgroundColor: tint(meta.accent, 20) }}
                 >
                   <Icon className="h-4 w-4" style={{ color: meta.accent }} />
                 </span>

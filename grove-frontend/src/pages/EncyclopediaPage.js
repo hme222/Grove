@@ -197,8 +197,8 @@ export default function EncyclopediaPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-plant text-grove-cream text-base font-semibold truncate">{s.common_name}</h3>
-                    <p className="text-xs italic text-grove-sage truncate">{s.latin_name}</p>
+                    <h3 className="font-plant text-grove-cream text-base font-semibold break-words">{s.common_name}</h3>
+                    <p className="text-xs italic text-grove-sage break-words">{s.latin_name}</p>
                     <div className="flex flex-wrap items-center gap-2 mt-2">
                       <span className="min-w-0 max-w-full break-words text-xs text-grove-sage">{s.family}</span>
                       {s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown' && (

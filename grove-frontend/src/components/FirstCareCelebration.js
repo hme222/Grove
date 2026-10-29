@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Sparkles, X } from 'lucide-react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
 import { userAPI } from '../lib/api';
@@ -63,13 +64,22 @@ export default function FirstCareCelebration({ open, onClose, logged }) {
   });
 
   return (
-    <div
-      data-testid="first-care-celebration"
-      className="fixed inset-0 z-celebration flex items-center justify-center px-4 grove-celebrate-fade"
-      style={{ background: tint('var(--grove-root)', 78) }}
-      role="dialog"
-      aria-modal="true"
-    >
+    <DialogPrimitive.Root open onOpenChange={(next) => { if (!next) handleClose(); }}>
+      <DialogPrimitive.Portal>
+      <DialogPrimitive.Overlay
+        className="fixed inset-0 z-celebration grove-celebrate-fade"
+        style={{ background: tint('var(--grove-root)', 78) }}
+      />
+      <div className="fixed inset-0 z-celebration flex items-center justify-center px-4 pointer-events-none">
+      <DialogPrimitive.Content
+        data-testid="first-care-celebration"
+        className="pointer-events-auto"
+        onOpenAutoFocus={(e) => {
+          // Land on the main action rather than the close button.
+          e.preventDefault();
+          e.currentTarget?.querySelector('[data-testid="first-care-celebration-cta"]')?.focus();
+        }}
+      >
       <div className="relative max-w-dialog w-full rounded-card border-hairline border-grove-lime/40 bg-grove-canopy px-6 py-6 grove-celebrate-pop">
         {/* Burst leaves around the central icon */}
         <div className="absolute inset-0 pointer-events-none flex items-start justify-center">
@@ -111,14 +121,14 @@ export default function FirstCareCelebration({ open, onClose, logged }) {
           <p className="font-ui text-xs font-medium text-grove-sprout">
             First care logged
           </p>
-          <h2 className="font-plant text-grove-cream text-2xl mt-1">
+          <DialogPrimitive.Title className="font-plant text-grove-cream text-2xl mt-1">
             Your grove remembers.
-          </h2>
-          <p className="font-ui text-sm text-grove-cream mt-2 leading-relaxed">
+          </DialogPrimitive.Title>
+          <DialogPrimitive.Description className="font-ui text-sm text-grove-cream mt-2 leading-relaxed">
             {loggedSummary(logged)
               ? `${loggedSummary(logged)} is the first entry in its timeline. Every drop, photo and note from now on joins it.`
               : 'That’s the loop. Every drop, every photo, every small note from now on becomes part of your plant’s living timeline.'}
-          </p>
+          </DialogPrimitive.Description>
           <button
             type="button"
             onClick={handleClose}
@@ -137,6 +147,9 @@ export default function FirstCareCelebration({ open, onClose, logged }) {
           </button>
         </div>
       </div>
-    </div>
+      </DialogPrimitive.Content>
+      </div>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }

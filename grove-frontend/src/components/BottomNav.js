@@ -27,13 +27,13 @@ export default function BottomNav() {
                 to={path}
                 data-testid={testid}
                 aria-current={isActive ? 'page' : undefined}
-                className={`relative flex min-h-row min-w-0 flex-col items-center justify-center gap-1 px-2 py-3 font-ui text-xs transition-colors duration-150 ${
+                className={`relative flex min-h-row min-w-0 flex-col items-center justify-center gap-1 px-1 py-3 font-ui text-xs transition-colors duration-150 ${
                   isActive ? 'text-grove-cream' : 'text-grove-sage'
                 }`}
               >
                 {isActive && <span aria-hidden="true" className="absolute inset-x-6 top-0 h-0.5 rounded-pill bg-grove-lime" />}
                 <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.5} />
-                <span className={`min-w-0 text-center leading-tight [overflow-wrap:anywhere] ${isActive ? 'font-bold' : ''}`}>{label}</span>
+                <span className={`min-w-0 text-center leading-tight ${isActive ? 'font-bold' : ''}`}>{label}</span>
               </AppLink>
             );
           })}

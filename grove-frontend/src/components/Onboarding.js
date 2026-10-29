@@ -188,7 +188,8 @@ export function Onboarding({ onComplete, replay = false }) {
     setFinishing(true);
     setFinishError('');
     try {
-      await userAPI.updateMe({ onboarding_complete: true });
+      // A replay by someone who already finished has nothing to save, so leaving it never needs the network.
+      if (!(user && user.onboarding_complete)) await userAPI.updateMe({ onboarding_complete: true });
       onComplete(to || planned ? { ...(to ? { to } : {}), planned: !!planned } : undefined);
     } catch {
       setFinishError('We couldn’t save that. Check your connection and try again.');

@@ -8,6 +8,7 @@ const Toaster = ({
   return (
     <Sonner
       theme="dark"
+      duration={6000}
       className="toaster group font-ui"
       toastOptions={{
         classNames: {

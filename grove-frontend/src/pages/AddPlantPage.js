@@ -117,6 +117,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
     notes: '', watering_frequency_days: null,
   });
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
 
   const [searchFailed, setSearchFailed] = useState(false);
   const runSearch = useCallback(async () => {
@@ -171,6 +172,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
 
   const handlePhotoReady = async (photoPath) => {
     setSaving(true);
+    setSaveError('');
     try {
       await plantAPI.create({
         ...formData,
@@ -181,7 +183,8 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
       toast.success(`${formData.nickname || formData.common_name} added to your collection`);
       navigate('/plants');
     } catch (e) {
-      toast.error(saveErrorMessage(e));
+      // A toast fades; the message stays beside the button that failed until the next try.
+      setSaveError(saveErrorMessage(e));
     } finally {
       setSaving(false);
     }
@@ -195,6 +198,9 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
       />
       {step === 'photo' ? (
         <div>
+          {saveError && (
+            <p role="alert" data-testid="add-plant-save-error" className="mx-4 mt-4 rounded-small border-hairline border-grove-bloom bg-grove-canopy px-4 py-3 font-ui text-sm text-grove-cream">{saveError}</p>
+          )}
           <PhotoRequirement
             plantName={formData.nickname || formData.common_name}
             onPhotoReady={handlePhotoReady}

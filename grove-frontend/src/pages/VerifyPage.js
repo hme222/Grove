@@ -7,6 +7,8 @@ import { toast } from 'sonner';
 import { Mail, Phone, ShieldCheck, ChevronDown, ChevronUp, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { PageHeader } from '../components/PageHeader';
+import { LoadErrorPage } from '../components/LoadError';
+import { actionErrorMessage } from '../lib/errors';
 import { verificationAPI } from '../lib/api';
 import {
   PACT_VERSION,
@@ -46,6 +48,8 @@ export default function VerifyPage() {
   const [verification, setVerification] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   // identity-step local state
   const [emailConfirmed, setEmailConfirmed] = useState(false);
@@ -58,6 +62,8 @@ export default function VerifyPage() {
 
   useEffect(() => {
     let alive = true;
+    setLoadFailed(false);
+    setLoading(true);
     (async () => {
       try {
         const [vRes] = await Promise.all([verificationAPI.status()]);
@@ -73,12 +79,14 @@ export default function VerifyPage() {
         if (v.verified_user && v.verification_pact_version === PACT_VERSION && !v.needs_reverification) {
           setStep('success');
         }
+      } catch (_e) {
+        if (alive) setLoadFailed(true);
       } finally {
         if (alive) setLoading(false);
       }
     })();
     return () => { alive = false; };
-  }, []);
+  }, [reloadKey]);
 
   const allAcksTrue = useMemo(
     () => PACT_SECTIONS.every((s) => acks[s.number] === true),
@@ -104,7 +112,7 @@ export default function VerifyPage() {
       setEmailConfirmed(true);
       toast.success('Email confirmed');
     } catch (e) {
-      toast.error('Could not confirm email. Try again.');
+      toast.error(actionErrorMessage(e, 'confirm your email'));
     } finally {
       setSubmitting(false);
     }
@@ -122,8 +130,7 @@ export default function VerifyPage() {
       setPhoneSavedOrSkipped(true);
       toast.success('Phone added');
     } catch (e) {
-      const msg = e?.response?.data?.detail || 'Could not save phone. Try again.';
-      toast.error(msg);
+      toast.error(actionErrorMessage(e, 'save that number'));
     } finally {
       setSubmitting(false);
     }
@@ -136,7 +143,7 @@ export default function VerifyPage() {
       setVerification(res.data);
       setPhoneSavedOrSkipped(true);
     } catch (e) {
-      toast.error('Could not skip. Try again.');
+      toast.error(actionErrorMessage(e, 'skip that'));
     } finally {
       setSubmitting(false);
     }
@@ -161,14 +168,15 @@ export default function VerifyPage() {
       setStep('success');
     } catch (e) {
       const detail = e?.response?.data?.detail;
-      const msg = (detail && typeof detail === 'object' && detail.message)
-        || (typeof detail === 'string' ? detail : null)
-        || 'Could not complete verification. Try again.';
-      toast.error(msg);
+      toast.error((detail && typeof detail === 'object' && detail.message) || actionErrorMessage(e, 'finish verifying'));
     } finally {
       setSubmitting(false);
     }
   };
+
+  if (loadFailed) {
+    return <LoadErrorPage title="Verify" what="verification" back={{ testId: 'verify-header-back' }} onRetry={() => setReloadKey((k) => k + 1)} />;
+  }
 
   if (loading) {
     return (

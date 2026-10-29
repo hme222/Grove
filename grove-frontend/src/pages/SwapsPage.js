@@ -160,7 +160,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
   return (
     <li
       data-testid={testid}
-      className={`rounded-small border-hairline px-4 py-3 flex items-start gap-3 ${
+      className={`rounded-small border-hairline px-4 py-3 flex flex-wrap items-start gap-3 ${
         done ? 'bg-grove-moss border-grove-fernLine' : 'bg-grove-canopy border-grove-moss'
       }`}
     >
@@ -171,7 +171,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
           <Circle className="h-4 w-4 text-grove-sage" />
         )}
       </span>
-      <span className="flex-1 min-w-0">
+      <span className="min-w-0 flex-1 basis-40">
         <p className="font-ui text-xs font-medium text-grove-cream flex items-center gap-1.5">
           <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
           {title}
@@ -182,7 +182,7 @@ function ProgressItem({ done, icon: Icon, title, detail, cta, testid }) {
         <button
           type="button"
           onClick={cta.onClick}
-          className={cn(buttonVariants({ variant: 'outline' }), "flex-shrink-0")}
+          className={cn(buttonVariants({ variant: 'outline' }), "ml-6 flex-shrink-0")}
         >
           {cta.label}
         </button>
