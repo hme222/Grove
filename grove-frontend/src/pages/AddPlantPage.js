@@ -255,7 +255,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   <p className="font-ui text-grove-cream text-sm font-medium">{sp.common_name}</p>
                   <p className="font-latin text-xs text-grove-cream">{sp.latin_name}</p>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
-                    <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" />
+                    <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" interactive={false} />
                     <span className="text-xs font-ui text-grove-cream">Check about every {sp.default_watering_days}d</span>
                   </div>
                 </button>

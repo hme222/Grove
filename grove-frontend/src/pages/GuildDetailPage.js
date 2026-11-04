@@ -113,7 +113,7 @@ export default function GuildDetailPage() {
                     <span className="font-plant text-base text-grove-cream">{s.common_name}</span>
                     <span className="font-latin italic text-xs text-grove-cream">{s.latin_name}</span>
                   </div>
-                  {s.toxicity && <ToxicityBadge toxicity={s.toxicity} size="sm" className="mb-1.5" />}
+                  {s.toxicity && <ToxicityBadge toxicity={s.toxicity} size="sm" className="mb-1.5" interactive={false} />}
                   <div className="flex flex-wrap gap-3 mt-1.5 text-xs font-ui text-grove-sage">
                     <span className="inline-flex items-center gap-1">
                       <Sun className="h-3 w-3" /> {LIGHT_LABEL[s.default_light_level] || s.default_light_level || '—'}

@@ -9,24 +9,28 @@ export const TOXICITY_LEVELS = {
   non_toxic: {
     level: 'non_toxic',
     label: 'Non-toxic to pets',
+    definition: 'Listed as non-toxic to pets. Any plant can still upset a stomach if a pet eats a lot of it.',
     icon: 'safe',
     className: 'text-grove-sprout bg-grove-canopy border-grove-lime',
   },
   mild: {
     level: 'mild',
     label: 'Toxic to pets (mild)',
+    definition: 'Listed as toxic to pets at the mild level. Keep it where cats and dogs can’t reach it.',
     icon: 'caution',
     className: 'text-grove-sun bg-grove-canopy border-grove-sun',
   },
   toxic: {
     level: 'toxic',
     label: 'Toxic if ingested',
+    definition: 'Listed as toxic to pets if eaten. Keep it where cats and dogs can’t reach it.',
     icon: 'danger',
     className: 'text-grove-blush bg-grove-canopy border-grove-bloom',
   },
   unknown: {
     level: 'unknown',
     label: 'Pet safety unknown — check before bringing it home',
+    definition: 'We don’t have a pet-safety listing for this plant, so don’t assume it’s safe. Check before bringing it home.',
     icon: 'unknown',
     className: 'text-grove-sage bg-grove-canopy border-grove-fernLine',
   },

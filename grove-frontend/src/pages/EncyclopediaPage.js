@@ -202,7 +202,7 @@ export default function EncyclopediaPage() {
                     <div className="flex flex-wrap items-center gap-2 mt-2">
                       <span className="min-w-0 max-w-full break-words text-xs text-grove-sage">{s.family}</span>
                       {s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown' && (
-                        <ToxicityBadge toxicity={s.toxicity} size="sm" className="max-w-full" />
+                        <ToxicityBadge toxicity={s.toxicity} size="sm" className="max-w-full" interactive={false} />
                       )}
                     </div>
                   </div>

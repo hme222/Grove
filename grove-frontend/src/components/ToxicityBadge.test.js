@@ -68,4 +68,26 @@ describe('ToxicityBadge', () => {
       expect(badge.textContent.length).toBeGreaterThan(3);
     });
   });
+
+  test('every level has a plain definition, and unknown never reads as safe', () => {
+    ['non_toxic', 'mild', 'toxic', undefined].forEach((value) => {
+      expect(getToxicityInfo(value).definition.length).toBeGreaterThan(20);
+    });
+    expect(getToxicityInfo(undefined).definition).toMatch(/don’t assume it’s safe/);
+  });
+
+  test('keyboard focus shows the definition and Escape closes it', async () => {
+    const badge = render('toxic');
+    expect(badge.getAttribute('tabindex')).toBe('0');
+    await act(async () => { badge.focus(); });
+    const panel = () => document.body.querySelector('[data-testid="toxicity-badge-definition"]');
+    expect(panel()?.textContent).toContain(getToxicityInfo('toxic').definition);
+    await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(panel()).toBeNull();
+  });
+
+  test('a chip inside a link or button takes no focus', () => {
+    act(() => root.render(<ToxicityBadge toxicity="mild" interactive={false} />));
+    expect(container.querySelector('[data-testid="toxicity-badge"]').hasAttribute('tabindex')).toBe(false);
+  });
 });
