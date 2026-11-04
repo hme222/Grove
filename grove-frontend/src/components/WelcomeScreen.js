@@ -90,7 +90,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
         <p className="mt-6 font-ui text-base text-grove-cream">
           FloraGrove is a <b className="font-bold">safe space</b> to learn about plants.
         </p>
-        <p className="mt-2 font-ui text-base font-light italic text-grove-cream">
+        <p className="mt-4 text-center font-ui text-lg italic text-grove-cream">
           Providing tools to help you feel confident in caring for your plants
         </p>
         <div className="mt-auto pt-8">

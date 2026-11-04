@@ -57,7 +57,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
         {/* Back and the card count stay in view on a long card (the window-map page is over 1100px tall). */}
         <div className="sticky top-0 z-sticky -mx-4 mb-4 flex items-center justify-between gap-2 bg-grove-forest px-4 py-3" data-testid="lesson-chrome">
           <BackButton onClick={onExit} where="lessons" testId="lesson-exit" />
-          <p className="text-xs font-ui text-grove-cream" data-testid="lesson-progress">
+          <p className="text-base font-ui text-grove-cream" data-testid="lesson-progress">
             Card {index + 1} of {cards.length}
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
 
         <div className={paper ? `rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
           {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
-          <p className={cn('mb-2 font-ui text-sm', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
+          <p className={cn('mb-2 font-ui text-base', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
           <h1
             id="page-title"
             ref={headingRef}
@@ -79,7 +79,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
             data-testid="lesson-headline"
             dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.headline) }}
           />
-          <p className={cn('text-sm leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
+          <p className={cn('text-base leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
         </div>
 
         <div className="mt-4">
@@ -116,7 +116,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           <Disclosure title="Sources for this lesson" testId="lesson-sources" className="mt-6">
             <ul className="space-y-3">
               {sources.sources.map((src) => (
-                <li key={src.url} className="font-ui text-sm text-grove-sage">
+                <li key={src.url} className="font-ui text-base text-grove-sage">
                   <a
                     href={src.url}
                     target="_blank"
@@ -131,7 +131,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
               ))}
             </ul>
             {sources.gaps?.map((g) => (
-              <p key={g} className="mt-3 font-ui text-sm leading-snug text-grove-sage">{g}</p>
+              <p key={g} className="mt-3 font-ui text-base leading-snug text-grove-sage">{g}</p>
             ))}
           </Disclosure>
         )}

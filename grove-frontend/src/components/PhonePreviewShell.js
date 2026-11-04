@@ -10,10 +10,11 @@ function StatusBar() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="relative flex items-end justify-between px-8 pb-2 text-grove-cream" style={{ height: PHONE.statusBar }} aria-hidden="true">
-      <span className="font-ui text-lead font-semibold leading-none tracking-tight">{now}</span>
-      <span className="absolute left-1/2 top-[11px] h-[34px] w-[122px] -translate-x-1/2 rounded-pill bg-grove-night" />
-      <span className="flex items-center gap-1.5">
+    <div className="relative text-grove-cream" style={{ height: PHONE.statusBar }} aria-hidden="true">
+      {/* iPhone 15: the Dynamic Island is 126x37, 11px from the top; time and icons are centered on it, each in the space beside it. */}
+      <span className="absolute left-0 top-[11px] flex h-[37px] w-[122px] items-center justify-center text-lead font-semibold leading-none tracking-tight" style={{ fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif' }}>{now}</span>
+      <span className="absolute left-1/2 top-[11px] h-[37px] w-[126px] -translate-x-1/2 rounded-pill bg-grove-night" />
+      <span className="absolute right-0 top-[11px] flex h-[37px] w-[122px] items-center justify-center gap-[5px]">
         <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="0.8" /><rect x="5" y="5.5" width="3" height="6.5" rx="0.8" /><rect x="10" y="3" width="3" height="9" rx="0.8" /><rect x="15" y="0" width="3" height="12" rx="0.8" /></svg>
         <svg width="17" height="12" viewBox="0 0 17 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M1.5 4.2a10 10 0 0 1 14 0" /><path d="M4.2 7a6 6 0 0 1 8.6 0" /><circle cx="8.5" cy="10" r="1" fill="currentColor" stroke="none" /></svg>
         <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" opacity="0.5" /><rect x="2" y="2" width="19" height="9" rx="2.2" fill="currentColor" /><path d="M24.2 4.3v4.4c.9-.3 1.6-1.2 1.6-2.2s-.7-1.9-1.6-2.2Z" fill="currentColor" opacity="0.5" /></svg>
@@ -66,7 +67,7 @@ export default function PhonePreviewShell({ children }) {
           <div className="overflow-hidden rounded-phoneScreen bg-grove-forest" style={{ width: PHONE.width, height: PHONE.height }}>
             <StatusBar />
             <iframe title="FloraGrove app preview" src={initialSrc} style={{ width: PHONE.width, height: screenH, border: 0, display: 'block', background: 'var(--grove-forest)' }} />
-            <div className="flex items-center justify-center bg-grove-forest" style={{ height: PHONE.homeBar }} aria-hidden="true">
+            <div className="flex items-end justify-center bg-grove-forest pb-2" style={{ height: PHONE.homeBar }} aria-hidden="true">
               <span className="h-[5px] w-[134px] rounded-pill bg-grove-cream/80" />
             </div>
           </div>

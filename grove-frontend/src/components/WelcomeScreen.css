@@ -30,7 +30,7 @@
 .gw-def, .gw-safe, .gw-tools { font-size: 17px; line-height: 20px; }
 .gw-safe { white-space: nowrap; }
 .gw-safe b { font-weight: 700; }
-.gw-tools { font-style: italic; font-weight: 300; }
+.gw-tools { font-size: 20px; line-height: 27px; font-style: italic; font-weight: 400; text-align: center; } /* centered above Continue, a size up from the body text so it reads on a phone */
 .gw-serif-bold { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
 .gw-forest { display: block; object-fit: cover; border-radius: var(--radius-card); }
 .gw-lines { left: 0; top: 0; overflow: visible; pointer-events: none; }
@@ -56,7 +56,7 @@
 @keyframes gw-fade-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes gw-settle { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
 @keyframes gw-pop { from { opacity: 0; transform: scale(0) rotate(-45deg); } to { opacity: 1; transform: none; } }
-@keyframes gw-wipe { from { transform: translateY(var(--gw-from)); } to { transform: none; } }
+@keyframes gw-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes gw-twinkle { 0%, 33%, 100% { opacity: 1; transform: scale(1) rotate(0deg); } 16% { opacity: 0.35; transform: scale(0.35) rotate(45deg); } }
 
 /* Slow pen pace: eases in, then slows into the turns. */
@@ -65,10 +65,13 @@
 .gw-brand   { animation: gw-fade-up 1.6s var(--gw-out) 0.3s both; }
 .gw-welcome { animation: gw-fade-up 1.6s var(--gw-out) 0.55s both; }
 .gw-stars   { transform-box: fill-box; transform-origin: center; animation: gw-pop 1s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s both; }
-.gw-wipe    { transform-box: view-box; }
-.gw-wipe-1  { animation: gw-wipe 2.2s var(--gw-pen) 3.3s both; }
+/* The lime lines are drawn on like a pen: a thick stroke along each line's middle grows from its start to its end and uncovers the brush shape. */
+.gw-draw-1  { animation: gw-draw 2.2s var(--gw-pen) 3.3s both; }
 .gw-def     { animation: gw-fade-rise 1.3s var(--gw-out) 5.2s both; }
-.gw-wipe-2  { animation: gw-wipe 1.5s var(--gw-pen) 6.5s both; }
+.gw-draw-2  { animation: gw-draw 1.5s var(--gw-pen) 6.5s both; }
+.gw-draw-3  { animation: gw-draw 1.4s var(--gw-pen) 7.9s both; }
+.gw-draw-4  { animation: gw-draw 1.1s var(--gw-pen) 8.6s both; }
+.gw-draw-5  { animation: gw-draw 1.1s var(--gw-pen) 9.4s both; }
 .gw-forest  { animation: gw-settle 1.8s var(--gw-out) 7.5s both; }
 .gw-lower   { animation: gw-fade-in 1.4s var(--gw-out) 7.9s both; }
 
@@ -81,22 +84,22 @@
 /* After the build, the lines are drawn again one at a time, in the order they first appeared, and the stars twinkle one at a time.
    Five slots of 2.4s make a 12s cycle. */
 .gw { --gw-slot: 2.4s; --gw-cycle: 12s; --gw-loop-start: 9.6s; }
-@keyframes gw-redraw-wipe {
-  0% { transform: translateY(var(--gw-from)); animation-timing-function: var(--gw-pen); }
-  20%, 100% { transform: none; }
+@keyframes gw-redraw-draw {
+  0% { stroke-dashoffset: 1; animation-timing-function: var(--gw-pen); }
+  20%, 100% { stroke-dashoffset: 0; }
 }
-@keyframes gw-redraw-fade { 0%, 100% { opacity: 1; } 5% { opacity: 0; } 25% { opacity: 1; } }
 .gw-slot-0 { --gw-i: 0; } .gw-slot-1 { --gw-i: 1; } .gw-slot-2 { --gw-i: 2; } .gw-slot-3 { --gw-i: 3; } .gw-slot-4 { --gw-i: 4; }
-.gw-redraw-wipe.gw-wipe-1, .gw-redraw-wipe.gw-wipe-2 { animation: gw-wipe 2.2s var(--gw-pen) 3.3s both, gw-redraw-wipe var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
-.gw-redraw-wipe.gw-wipe-2 { animation-duration: 1.5s, var(--gw-cycle); animation-delay: 6.5s, calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)); }
-.gw-redraw-fade { animation: gw-redraw-fade var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
-.gw-lower.gw-redraw-fade { animation: gw-fade-in 1.4s var(--gw-out) 7.9s both, gw-redraw-fade var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
+.gw-redraw-draw { --gw-redraw: gw-redraw-draw var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
+.gw-draw-1.gw-redraw-draw { animation: gw-draw 2.2s var(--gw-pen) 3.3s both, var(--gw-redraw); }
+.gw-draw-2.gw-redraw-draw { animation: gw-draw 1.5s var(--gw-pen) 6.5s both, var(--gw-redraw); }
+.gw-draw-3.gw-redraw-draw { animation: gw-draw 1.4s var(--gw-pen) 7.9s both, var(--gw-redraw); }
+.gw-draw-4.gw-redraw-draw { animation: gw-draw 1.1s var(--gw-pen) 8.6s both, var(--gw-redraw); }
+.gw-draw-5.gw-redraw-draw { animation: gw-draw 1.1s var(--gw-pen) 9.4s both, var(--gw-redraw); }
 
 /* Tap to skip the build: show the finished screen at once; the loops and the twinkle carry on. */
 .gw-done { --gw-loop-start: 1s; }
-.gw-done .gw-a, .gw-done .gw-wipe { animation: none; }
-.gw-done .gw-redraw-wipe { animation: gw-redraw-wipe var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
-.gw-done .gw-redraw-fade { animation: gw-redraw-fade var(--gw-cycle) calc(var(--gw-loop-start) + var(--gw-i) * var(--gw-slot)) infinite; }
+.gw-done .gw-a { animation: none; }
+.gw-done .gw-draw.gw-redraw-draw { animation: var(--gw-redraw); }
 
 /* Pinned Continue: fixed above the sign-in bar, with room under the scrolling picture for both. */
 .gw-pinned { padding-bottom: calc(var(--touch-min) * 2 + 1.5rem); }
@@ -144,13 +147,18 @@
   58.06%, 87.10% { opacity: 1; transform: none; filter: none; animation-timing-function: ease-in-out; }
   94.84%, 100% { opacity: 0; }
 }
-@keyframes gwl-wipe-1 {
-  0%, 19.35% { transform: translateY(var(--gw-from)); animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
-  33.55%, 100% { transform: none; }
+@keyframes gwl-draw-1 {
+  0%, 19.35% { stroke-dashoffset: 1; animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
+  33.55%, 100% { stroke-dashoffset: 0; }
 }
-@keyframes gwl-wipe-2 {
-  0%, 40.00% { transform: translateY(var(--gw-from)); animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
-  49.68%, 100% { transform: none; }
+@keyframes gwl-draw-2 {
+  0%, 40.00% { stroke-dashoffset: 1; animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
+  49.68%, 100% { stroke-dashoffset: 0; }
+}
+@keyframes gwl-draw-lower {
+  0%, 49.03% { stroke-dashoffset: 1; opacity: 1; animation-timing-function: cubic-bezier(.42,.08,.5,.96); }
+  58.06%, 87.10% { stroke-dashoffset: 0; opacity: 1; }
+  94.84%, 100% { stroke-dashoffset: 0; opacity: 0; }
 }
 @keyframes gwl-line-out {
   0%, 87.10% { opacity: 1; }
@@ -168,16 +176,17 @@
 .gw-loop .gw-def     { animation: gwl-def 15.5s infinite; }
 .gw-loop .gw-forest  { animation: gwl-forest 15.5s infinite; }
 .gw-loop .gw-lower   { animation: gwl-lower 15.5s infinite; }
-.gw-loop .gw-wipe-1  { animation: gwl-wipe-1 15.5s infinite; }
-.gw-loop .gw-wipe-2  { animation: gwl-wipe-2 15.5s infinite; }
+.gw-loop .gw-draw-1  { animation: gwl-draw-1 15.5s infinite; }
+.gw-loop .gw-draw-2  { animation: gwl-draw-2 15.5s infinite; }
+.gw-loop .gw-draw-3, .gw-loop .gw-draw-4, .gw-loop .gw-draw-5 { animation: gwl-draw-lower 15.5s infinite; }
 .gw-loop .gw-line    { animation: gwl-line-out 15.5s infinite; }
 .gw-loop { animation-delay: 0s; }
-.gw-loop .gw-a, .gw-loop .gw-wipe, .gw-loop .gw-line { animation-delay: 1.1s; animation-fill-mode: both; }
+.gw-loop .gw-a, .gw-loop .gw-draw, .gw-loop .gw-line { animation-delay: 1.1s; animation-fill-mode: both; }
 
 @media (prefers-reduced-motion: reduce) {
-  .gw-loop .gw-a, .gw-loop .gw-wipe, .gw-loop .gw-line { animation: none !important; }
+  .gw-loop .gw-a, .gw-loop .gw-draw, .gw-loop .gw-line { animation: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gw-a, .gw-wipe, .gw-twinkle, .gw-redraw { animation: none !important; }
+  .gw-a, .gw-draw, .gw-twinkle, .gw-redraw { animation: none !important; }
 }

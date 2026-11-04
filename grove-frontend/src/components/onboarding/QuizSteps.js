@@ -79,7 +79,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
       testId={`onboarding-${question.id}`}
     >
       {!step && (
-        <p className="mt-1 font-ui text-sm text-grove-sage" data-testid="question-count">
+        <p className="mt-1 font-ui text-base text-grove-sage" data-testid="question-count">
           Question {index + 1} of {PLAN_QUESTIONS.length}
         </p>
       )}
@@ -99,7 +99,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
                 onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`option-${question.id}-${option.id}`}
                 className={cn(
-                  'flex min-h-touch w-full items-center gap-3 rounded-small border-hairline px-4 py-3 text-left font-ui text-sm text-grove-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime',
+                  'flex min-h-touch w-full items-center gap-3 rounded-small border-hairline px-4 py-3 text-left font-ui text-base text-grove-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime',
                   on ? 'border-grove-lime bg-grove-moss' : 'border-grove-fernLine bg-grove-canopy hover:border-grove-lime',
                 )}
               >
@@ -114,7 +114,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
             );
           })}
         </div>
-        <p className="mt-3 font-ui text-sm text-grove-sage" data-testid="question-why">{question.why}</p>
+        <p className="mt-3 font-ui text-base text-grove-sage" data-testid="question-why">{question.why}</p>
         {/* The hint's row is always there, so picking an answer does not move the buttons under the thumb. */}
         <p
           id={blocked ? hintId : undefined}
