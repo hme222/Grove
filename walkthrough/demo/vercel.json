@@ -1,0 +1,7 @@
+{
+  "cleanUrls": false,
+  "rewrites": [{ "source": "/((?!assets|static|fonts|photos|_vercel).*)", "destination": "/index.html" }],
+  "headers": [
+    { "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] }
+  ]
+}

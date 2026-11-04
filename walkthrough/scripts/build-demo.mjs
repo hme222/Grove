@@ -22,4 +22,7 @@ let html = fs.readFileSync(indexPath, 'utf8');
 html = html.replace(/<link[^>]*fonts\.(googleapis|gstatic)\.com[^>]*>/g, '');
 html = html.replace('<head>', '<head><meta name="robots" content="noindex,nofollow"><script src="/demo-shim.js"></script><link rel="stylesheet" href="/fonts/fonts.css">');
 fs.writeFileSync(indexPath, html);
+// Hosting config (SPA routing, noindex header). Source maps are not shipped with a review link.
+fs.copyFileSync(path.join(root, 'demo', 'vercel.json'), path.join(site, 'vercel.json'));
+for (const f of fs.readdirSync(path.join(site, 'static', 'js'))) if (f.endsWith('.map')) fs.rmSync(path.join(site, 'static', 'js', f));
 console.log('demo built ->', site);
