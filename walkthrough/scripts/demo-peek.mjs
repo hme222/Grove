@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4176);
+const browser = await chromium.launch();
+const page = await (await browser.newContext({ viewport: { width: 390, height: 844 } })).newPage();
+page.on('console', (m) => console.log('console', m.type(), m.text().slice(0, 200)));
+page.on('pageerror', (e) => console.log('pageerror', e.message.slice(0, 300)));
+page.on('request', (r) => { if (!r.url().startsWith('http://localhost:4176')) console.log('EXTERNAL', r.url().slice(0, 100)); });
+await page.goto('http://localhost:4176/');
+await page.waitForTimeout(3000);
+console.log('testids:', await page.$$eval('[data-testid]', (e) => e.map((x) => x.dataset.testid)));
+console.log('demo-ui:', await page.locator('[data-demo-ui]').count());
+await page.screenshot({ path: '.cache/peek.png' });
+await browser.close(); server.close();
