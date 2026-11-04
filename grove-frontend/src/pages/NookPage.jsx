@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PageHeader } from '../components/PageHeader';
+import { CareTabs } from '../components/CareTabs';
 import { LoadErrorPage } from '../components/LoadError';
 import Loading from '../components/Loading';
 import AppLink from '../components/AppLink';
@@ -80,13 +81,13 @@ export default function NookPage() {
   }, [state]);
 
   if (failed && !state) {
-    return <LoadErrorPage title="Pip’s nook" what="Pip’s nook" onRetry={load} />;
+    return <LoadErrorPage title="Pip’s nook" headerExtra={<CareTabs />} what="Pip’s nook" onRetry={load} />;
   }
 
   if (!state) {
     return (
       <div>
-        <PageHeader title="Pip’s nook" />
+        <PageHeader title="Pip’s nook"><CareTabs /></PageHeader>
         <Loading label="Loading Pip’s nook" />
       </div>
     );
@@ -95,7 +96,7 @@ export default function NookPage() {
   if (!state.enabled) {
     return (
       <div>
-        <PageHeader title="Pip’s nook" />
+        <PageHeader title="Pip’s nook"><CareTabs /></PageHeader>
         <div className="mx-auto max-w-sheet px-4 py-4">
           <section className="rounded-card border-hairline border-grove-paperBorder bg-grove-paperDeep p-5" data-testid="nook-off">
             <h2 className="mb-1 font-plant text-base font-semibold text-grove-root">Pip&rsquo;s nook is off</h2>
@@ -120,7 +121,7 @@ export default function NookPage() {
 
   return (
     <div className="min-h-screen bg-grove-paper">
-      <PageHeader title="Pip’s nook" />
+      <PageHeader title="Pip’s nook"><CareTabs /></PageHeader>
 
       <div className="bg-grove-forest pb-2 pt-2">
         <div className="mx-auto max-w-sheet">
