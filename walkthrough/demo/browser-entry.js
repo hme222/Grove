@@ -101,3 +101,17 @@ if (window.top === window) {
     document.body.appendChild(bar);
   });
 }
+
+// Demo only: fill the account form so a reviewer can just tap Create account. Any values work in this demo;
+// the fields stay editable, and are filled once per time they appear (not again while someone is typing).
+const DEMO_ACCOUNT = { 'signup-email': 'maya@example.com', 'signup-password': 'growgrove1' };
+const fillDemoAccount = () => {
+  for (const [id, value] of Object.entries(DEMO_ACCOUNT)) {
+    const el = document.getElementById(id);
+    if (!el || el.dataset.demoFilled) continue;
+    el.dataset.demoFilled = '1';
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, value);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+};
+new MutationObserver(fillDemoAccount).observe(document.documentElement, { childList: true, subtree: true });
