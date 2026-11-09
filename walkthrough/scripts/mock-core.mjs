@@ -76,6 +76,18 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     ['GET', /^\/lessons\/queue$/, () => queueBody()],
     ['POST', /^\/lessons\/([\w-]+)\/progress$/, (b, m) => { state.progress[m[1]] = b.card; return { ok: true }; }],
     ['POST', /^\/lessons\/([\w-]+)\/complete$/, (b, m) => { state.completed.push(m[1]); delete state.progress[m[1]]; return { ok: true }; }],
+    // Demo only: the real app reads the photo with a vision model. This returns one fixed, library-backed answer
+    // whatever photo is chosen; the demo says so on the result screen.
+    ['POST', /^\/plants\/identify$/, () => {
+      const sp = SPECIES.find((s) => s.slug === 'monstera-deliciosa');
+      return {
+        identified: true, isConfident: true, commonName: sp.common_name, latinName: sp.latin_name, confidence: 0.92,
+        nicknameSuggestion: '', wateringFrequencyDays: sp.default_watering_days, wateringReason: 'Let the top inch of soil dry between waterings.',
+        healthScore: 88, healthSummary: 'The leaves look glossy and green.', healthFlags: [], growMedium: 'soil',
+        toxicity: sp.toxicity,
+        libraryMatch: { speciesId: sp.id || null, commonName: sp.common_name, latinName: sp.latin_name, family: sp.family, source: (sp.citations || [])[0]?.label || null },
+      };
+    }],
     ['GET', /^\/species\/search$/, (b, m, url) => {
       const q = (url.searchParams.get('q') || '').toLowerCase();
       return SPECIES.filter((s) => !q || [s.common_name, s.latin_name, ...(s.synonyms || [])].some((n) => n.toLowerCase().includes(q))).slice(0, 12);

@@ -70,17 +70,17 @@ export default function NextLessonCard({ embedded = false }) {
 
   return (
     <section
-      className={embedded ? 'flex items-center justify-between gap-3 py-4' : 'rounded-card border-hairline border-grove-moss bg-grove-moss p-5 flex items-center justify-between gap-3'}
+      className={embedded ? 'flex items-center justify-between gap-3 py-4' : 'rounded-card border-strong border-grove-lime bg-grove-moss p-5 flex items-center justify-between gap-3'}
       data-testid="next-lesson-card"
     >
       <div>
-        <p className="font-ui text-sm text-grove-sage">Your next lesson</p>
-        <p className="font-plant text-base font-semibold text-grove-cream">{lesson.title}</p>
-        <p className="text-xs font-ui text-grove-cream">{lesson.blurb}</p>
+        <p className="font-ui text-sm font-bold uppercase tracking-wide text-grove-sprout">Your next lesson</p>
+        <p className="mt-1 font-plant text-xl font-bold leading-tight text-grove-cream">{lesson.title}</p>
+        <p className="mt-1 font-ui text-sm text-grove-cream">{lesson.blurb}</p>
         <button
           type="button"
           onClick={() => navigate('/lessons')}
-          className="mt-1 text-xs font-ui text-grove-sprout underline underline-offset-2"
+          className="mt-1 min-h-touch font-ui text-sm text-grove-sprout underline underline-offset-2"
           data-testid="next-lesson-all"
         >
           All lessons

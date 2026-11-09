@@ -13,8 +13,24 @@ try {
 const isMock = (url) => /^https?:\/\/mock\.local\/api\//.test(url);
 const LATENCY_MS = 90;
 
+// Photos a reviewer picks stay in this tab: the upload gets a made-up address, and images asking for it are
+// pointed at the picked file. Nothing is sent anywhere.
+const PICKED = new Map();
+const PICKED_HOST = 'http://demo.local/photo/';
+const imgSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+Object.defineProperty(HTMLImageElement.prototype, 'src', {
+  ...imgSrc,
+  set(value) { imgSrc.set.call(this, typeof value === 'string' && PICKED.has(value) ? PICKED.get(value) : value); },
+});
+
 function respond(method, url, bodyText) {
   const u = new URL(url);
+  if (method === 'POST' && u.pathname === '/api/upload') {
+    const file = bodyText instanceof FormData ? bodyText.get('file') : null;
+    const id = `${PICKED_HOST}${PICKED.size + 1}`;
+    if (file instanceof Blob) PICKED.set(id, URL.createObjectURL(file));
+    return { status: 200, body: { path: id, url: id } };
+  }
   let body = {};
   try { body = bodyText ? JSON.parse(bodyText) : {}; } catch (e) { body = {}; }
   const out = core.handle(method, u.pathname.replace(/^\/api/, ''), body, u.searchParams);
@@ -115,3 +131,17 @@ const fillDemoAccount = () => {
   }
 };
 new MutationObserver(fillDemoAccount).observe(document.documentElement, { childList: true, subtree: true });
+
+// On the plant-ID result, say plainly that the answer is a sample. The real app reads the photo that was chosen.
+const markSampleResult = () => {
+  for (const el of document.querySelectorAll('[data-testid="identify-review"], [data-testid="identify-low-conf"]')) {
+    if (el.querySelector('[data-demo-note]')) continue;
+    const note = document.createElement('p');
+    note.setAttribute('data-demo-note', '');
+    note.setAttribute('role', 'note');
+    note.className = 'mb-3 rounded-inset border-hairline border-grove-sprout bg-grove-canopy px-3 py-2 font-ui text-sm text-grove-cream';
+    note.textContent = 'Demo note: this result is a sample. In the real app, FloraGrove reads the photo you choose.';
+    el.insertBefore(note, el.firstChild);
+  }
+};
+new MutationObserver(markSampleResult).observe(document.documentElement, { childList: true, subtree: true });

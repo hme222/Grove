@@ -51,7 +51,7 @@ export default function ThumbStrip({ items, activeIndex = 0, onSelect, variant =
       ref={stripRef}
       role="group"
       aria-label={label}
-      className={cn('flex items-center gap-2 overflow-x-auto px-2 py-2', className)}
+      className={cn('flex touch-pan-x snap-x items-center gap-3 overflow-x-auto overscroll-x-contain px-3 py-3 [-webkit-overflow-scrolling:touch]', className)}
       data-testid={testId}
     >
       {announce && <span className="sr-only" aria-live="polite">{activeIndex + 1} of {items.length}</span>}
@@ -66,7 +66,7 @@ export default function ThumbStrip({ items, activeIndex = 0, onSelect, variant =
             onClick={() => onSelect && onSelect(i)}
             data-testid={`${testId}-thumb-${i}`}
             className={cn(
-              'h-touch min-h-touch w-touch min-w-touch shrink-0 overflow-hidden rounded-chip focus-visible:outline-none focus-visible:ring-2 motion-safe:transition-transform',
+              'h-touch min-h-touch w-touch min-w-touch shrink-0 snap-center overflow-hidden rounded-chip focus-visible:outline-none focus-visible:ring-2 motion-safe:transition-transform',
               v.focus,
               current ? cn('ring-2 ring-offset-2', v.current, SIZES[size] || SIZES.md) : '',
             )}

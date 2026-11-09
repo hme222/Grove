@@ -1,0 +1,21 @@
+// Drives the demo's plant-ID path with a picked photo; screenshots the result.
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4178);
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+p.setDefaultTimeout(8000);
+const $ = (id) => p.getByTestId(id);
+await p.goto('http://localhost:4178/'); await p.waitForTimeout(1500);
+await $('onboarding-continue').click(); await $('signup-submit').click();
+for (let i = 0; i < 3; i++) await $('onboarding-continue').click();
+await $('hemisphere-north').click(); await $('quiz-intro-start').click();
+await $('question-skip').click(); await $('question-skip').click(); await $('question-skip').click(); await $('question-skip').click();
+await p.waitForTimeout(1500); await $('plan-start').click();
+for (let i = 0; i < 4; i++) await $('lesson-next').click();
+await $('soil-step-add-plant').click();
+await $('add-option-identify').click();
+await p.locator('input[type=file]').first().setInputFiles('../grove-frontend/public/photos/soil-card-2.jpg');
+await p.waitForTimeout(4000);
+console.log('review shown:', await $('identify-review').count(), '| note:', await p.locator('[data-demo-note]').count(), '| toxicity:', await $('identify-toxicity').count());
+await p.screenshot({ path: '.cache/photo-id.png' });
+await b.close(); server.close();

@@ -221,13 +221,19 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
+    // Wait until the scroll settles, so a smooth scroll to a tapped preview is not turned back into
+    // every card it passes on the way.
+    let timer = null;
     const onScroll = () => {
-      const w = el.clientWidth;
-      const best = Math.round(el.scrollLeft / w);
-      if (best !== index) setIndex(Math.max(0, Math.min(CARDS.length - 1, best)));
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const w = el.clientWidth;
+        const best = Math.round(el.scrollLeft / w);
+        setIndex((cur) => (best === cur ? cur : Math.max(0, Math.min(CARDS.length - 1, best))));
+      }, 90);
     };
     el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
+    return () => { clearTimeout(timer); el.removeEventListener('scroll', onScroll); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
