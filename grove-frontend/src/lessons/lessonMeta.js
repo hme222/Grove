@@ -3,8 +3,8 @@
 export const LESSON_META = {
   'soil-finger-test': {
     id: 'soil-finger-test',
-    photo: '/photos/soil-1.jpg',
-    thumb: '/photos/soil-thumb-1.jpg',
+    photo: '/photos/soil-2.jpg',
+    thumb: '/photos/soil-thumb-2.jpg',
     title: 'Soil finger-test',
     blurb: 'Check the soil with your finger, then decide.',
   },
@@ -38,8 +38,8 @@ export const LESSON_META = {
   },
   'window-map': {
     id: 'window-map',
-    photo: '/photos/light-2.jpg',
-    thumb: '/photos/light-thumb-2.jpg',
+    photo: '/photos/light-3.jpg',
+    thumb: '/photos/light-thumb-3.jpg',
     title: 'Your window',
     blurb: 'Pick your window and see how it lights a room.',
   },

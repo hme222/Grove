@@ -19,6 +19,13 @@ const ANGELINA = ['Angelina Jollivet', a('angelinajlv'), p('pink-beige-and-red-f
 const WOLFGANG = ['Wolfgang Hasselmann', a('wolfgang_hasselmann'), p('a-small-green-plant-growing-from-the-soil-sGMVZeb7yiQ')];
 const VIKA = ['Vika Chartier', a('vikachartier'), p('green-potted-plant-near-window-Y0dBD80odGw')];
 
+const AKSHAR = ['Akshar Dave', a('akshar_dave'), p('person-holding-silver-ring-with-brown-stone-fxyRimO0khY')];
+const NORA = ['Nora Hutton', a('norahutton'), p('green-plant-on-white-and-red-floral-ceramic-vase-ou_v4g_H3oI')];
+const ROB = ['Rob Wicks', a('robwicks'), p('a-small-plant-pot-with-soil-and-a-hope-marker-T_mqIZydlXE')];
+const ALICIA = ['Alicia Christin Gerald', a('allysphotos'), p('a-person-holding-a-handful-of-dirt-in-their-hand-bQ9y93kdk4c')];
+const ANNIE_WATERING = ['Annie Spratt', a('anniespratt'), p('a-woman-watering-a-potted-plant-in-a-greenhouse-QseVBp3YtG4')];
+const BARBARA = ['Barbara Burgess', a('fieldworkframes'), p('a-couple-of-potted-plants-sitting-on-top-of-a-shelf-suKipx69jpQ')];
+
 const HOWARD = ['Howard Walsh', a('hswalsh'), p('a-dirt-path-winds-through-a-sun-dappled-forest-eohdpP_XFJw')];
 // The first-run photos were exported from the Figma file 'Grove App', where the layer names credit Maxx Gong
 // on Unsplash. The profile is verified; the exact photo pages are not, so photoUrl is the profile and the note says so.
@@ -46,6 +53,14 @@ export const photoCredits = [
   row('bouquet-1.jpg', 'A bouquet in a glass vase', ANGELINA),
   row('sprout-1.jpg', 'A small fern sprout in soil', WOLFGANG),
   row('window-1.jpg', 'Small plants along a windowsill', VIKA),
+  row('soil-2.jpg', 'A hand pressed into the soil of a blue pot', AKSHAR),
+  row('soil-thumb-2.jpg', 'A hand pressed into the soil of a blue pot (thumbnail)', AKSHAR),
+  row('soil-card-1.jpg', 'A leafy plant in a flowered pot in a window', NORA),
+  row('soil-card-2.jpg', 'A small orange pot of soil with a plant marker', ROB),
+  row('soil-card-3.jpg', 'A hand holding a handful of dark, damp soil', ALICIA),
+  row('soil-card-4.jpg', 'A woman watering a potted plant by a window', ANNIE_WATERING),
+  row('light-3.jpg', 'Sun and window-blind shadows on a wall behind two plants', BARBARA),
+  row('light-thumb-3.jpg', 'Sun and window-blind shadows on a wall behind two plants (thumbnail)', BARBARA),
   row('welcome-forest.jpg', 'A sunlit path through a forest', HOWARD),
   row('welcome-forest-edited.jpg', 'A misty forest (the edited welcome photo)', MAXX, UNVERIFIED),
   row('onboarding-forest.jpg', 'A misty forest', MAXX, UNVERIFIED),

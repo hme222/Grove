@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Disclosure from '../components/Disclosure';
 import BackButton from '../components/BackButton';
+import PhotoBand from '../components/PhotoBand';
 import { cn } from '../lib/utils';
 import { sanitizeLessonHtml } from '../lib/safeHtml';
 import { buttonVariants } from '../components/ui/button';
@@ -68,8 +69,9 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           </div>
         )}
 
-        <div className={paper ? `rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
-          {Icon && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
+        <div className={paper ? `overflow-hidden rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `overflow-hidden rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
+          {card.photo && <PhotoBand src={card.photo} ratio="band" className="-mx-5 -mt-5 mb-4 !w-auto !rounded-none" testId="lesson-card-photo" />}
+          {Icon && !card.photo && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
           <p className={cn('mb-2 font-ui text-base', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
           <h1
             id="page-title"

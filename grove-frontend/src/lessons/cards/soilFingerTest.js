@@ -4,6 +4,7 @@ import { Hand, Timer, Cookie, Waves, Heart } from "lucide-react";
 export const CARDS = [
   {
     n: 1,
+    photo: "/photos/soil-card-1.jpg",
     header: "Card 1 of 5 · The hook",
     headline: "Erase the plant guilt.",
     body:
@@ -16,6 +17,7 @@ export const CARDS = [
   },
   {
     n: 2,
+    photo: "/photos/soil-card-2.jpg",
     header: "Card 2 of 5 · The probe",
     headline: "Your natural moisture sensor.",
     body:
@@ -28,6 +30,7 @@ export const CARDS = [
   },
   {
     n: 3,
+    photo: "/photos/soil-card-3.jpg",
     header: "Card 3 of 5 · The walk away",
     headline: "Is it damp?",
     body:
@@ -41,6 +44,7 @@ export const CARDS = [
   },
   {
     n: 4,
+    photo: "/photos/soil-card-4.jpg",
     header: "Card 4 of 5 · The water sign",
     headline: "Is it dry?",
     body:
