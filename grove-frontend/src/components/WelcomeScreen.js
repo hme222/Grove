@@ -79,7 +79,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
     >
       <div className="mx-auto flex min-h-full w-full max-w-md flex-col px-4 pb-16 pt-6">
         <div className="flex min-h-touch items-center justify-between gap-2">
-          <FloraGroveWordmark size={24} />
+          <FloraGroveWordmark size={30} />
           {showSkip && skipButton(onSkip, disabled, 'flex min-h-touch min-w-touch shrink-0 items-center justify-center rounded-control text-grove-lichen hover:text-grove-cream')}
         </div>
         <h1 className="mt-6 max-w-full break-words font-plant text-3xl leading-tight text-grove-cream">Welcome to FloraGrove</h1>
@@ -101,7 +101,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
             className={cn(buttonVariants(), 'w-full')}
             data-testid="onboarding-continue"
           >
-            {disabled ? 'Loading…' : 'Continue'}
+            {disabled ? 'Loading…' : 'Sign up'}
           </button>
         </div>
       </div>
@@ -109,27 +109,16 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
   );
 }
 
-// Continue fades in at 7.9s over 1.4s (WelcomeScreen.css). Until it is on screen it is out of the tab order.
-const CTA_REVEAL_MS = 9300;
-const prefersReducedMotion = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true }) {
   const scale = useStageScale();
   const [done, setDone] = useState(false);
-  const [revealed, setRevealed] = useState(prefersReducedMotion);
+  // A keyboard user cannot tap to skip the build, so any key press shows the finished screen. Sign up is on screen from the start.
   useEffect(() => {
-    if (revealed) return undefined;
-    const t = setTimeout(() => setRevealed(true), CTA_REVEAL_MS);
-    return () => clearTimeout(t);
-  }, [revealed]);
-  const ctaReady = revealed || done;
-  // A keyboard user cannot tap to skip the build, so any key press shows the finished screen and Continue.
-  useEffect(() => {
-    if (ctaReady) return undefined;
+    if (done) return undefined;
     const onKey = () => setDone(true);
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [ctaReady]);
+  }, [done]);
   const width = typeof window === 'undefined' ? STAGE_W : window.innerWidth;
   const height = typeof window === 'undefined' ? STAGE_H : window.innerHeight;
   const pinned = shouldPinContinue(scale, height);
@@ -149,14 +138,14 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
 
       <div className="gw-stage-wrap" style={{ width: STAGE_W * scale, height: STAGE_H * scale }}>
         <div className="gw-stage" style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${scale})` }}>
-          <WelcomeStage pinContinue={pinned} ctaReady={ctaReady} onContinue={onContinue} disabled={disabled} />
+          <WelcomeStage pinContinue={pinned} onContinue={onContinue} disabled={disabled} />
         </div>
       </div>
 
       {pinned && (
-        <div className="gw-pin gw-a gw-lower">
-          <button type="button" className="gw-cta gw-pin-cta" onClick={onContinue} disabled={disabled} tabIndex={ctaReady ? undefined : -1} aria-hidden={ctaReady ? undefined : true} data-testid="onboarding-continue">
-            {disabled ? 'Loading…' : 'Continue'}
+        <div className="gw-pin">
+          <button type="button" className="gw-cta gw-pin-cta" onClick={onContinue} disabled={disabled} data-testid="onboarding-continue">
+            {disabled ? 'Loading…' : 'Sign up'}
           </button>
         </div>
       )}

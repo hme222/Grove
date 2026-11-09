@@ -29,11 +29,11 @@ function Sparkle({ cx, cy, r, i }) {
   return <path className={`gw-twinkle gw-twinkle-${i}`} d={d} />;
 }
 
-export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady = true, onContinue, disabled }) {
+export function WelcomeStage({ decorative = false, pinContinue = false, onContinue, disabled }) {
   return (
     <>
       <div className="gw-a gw-brand" style={{ left: 20, top: 40 }}>
-        <FloraGroveWordmark size={24} />
+        <FloraGroveWordmark size={30} />
       </div>
 
       <h1 className="gw-a gw-welcome" style={{ left: 20, top: 138 }}>
@@ -56,7 +56,7 @@ export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady
         <span className="gw-caring">
           caring
           <svg className="gw-caring-ring" viewBox="306 725 86 19" preserveAspectRatio="none" aria-hidden="true">
-            <path className="gw-draw gw-draw-5 gw-redraw gw-redraw-draw gw-slot-4" pathLength="1" strokeDasharray="1 2" fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.3" strokeOpacity="0.5" vectorEffect="non-scaling-stroke" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
+            <path className="gw-draw gw-draw-5" pathLength="1" strokeDasharray="1 2" fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.3" strokeOpacity="0.5" vectorEffect="non-scaling-stroke" d="M376 728C350 726 322 730 313 737C307 742 330 743 350 742C372 741 391 737 389 732C386 728 370 727 358 729" />
           </svg>
         </span>{' '}
         for your plants
@@ -65,13 +65,13 @@ export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady
       <svg className="gw-lines" viewBox={`0 0 ${STAGE_W} ${STAGE_H}`} width={STAGE_W} height={STAGE_H} aria-hidden="true">
         <defs>
           <mask id="gw-mask-1" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <path className="gw-draw gw-draw-1 gw-redraw gw-redraw-draw gw-slot-0" d={PEN_1} strokeWidth="14" {...DRAW} />
+            <path className="gw-draw gw-draw-1" d={PEN_1} strokeWidth="14" {...DRAW} />
           </mask>
           <mask id="gw-mask-2" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <path className="gw-draw gw-draw-2 gw-redraw gw-redraw-draw gw-slot-1" d={PEN_2} strokeWidth="10" {...DRAW} />
+            <path className="gw-draw gw-draw-2" d={PEN_2} strokeWidth="10" {...DRAW} />
           </mask>
           <mask id="gw-mask-3" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
-            <path className="gw-draw gw-draw-3 gw-redraw gw-redraw-draw gw-slot-2" d={PEN_3} strokeWidth="10" {...DRAW} />
+            <path className="gw-draw gw-draw-3" d={PEN_3} strokeWidth="10" {...DRAW} />
           </mask>
         </defs>
         <g fill="var(--grove-lime)">
@@ -80,7 +80,7 @@ export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady
           <path className="gw-line" mask="url(#gw-mask-3)" d={LINE_3} />
         </g>
         <g fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round">
-          <path className="gw-draw gw-draw-4 gw-redraw gw-redraw-draw gw-slot-3" pathLength="1" strokeDasharray="1 2" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
+          <path className="gw-draw gw-draw-4" pathLength="1" strokeDasharray="1 2" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
         </g>
         <g className="gw-a gw-stars" fill="var(--grove-sun)">
           <Sparkle cx={277} cy={133} r={5.5} i={1} />
@@ -99,18 +99,13 @@ export function WelcomeStage({ decorative = false, pinContinue = false, ctaReady
       ) : (
         <button
           type="button"
-          className="gw-a gw-lower gw-cta"
+          className="gw-cta"
           onClick={onContinue}
           disabled={disabled}
-          tabIndex={ctaReady ? undefined : -1}
-          aria-hidden={ctaReady ? undefined : true}
           data-testid="onboarding-continue"
           style={{ left: 20, top: 804, width: 390, height: 46 }}
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" className="gw-cta-ring">
-            <circle cx="9" cy="9" r="7" fill="none" stroke="var(--grove-fern-line)" strokeWidth="1.8" />
-          </svg>
-          {disabled ? 'Loading…' : 'Continue'}
+          {disabled ? 'Loading…' : 'Sign up'}
         </button>
       )}
     </>

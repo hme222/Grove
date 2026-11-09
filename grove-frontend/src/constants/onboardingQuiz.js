@@ -30,7 +30,7 @@ export const PLAN_QUESTIONS = [
   },
   {
     id: 'q3',
-    heading: 'What would feel like a win each morning?',
+    heading: 'What would feel like a win?',
     why: 'Why we ask: so your plan aims at what you want from it.',
     options: [
       { id: 'inspiration', label: 'A little green inspiration' },
@@ -43,15 +43,15 @@ export const PLAN_QUESTIONS = [
   },
   {
     id: 'q4',
-    heading: 'How do you approach plant care today?',
-    why: 'Why we ask: so the lessons match how much you already know.',
+    heading: 'How can we best support your plant journey?',
+    why: 'Why we ask: so the lessons match where you are.',
     options: [
-      { id: 'blank_slate', label: 'I’m a blank slate' },
-      { id: 'overwhelmed', label: 'Overwhelmed. Give me one trick' },
-      { id: 'winging_it', label: 'Winging it day to day' },
-      { id: 'know_basics', label: 'I know the basics' },
-      { id: 'mechanics', label: 'I love the mechanics' },
-      { id: 'botanical', label: 'I apply botanical science' },
+      { id: 'blank_slate', label: 'I’m starting from scratch' },
+      { id: 'overwhelmed', label: 'Too much advice. Give me one thing to try' },
+      { id: 'winging_it', label: 'I’m figuring it out as I go' },
+      { id: 'know_basics', label: 'I know the basics. Help me go deeper' },
+      { id: 'mechanics', label: 'I like understanding how it works' },
+      { id: 'botanical', label: 'I want the science behind it' },
     ],
   },
 ];

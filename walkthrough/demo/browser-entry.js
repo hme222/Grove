@@ -104,7 +104,7 @@ if (window.top === window) {
 
 // Demo only: fill the account form so a reviewer can just tap Create account. Any values work in this demo;
 // the fields stay editable, and are filled once per time they appear (not again while someone is typing).
-const DEMO_ACCOUNT = { 'signup-email': 'maya@example.com', 'signup-password': 'growgrove1' };
+const DEMO_ACCOUNT = { 'signup-email': 'maya@example.com', 'signup-password': 'growgrove1', 'signup-confirm': 'growgrove1' };
 const fillDemoAccount = () => {
   for (const [id, value] of Object.entries(DEMO_ACCOUNT)) {
     const el = document.getElementById(id);

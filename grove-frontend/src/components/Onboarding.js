@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { AppLink } from '@/components/AppLink';
@@ -31,15 +31,6 @@ const OFF = { email_verification: false, sso: {} };
 
 const SLIDES = [
   {
-    // The welcome screen has already said the name, the definition of a grove and the promise, so this
-    // screen says something new: what the next few minutes are.
-    kicker: null,
-    title: 'Three short steps to set up',
-    lead: 'Make your account, tell us where you grow, and answer four quick questions.',
-    body: 'You can skip the last two and change any answer later.',
-    photo: '/photos/onboarding-forest.jpg',
-  },
-  {
     kicker: 'Grow together',
     title: 'Track care, not metrics',
     lead: 'FloraGrove gives you simple, clear tools to help plants thrive.',
@@ -58,6 +49,7 @@ const SLIDES = [
 const STAGE_LABELS = {
   welcome: 'Welcome to FloraGrove',
   account: 'Create your account',
+  steps: 'Three short steps to set up',
   'check-email': 'Check your email',
   confirmed: 'Email confirmed',
   zone: 'Where you grow',
@@ -111,6 +103,48 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
             </button>
           )}
           secondary={<p className="font-ui text-sm text-grove-sage">{index + 1} of {SLIDES.length}</p>}
+        />
+      </div>
+    </StepScreen>
+  );
+}
+
+// Right after the account: the three steps, numbered, so "Step 2 of 3" on the next screens means something.
+// The account is already done; the other two can be skipped.
+const STEPS = [
+  { title: 'Make your account', note: 'Done.' },
+  { title: 'Tell us where you grow', note: 'Skippable. Helps with light and seasons.' },
+  { title: 'Answer four quick questions', note: 'Skippable. They only choose your first lesson.' },
+];
+
+function StepsStep({ onBack, onNext }) {
+  return (
+    <StepScreen heading="Three short steps to set up" onBack={onBack} testId="onboarding-steps">
+      <div className="mt-4 flex flex-1 flex-col">
+        <ol className="space-y-4" data-testid="steps-list">
+          {STEPS.map((item, i) => (
+            <li key={item.title} className="flex items-start gap-3">
+              <span
+                aria-hidden="true"
+                className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-pill font-plant text-base', i === 0 ? 'bg-grove-lime text-grove-root' : 'border-strong border-grove-lime text-grove-sprout')}
+              >
+                {i === 0 ? <Check className="h-4 w-4" /> : i + 1}
+              </span>
+              <span>
+                <span className="block font-ui text-base font-medium text-grove-cream">{item.title}</span>
+                <span className="block font-ui text-sm text-grove-sage">{item.note}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-6 font-ui text-sm text-grove-sage">You can change any answer later.</p>
+        <PhotoBand src="/photos/onboarding-forest.jpg" ratio="photo" eager className="mt-6" testId="hero-image" />
+        <StepActions
+          primary={(
+            <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
+              Next
+            </button>
+          )}
         />
       </div>
     </StepScreen>
@@ -197,17 +231,17 @@ export function Onboarding({ onComplete, replay = false }) {
     }
   };
 
-  const skipIntro = () => { if (user) finish(); else setStage('account'); };
+  const skipIntro = () => finish();
 
   const afterAccount = ({ user: created, name: given, sso }) => {
     setName(firstName(given));
     if (sso && created && created.onboarding_complete) { onComplete(); return; }
     if (!sso && config && config.email_verification && created && created.email_confirmed === false) setStage('check-email');
-    else setStage(setupStage(created));
+    else setStage('steps');
   };
 
   const goConfirmed = useCallback(() => setStage('confirmed'), []);
-  const goZone = useCallback(() => setStage(setupStage(user)), [user]);
+  const goZone = useCallback(() => setStage('steps'), []);
 
   const afterZone = (saved) => {
     if (saved && updateUser) updateUser(saved);
@@ -234,7 +268,7 @@ export function Onboarding({ onComplete, replay = false }) {
   if (welcome) {
     body = (
       <>
-        <WelcomeScreen onContinue={() => setStage('intro-0')} onSkip={() => finish()} disabled={finishing} showSkip={!!user} />
+        <WelcomeScreen onContinue={() => setStage(user ? 'steps' : 'account')} onSkip={() => finish()} disabled={finishing} showSkip={!!user} />
         {!user && (
           <AppLink
             to="/login"
@@ -252,13 +286,15 @@ export function Onboarding({ onComplete, replay = false }) {
       <IntroStep
         key={stage}
         index={index}
-        onBack={() => setStage(index === 0 ? 'welcome' : `intro-${index - 1}`)}
-        onNext={() => (index < SLIDES.length - 1 ? setStage(`intro-${index + 1}`) : user ? setStage(setupStage(user)) : setStage('account'))}
+        onBack={() => setStage(index === 0 ? 'steps' : `intro-${index - 1}`)}
+        onNext={() => (index < SLIDES.length - 1 ? setStage(`intro-${index + 1}`) : setStage(setupStage(user)))}
         onSkip={skipIntro}
       />
     );
+  } else if (stage === 'steps') {
+    body = <StepsStep onBack={replay ? () => setStage('welcome') : undefined} onNext={() => setStage('intro-0')} />;
   } else if (stage === 'account') {
-    body = <AccountStep config={config || OFF} onBack={() => setStage(`intro-${SLIDES.length - 1}`)} onDone={afterAccount} />;
+    body = <AccountStep config={config || OFF} onBack={() => setStage('welcome')} onDone={afterAccount} />;
   } else if (stage === 'check-email') {
     body = <CheckEmailStep onConfirmed={goConfirmed} onLater={goZone} />;
   } else if (stage === 'confirmed') {

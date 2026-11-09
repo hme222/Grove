@@ -60,11 +60,11 @@ const step = async (label, fn) => {
 
 await page.goto('http://localhost:4176/'); await page.waitForTimeout(1500);
 await step('welcome', async () => {});
-await step('intro-1', async () => { await page.mouse.click(195, 300); await $('onboarding-continue').click(); });
+await step('account', async () => { await page.mouse.click(195, 300); await $('onboarding-continue').click(); });
+await step('steps', async () => { await $('signup-email').fill('maya@example.com'); await $('signup-password').fill('growgrove1'); await $('signup-submit').click(); });
+await step('intro-1', async () => { await $('onboarding-continue').click(); });
 await step('intro-2', async () => { await $('onboarding-continue').click(); });
-await step('intro-3', async () => { await $('onboarding-continue').click(); });
-await step('account', async () => { await $('onboarding-continue').click(); });
-await step('hemisphere', async () => { await $('signup-email').fill('maya@example.com'); await $('signup-password').fill('growgrove1'); await $('signup-submit').click(); });
+await step('hemisphere', async () => { await $('onboarding-continue').click(); });
 await step('quiz-intro', async () => { await $('hemisphere-north').click(); });
 await step('q1', async () => { await $('quiz-intro-start').click(); });
 await step('q2', async () => { await page.locator('[data-testid^="option-q1"]').first().click(); await $('question-next').click(); });

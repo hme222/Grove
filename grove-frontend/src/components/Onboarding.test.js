@@ -82,6 +82,10 @@ afterEach(() => {
 
 const toAccount = async () => {
   await click(q('welcome-continue'));
+};
+
+// After the account: the numbered steps page, then the two intro slides, then the setup steps.
+const pastIntro = async () => {
   await click(q('onboarding-continue'));
   await click(q('onboarding-continue'));
   await click(q('onboarding-continue'));
@@ -94,28 +98,33 @@ test('a signed-out visitor sees the welcome with a way to sign in and no skip th
   expect(q('welcome-signin').getAttribute('href')).toBe('/login');
 });
 
-test('the three intro slides move on and carry no day-7 or day-30 promise', async () => {
+test('signed out, Sign up goes straight to the account step, before any slide', async () => {
   await mount();
   await click(q('welcome-continue'));
-  // The welcome screen already said the name and what a grove is; this screen carries something new.
+  expect(q('onboarding-account')).not.toBeNull();
+});
+
+test('after the account come the numbered steps, then two intro slides with no day-7 or day-30 promise', async () => {
+  signedIn();
+  await mount({ replay: true });
+  await click(q('welcome-continue'));
   expect(q('onboarding-heading').textContent).toBe('Three short steps to set up');
   expect(text()).not.toContain('A grove is a small group');
   expect(text()).not.toContain('Welcome to FloraGrove');
-  expect(text()).toContain('1 of 3');
+  const items = [...q('steps-list').querySelectorAll('li')].map((li) => li.textContent);
+  expect(items).toEqual([
+    'Make your account' + 'Done.',
+    '2Tell us where you grow' + 'Skippable. Helps with light and seasons.',
+    '3Answer four quick questions' + 'Skippable. They only choose your first lesson.',
+  ]);
   await click(q('onboarding-continue'));
   expect(text()).toContain('Track care, not metrics');
+  expect(text()).toContain('1 of 2');
   await click(q('onboarding-continue'));
   expect(text()).toContain('Each plant has a story');
   expect(text()).not.toMatch(/day 7|day 30|7 days|30 days|unlock/i);
   await click(q('onboarding-continue'));
-  expect(q('onboarding-account')).not.toBeNull();
-});
-
-test('skipping the intro as a signed-out visitor goes to the account step', async () => {
-  await mount();
-  await click(q('welcome-continue'));
-  await click(q('onboarding-skip'));
-  expect(q('onboarding-account')).not.toBeNull();
+  expect(q('onboarding-zone')).not.toBeNull();
 });
 
 test('the account step says Step 1 of 3 and puts focus on its headline', async () => {
@@ -163,6 +172,7 @@ test('an email that looks incomplete is explained and a fix is offered, nothing 
   await toAccount();
   await type(q('signup-email'), 'maya@gmail');
   await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret1');
   await click(q('signup-submit'));
   expect(auth.register).not.toHaveBeenCalled();
   expect(q('signup-email').getAttribute('aria-invalid')).toBe('true');
@@ -182,6 +192,18 @@ test('a short password is refused with a reason', async () => {
   expect(auth.register).not.toHaveBeenCalled();
 });
 
+test('a confirm password that does not match is refused, and nothing is created', async () => {
+  await mount();
+  await toAccount();
+  await type(q('signup-email'), 'maya@gmail.com');
+  await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret2');
+  await click(q('signup-submit'));
+  expect(text()).toContain('The two passwords don’t match.');
+  expect(auth.register).not.toHaveBeenCalled();
+  expect(document.activeElement).toBe(q('signup-confirm'));
+});
+
 test('the password can be shown and hidden', async () => {
   await mount();
   await toAccount();
@@ -196,9 +218,12 @@ test('creating an account sends no username, uses the first name from the email,
   await toAccount();
   await type(q('signup-email'), 'maya.r88@gmail.com');
   await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret1');
   await click(q('signup-submit'));
   await flush();
   expect(auth.register).toHaveBeenCalledWith(undefined, 'maya.r88@gmail.com', 'secret1', 'Maya');
+  expect(q('onboarding-steps')).not.toBeNull();
+  await pastIntro();
   expect(q('onboarding-zone')).not.toBeNull();
   expect(q('onboarding-progress').textContent).toBe('Step 2 of 3 · Your space');
 });
@@ -210,6 +235,7 @@ test('with verification on, a new unconfirmed account is sent to the check-your-
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
   await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret1');
   await click(q('signup-submit'));
   await flush();
   expect(q('onboarding-check-email')).not.toBeNull();
@@ -224,6 +250,7 @@ test('an email that is already registered offers sign in, and stays on the step'
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
   await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret1');
   await click(q('signup-submit'));
   await flush();
   expect(q('signup-form-error').textContent).toContain('Email already registered');
@@ -239,6 +266,7 @@ test('Open email app opens a picker that Escape closes', async () => {
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
   await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret1');
   await click(q('signup-submit'));
   await flush();
   await click(q('open-email-app'));
@@ -456,6 +484,7 @@ test('a person signed in with an unfinished replay can skip the intro to finish'
   const onComplete = await mount({ replay: true });
   expect(q('onboarding-welcome')).not.toBeNull();
   await click(q('welcome-continue'));
+  await click(q('onboarding-continue'));
   await click(q('onboarding-skip'));
   await flush();
   expect(userAPI.updateMe).toHaveBeenCalledWith({ onboarding_complete: true });
@@ -513,8 +542,9 @@ test('email helpers', () => {
 
 const photo = () => q('hero-image');
 
-test('each intro slide carries its photo from the Figma frames, decorative and with a fixed shape', async () => {
-  await mount();
+test('the steps page and each intro slide carry their photo from the Figma frames, decorative and with a fixed shape', async () => {
+  signedIn();
+  await mount({ replay: true });
   await click(q('welcome-continue'));
   expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-forest.jpg');
   await click(q('onboarding-continue'));
@@ -530,7 +560,8 @@ test('each intro slide carries its photo from the Figma frames, decorative and w
 });
 
 test('a photo that fails to load is replaced by a designed tile of the same shape', async () => {
-  await mount();
+  signedIn();
+  await mount({ replay: true });
   await click(q('welcome-continue'));
   const box = photo();
   await act(async () => { box.querySelector('img').dispatchEvent(new Event('error')); });
@@ -583,7 +614,8 @@ test('the first-run overlay is a labelled modal dialog with focus inside it from
 });
 
 test('each step moves focus to its headline and the dialog label follows the step', async () => {
-  await mount();
+  signedIn();
+  await mount({ replay: true });
   await click(q('welcome-continue'));
   expect(document.activeElement).toBe(q('onboarding-heading'));
   expect(q('onboarding-flow').getAttribute('aria-label')).toBe('Three short steps to set up');
@@ -634,6 +666,7 @@ test('Skip intro shows the same alert from an intro slide, and moving on clears 
   userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
   await mount({ replay: true });
   await click(q('welcome-continue'));
+  await click(q('onboarding-continue'));
   await click(q('onboarding-skip'));
   expect(q('onboarding-finish-error').textContent).toContain('We couldn’t save that');
   await click(q('onboarding-continue'));
@@ -657,7 +690,8 @@ test('Skip for now on a failed plan shows the alert in the shared slot', async (
 // ---------- step 2 and the eyebrow ----------
 
 test('the Grow together eyebrow sits above the headline, in sage, as a 14px sentence-case label', async () => {
-  await mount();
+  signedIn();
+  await mount({ replay: true });
   await click(q('welcome-continue'));
   await click(q('onboarding-continue'));
   const eyebrow = q('onboarding-eyebrow');
@@ -736,8 +770,10 @@ test('with the zip step held back, a new account goes straight to the hemisphere
   await toAccount();
   await type(q('signup-email'), 'maya.r88@gmail.com');
   await type(q('signup-password'), 'secret1');
+  await type(q('signup-confirm'), 'secret1');
   await click(q('signup-submit'));
   await flush();
+  await pastIntro();
   expect(q('onboarding-zone')).toBeNull();
   expect(q('onboarding-hemisphere')).not.toBeNull();
 });

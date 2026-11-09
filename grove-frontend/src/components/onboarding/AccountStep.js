@@ -28,6 +28,7 @@ export default function AccountStep({ config, onBack, onDone }) {
   const { register, acceptSession } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [ssoBusy, setSsoBusy] = useState('');
@@ -43,9 +44,10 @@ export default function AccountStep({ config, onBack, onDone }) {
       next.email = suggestEmail(email) ? 'That email looks incomplete.' : 'That email doesn’t look right. Check it and try again.';
     }
     if (password.length < 6) next.password = 'Use at least 6 characters.';
+    else if (confirm !== password) next.confirm = 'The two passwords don’t match. Check them and try again.';
     setErrors(next);
     if (Object.keys(next).length) {
-      document.getElementById(next.email ? 'signup-email' : 'signup-password')?.focus();
+      document.getElementById(next.email ? 'signup-email' : next.password ? 'signup-password' : 'signup-confirm')?.focus();
       return;
     }
     setBusy(true);
@@ -162,6 +164,22 @@ export default function AccountStep({ config, onBack, onDone }) {
               describedBy={errors.password ? 'signup-password-error' : undefined}
             />
             {errors.password && <FieldError id="signup-password-error">{errors.password}</FieldError>}
+          </div>
+
+          <div>
+            <PasswordField
+              id="signup-confirm"
+              label="Confirm password"
+              value={confirm}
+              onChange={(e) => { setConfirm(e.target.value); if (errors.confirm) setErrors((x) => ({ ...x, confirm: undefined })); }}
+              autoComplete="new-password"
+              required
+              testId="signup-confirm"
+              toggleTestId="signup-confirm-toggle"
+              invalid={!!errors.confirm}
+              describedBy={errors.confirm ? 'signup-confirm-error' : undefined}
+            />
+            {errors.confirm && <FieldError id="signup-confirm-error">{errors.confirm}</FieldError>}
           </div>
         </div>
 

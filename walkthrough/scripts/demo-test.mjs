@@ -25,8 +25,8 @@ const step = async (label, fn) => { try { await fn(); console.log('ok  ', label)
 await page.goto('http://localhost:4175/', { timeout: 30000 });
 await page.waitForTimeout(1200);
 await step('welcome', async () => { await page.mouse.click(195, 300); await $('onboarding-continue').click({ timeout: 15000 }); });
-for (let i = 1; i <= 3; i++) await step(`intro-${i}`, async () => { await $('onboarding-continue').click({ timeout: 4000 }); });
 await step('account', async () => { await $('signup-email').fill('maya@example.com'); await $('signup-password').fill('growgrove1'); await $('signup-submit').click(); });
+for (const n of ['steps', 'intro-1', 'intro-2']) await step(n, async () => { await $('onboarding-continue').click({ timeout: 4000 }); });
 await step('hemisphere', async () => { await $('hemisphere-north').click({ timeout: 4000 }); });
 await step('quiz-start', async () => { await $('quiz-intro-start').click({ timeout: 4000 }); });
 await step('q1', async () => { await root.locator('[data-testid^="option-q1"]').first().click(); await $('question-next').click(); });
