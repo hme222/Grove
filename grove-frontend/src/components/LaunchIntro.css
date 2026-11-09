@@ -1,0 +1,13 @@
+/* FloraGrove launch intro: the mark drops in, bounces twice, then the name fades up. Plays once, about 2.8s. */
+@keyframes li-drop {
+  0%   { transform: translateY(-70vh); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  45%  { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+  62%  { transform: translateY(-28px); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  76%  { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+  86%  { transform: translateY(-10px); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  94%, 100% { transform: translateY(0); }
+}
+@keyframes li-name { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.li { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; background: var(--grove-forest); }
+.li-mark { animation: li-drop 1.5s both; }
+.li-name { animation: li-name 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.55s both; }

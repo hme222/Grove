@@ -244,7 +244,7 @@ function AppRoutes() {
 
   return (
     <>
-      {flowOpen && <Onboarding onComplete={handleOnboardingComplete} replay={replayFirstRun} />}
+      {flowOpen && <Onboarding onComplete={handleOnboardingComplete} replay={replayFirstRun} launchIntro />}
       {showQuiz && <QuizFlow onDone={handleQuizDone} />}
       {showOffer && <NookOfferCard onDone={handleOfferDone} />}
       <Routes>

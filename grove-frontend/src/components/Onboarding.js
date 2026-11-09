@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { AppLink } from '@/components/AppLink';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
+import LaunchIntro from '@/components/LaunchIntro';
 import { useAuth } from '@/contexts/AuthContext';
 import { authAPI, userAPI } from '@/lib/api';
 import { lessonPath } from '@/lessons/lessonMeta';
@@ -151,7 +152,7 @@ function StepsStep({ onBack, onNext }) {
   );
 }
 
-export function Onboarding({ onComplete, replay = false }) {
+export function Onboarding({ onComplete, replay = false, launchIntro = false }) {
   const { user, updateUser } = useAuth();
   const [stage, setStage] = useState(() => (user && !replay ? setupStage(user) : 'welcome'));
   const [config, setConfig] = useState(null);
@@ -161,6 +162,9 @@ export function Onboarding({ onComplete, replay = false }) {
   const [planResult, setPlanResult] = useState(null);
   const [finishing, setFinishing] = useState(false);
   const [finishError, setFinishError] = useState('');
+  // The launch intro plays once, before the welcome screen, for someone who is not signed in yet.
+  const [introPlaying, setIntroPlaying] = useState(() => launchIntro && !user && !replay);
+  const endIntro = useCallback(() => setIntroPlaying(false), []);
   const shell = useRef(null);
 
   useEffect(() => {
@@ -205,13 +209,13 @@ export function Onboarding({ onComplete, replay = false }) {
 
   // The welcome screen has no StepScreen to take focus, so put it on its headline (or Continue).
   useEffect(() => {
-    if (stage !== 'welcome' || !shell.current) return;
+    if (stage !== 'welcome' || introPlaying || !shell.current) return;
     const target = shell.current.querySelector('h1') || shell.current.querySelector('button[data-testid="welcome-continue"], button');
     if (!target) return;
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     target.style.outline = 'none';
     target.focus({ preventScroll: true });
-  }, [stage]);
+  }, [stage, introPlaying]);
 
   // A save error belongs to the screen it happened on.
   useEffect(() => { setFinishError(''); }, [stage]);
@@ -265,7 +269,9 @@ export function Onboarding({ onComplete, replay = false }) {
 
   const welcome = stage === 'welcome';
   let body = null;
-  if (welcome) {
+  if (welcome && introPlaying) {
+    body = <LaunchIntro onDone={endIntro} />;
+  } else if (welcome) {
     body = (
       <>
         <WelcomeScreen onContinue={() => setStage(user ? 'steps' : 'account')} onSkip={() => finish()} disabled={finishing} showSkip={!!user} />

@@ -786,3 +786,44 @@ test('with the zip step held back, someone who already has a hemisphere starts a
   expect(q('onboarding-hemisphere')).toBeNull();
   expect(text()).toContain('quick');
 });
+
+// ---------- launch intro: the mark drops in, bounces twice, the name fades up, then the welcome screen ----------
+
+describe('launch intro', () => {
+  const setMotion = (reduce) => { window.matchMedia = jest.fn().mockImplementation((query) => ({ matches: reduce && query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} })); };
+  afterEach(() => { delete window.matchMedia; jest.useRealTimers(); });
+
+  test('plays before the welcome screen, then hands over after about 2.8 seconds', async () => {
+    setMotion(false);
+    jest.useFakeTimers();
+    await mount({ launchIntro: true });
+    expect(q('launch-intro')).not.toBeNull();
+    expect(q('onboarding-welcome')).toBeNull();
+    await act(async () => { jest.advanceTimersByTime(2900); });
+    expect(q('launch-intro')).toBeNull();
+    expect(q('onboarding-welcome')).not.toBeNull();
+  });
+
+  test('a tap skips it', async () => {
+    setMotion(false);
+    await mount({ launchIntro: true });
+    await act(async () => { q('launch-intro').dispatchEvent(new Event('pointerdown', { bubbles: true })); });
+    expect(q('launch-intro')).toBeNull();
+    expect(q('onboarding-welcome')).not.toBeNull();
+  });
+
+  test('with reduced motion it is not shown at all', async () => {
+    setMotion(true);
+    await mount({ launchIntro: true });
+    expect(q('launch-intro')).toBeNull();
+    expect(q('onboarding-welcome')).not.toBeNull();
+  });
+
+  test('a signed-in replay goes straight to the welcome screen', async () => {
+    setMotion(false);
+    signedIn();
+    await mount({ launchIntro: true, replay: true });
+    expect(q('launch-intro')).toBeNull();
+    expect(q('onboarding-welcome')).not.toBeNull();
+  });
+});
