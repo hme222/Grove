@@ -17,13 +17,13 @@
 .li { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--grove-forest); overflow: hidden; }
 .li-stem-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .li-stem { stroke-dasharray: 1 2; stroke-dashoffset: 1; animation: li-draw 1s cubic-bezier(0.42, 0.08, 0.5, 0.96) 0.2s both, li-fade-out 0.4s ease 2s forwards; }
-.li-mark-box { position: relative; width: 120px; height: 120px; }
+.li-mark-box { position: relative; width: 7.5rem; height: 7.5rem; }
 .li-mark { display: block; overflow: visible; }
 .li-leaf { transform-box: view-box; transform-origin: 0 0; }
 .li-leaf-l { transform: translate(25px, 34px) rotate(-24deg); animation: li-left 1.2s cubic-bezier(0.34, 1.4, 0.5, 1) 1s both; }
 .li-leaf-r { transform: translate(39px, 34px) rotate(24deg); animation: li-right 1.2s cubic-bezier(0.34, 1.4, 0.5, 1) 1s both; }
 .li-name { margin-top: 38px; animation: li-name 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 2.3s both; }
-.li-star { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; fill: var(--grove-sun); opacity: 0; transform-box: fill-box; transform-origin: center; }
+.li-star { position: absolute; --s: 1.25rem; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); fill: var(--grove-sun); opacity: 0; transform-box: fill-box; transform-origin: center; }
 .li-star-1 { left: calc(50% - 65px); top: calc(50% - 90px); animation: li-pop 0.5s ease 2.1s both, li-twinkle 2s ease-in-out 3.1s; }
-.li-star-2 { left: calc(50% + 65px); top: calc(50% - 110px); width: 16px; height: 16px; animation: li-pop 0.5s ease 2.3s both, li-twinkle 2s ease-in-out 3.3s; }
-.li-star-3 { left: calc(50% + 80px); top: calc(50% + 10px); width: 14px; height: 14px; animation: li-pop 0.5s ease 2.5s both, li-twinkle 2s ease-in-out 3.5s; }
+.li-star-2 { left: calc(50% + 65px); top: calc(50% - 110px); --s: 1rem; animation: li-pop 0.5s ease 2.3s both, li-twinkle 2s ease-in-out 3.3s; }
+.li-star-3 { left: calc(50% + 80px); top: calc(50% + 10px); --s: 0.875rem; animation: li-pop 0.5s ease 2.5s both, li-twinkle 2s ease-in-out 3.5s; }

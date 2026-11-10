@@ -23,8 +23,31 @@ Object.defineProperty(HTMLImageElement.prototype, 'src', {
   set(value) { imgSrc.set.call(this, typeof value === 'string' && PICKED.has(value) ? PICKED.get(value) : value); },
 });
 
+// React sets an <img>'s src as an attribute, so the picked-photo address is swapped there too.
+const setAttr = Element.prototype.setAttribute;
+Element.prototype.setAttribute = function (name, value) {
+  if (this.tagName === 'IMG' && name === 'src' && typeof value === 'string' && PICKED.has(value)) return setAttr.call(this, name, PICKED.get(value));
+  return setAttr.call(this, name, value);
+};
+// Nothing a reviewer picks outlives the tab: the picture is forgotten the moment they leave or close the demo.
+window.addEventListener('pagehide', () => { PICKED.forEach((blobUrl) => URL.revokeObjectURL(blobUrl)); PICKED.clear(); });
+
+const keepPicked = (formData) => {
+  const file = formData instanceof FormData ? formData.get('file') : null;
+  if (!(file instanceof Blob)) return '';
+  const id = `${PICKED_HOST}${PICKED.size + 1}`;
+  PICKED.set(id, URL.createObjectURL(file));
+  return id;
+};
+
 function respond(method, url, bodyText) {
   const u = new URL(url);
+  const plantPhoto = u.pathname.match(/^\/api\/plants\/([\w-]+)\/photos?$/);
+  if (method === 'POST' && plantPhoto) {
+    const id = keepPicked(bodyText);
+    if (!id) return { status: 400, body: { detail: 'Choose a photo.' } };
+    return core.handle(method, `${u.pathname.replace(/^\/api/, '')}`, { path: id }, u.searchParams);
+  }
   if (method === 'POST' && u.pathname === '/api/upload') {
     const file = bodyText instanceof FormData ? bodyText.get('file') : null;
     const id = `${PICKED_HOST}${PICKED.size + 1}`;
@@ -78,6 +101,7 @@ window.XMLHttpRequest = DemoXHR;
 const realFetch = window.fetch.bind(window);
 window.fetch = (input, init = {}) => {
   const url = typeof input === 'string' ? input : input.url;
+  if (typeof url === 'string' && PICKED.has(url)) return realFetch(PICKED.get(url));
   if (!isMock(url)) return realFetch(input, init);
   const out = respond((init.method || 'GET').toUpperCase(), url, init.body);
   return new Promise((r) => setTimeout(() => r(new Response(JSON.stringify(out.body), { status: out.status, headers: { 'content-type': 'application/json' } })), LATENCY_MS));
@@ -145,3 +169,16 @@ const markSampleResult = () => {
   }
 };
 new MutationObserver(markSampleResult).observe(document.documentElement, { childList: true, subtree: true });
+
+// On a plant page, say plainly where an added photo goes: nowhere. It stays in this tab and is forgotten on exit.
+const markPhotoNote = () => {
+  const tabs = document.querySelector('[data-testid="plant-detail-tabs"]');
+  if (!tabs || document.querySelector('[data-demo-photo-note]')) return;
+  const note = document.createElement('p');
+  note.setAttribute('data-demo-photo-note', '');
+  note.setAttribute('role', 'note');
+  note.className = 'mx-4 mt-3 rounded-inset border-hairline border-grove-sprout bg-grove-canopy px-3 py-2 font-ui text-sm text-grove-cream';
+  note.textContent = 'Demo note: a photo you add here stays in this browser tab. Nothing is uploaded or saved, and it is gone when you close the demo.';
+  tabs.parentNode.insertBefore(note, tabs);
+};
+new MutationObserver(markPhotoNote).observe(document.documentElement, { childList: true, subtree: true });

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Share2 } from 'lucide-react';
 import { getFileUrl } from '../lib/api';
 import PhotoBand from './PhotoBand';
 
@@ -135,19 +136,30 @@ function PhotoMemory({ item, plantName, index, onOpen }) {
   );
 }
 
-function Milestone({ item, onOpen }) {
+function Milestone({ item, onOpen, onShare, plantName }) {
   return (
-    <button
-      type="button"
-      onClick={() => onOpen(item)}
-      className="block w-full rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss p-5 text-left transition-colors duration-200 hover:border-grove-sun/80"
-      data-testid="journal-milestone"
-    >
-      <p className="font-ui text-xs font-medium text-grove-sun">{item.kicker}</p>
-      <p className="mt-0.5 font-plant text-base leading-tight text-grove-cream">{item.title}</p>
-      <p className="mt-1 font-ui text-sm leading-snug text-grove-sage">{item.subtitle}</p>
-      <p className="mt-2 font-ui text-xs text-grove-sage">{when(item.logged_at)}</p>
-    </button>
+    <div className="rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss transition-colors duration-200 hover:border-grove-sun/80">
+      <button type="button" onClick={() => onOpen(item)} className="block w-full rounded-card p-5 text-left" data-testid="journal-milestone">
+        <p className="font-ui text-xs font-medium text-grove-sun">{item.kicker}</p>
+        <p className="mt-0.5 font-plant text-base leading-tight text-grove-cream">{item.title}</p>
+        <p className="mt-1 font-ui text-sm leading-snug text-grove-sage">{item.subtitle}</p>
+        <p className="mt-2 font-ui text-xs text-grove-sage">{when(item.logged_at)}</p>
+      </button>
+      {onShare && (
+        <div className="px-5 pb-4">
+          <button
+            type="button"
+            onClick={() => onShare(item)}
+            aria-label={`Share: ${item.title}, ${plantName}`}
+            data-testid="journal-milestone-share"
+            className="inline-flex min-h-touch items-center gap-1.5 rounded-control font-ui text-sm text-grove-sprout underline underline-offset-2 hover:text-grove-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-cream"
+          >
+            <Share2 className="h-4 w-4" aria-hidden="true" />
+            Share this
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -167,7 +179,7 @@ function NoteMemory({ item, onOpen }) {
   );
 }
 
-export default function MemoryJournal({ logs, plant, onOpenEntry }) {
+export default function MemoryJournal({ logs, plant, onOpenEntry, onShare }) {
   const months = useMemo(() => buildJournal(logs, plant), [logs, plant]);
   const plantName = plant?.nickname || plant?.common_name || 'your plant';
   const open = (item) => onOpenEntry && onOpenEntry({
@@ -199,7 +211,7 @@ export default function MemoryJournal({ logs, plant, onOpenEntry }) {
             {m.items.map((it) => (
               <li key={it.id}>
                 {it.type === 'photo' && <PhotoMemory item={it} plantName={plantName} index={photoIndex++} onOpen={open} />}
-                {it.type === 'milestone' && <Milestone item={it} onOpen={open} />}
+                {it.type === 'milestone' && <Milestone item={it} onOpen={open} onShare={onShare} plantName={plantName} />}
                 {it.type === 'note' && <NoteMemory item={it} onOpen={open} />}
               </li>
             ))}

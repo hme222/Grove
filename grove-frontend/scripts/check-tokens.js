@@ -29,6 +29,7 @@ const FILES = /\.(js|jsx|css)$/;
 const RAW_IMG_ALLOWED = {
   'src/components/PhotoBand.jsx': { count: 1, reason: 'the photo component itself' },
   'src/components/ThumbStrip.jsx': { count: 1, reason: 'thumbnail strip: a tiny square with its own leaf fallback' },
+  'src/components/ShareCardSheet.jsx': { count: 1, reason: 'share preview: a generated picture (often with transparency) shown whole at its own ratio; PhotoBand would crop it and tint it' },
   'src/components/PhotoViewer.jsx': { count: 1, reason: 'full-screen viewer: the photo keeps its natural size and ratio (object-contain), no fixed band' },
   'src/pages/FeedPage.js': { count: 1, reason: 'lightbox: the enlarged picture keeps its natural size (object-contain)' },
   'src/components/GroveChat.js': { count: 2, reason: 'chat attachments: a 40px composer preview and a message image at its natural ratio, up to max-h-72' },

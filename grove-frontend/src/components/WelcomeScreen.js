@@ -81,7 +81,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip, short }) {
       data-testid="onboarding-welcome"
       data-layout="flow"
     >
-      <div className={cn('mx-auto flex min-h-full w-full max-w-md flex-col px-4', short ? 'pb-14 pt-2' : 'pb-16 pt-6')}>
+      <div className={cn('mx-auto flex min-h-full w-full max-w-md flex-col px-4', short ? 'pb-12 pt-2' : 'pb-16 pt-6')}>
         <div className="flex min-h-touch items-center justify-between gap-2">
           <FloraGroveWordmark size={30} />
           {showSkip && skipButton(onSkip, disabled, 'flex min-h-touch min-w-touch shrink-0 items-center justify-center rounded-control text-grove-lichen hover:text-grove-cream')}

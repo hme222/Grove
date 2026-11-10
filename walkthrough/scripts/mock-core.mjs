@@ -97,6 +97,27 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       state.plants.push(plant);
       return plant;
     }],
+    // Demo only: an added photo is a made-up in-tab address (see demo/browser-entry.js). Nothing is stored beyond this page.
+    ['POST', /^\/plants\/([\w-]+)\/photo$/, (b, m) => {
+      const plant = state.plants.find((p) => p.id === m[1]);
+      if (!plant) return { __status: 404 };
+      plant.photo_url = b.path;
+      return { photo_url: b.path };
+    }],
+    ['POST', /^\/plants\/([\w-]+)\/photos$/, (b, m) => {
+      const plant = state.plants.find((p) => p.id === m[1]);
+      if (!plant) return { __status: 404 };
+      plant.photos = plant.photos || [];
+      const photo = { id: `ph_${plant.photos.length + 1}`, path: b.path, caption: '', taken_at: now(), is_cover: plant.photos.length === 0 };
+      plant.photos.push(photo);
+      if (!plant.photo_url) plant.photo_url = b.path;
+      return photo;
+    }],
+    ['GET', /^\/plants\/([\w-]+)\/photos$/, (b, m) => {
+      const plant = state.plants.find((p) => p.id === m[1]);
+      const photos = (plant && plant.photos) || [];
+      return { photos, count: photos.length, cap: 10 };
+    }],
     ['GET', /^\/plants\/([\w-]+)$/, (b, m) => state.plants.find((p) => p.id === m[1]) || { __status: 404 }],
     ['GET', /^\/plants\/([\w-]+)\/timeline$/, (b, m) => state.careLogList.filter((l) => l.plant_id === m[1]).slice().reverse()],
     ['GET', /^\/plants\/([\w-]+)\/biography$/, () => ({ biography: null, cached: false })],

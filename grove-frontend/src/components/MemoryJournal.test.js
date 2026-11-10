@@ -79,3 +79,20 @@ describe('new leaf milestone', () => {
     expect(items.find((i) => i.id === 'l2').subtitle).toBe('Unfurling');
   });
 });
+
+describe('sharing from a milestone', () => {
+  it('shows a Share button on milestones only when onShare is given, and passes the item', () => {
+    const onShare = jest.fn();
+    const withLeaf = [{ id: 'l1', action: 'new_leaf', logged_at: '2026-10-03T09:00:00Z' }];
+    const { el, unmount } = mount(<MemoryJournal logs={withLeaf} plant={plant} onShare={onShare} />);
+    const buttons = el.querySelectorAll('[data-testid="journal-milestone-share"]');
+    expect(buttons.length).toBe(2); // Welcome home and First new leaf
+    expect([...buttons].map((b) => b.getAttribute('aria-label'))).toContain('Share: First new leaf, Rudy');
+    act(() => buttons[0].click());
+    expect(onShare).toHaveBeenCalledTimes(1);
+    unmount();
+    const plain = mount(<MemoryJournal logs={withLeaf} plant={plant} />);
+    expect(plain.el.querySelectorAll('[data-testid="journal-milestone-share"]').length).toBe(0);
+    plain.unmount();
+  });
+});

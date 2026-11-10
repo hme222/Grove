@@ -34,6 +34,15 @@ describe('shareStats', () => {
   });
 });
 
+describe('shareStats for one milestone', () => {
+  it('counts the day of the chosen leaf, not the latest, and counts as having a leaf', () => {
+    const s = shareStats(plant, logs, NOW, { leafAt: daysAgo(30) });
+    expect(s.leafDay).toBe(12);
+    expect(s.hasLeaf).toBe(true);
+    expect(shareStats(plant, [], NOW, { leafAt: daysAgo(30) }).hasLeaf).toBe(true);
+  });
+});
+
 describe('availableKinds', () => {
   it('hides the new-leaf and this-week cards until they are true', () => {
     expect(availableKinds(shareStats(plant, [], NOW)).map((k) => k.id)).toEqual(['day', 'sticker', 'card']);

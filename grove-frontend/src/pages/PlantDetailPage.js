@@ -48,6 +48,7 @@ export default function PlantDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [careModalOpen, setCareModalOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [shareFrom, setShareFrom] = useState({ kind: null, leafAt: null });
   const [biography, setBiography] = useState(null);
   const [generatingBio, setGeneratingBio] = useState(false);
   const [aiSchedule, setAiSchedule] = useState(null);
@@ -326,7 +327,7 @@ export default function PlantDetailPage() {
                 Log care
               </button>
               <button type="button"
-                onClick={() => setShareOpen(true)}
+                onClick={() => { setShareFrom({ kind: null, leafAt: null }); setShareOpen(true); }}
                 data-testid="plant-share-button"
                 className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
               >
@@ -364,6 +365,10 @@ export default function PlantDetailPage() {
               logs={mergedTimeline}
               plant={plant}
               onOpenEntry={openJournalEntry}
+              onShare={(item) => {
+                setShareFrom(item.action === 'new_leaf' ? { kind: 'leaf', leafAt: item.logged_at } : { kind: 'card', leafAt: null });
+                setShareOpen(true);
+              }}
             />
           </TabsContent>
 
@@ -525,7 +530,7 @@ export default function PlantDetailPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <ShareCardSheet open={shareOpen} onClose={() => setShareOpen(false)} plant={plant} logs={mergedTimeline} photoSrc={photoUrl} />
+      <ShareCardSheet open={shareOpen} onClose={() => setShareOpen(false)} plant={plant} logs={mergedTimeline} photoSrc={photoUrl} initialKind={shareFrom.kind} leafAt={shareFrom.leafAt} />
       <CareLogModal
         open={careModalOpen}
         onClose={() => setCareModalOpen(false)}

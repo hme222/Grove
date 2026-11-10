@@ -44,7 +44,7 @@ export default function ToxicityBadge({ toxicity, size = 'md', className = '', t
             sideOffset={6}
             collisionPadding={12}
             data-testid={`${testId}-definition`}
-            className="z-tip max-w-[16rem] rounded-inset border-hairline border-grove-fernLine bg-grove-canopy px-3 py-2 font-ui text-sm leading-snug text-grove-cream shadow-dialog"
+            className="z-tip max-w-tip rounded-inset border-hairline border-grove-fernLine bg-grove-canopy px-3 py-2 font-ui text-sm leading-snug text-grove-cream shadow-dialog"
           >
             {info.definition}
           </TooltipPrimitive.Content>

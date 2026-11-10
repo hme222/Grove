@@ -36,7 +36,8 @@ const DAY_MS = 86400000;
 const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
 // What the cards say, worked out from the plant and its care log. `now` is injectable for tests.
-export function shareStats(plant, logs, now = new Date()) {
+// `leafAt` names which new leaf a milestone card is about (sharing from that journal entry); otherwise the latest one.
+export function shareStats(plant, logs, now = new Date(), { leafAt = null } = {}) {
   const list = (logs || []).filter((l) => l && l.logged_at && !Number.isNaN(new Date(l.logged_at).getTime()));
   const created = plant && plant.created_at ? new Date(plant.created_at) : null;
   const days = created && !Number.isNaN(created.getTime())
@@ -51,14 +52,14 @@ export function shareStats(plant, logs, now = new Date()) {
     if (ago >= 0 && ago < 7) careDays.add(ago);
   }
   const leaves = list.filter((l) => l.action === 'new_leaf').sort((a, b) => new Date(b.logged_at) - new Date(a.logged_at));
-  const leafAt = leaves[0] ? new Date(leaves[0].logged_at) : null;
-  const leafDay = leafAt && created && !Number.isNaN(created.getTime())
-    ? Math.max(1, Math.round((startOfDay(leafAt) - startOfDay(created)) / DAY_MS) + 1)
+  const leafDate = leafAt ? new Date(leafAt) : (leaves[0] ? new Date(leaves[0].logged_at) : null);
+  const leafDay = leafDate && !Number.isNaN(leafDate.getTime()) && created && !Number.isNaN(created.getTime())
+    ? Math.max(1, Math.round((startOfDay(leafDate) - startOfDay(created)) / DAY_MS) + 1)
     : days;
   return {
     name: (plant && (plant.nickname || plant.common_name)) || 'My plant',
     species: (plant && (plant.latin_name || (plant.nickname ? plant.common_name : ''))) || '',
-    days, waters, weekDays: careDays.size, hasLeaf: leaves.length > 0, leafDay,
+    days, waters, weekDays: careDays.size, hasLeaf: leaves.length > 0 || !!leafAt, leafDay,
   };
 }
 

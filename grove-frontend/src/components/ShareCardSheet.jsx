@@ -19,10 +19,11 @@ const CHECKER = {
 
 const svgUrl = (svg) => URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
 
-export default function ShareCardSheet({ open, onClose, plant, logs, photoSrc }) {
-  const stats = useMemo(() => shareStats(plant, logs), [plant, logs]);
+export default function ShareCardSheet({ open, onClose, plant, logs, photoSrc, initialKind = null, leafAt = null }) {
+  const stats = useMemo(() => shareStats(plant, logs, new Date(), { leafAt }), [plant, logs, leafAt]);
   const kinds = useMemo(() => availableKinds(stats), [stats]);
   const [index, setIndex] = useState(0);
+  const startedAt = useRef(null);
   const [assets, setAssets] = useState({ fontCss: '', photo: '', ready: false });
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState('');
@@ -50,6 +51,15 @@ export default function ShareCardSheet({ open, onClose, plant, logs, photoSrc })
     [kinds, stats, assets],
   );
   useEffect(() => () => { urls.forEach((u) => URL.revokeObjectURL(u)); thumbUrls.forEach((u) => u && URL.revokeObjectURL(u)); }, [urls, thumbUrls]);
+
+  // Opened from a journal milestone: start on that card (the new-leaf card for a new leaf).
+  useEffect(() => {
+    if (!open) { startedAt.current = null; return; }
+    if (startedAt.current === initialKind) return;
+    startedAt.current = initialKind;
+    const at = kinds.findIndex((k) => k.id === initialKind);
+    setIndex(at >= 0 ? at : 0);
+  }, [open, initialKind, kinds]);
 
   const safeIndex = Math.min(index, kinds.length - 1);
   const kind = kinds[safeIndex];

@@ -33,8 +33,8 @@ let container;
 let root;
 const q = (id) => container.querySelector(`[data-testid="${id}"]`);
 const flush = () => act(async () => {});
-const mount = async (logs) => {
-  await act(async () => { root.render(<ShareCardSheet open onClose={() => {}} plant={plant} logs={logs} photoSrc="" />); });
+const mount = async (logs, extra = {}) => {
+  await act(async () => { root.render(<ShareCardSheet open onClose={() => {}} plant={plant} logs={logs} photoSrc="" {...extra} />); });
   await flush();
 };
 
@@ -77,6 +77,12 @@ describe('ShareCardSheet', () => {
     expect(q('share-transparent-note')).toBeNull();
     await act(async () => { container.querySelector('[aria-label="Sticker card"]').click(); });
     expect(q('share-transparent-note').textContent).toMatch(/paste it onto your own photo/i);
+  });
+
+  it('starts on the new-leaf card when opened from a milestone, for that leaf', async () => {
+    await mount(withLeaf, { initialKind: 'leaf', leafAt: day(3) });
+    expect(container.querySelector('[data-testid="share-preview"] img').getAttribute('alt')).toMatch(/new leaf on day 8/i);
+    expect(container.querySelector('[aria-label="New leaf card"]').getAttribute('aria-current')).toBe('true');
   });
 
   it('copies the image and says so', async () => {

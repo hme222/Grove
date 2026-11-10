@@ -9,13 +9,6 @@
   {
     "file": "src/components/PhonePreviewShell.js",
     "rule": "arbitrary-spacing",
-    "match": "h-[34px]",
-    "reason": "Dynamic Island of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
-    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
-  },
-  {
-    "file": "src/components/PhonePreviewShell.js",
-    "rule": "arbitrary-spacing",
     "match": "w-[122px]",
     "reason": "Dynamic Island of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
     "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
@@ -52,13 +45,6 @@
     "file": "src/components/WelcomeStage.js",
     "rule": "inline-style-number",
     "match": "height: 272",
-    "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
-    "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
-  },
-  {
-    "file": "src/components/WelcomeStage.js",
-    "rule": "inline-style-number",
-    "match": "width: 310",
     "reason": "Composition canvas drawn in 430pt iPhone units (the stage is scaled as one picture); each art element is positioned in that coordinate space and has no meaning outside it.",
     "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
   },
@@ -320,5 +306,33 @@
     "match": "*",
     "reason": "The room's translucent light (sun beams, lamp glow, ghost outlines) is canvas art with an alpha; canvas fillStyle cannot use color-mix or a CSS variable.",
     "retireWhen": "the room is drawn from SVG or image assets, or the pixel palette becomes a token group in design/tokens.json."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "h-[37px]",
+    "reason": "Dynamic Island and status icons of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "w-[126px]",
+    "reason": "Dynamic Island and status icons of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/components/PhonePreviewShell.js",
+    "rule": "arbitrary-spacing",
+    "match": "gap-[5px]",
+    "reason": "Dynamic Island and status icons of the desktop iPhone preview frame, real device metrics (design/tokens.json phoneFrame).",
+    "retireWhen": "phoneFrame metrics move into tokens.json as a width/height/inset scale, or the desktop preview frame is removed."
+  },
+  {
+    "file": "src/nook/PipMark.jsx",
+    "rule": "inline-style-number",
+    "match": "width: 15",
+    "reason": "Pixel-art canvas: its CSS size is the sprite's 15 columns times an integer scale, so the pixels stay square.",
+    "retireWhen": "Pip is drawn as SVG instead of a canvas."
   }
 ]

@@ -23,6 +23,17 @@ const id = await p.evaluate(async () => {
   return plant.id;
 });
 await p.evaluate((pid) => { window.history.pushState({}, '', `/plants/${pid}`); window.dispatchEvent(new PopStateEvent('popstate')); }, id);
+// A real picture, chosen by the reviewer, stays in the tab only.
+await $('plant-detail-hero').waitFor();
+await p.locator('input[type=file]').first().setInputFiles('../grove-frontend/public/photos/soil-card-2.jpg');
+await p.waitForTimeout(1200);
+const heroSrc = await $('plant-detail-hero').locator('img').first().getAttribute('src');
+console.log('hero shows picked photo:', /^blob:/.test(heroSrc || ''), '| photo note:', await p.locator('[data-demo-photo-note]').count());
+// Sharing from the journal's new-leaf milestone opens on the new-leaf card.
+await p.getByRole('button', { name: /Share: First new leaf/ }).click();
+await $('share-save').waitFor(); await p.waitForTimeout(600);
+console.log('milestone opens on:', await $('share-preview').locator('img').getAttribute('alt'));
+await p.keyboard.press('Escape'); await p.waitForTimeout(400);
 await $('plant-share-button').click();
 await $('share-save').waitFor();
 await p.waitForTimeout(800);
@@ -37,5 +48,10 @@ for (let i = 0; i < kinds; i++) {
   const file = `.cache/share-${i}-${dl.suggestedFilename()}`; await dl.saveAs(file); out[i] = file;
   if (i === 1) await p.screenshot({ path: '.cache/share-sheet-sticker.png' });
 }
+await $('share-cards').locator('button').nth(kinds - 1).click(); await p.waitForTimeout(500);
+await p.screenshot({ path: '.cache/share-sheet-card.png' });
+// Leaving the demo forgets the picture: a reload restarts with no plant and no photo.
+await p.reload(); await p.waitForTimeout(1500);
+console.log('after reload, picked photo still reachable:', await p.evaluate(async () => { try { const r = await fetch('http://demo.local/photo/1'); return r.ok; } catch { return false; } }));
 console.log(out, 'page errors:', errs);
 await b.close(); server.close();
