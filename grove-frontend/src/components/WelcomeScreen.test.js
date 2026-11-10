@@ -12,13 +12,16 @@ test('the flow layout takes over only below 360px', () => {
   expect(isCompact(360)).toBe(false);
   expect(isCompact(1420)).toBe(false);
   expect(isCompact(375, 667)).toBe(true); // a short phone gets the flow page, so it never scrolls
+  expect(isCompact(375, 715)).toBe(true);
+  expect(isCompact(390, 756)).toBe(false);
   expect(isCompact(1420, 600)).toBe(false); // a short laptop window keeps the picture
 });
 
 test('the stage scales to fit but never below the size where its body text is 14px', () => {
   expect(stageScaleFor(430, 932)).toBe(1);
   expect(stageScaleFor(390, 844)).toBeCloseTo(390 / 430, 5); // an iPhone fits, bound by its width
-  expect(stageScaleFor(430, 700)).toBeCloseTo(700 / 800, 5); // a shorter screen is bound by its height
+  expect(stageScaleFor(430, 800)).toBeCloseTo((800 - 44) / 800, 5); // a shorter screen is bound by its height, less the sign-in bar
+  expect(stageScaleFor(390, 756)).toBeCloseTo((756 - 44) / 800, 5); // the desktop phone preview (390 x 756) fits with no scrolling
   expect(stageScaleFor(1420, 600)).toBeCloseTo(14 / 17, 5); // a laptop window keeps the picture and scrolls
   expect(stageScaleFor(360, 500)).toBeCloseTo(14 / 17, 5);
 });
@@ -69,7 +72,7 @@ test('Continue is pinned when the stage would put it below the fold or behind th
   expect(shouldPinContinue(1, 932)).toBe(false); // a full 430 x 932 screen
   expect(shouldPinContinue(stageScaleFor(390, 844), 844)).toBe(false); // an iPhone as a home-screen app
   expect(shouldPinContinue(stageScaleFor(390, 664), 664)).toBe(true); // an iPhone in Safari
-  expect(shouldPinContinue(stageScaleFor(1420, 682), 682)).toBe(true); // a laptop window
+  expect(shouldPinContinue(stageScaleFor(1420, 640), 640)).toBe(true); // a laptop window
 });
 
 test('a short phone gets the flow page: one Sign up button, no scaled picture', async () => {

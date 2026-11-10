@@ -26,7 +26,7 @@ const MIN_SCALE = MIN_BODY_PX / STAGE_BODY_PX;
 
 // A phone narrower than 360, or a short phone (an iPhone SE is 667 tall: the picture would need text under 14px to fit),
 // gets the normal-flow page. A short but wide window (a laptop) keeps the picture and scrolls.
-const SHORT_PHONE_H = 700;
+const SHORT_PHONE_H = 720;
 const PHONE_MAX_W = 500;
 export function isCompact(width, height = Infinity) {
   return width < COMPACT_W || (height < SHORT_PHONE_H && width < PHONE_MAX_W);
@@ -40,8 +40,9 @@ export function shouldPinContinue(scale, height) {
   return scale * CTA_BOTTOM + SIGN_IN_BAR_PX > height;
 }
 
+// The window has to hold the picture and the sign-in bar under it, so the bar's height comes off the height the picture may use.
 export function stageScaleFor(width, height) {
-  return Math.max(Math.min(width / STAGE_W, height / STAGE_H), MIN_SCALE);
+  return Math.max(Math.min(width / STAGE_W, (height - SIGN_IN_BAR_PX) / STAGE_H), MIN_SCALE);
 }
 
 function stageScale() {

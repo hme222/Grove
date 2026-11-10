@@ -93,8 +93,22 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       return SPECIES.filter((s) => !q || [s.common_name, s.latin_name, ...(s.synonyms || [])].some((n) => n.toLowerCase().includes(q))).slice(0, 12);
     }],
     ['POST', /^\/plants$/, (b) => {
-      const plant = { id: `pl_${state.plants.length + 1}`, ...b, status: 'healthy', created_at: now(), last_watered_at: null, next_water_due: null, photo_url: null };
+      // Demo only: a new plant arrives a month into its story, with three sample photos and a note, so the Journal and
+      // Photos tab show what a plant's story looks like. The demo labels these as samples; the first care log still counts
+      // as the first care (last_watered_at stays empty).
+      const DAY = 86400000;
+      const ago = (days) => new Date(Date.now() - days * DAY).toISOString();
+      const origin = typeof location !== 'undefined' ? location.origin : '';
+      const sample = (n, file, days, caption) => ({ id: `ph_sample_${n}`, path: `${origin}/photos/${file}`, caption, taken_at: ago(days), is_cover: n === 1, sample: true });
+      const id = `pl_${state.plants.length + 1}`;
+      const photos = [
+        sample(1, 'plant-2.jpg', 28, 'Brought it home today'),
+        sample(2, 'window-1.jpg', 14, 'Found it a spot by the window'),
+        sample(3, 'plant-1.jpg', 3, 'Looking happier'),
+      ];
+      const plant = { id, ...b, status: 'healthy', created_at: ago(28), last_watered_at: null, next_water_due: null, photo_url: photos[0].path, photos };
       state.plants.push(plant);
+      state.careLogList.push({ id: `cl_${state.careLogList.length + 1}`, plant_id: id, action: 'note', notes: 'Moved it next to the east window.', logged_at: ago(14), created_at: ago(14) });
       return plant;
     }],
     // Demo only: an added photo is a made-up in-tab address (see demo/browser-entry.js). Nothing is stored beyond this page.

@@ -1,0 +1,30 @@
+// On a demo plant: what does the Journal and Photos tab show before and after a photo is added?
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4199);
+const url = process.argv[2] || 'http://localhost:4199/';
+const b = await chromium.launch();
+const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 })).newPage(); p.setDefaultTimeout(12000);
+const errs = []; p.on('pageerror', (e) => errs.push(e.message.slice(0, 140)));
+const $ = (id) => p.getByTestId(id);
+await p.goto(url); await p.waitForTimeout(1500); await p.mouse.click(195, 300);
+await $('onboarding-continue').click(); await $('signup-submit').click();
+for (let i = 0; i < 3; i++) await $('onboarding-continue').click();
+await $('hemisphere-north').click(); await $('quiz-intro-start').click();
+for (let i = 0; i < 4; i++) await $('question-skip').click();
+await p.waitForTimeout(1500); await $('plan-start').click(); await p.waitForTimeout(2500);
+const pid = await p.evaluate(async () => {
+  const post = async (path, body) => (await fetch('http://mock.local/api' + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
+  const plant = await post('/plants', { nickname: 'Monty', common_name: 'Monstera', latin_name: 'Monstera deliciosa', watering_frequency_days: 7 });
+  await post(`/plants/${plant.id}/care-logs`, { actions: ['water'], notes: '' });
+  return plant.id;
+});
+await p.evaluate((id) => { window.history.pushState({}, '', `/plants/${id}`); window.dispatchEvent(new PopStateEvent('popstate')); }, pid);
+await $('plant-detail-hero').waitFor(); await p.waitForTimeout(800);
+console.log('journal photos:', await $('journal-photo').count(), '| notes:', await $('journal-note').count(), '| milestones:', await $('journal-milestone').count(), '| empty state:', await $('timeline-empty').count(), '| demo note:', await p.locator('[data-demo-photo-note]').count());
+await p.screenshot({ path: '.cache/story-before.png' });
+await p.getByRole('tab', { name: 'Photos' }).click(); await p.waitForTimeout(600);
+console.log('photos tab text:', (await p.locator('[role=tabpanel]:visible').innerText()).replace(/\s+/g, ' ').slice(0, 160));
+await p.screenshot({ path: '.cache/story-photos-tab.png' });
+console.log('page errors:', errs);
+await b.close(); server.close();

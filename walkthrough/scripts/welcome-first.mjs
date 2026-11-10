@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 })).newPage();
+await p.goto('http://localhost:4174/', { waitUntil: 'domcontentloaded' });
+await p.waitForTimeout(700);
+await p.screenshot({ path: '.cache/welcome-first-frame.png' });
+const btn = p.getByTestId('onboarding-continue');
+console.log('button text:', await btn.innerText(), '| visible at 0.7s:', await btn.isVisible(), '| opacity:', await btn.evaluate((e) => getComputedStyle(e).opacity));
+await p.waitForTimeout(13000);
+await p.screenshot({ path: '.cache/welcome-final-frame.png' });
+await b.close();

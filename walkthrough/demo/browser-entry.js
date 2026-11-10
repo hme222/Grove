@@ -178,7 +178,7 @@ const markPhotoNote = () => {
   note.setAttribute('data-demo-photo-note', '');
   note.setAttribute('role', 'note');
   note.className = 'mx-4 mt-3 rounded-inset border-hairline border-grove-sprout bg-grove-canopy px-3 py-2 font-ui text-sm text-grove-cream';
-  note.textContent = 'Demo note: a photo you add here stays in this browser tab. Nothing is uploaded or saved, and it is gone when you close the demo.';
+  note.textContent = 'Demo note: the first three photos and the note in this story are samples. A photo you add stays in this browser tab; nothing is uploaded or saved, and it is gone when you close the demo.';
   tabs.parentNode.insertBefore(note, tabs);
 };
 new MutationObserver(markPhotoNote).observe(document.documentElement, { childList: true, subtree: true });
