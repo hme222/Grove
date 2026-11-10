@@ -289,8 +289,8 @@
   {
     "file": "src/index.css",
     "rule": "css-px",
-    "match": "font-size: 16px",
-    "reason": "iOS Safari zooms a focused field under 16px, so the floor must be a literal 16px, not a rem that follows the reader's text size.",
+    "match": "font-size: max(16px",
+    "reason": "Form fields stay at least 16px so iOS Safari does not zoom the page on focus, and grow with the reader's text size (max(16px, 1rem)).",
     "retireWhen": "iOS stops zooming on focus or the app locks viewport scale deliberately."
   },
   {

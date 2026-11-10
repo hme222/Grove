@@ -78,7 +78,9 @@ describe('ToxicityBadge', () => {
 
   test('keyboard focus shows the definition and Escape closes it', async () => {
     const badge = render('toxic');
-    expect(badge.getAttribute('tabindex')).toBe('0');
+    // A real button: focusable and tappable without a hand-made tabindex.
+    expect(badge.tagName).toBe('BUTTON');
+    expect(badge.getAttribute('type')).toBe('button');
     await act(async () => { badge.focus(); });
     const panel = () => document.body.querySelector('[data-testid="toxicity-badge-definition"]');
     expect(panel()?.textContent).toContain(getToxicityInfo('toxic').definition);
@@ -89,5 +91,6 @@ describe('ToxicityBadge', () => {
   test('a chip inside a link or button takes no focus', () => {
     act(() => root.render(<ToxicityBadge toxicity="mild" interactive={false} />));
     expect(container.querySelector('[data-testid="toxicity-badge"]').hasAttribute('tabindex')).toBe(false);
+    expect(container.querySelector('[data-testid="toxicity-badge"]').tagName).toBe('SPAN');
   });
 });

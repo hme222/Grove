@@ -102,7 +102,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) { handleReset(); onClose(); } }}>
-      <DialogContent className="max-w-dialog" data-testid="care-log-modal"
+      <DialogContent className="max-w-dialog" data-testid="care-log-modal" aria-labelledby="care-log-title"
         onOpenAutoFocus={(e) => { e.preventDefault(); openerRef.current = openerRef.current || document.activeElement; document.getElementById('care-log-title')?.focus(); }}
         onCloseAutoFocus={(e) => { e.preventDefault(); const el = openerRef.current; openerRef.current = null; if (el && el.focus && document.contains(el)) el.focus(); }}
       >
@@ -115,7 +115,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
           </p>
         </DialogHeader>
 
-        <div className="grid grid-cols-4 gap-2 my-4" data-testid="care-action-grid">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] gap-2 my-4" data-testid="care-action-grid">
           {CARE_ACTIONS.map(({ value, label, icon: Icon, color }) => {
             const isOn = selected.has(value);
             return (

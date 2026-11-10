@@ -234,7 +234,6 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
     };
     el.addEventListener('scroll', onScroll, { passive: true });
     return () => { clearTimeout(timer); el.removeEventListener('scroll', onScroll); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -99,12 +99,12 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           ) : isLast && renderFinalCard ? (
             renderFinalCard(card)
           ) : (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {backButton}
               <button
                 type="button"
                 onClick={next}
-                className={cn(buttonVariants(), "flex-1 flex")}
+                className={cn(buttonVariants(), "flex flex-1 basis-40")}
                 data-testid="lesson-next"
               >
                 <span dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.cta || 'Next') }} />

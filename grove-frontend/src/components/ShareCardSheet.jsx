@@ -112,7 +112,7 @@ export default function ShareCardSheet({ open, onClose, plant, logs, photoSrc, i
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-      <DialogContent className="max-h-viewport max-w-dialog overflow-y-auto" data-testid="share-sheet"
+      <DialogContent className="flex max-h-viewport max-w-dialog flex-col overflow-y-auto [&>*]:shrink-0" data-testid="share-sheet"
         onOpenAutoFocus={(e) => { e.preventDefault(); titleRef.current?.focus(); }}>
         <DialogHeader>
           <DialogTitle ref={titleRef} tabIndex={-1} className="font-plant text-xl text-grove-cream focus:outline-none">
