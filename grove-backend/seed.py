@@ -134,7 +134,7 @@ async def apply_sourced_safety(db):
     species links). Pet-safety values stay only where an ASPCA page backs them; everything else is removed."""
     from species_safety import sourced_toxicity
     for s in CURATED_SPECIES:
-        update = {"$set": {"care_summary": s["care_summary"], "flags": s.get("flags", {})}}
+        update = {"$set": {"care_summary": s["care_summary"], "flags": s.get("flags", {}), "citations": s["citations"]}}
         if s.get("toxicity") and sourced_toxicity(s):
             update["$set"]["toxicity"] = s["toxicity"]
         else:

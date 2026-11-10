@@ -29,3 +29,12 @@ def test_scrub_returns_a_copy_with_unsourced_values_removed():
     assert doc["toxicity"] == "mild"  # the input is untouched
     assert scrub_species(None) is None
     assert has_toxicity_source({"citations": [ASPCA]}) and not has_toxicity_source({"citations": []})
+
+
+def test_every_aspca_citation_points_at_a_plant_page_on_the_aspca_site():
+    from curated_species import CURATED_SPECIES
+    base = "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/"
+    for s in CURATED_SPECIES:
+        for c in s["citations"]:
+            if "aspca.org" in c["url"]:
+                assert c["url"].startswith(base) and len(c["url"]) > len(base), s["slug"]

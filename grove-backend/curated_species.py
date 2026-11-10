@@ -29,12 +29,14 @@ CURATED_SPECIES = [
         "light_min": "medium",
         "light_ideal": "bright_indirect",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Bright indirect light. Let the top inch of soil dry between waterings, and water less in winter. Give it a moss pole or trellis: climbing helps it mature and produce split leaves, but light matters too.",
         "synonyms": ["Swiss cheese plant", "Split-leaf philodendron", "Monstera"],
         "flags": {"introduced_widely": True},
         "citations": [
             {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/11455/monstera-deliciosa/details"},
-            {"label": "USDA NRCS PLANTS", "url": "https://plants.usda.gov/home/plantProfile?symbol=MODE"}
+            {"label": "USDA NRCS PLANTS", "url": "https://plants.usda.gov/home/plantProfile?symbol=MODE"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/swiss-cheese-plant"}
         ],
     },
     # 2
@@ -50,12 +52,14 @@ CURATED_SPECIES = [
         "light_ideal": "bright_indirect",
         "sun_sensitive": True,
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Tolerates low to bright indirect light; no direct midday sun, and not a windowless room. Water when the top inch is dry, less in winter. Note: outdoors in tropical regions this species is invasive — never compost cuttings or release into the environment.",
         "synonyms": ["Pothos", "Golden pothos", "Devil's ivy", "Scindapsus aureus"],
         "flags": {"invasive_outdoors": True, "introduced_widely": True},
         "citations": [
             {"label": "USDA NRCS PLANTS", "url": "https://plants.usda.gov/home/plantProfile?symbol=EPAU"},
-            {"label": "Global Invasive Species Database (ISSG)", "url": "http://www.iucngisd.org/gisd/species.php?sc=1463"}
+            {"label": "Global Invasive Species Database (ISSG)", "url": "http://www.iucngisd.org/gisd/species.php?sc=1463"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/devils-ivy"}
         ],
     },
     # 3
@@ -70,12 +74,14 @@ CURATED_SPECIES = [
         "light_min": "low",
         "light_ideal": "bright_indirect",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Tolerates low light and erratic watering, though it grows best in brighter indirect light. Let soil dry completely between waterings, and water less in winter; overwatering is the only common way to kill it.",
         "synonyms": ["Sansevieria trifasciata", "Sansevieria", "Mother-in-law's tongue", "Snake plant"],
         "flags": {"introduced_widely": True},
         "citations": [
             {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/76090/sansevieria-trifasciata/details"},
-            {"label": "Kew Gardens — Plants of the World Online", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77181068-1"}
+            {"label": "Kew Gardens — Plants of the World Online", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77181068-1"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/snake-plant"}
         ],
     },
     # 4
@@ -91,11 +97,13 @@ CURATED_SPECIES = [
         "light_ideal": "bright_indirect",
         "sun_sensitive": True,
         "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
         "care_summary": "Bright indirect light. Water when the top inch dries, less in winter. Prolific producer of plantlets — clip and pot to share with friends.",
         "synonyms": ["Chlorophytum", "Airplane plant"],
-        "flags": {"introduced_widely": True},
+        "flags": {"introduced_widely": True, "pet_safe": True},
         "citations": [
-            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/3717/chlorophytum-comosum/details"}
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/3717/chlorophytum-comosum/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/spider-plant"}
         ],
     },
     # 5
@@ -110,12 +118,14 @@ CURATED_SPECIES = [
         "light_min": "bright_indirect",
         "light_ideal": "bright_direct",
         "default_grow_medium": "soil",
-        "care_summary": "Bright direct light, ideally a south- or west-facing window. Water deeply but only when soil is bone dry. Use a fast-draining cactus mix.",
+        "toxicity": "toxic",
+        "care_summary": "Bright direct light, ideally a south- or west-facing window. Water deeply but only when soil is bone dry. Use a fast-draining cactus mix. The ASPCA lists it as toxic to cats and dogs, so keep it out of their reach.",
         "synonyms": ["Aloe barbadensis", "Aloe barbadensis miller"],
         "flags": {"medicinal": True, "introduced_widely": True},
         "citations": [
             {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/14345/aloe-vera/details"},
-            {"label": "Iran J Med Sci — peer-reviewed review", "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2763764/"}
+            {"label": "Iran J Med Sci — peer-reviewed review", "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2763764/"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/aloe"}
         ],
     },
     # 6
@@ -130,11 +140,13 @@ CURATED_SPECIES = [
         "light_min": "low",
         "light_ideal": "medium",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Low to medium light works; avoid direct sun. Likes evenly moist soil. Check the top inch. Water when it just starts to dry, before it droops, and less often in winter.",
         "synonyms": ["Spathiphyllum", "Peace lily"],
         "flags": {"introduced_widely": True},
         "citations": [
-            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/17681/spathiphyllum-wallisii/details"}
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/17681/spathiphyllum-wallisii/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/peace-lily"}
         ],
     },
     # 7
@@ -271,12 +283,14 @@ CURATED_SPECIES = [
         "light_min": "bright_indirect",
         "light_ideal": "bright_direct",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Wants the brightest spot you can give it; flowers indoors only with several hours of direct sun. Water when the top two inches are dry; in winter, let the top few inches dry before watering.",
         "synonyms": ["Crane flower", "Bird of paradise"],
         "flags": {"introduced_widely": True},
         "citations": [
             {"label": "Kew Gardens — Plants of the World Online", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:797486-1"},
-            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/18079/strelitzia-reginae/details"}
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/18079/strelitzia-reginae/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/bird-paradise-flower"}
         ],
     },
     # 14
@@ -331,12 +345,14 @@ CURATED_SPECIES = [
         "light_min": "medium",
         "light_ideal": "bright_indirect",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Bright to medium indirect light indoors. Keep soil evenly moist. Outdoors in much of North America this species is aggressively invasive — never compost cuttings, and consider native alternatives like Virginia creeper (Parthenocissus quinquefolia).",
         "synonyms": ["Common ivy"],
         "flags": {"invasive_outdoors": True, "native_alternatives_us": ["Parthenocissus quinquefolia", "Asarum canadense"]},
         "citations": [
             {"label": "USDA NRCS PLANTS", "url": "https://plants.usda.gov/home/plantProfile?symbol=HEHE"},
-            {"label": "Invasive.org — Center for Invasive Species", "url": "https://www.invasive.org/species/subject.cfm?sub=3027"}
+            {"label": "Invasive.org — Center for Invasive Species", "url": "https://www.invasive.org/species/subject.cfm?sub=3027"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/english-ivy"}
         ],
     },
     # 17
@@ -352,11 +368,13 @@ CURATED_SPECIES = [
         "light_min": "bright_direct",
         "light_ideal": "bright_direct",
         "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
         "care_summary": "Famous David Austin cut-flower rose with peachy-apricot rosette blooms. A garden plant: full sun and well-drained soil. Check the soil and deep water about weekly in dry weather; a potted rose or tuber rots if watered on a short cycle. Disbud for fewer, bigger blooms — the standard florist trick.",
         "synonyms": ["Juliet rose", "Rosa Juliet", "Rosa Ausjameson"],
-        "flags": {"cultivar": True, "parent_species": "Rosa hybrid (David Austin breeding)", "cut_flower": True},
+        "flags": {"cultivar": True, "parent_species": "Rosa hybrid (David Austin breeding)", "cut_flower": True, "pet_safe": True},
         "citations": [
-            {"label": "David Austin Roses — official cultivar page", "url": "https://www.davidaustinroses.com/products/juliet-auspoly"}
+            {"label": "David Austin Roses — official cultivar page", "url": "https://www.davidaustinroses.com/products/juliet-auspoly"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/rose"}
         ],
     },
     # 18
@@ -371,11 +389,13 @@ CURATED_SPECIES = [
         "light_min": "bright_direct",
         "light_ideal": "bright_direct",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Cut-flower staple — round silvery juvenile leaves are the foliage you've seen in every wedding bouquet for a decade. Full sun, well-drained soil. Cut hard in spring to keep juvenile foliage.",
         "synonyms": ["Eucalyptus", "Silver dollar gum"],
         "flags": {"introduced_widely": True, "cut_flower": True},
         "citations": [
-            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/95220/eucalyptus-polyanthemos/details"}
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/95220/eucalyptus-polyanthemos/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/eucalyptus"}
         ],
     },
     # 19
@@ -430,11 +450,13 @@ CURATED_SPECIES = [
         "light_ideal": "bright_indirect",
         "sun_sensitive": True,
         "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
         "care_summary": "Bright indirect light. Let soil dry between waterings, and water less in winter. Don't deadhead spent flower spurs — Hoya re-flowers from the same peduncle for years.",
         "synonyms": ["Wax plant", "Porcelain flower"],
-        "flags": {"introduced_widely": True},
+        "flags": {"introduced_widely": True, "pet_safe": True},
         "citations": [
-            {"label": "International Hoya Association", "url": "http://international-hoya.org/"}
+            {"label": "International Hoya Association", "url": "http://international-hoya.org/"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/wax-plant"}
         ],
     },
     # 22
@@ -468,11 +490,13 @@ CURATED_SPECIES = [
         "light_min": "medium",
         "light_ideal": "medium",
         "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
         "care_summary": "Indirect light, high humidity, soil that never fully dries; water less often in winter. Browning fronds mean a dry root ball or dry air. Check the soil first.",
         "synonyms": ["Nephrolepis", "Sword fern", "Boston fern"],
-        "flags": {"introduced_widely": True},
+        "flags": {"introduced_widely": True, "pet_safe": True},
         "citations": [
-            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/12009/nephrolepis-exaltata/details"}
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/12009/nephrolepis-exaltata/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/boston-fern"}
         ],
     },
     # 24
@@ -487,11 +511,13 @@ CURATED_SPECIES = [
         "light_min": "bright_indirect",
         "light_ideal": "bright_direct",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "Bright direct light keeps the leaves compact and red-edged. Water deeply only when soil is bone dry. A jade plant rarely outlives its owner — they get passed down generations.",
         "synonyms": ["Crassula argentea", "Lucky plant", "Jade"],
         "flags": {"introduced_widely": True},
         "citations": [
-            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/4844/crassula-ovata/details"}
+            {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/4844/crassula-ovata/details"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/jade-plant"}
         ],
     },
     # 25
@@ -507,11 +533,13 @@ CURATED_SPECIES = [
         "light_min": "bright_direct",
         "light_ideal": "bright_direct",
         "default_grow_medium": "soil",
+        "toxicity": "toxic",
         "care_summary": "The dinner-plate dahlia of wedding bouquets — blush, blooms 8–10 inches across. A garden plant: plant tubers after last frost in full sun and stake early. Check the soil and deep water about weekly in dry weather; potted tubers rot if watered on a short cycle. Lift tubers in cold-winter zones.",
         "synonyms": ["Dahlia"],
         "flags": {"cultivar": True, "parent_species": "Dahlia pinnata lineage", "cut_flower": True},
         "citations": [
-            {"label": "American Dahlia Society", "url": "https://www.dahlia.org/"}
+            {"label": "American Dahlia Society", "url": "https://www.dahlia.org/"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/dahlia"}
         ],
     },
     # 26. Added after the first synthetic user test found common houseplants missing
