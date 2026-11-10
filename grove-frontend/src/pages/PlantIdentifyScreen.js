@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { plantAPI } from '../lib/api';
 import PlantImage from '../components/PlantImage';
 import ToxicityBadge from '../components/ToxicityBadge';
+import PetSafetyLookup from '../components/PetSafetyLookup';
 import { confidenceText, identifyWhy } from '../lib/aiTrust';
 import { impactLight, impactMedium, success } from '../lib/haptics';
 
@@ -285,6 +286,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           className="mt-2"
           testId="identify-toxicity"
         />
+        <PetSafetyLookup toxicity={speciesEdited ? null : identified?.toxicity} className="block" testId="identify-safety-lookup" />
       </div>
       <div className="h-px bg-grove-moss my-3" />
 

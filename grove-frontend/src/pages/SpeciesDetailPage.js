@@ -13,6 +13,7 @@ import { encyclopediaAPI, wantsAPI } from '../lib/api';
 import { Leaf, Droplets, Sun, Sprout, Bug, BookOpen, ExternalLink, ShieldAlert, Heart, Bird, Scissors, Sparkles, BarChart3, Bookmark, BookmarkCheck, Camera, Plus } from 'lucide-react';
 import SectionTutorial from '../components/SectionTutorial';
 import ToxicityBadge from '../components/ToxicityBadge';
+import PetSafetyLookup from '../components/PetSafetyLookup';
 import { toast } from 'sonner';
 import PhotoBand from '../components/PhotoBand';
 
@@ -209,6 +210,7 @@ export default function SpeciesDetailPage() {
                   {species.family}
                 </span>
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
+                <PetSafetyLookup toxicity={species.toxicity} testId="species-safety-lookup" />
                 <p className="mt-1.5 font-ui text-xs text-grove-sage" data-testid="species-safety-line">
                   Based on ASPCA listings for cats and dogs. Even non-toxic plants can upset a stomach, and small children should not chew any plant. If something was eaten:
                 </p>

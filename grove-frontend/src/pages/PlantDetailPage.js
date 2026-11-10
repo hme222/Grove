@@ -15,6 +15,7 @@ import { getFileUrl } from '../lib/api';
 import StatusDot from '../components/StatusDot';
 import AppLink from '../components/AppLink';
 import ToxicityBadge from '../components/ToxicityBadge';
+import PetSafetyLookup from '../components/PetSafetyLookup';
 import { confidenceText } from '../lib/aiTrust';
 import CareLogModal from '../components/CareLogModal';
 import FirstCareCelebration from '../components/FirstCareCelebration';
@@ -312,6 +313,7 @@ export default function PlantDetailPage() {
                 </span>
               </div>
               <ToxicityBadge toxicity={plant.species_toxicity} size="sm" className="mt-1.5" testId="plant-toxicity" />
+              <PetSafetyLookup toxicity={plant.species_toxicity} className="block" testId="plant-safety-lookup" />
               <p className="mt-1 font-ui text-xs text-grove-sage">If a pet or child ate any of it:</p>
               <AppLink to="/help-my-plant" className="inline-flex min-h-touch items-center font-ui text-sm text-grove-cream underline underline-offset-2" data-testid="plant-poison-help">
                 Open Help my plant for who to call
