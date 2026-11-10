@@ -263,12 +263,14 @@ CURATED_SPECIES = [
         "light_ideal": "medium",
         "sun_sensitive": True,
         "default_grow_medium": "soil",
+        "toxicity": "non_toxic",
         "care_summary": "Medium indirect light only — direct sun bleaches the silver bands. Keeps soil consistently moist, a little less in winter. Use filtered or rain water; tap water minerals burn the leaf edges.",
         "synonyms": ["Calathea orbifolia", "Calathea", "Goeppertia"],
-        "flags": {"introduced_widely": True},
+        "flags": {"introduced_widely": True, "pet_safe": True},
         "citations": [
             {"label": "Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/108807/calathea-orbifolia/details"},
-            {"label": "Borchsenius & Suárez (Phytotaxa)", "url": "https://www.biotaxa.org/Phytotaxa/article/view/phytotaxa.124.1.2"}
+            {"label": "Borchsenius & Suárez (Phytotaxa)", "url": "https://www.biotaxa.org/Phytotaxa/article/view/phytotaxa.124.1.2"},
+            {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/calathea"}
         ],
     },
     # 13
