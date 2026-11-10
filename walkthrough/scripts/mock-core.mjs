@@ -29,7 +29,7 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
 
   const baseUser = () => ({
     id: 'u_maya', username: 'maya', email: 'maya@example.com', display_name: 'Maya',
-    created_at: now(), tier: 'free', onboarding_complete: false,
+    created_at: now(), tier: 'preview', onboarding_complete: false,
     tutorials_seen: ['care', 'collection', 'greenhouse', 'lighting'],
     first_session_banner_dismissed: true, tooltips_enabled: false, has_pets: false, show_daily_trivia: false,
     first_care_celebrated: false, nook_enabled: false,
@@ -133,7 +133,7 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     ['GET', /^\/stats\/me$/, () => ({
       plants_needing_water: 0, plants_on_schedule: state.plants.length, total_plants: state.plants.length, active_plants: state.plants.length,
       past_plants_count: 0, total_care_logs: state.careLogs, estimated_care_hours: 0, propagation_count: 0, thriving_rate: 0,
-      swap_count: 0, bouquet_count: 0, check_ins: { this_week: state.careLogs ? 1 : 0, weekly_goal: 3 }, show_advanced_analytics: false, tier: 'free',
+      swap_count: 0, bouquet_count: 0, check_ins: { this_week: state.careLogs ? 1 : 0, weekly_goal: 3 }, show_advanced_analytics: false, tier: 'preview',
     })],
     ['GET', /^\/stats\/me\/care-hours$/, () => (state.careLogs ? { soil_check: { count: state.careLogs, estimated_minutes: state.careLogs }, total_hours: 0 } : { total_hours: 0 })],
     ['GET', /^\/users\/me\/badges$/, () => []],

@@ -11,12 +11,15 @@ test('the flow layout takes over only below 360px', () => {
   expect(isCompact(195)).toBe(true);
   expect(isCompact(360)).toBe(false);
   expect(isCompact(1420)).toBe(false);
+  expect(isCompact(375, 667)).toBe(true); // a short phone gets the flow page, so it never scrolls
+  expect(isCompact(1420, 600)).toBe(false); // a short laptop window keeps the picture
 });
 
 test('the stage scales to fit but never below the size where its body text is 14px', () => {
   expect(stageScaleFor(430, 932)).toBe(1);
-  expect(stageScaleFor(390, 844)).toBeCloseTo(844 / 932, 5); // an iPhone fits
-  expect(stageScaleFor(1420, 682)).toBeCloseTo(14 / 17, 5); // a laptop window keeps the picture and scrolls
+  expect(stageScaleFor(390, 844)).toBeCloseTo(390 / 430, 5); // an iPhone fits, bound by its width
+  expect(stageScaleFor(430, 700)).toBeCloseTo(700 / 800, 5); // a shorter screen is bound by its height
+  expect(stageScaleFor(1420, 600)).toBeCloseTo(14 / 17, 5); // a laptop window keeps the picture and scrolls
   expect(stageScaleFor(360, 500)).toBeCloseTo(14 / 17, 5);
 });
 
@@ -69,8 +72,16 @@ test('Continue is pinned when the stage would put it below the fold or behind th
   expect(shouldPinContinue(stageScaleFor(1420, 682), 682)).toBe(true); // a laptop window
 });
 
-test('short screen: one Continue button, outside the stage, pinned', async () => {
+test('a short phone gets the flow page: one Sign up button, no scaled picture', async () => {
   const { container, done } = await render(390, 664);
+  expect(container.querySelector('[data-layout="flow"]')).not.toBeNull();
+  expect(container.querySelectorAll('[data-testid="onboarding-continue"]')).toHaveLength(1);
+  expect(container.querySelector('.gw-stage')).toBeNull();
+  done();
+});
+
+test('short screen: one Continue button, outside the stage, pinned', async () => {
+  const { container, done } = await render(1000, 600);
   const buttons = container.querySelectorAll('[data-testid="onboarding-continue"]');
   expect(buttons).toHaveLength(1);
   expect(container.querySelector('.gw-stage [data-testid="onboarding-continue"]')).toBeNull();

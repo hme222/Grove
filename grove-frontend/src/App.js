@@ -75,10 +75,16 @@ function SlowStartNote() {
   return <p className="mt-2 font-ui text-sm text-grove-sage" data-testid="slow-start">Waking up. The first open after a quiet spell can take about a minute.</p>;
 }
 
+// The spinner only appears if loading takes a moment, so a quick start never flashes it.
 function LoadingScreen() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), 400);
+    return () => clearTimeout(t);
+  }, []);
   return (
     <div className="flex items-center justify-center min-h-screen bg-grove-forest">
-      <div className="text-center" role="status">
+      <div className={show ? 'text-center' : 'text-center invisible'} role="status">
         <Spinner className="mx-auto mb-3 block h-8 w-8" />
         <p className="font-plant text-grove-cream text-lg">Loading FloraGrove…</p>
         <SlowStartNote />
@@ -184,6 +190,22 @@ function AppRoutes() {
     navigate('/', { replace: true });
   }, [location.pathname, loading, user, navigate]);
   const [offerDone, setOfferDone] = useState(false);
+  const [handoff, setHandoff] = useState(null);
+
+  // The cover comes down once the page it is waiting for shows words (or after two seconds, whatever happens).
+  useEffect(() => {
+    if (!handoff) return undefined;
+    const started = Date.now();
+    let frame;
+    const check = () => {
+      const main = document.getElementById('main-content');
+      const ready = location.pathname === handoff && main && main.innerText.trim().length > 20;
+      if (ready || Date.now() - started > 2000) setHandoff(null);
+      else frame = requestAnimationFrame(check);
+    };
+    frame = requestAnimationFrame(check);
+    return () => cancelAnimationFrame(frame);
+  }, [handoff, location.pathname]);
 
   useEffect(() => {
     if (!loading && user && user.onboarding_complete === false) {
@@ -198,7 +220,11 @@ function AppRoutes() {
       setQuizDone(true);
       setReplayFirstRun(false);
     }
-    if (choice?.to) navigate(choice.to);
+    if (choice?.to) {
+      // Keep a plain cover up until the lesson has content, so Today does not flash through on the way there.
+      setHandoff(choice.to);
+      navigate(choice.to);
+    }
     // Onboarding saved this on the server; mirror it so the quiz can follow right away.
     updateUser({ onboarding_complete: true });
   };
@@ -244,6 +270,11 @@ function AppRoutes() {
 
   return (
     <>
+      {handoff && !flowOpen && (
+        <div className="fixed inset-0 z-intro bg-grove-forest" data-testid="handoff-cover">
+          <p role="status" className="sr-only">Opening your lesson</p>
+        </div>
+      )}
       {flowOpen && <Onboarding onComplete={handleOnboardingComplete} replay={replayFirstRun} launchIntro />}
       {showQuiz && <QuizFlow onDone={handleQuizDone} />}
       {showOffer && <NookOfferCard onDone={handleOfferDone} />}

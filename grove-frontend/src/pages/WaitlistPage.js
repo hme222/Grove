@@ -141,7 +141,7 @@ export default function WaitlistPage() {
         <div
           className="wl-phone"
           role="img"
-          aria-label="The FloraGrove app's welcome screen: Welcome to FloraGrove. A grove is a small group of trees growing closely together. FloraGrove is a safe space to learn about plants. Providing tools to help you feel confident in caring for your plants."
+          aria-label="The FloraGrove app's welcome screen: Welcome to FloraGrove. A grove is a small group of trees growing closely together. FloraGrove is a safe space to learn about plants."
         >
           <span className="wl-btn wl-btn-action" aria-hidden="true" />
           <span className="wl-btn wl-btn-up" aria-hidden="true" />

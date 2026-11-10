@@ -35,7 +35,7 @@ export default function StepScreen({ step, stepLabel, onBack, heading, eyebrow, 
   return (
     <div className="mx-auto flex min-h-full w-full max-w-md flex-col" data-testid={testId}>
       {bleed}
-      <div className={`flex flex-1 flex-col px-4 pb-6 ${bleed ? 'pt-4' : 'pt-6'}`}>
+      <div className={`os-pad flex flex-1 flex-col px-4 pb-6 ${bleed ? 'pt-4' : 'pt-6'}`}>
       {(onBack || !bleed) && (
         <div className="flex min-h-touch items-center">
           {onBack && <BackButton onClick={onBack} testId="onboarding-back" />}

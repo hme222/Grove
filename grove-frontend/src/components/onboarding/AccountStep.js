@@ -88,7 +88,7 @@ export default function AccountStep({ config, onBack, onDone }) {
       stepLabel="Your account"
       onBack={onBack}
       heading="Create your FloraGrove account"
-      intro="Free, and we never share your details."
+      intro="We never share your details."
       testId="onboarding-account"
     >
       {providers.length > 0 && (
@@ -205,7 +205,7 @@ export default function AccountStep({ config, onBack, onDone }) {
             {busy ? 'Creating account…' : 'Create account'}
           </button>
           <p className="text-center font-ui text-sm text-grove-cream">
-            <AppLink to="/login" className="inline-flex min-h-touch items-center rounded-control px-2 underline underline-offset-2" data-testid="signup-signin">
+            <AppLink to="/login" className="inline-flex min-h-touch items-center rounded-control px-2" data-testid="signup-signin">
               Already have an account? Sign in
             </AppLink>
           </p>

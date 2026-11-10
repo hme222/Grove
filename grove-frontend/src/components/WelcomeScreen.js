@@ -24,8 +24,12 @@ const MIN_BODY_PX = 14;
 const STAGE_BODY_PX = 17;
 const MIN_SCALE = MIN_BODY_PX / STAGE_BODY_PX;
 
-export function isCompact(width) {
-  return width < COMPACT_W;
+// A phone narrower than 360, or a short phone (an iPhone SE is 667 tall: the picture would need text under 14px to fit),
+// gets the normal-flow page. A short but wide window (a laptop) keeps the picture and scrolls.
+const SHORT_PHONE_H = 700;
+const PHONE_MAX_W = 500;
+export function isCompact(width, height = Infinity) {
+  return width < COMPACT_W || (height < SHORT_PHONE_H && width < PHONE_MAX_W);
 }
 
 // The sign-in bar under the screen is one touch target tall. If the stage's own Continue button would sit
@@ -70,30 +74,27 @@ function skipButton(onSkip, disabled, className) {
   );
 }
 
-function CompactWelcome({ onContinue, onSkip, disabled, showSkip }) {
+function CompactWelcome({ onContinue, onSkip, disabled, showSkip, short }) {
   return (
     <div
       className="fixed inset-0 z-intro overflow-y-auto bg-grove-forest text-grove-cream"
       data-testid="onboarding-welcome"
       data-layout="flow"
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col px-4 pb-16 pt-6">
+      <div className={cn('mx-auto flex min-h-full w-full max-w-md flex-col px-4', short ? 'pb-14 pt-2' : 'pb-16 pt-6')}>
         <div className="flex min-h-touch items-center justify-between gap-2">
           <FloraGroveWordmark size={30} />
           {showSkip && skipButton(onSkip, disabled, 'flex min-h-touch min-w-touch shrink-0 items-center justify-center rounded-control text-grove-lichen hover:text-grove-cream')}
         </div>
-        <h1 className="mt-6 max-w-full break-words font-plant text-3xl leading-tight text-grove-cream">Welcome to FloraGrove</h1>
+        <h1 className={cn('max-w-full break-words font-plant text-3xl leading-tight text-grove-cream', short ? 'mt-3' : 'mt-6')}>Welcome to FloraGrove</h1>
         <p className="mt-3 font-ui text-base leading-relaxed text-grove-cream">
           A <b className="font-plant text-lg font-bold">grove</b> is a small group of trees growing closely together
         </p>
-        <PhotoBand src="/photos/welcome-forest-edited.jpg" ratio="photo" eager className="mt-6" />
-        <p className="mt-6 font-ui text-base text-grove-cream">
+        <PhotoBand src="/photos/welcome-forest-edited.jpg" ratio={short ? 'wide' : 'photo'} eager className={short ? 'mt-4' : 'mt-6'} />
+        <p className={cn('font-ui text-base text-grove-cream', short ? 'mt-4' : 'mt-6')}>
           FloraGrove is a <b className="font-bold">safe space</b> to learn about plants.
         </p>
-        <p className="mt-4 text-center font-ui text-lg italic text-grove-cream">
-          Providing tools to help you feel confident in caring for your plants
-        </p>
-        <div className="mt-auto pt-8">
+        <div className={cn('mt-auto', short ? 'pt-4' : 'pt-8')}>
           <button
             type="button"
             onClick={onContinue}
@@ -123,8 +124,8 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
   const height = typeof window === 'undefined' ? STAGE_H : window.innerHeight;
   const pinned = shouldPinContinue(scale, height);
 
-  if (isCompact(width)) {
-    return <CompactWelcome onContinue={onContinue} onSkip={onSkip} disabled={disabled} showSkip={showSkip} />;
+  if (isCompact(width, height)) {
+    return <CompactWelcome onContinue={onContinue} onSkip={onSkip} disabled={disabled} showSkip={showSkip} short={width >= COMPACT_W} />;
   }
 
   return (

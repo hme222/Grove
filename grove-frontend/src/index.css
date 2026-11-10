@@ -99,3 +99,23 @@
 /* One scrollbar-free scroller for swipe rows (photo guide cards, nook plant tiles). */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* First-run flow on a short screen (a small phone, or a phone with big browser bars): nothing here should need
+   scrolling, so decorative photos go and the spacing closes up. Touch targets stay at --touch-min. */
+@media (max-height: 760px) {
+  [data-testid="onboarding-flow"] [data-photo] { display: none; }
+  [data-testid="onboarding-flow"] .os-pad { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  [data-testid="onboarding-flow"] [data-testid="step-actions"] { padding-top: 0.75rem; }
+  [data-testid="onboarding-flow"] [data-testid="onboarding-heading"] { margin-top: 0.5rem; font-size: 1.625rem; }
+  [data-testid="onboarding-flow"] [role="radiogroup"] > * + * { margin-top: 0.375rem; }
+  [data-testid="onboarding-flow"] [role="radio"] { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+  [data-testid="onboarding-flow"] [data-testid="question-why"] { margin-top: 0.5rem; }
+  [data-testid="onboarding-flow"] [data-testid="question-hint"] { margin-top: 0.5rem; }
+}
+@media (max-height: 700px) {
+  [data-testid="onboarding-flow"] [data-testid="onboarding-heading"] { font-size: 1.5rem; }
+  [data-testid="onboarding-flow"] .os-pad { padding-bottom: 0; }
+  [data-testid="onboarding-flow"] [role="radiogroup"] > * + * { margin-top: 0.25rem; }
+  [data-testid="onboarding-flow"] [data-testid="onboarding-progress"] { margin-top: 0.25rem; }
+  [data-testid="onboarding-flow"] [data-testid="question-why"], [data-testid="onboarding-flow"] [data-testid="question-hint"] { margin-top: 0.25rem; }
+}

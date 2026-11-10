@@ -793,13 +793,13 @@ describe('launch intro', () => {
   const setMotion = (reduce) => { window.matchMedia = jest.fn().mockImplementation((query) => ({ matches: reduce && query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} })); };
   afterEach(() => { delete window.matchMedia; jest.useRealTimers(); });
 
-  test('plays before the welcome screen, then hands over after about 2.8 seconds', async () => {
+  test('plays before the welcome screen, then hands over after about 3.4 seconds', async () => {
     setMotion(false);
     jest.useFakeTimers();
     await mount({ launchIntro: true });
     expect(q('launch-intro')).not.toBeNull();
     expect(q('onboarding-welcome')).toBeNull();
-    await act(async () => { jest.advanceTimersByTime(2900); });
+    await act(async () => { jest.advanceTimersByTime(3500); });
     expect(q('launch-intro')).toBeNull();
     expect(q('onboarding-welcome')).not.toBeNull();
   });

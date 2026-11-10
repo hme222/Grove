@@ -1,13 +1,29 @@
-/* FloraGrove launch intro: the mark drops in, bounces twice, then the name fades up. Plays once, about 2.8s. */
-@keyframes li-drop {
-  0%   { transform: translateY(-70vh); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
-  45%  { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
-  62%  { transform: translateY(-28px); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
-  76%  { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
-  86%  { transform: translateY(-10px); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
-  94%, 100% { transform: translateY(0); }
+/* FloraGrove launch intro: a stem grows up from the bottom of the screen into a closed bud, the bud opens into the
+   mark, the stem fades, stars land around it, and the name fades up. Plays once, about 3.3s. */
+@keyframes li-draw { to { stroke-dashoffset: 0; } }
+@keyframes li-fade-out { to { opacity: 0; } }
+@keyframes li-left {
+  from { transform: translate(32px, 40px) rotate(0deg) scale(0.55); opacity: 0; }
+  to { transform: translate(25px, 34px) rotate(-24deg); }
+}
+@keyframes li-right {
+  from { transform: translate(32px, 40px) rotate(0deg) scale(0.55); opacity: 0; }
+  to { transform: translate(39px, 34px) rotate(24deg); }
 }
 @keyframes li-name { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.li { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; background: var(--grove-forest); }
-.li-mark { animation: li-drop 1.5s both; }
-.li-name { animation: li-name 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.55s both; }
+@keyframes li-pop { 0% { opacity: 0; transform: scale(0) rotate(-45deg); } 70% { opacity: 1; transform: scale(1.25) rotate(8deg); } 100% { opacity: 1; transform: none; } }
+@keyframes li-twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.5) rotate(45deg); } }
+
+.li { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--grove-forest); overflow: hidden; }
+.li-stem-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.li-stem { stroke-dasharray: 1 2; stroke-dashoffset: 1; animation: li-draw 1s cubic-bezier(0.42, 0.08, 0.5, 0.96) 0.2s both, li-fade-out 0.4s ease 2s forwards; }
+.li-mark-box { position: relative; width: 120px; height: 120px; }
+.li-mark { display: block; overflow: visible; }
+.li-leaf { transform-box: view-box; transform-origin: 0 0; }
+.li-leaf-l { transform: translate(25px, 34px) rotate(-24deg); animation: li-left 1.2s cubic-bezier(0.34, 1.4, 0.5, 1) 1s both; }
+.li-leaf-r { transform: translate(39px, 34px) rotate(24deg); animation: li-right 1.2s cubic-bezier(0.34, 1.4, 0.5, 1) 1s both; }
+.li-name { margin-top: 38px; animation: li-name 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 2.3s both; }
+.li-star { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; fill: var(--grove-sun); opacity: 0; transform-box: fill-box; transform-origin: center; }
+.li-star-1 { left: calc(50% - 65px); top: calc(50% - 90px); animation: li-pop 0.5s ease 2.1s both, li-twinkle 2s ease-in-out 3.1s; }
+.li-star-2 { left: calc(50% + 65px); top: calc(50% - 110px); width: 16px; height: 16px; animation: li-pop 0.5s ease 2.3s both, li-twinkle 2s ease-in-out 3.3s; }
+.li-star-3 { left: calc(50% + 80px); top: calc(50% + 10px); width: 14px; height: 14px; animation: li-pop 0.5s ease 2.5s both, li-twinkle 2s ease-in-out 3.5s; }

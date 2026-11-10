@@ -279,7 +279,7 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
           <AppLink
             to="/login"
             data-testid="welcome-signin"
-            className="fixed inset-x-0 bottom-0 z-intro flex min-h-touch items-center justify-center bg-grove-forest font-ui text-sm text-grove-cream underline underline-offset-2"
+            className="fixed inset-x-0 bottom-0 z-intro flex min-h-touch items-center justify-center bg-grove-forest font-ui text-sm text-grove-cream"
           >
             Already have an account? Sign in
           </AppLink>
