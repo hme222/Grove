@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Heart, AlertTriangle, OctagonAlert, CircleHelp } from 'lucide-react';
+import { Heart, OctagonAlert, CircleHelp } from 'lucide-react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { getToxicityInfo } from '../lib/toxicity';
 
-const ICONS = { safe: Heart, caution: AlertTriangle, danger: OctagonAlert, unknown: CircleHelp };
+const ICONS = { safe: Heart, danger: OctagonAlert, unknown: CircleHelp };
 
 const SIZES = {
   sm: { box: 'px-2.5 py-1 min-h-6 text-xs gap-1.5', icon: 'h-3.5 w-3.5' },

@@ -14,11 +14,17 @@ def text(slug):
     return (g["description"] + " " + g["design_notes"]).replace("\n", " ")
 
 
-def test_guilds_with_toxic_plants_say_so():
-    assert "Peace Lily and Anthurium are toxic to cats and dogs if chewed; Calathea and Boston Fern are not." in text("tropical-humidity-cluster")
-    assert "eucalyptus is toxic" in text("cut-flower-border")
-    assert "pets cannot reach" in text("low-light-hallway") and "Cast Iron Plant" in text("low-light-hallway")
-    assert "console" not in text("low-light-hallway")
+def test_guild_pet_lines_only_make_sourced_claims():
+    for slug in ("tropical-humidity-cluster", "cut-flower-border", "low-light-hallway"):
+        t = text(slug)
+        assert "ASPCA" in t and "toxic and non-toxic plant list" in t, slug
+    # Unsourced species-by-species claims were removed; only Cast Iron Plant has an ASPCA page in the library.
+    for gone in ("Peace Lily and Anthurium are toxic", "eucalyptus is toxic", "all four are toxic", "irritate the mouth and skin"):
+        for slug in BY_SLUG:
+            assert gone not in text(slug), (slug, gone)
+    hall = text("low-light-hallway")
+    assert "pets cannot reach" in hall and "Cast Iron Plant, which the ASPCA lists as non-toxic to cats and dogs" in hall
+    assert "console" not in hall
 
 
 def test_guild_claims_stay_inside_what_is_known():

@@ -56,8 +56,8 @@ describe('the content fixes carried over from the retired window lesson', () => 
     );
   });
 
-  test('the pet warning appears once in the lesson that names the plants', () => {
-    const warning = 'toxic to cats and dogs if chewed. Keep them out of reach, or check the plant&rsquo;s pet-safety label first.';
+  test('the pet note appears once in the lesson that names the plants, and makes no claim about a named plant', () => {
+    const warning = 'If you have cats or dogs, check each plant on the ASPCA&rsquo;s toxic and non-toxic plant list before you bring it home.';
     expect(body(WINDOW_MAP_CARDS).split(warning)).toHaveLength(2);
     expect(body(LIGHT_BASICS_CARDS)).not.toMatch(/Monstera|Pothos|Philodendron|Snake plant/);
   });

@@ -62,7 +62,7 @@ CURATED_GUILDS = [
             "briefly drops. Together they need filtered medium light (no direct sun), evenly "
             "moist soil, and filtered or rain water for the Calathea — fluoride and minerals in tap "
             "water can burn its silver-banded edges. "
-            "\n\nPets: Peace Lily and Anthurium are toxic to cats and dogs if chewed; Calathea and Boston Fern are not."
+            "\n\nPets: if you have cats or dogs, check each plant on the ASPCA’s toxic and non-toxic plant list before bringing it home."
         ),
         "design_notes": (
             "Tier the cluster vertically — Anthurium hanging or staked at the back, Calathea "
@@ -97,7 +97,7 @@ CURATED_GUILDS = [
             "means you'll have material on hand whenever you need to cut. "
             "Disbud the rose for fewer, larger blooms (the standard florist trick), and sear "
             "anemone stems briefly in hot water after cutting to extend vase life. "
-            "\n\nPets: eucalyptus is toxic to cats and dogs if chewed, and anemone and dahlia can irritate the mouth and skin."
+            "\n\nPets: if you have cats or dogs, check each plant on the ASPCA’s toxic and non-toxic plant list before bringing it home."
         ),
         "design_notes": (
             "Plant the eucalyptus along the back as the structural spine; rose and dahlias mid-"
@@ -131,12 +131,11 @@ CURATED_GUILDS = [
             "and ZZ, weekly for the Pothos, and every five days or so for the Peace Lily, and less often "
             "in winter. A Peace Lily droops when it is thirsty, but do not wait for that every time; "
             "check the top inch and water when it starts to dry. "
-            "\n\nPets and children: all four are toxic to cats and dogs if chewed. Keep them on a shelf "
-            "or stand out of reach, or choose a pet-safe set such as Cast Iron Plant."
+            "\n\nPets and children: keep plants on a shelf or stand out of reach, and check each plant on the ASPCA’s toxic and non-toxic plant list before bringing it home."
         ),
         "design_notes": (
             "Put the Snake Plant and ZZ on a high stand or shelf where pets cannot reach, or swap in "
-            "Cast Iron Plant if you have cats or dogs. Keep Pothos trailing from above and Peace Lily on a high stand. The vertical rhythm makes "
+            "Cast Iron Plant, which the ASPCA lists as non-toxic to cats and dogs. Keep Pothos trailing from above and Peace Lily on a high stand. The vertical rhythm makes "
             "the hallway feel intentional rather than 'wherever the plants fit'."
         ),
     },

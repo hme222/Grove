@@ -166,10 +166,12 @@ describe('the lesson quizzes', () => {
     expect(droop.options.find((o) => o.id === 'c').why).toMatch(/mushy or smell sour/);
   });
 
-  test('cards that name plants toxic to pets say so, and no card calls every succulent a whole-pot-dry plant', () => {
+  test('no card states that a named plant is toxic (pet safety is sourced or absent), and no card calls every succulent a whole-pot-dry plant', () => {
     const cards = LESSON_CARDS;
     const joined = (id) => cards[id].map((c) => c.body).join(' ');
-    expect(joined('habit-stacking')).toMatch(/Monstera is toxic to cats and dogs/);
+    Object.keys(cards).forEach((id) => {
+      expect(joined(id)).not.toMatch(/(?:Monstera|Pothos|Philodendron|Snake plant)[^.]{0,40}(?:toxic|harmful|poison)/i);
+    });
     Object.keys(cards).forEach((id) => {
       expect(joined(id)).not.toMatch(/(?<!Desert )[Ss]ucculents and cacti want the whole pot dry/);
     });

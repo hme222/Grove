@@ -33,8 +33,9 @@ from hardiness_zones import (
     lookup_zone, hemisphere_for_zip, USDA_DESCRIPTIONS, RHS_DESCRIPTIONS,
     US_ZIP_PREFIX_TO_ZONE, UK_POSTCODE_AREA_TO_RHS,
 )
-from seed import seed_database
+from seed import apply_sourced_safety, seed_database
 from curated_species import CURATED_SPECIES
+from species_safety import scrub_species, sourced_toxicity
 import missions as missions_mod
 import soil_check as soil_check_mod
 import check_ins as check_ins_mod
@@ -1878,12 +1879,12 @@ async def gen_personality(current_user: dict = Depends(get_current_user)):
 async def search_species(q: str = ""):
     if not q or len(q) < 2:
         species = await db.species.find({}, {"_id": 0}).sort("common_name", 1).limit(50).to_list(50)
-        return [serialize_doc(s) for s in species]
+        return [serialize_doc(scrub_species(s)) for s in species]
     regex = {"$regex": re.escape(q[:limits.MAX_SEARCH_QUERY]), "$options": "i"}
     species = await db.species.find(
         {"$or": [{"common_name": regex}, {"latin_name": regex}]}, {"_id": 0}
     ).limit(20).to_list(20)
-    return [serialize_doc(s) for s in species]
+    return [serialize_doc(scrub_species(s)) for s in species]
 
 async def find_library_species(species_id: Optional[str] = None, latin_name: Optional[str] = None, common_name: Optional[str] = None) -> Optional[dict]:
     """Grove's own species record, by id, then exact (case-insensitive) Latin name, then common name. None if no match."""
@@ -1891,7 +1892,7 @@ async def find_library_species(species_id: Optional[str] = None, latin_name: Opt
         if species_id:
             found = await db.species.find_one({"id": species_id}, {"_id": 0})
             if found:
-                return found
+                return scrub_species(found)
         for field, value in (("latin_name", latin_name), ("common_name", common_name)):
             name = (value or '').strip()
             if name:
@@ -1899,7 +1900,7 @@ async def find_library_species(species_id: Optional[str] = None, latin_name: Opt
                     {field: {"$regex": f"^{re.escape(name)}$", "$options": "i"}}, {"_id": 0}
                 )
                 if found:
-                    return found
+                    return scrub_species(found)
     except Exception:
         logger.exception("species library lookup failed")
     return None
@@ -1925,7 +1926,7 @@ async def get_species(species_id: str):
     species = await db.species.find_one({"id": species_id})
     if not species:
         raise HTTPException(status_code=404, detail="Species not found")
-    return serialize_doc(species)
+    return serialize_doc(scrub_species(species))
 
 # ============ PLANT ROUTES ============
 
@@ -1981,8 +1982,9 @@ async def attach_species_toxicity(plants):
     None means unknown, never safe; care_tip is None when the plant is not in the guide, so the
     app falls back to a generic line instead of inventing one.
     """
-    docs = await db.species.find({}, {"_id": 0, "slug": 1, "latin_name": 1, "common_name": 1, "toxicity": 1, "care_summary": 1}).to_list(500)
+    docs = await db.species.find({}, {"_id": 0, "slug": 1, "latin_name": 1, "common_name": 1, "toxicity": 1, "citations": 1, "care_summary": 1}).to_list(500)
     for d in docs:
+        d["toxicity"] = sourced_toxicity(d)
         d["care_step"] = care_step_for(d.get("slug")) or watering_sentence(d.get("care_summary"))
     index = species_name_index(docs, "toxicity")
     tips = species_name_index(docs, "care_step")
@@ -4334,6 +4336,10 @@ async def startup():
     except Exception as e:
         logger.warning(f"Storage init failed (non-fatal): {e}")
     await seed_database(db)
+    try:
+        await apply_sourced_safety(db)
+    except Exception:
+        logger.exception("Could not apply sourced pet-safety data")
     await seed_trivia(db)
     logger.info("Grove API ready")
 
@@ -4738,7 +4744,7 @@ async def get_species_list(
     species = await db.species.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
     total = await db.species.count_documents(query)
     return {
-        "species": [serialize_doc(s) for s in species],
+        "species": [serialize_doc(scrub_species(s)) for s in species],
         "total": total,
         "page": page,
         "limit": limit
@@ -4751,7 +4757,7 @@ async def get_species_detail(species_id: str, current_user: dict = Depends(get_o
         raise HTTPException(status_code=404, detail="Species not found")
     # Get count of plants in collections
     plant_count = await db.plants.count_documents({"species_id": species_id, "is_archived": {"$ne": True}})
-    species_data = serialize_doc(species)
+    species_data = serialize_doc(scrub_species(species))
     species_data['in_collections_count'] = plant_count
     # Phase 14B.2 — hydrate companion entries with the linked species' ids and
     # display names so the frontend can render and link them in one fetch.

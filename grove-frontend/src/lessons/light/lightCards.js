@@ -67,7 +67,7 @@ export const WINDOW_MAP_CARDS = [
     body:
       'Here is how that window lights a room. Try the other directions to see how they differ.<br/><br/>' +
       'North windows give low light. Pothos and Snake plant tolerate it, but they will grow slowly and may need a brighter spot in winter. ' +
-      'Pothos and Snake plant are toxic to cats and dogs if chewed. Keep them out of reach, or check the plant&rsquo;s pet-safety label first.<br/><br/>' +
+      'If you have cats or dogs, check each plant on the ASPCA&rsquo;s toxic and non-toxic plant list before you bring it home.<br/><br/>' +
       `<em>${HEMISPHERE_NOTE}</em>`,
     cta: 'Got it',
     icon: Home,

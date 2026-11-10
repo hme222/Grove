@@ -10,18 +10,17 @@ describe('normalizeToxicity', () => {
     ['non_toxic', 'non_toxic'],
     ['non-toxic', 'non_toxic'],
     [' Non Toxic ', 'non_toxic'],
-    ['mild', 'mild'],
     ['toxic', 'toxic'],
     ['TOXIC', 'toxic'],
   ])('%p reads as %p', (value, level) => {
     expect(normalizeToxicity(value)).toBe(level);
   });
 
-  test.each([[undefined], [null], [''], ['   '], ['safe-ish'], ['unknown'], [0], [{}]])(
+  test.each([[undefined], [null], [''], ['   '], ['safe-ish'], ['unknown'], ['mild'], ['mildly_toxic'], [0], [{}]])(
     'missing or unrecognized %p is unknown, never pet-safe',
     (value) => {
       expect(normalizeToxicity(value)).toBe('unknown');
-      expect(getToxicityInfo(value).label).not.toBe('Non-toxic to pets');
+      expect(getToxicityInfo(value).label).not.toBe('Non-toxic to cats and dogs');
     }
   );
 });
@@ -54,15 +53,15 @@ describe('ToxicityBadge', () => {
   test('toxic shows warning words and a distinct style from non-toxic', () => {
     const toxic = render('toxic');
     const toxicClass = toxic.className;
-    expect(toxic.textContent).toBe('Toxic if ingested');
+    expect(toxic.textContent).toBe('Toxic to cats and dogs');
     expect(toxic.querySelector('svg')).not.toBeNull();
     const safe = render('non_toxic');
-    expect(safe.textContent).toBe('Non-toxic to pets');
+    expect(safe.textContent).toBe('Non-toxic to cats and dogs');
     expect(safe.className).not.toBe(toxicClass);
   });
 
   test('every level carries an icon and words, not color alone', () => {
-    ['non_toxic', 'mild', 'toxic', undefined].forEach((value) => {
+    ['non_toxic', 'toxic', undefined].forEach((value) => {
       const badge = render(value);
       expect(badge.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
       expect(badge.textContent.length).toBeGreaterThan(3);
@@ -70,10 +69,14 @@ describe('ToxicityBadge', () => {
   });
 
   test('every level has a plain definition, and unknown never reads as safe', () => {
-    ['non_toxic', 'mild', 'toxic', undefined].forEach((value) => {
+    ['non_toxic', 'toxic', undefined].forEach((value) => {
       expect(getToxicityInfo(value).definition.length).toBeGreaterThan(20);
     });
     expect(getToxicityInfo(undefined).definition).toMatch(/don’t assume it’s safe/);
+    // Sourced or unknown: a definition says who lists it, and there is no ungraded "mild" tier.
+    expect(getToxicityInfo('toxic').definition).toMatch(/ASPCA/);
+    expect(getToxicityInfo('non_toxic').definition).toMatch(/ASPCA/);
+    expect(getToxicityInfo('mild').level).toBe('unknown');
   });
 
   test('keyboard focus shows the definition and Escape closes it', async () => {
@@ -89,7 +92,7 @@ describe('ToxicityBadge', () => {
   });
 
   test('a chip inside a link or button takes no focus', () => {
-    act(() => root.render(<ToxicityBadge toxicity="mild" interactive={false} />));
+    act(() => root.render(<ToxicityBadge toxicity="toxic" interactive={false} />));
     expect(container.querySelector('[data-testid="toxicity-badge"]').hasAttribute('tabindex')).toBe(false);
     expect(container.querySelector('[data-testid="toxicity-badge"]').tagName).toBe('SPAN');
   });

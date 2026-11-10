@@ -34,7 +34,7 @@ export const CARDS = [
     eyebrow: "The morning grind",
     headline: "Coffee grinder \u2192 Monstera.",
     body:
-      "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes 8 seconds and the smell of coffee becomes your daily cue. Monstera is toxic to cats and dogs if chewed, so keep it out of reach, or check the plant&rsquo;s pet-safety label first.",
+      "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes 8 seconds and the smell of coffee becomes your daily cue.",
     cta: "Love this one",
     icon: Coffee,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

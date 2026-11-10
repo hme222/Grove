@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
@@ -7,7 +8,7 @@ from curated_species import CURATED_SPECIES  # noqa: E402
 from room_light import LEVELS  # noqa: E402
 
 REQUIRED = ["slug", "common_name", "latin_name", "family", "native_range", "default_watering_days",
-            "default_light_level", "default_grow_medium", "toxicity", "care_summary", "flags", "citations"]
+            "default_light_level", "default_grow_medium", "care_summary", "flags", "citations"]
 
 
 def test_every_species_has_the_fields_the_app_reads():
@@ -26,11 +27,19 @@ def test_light_levels_match_the_room_light_levels():
         assert s["default_light_level"] in LEVELS, s["slug"]
 
 
-def test_toxicity_is_a_known_level_and_pet_safe_means_non_toxic():
+def test_pet_safety_is_only_stated_where_an_aspca_page_backs_it():
+    """Pet safety is sourced or absent. No value without an ASPCA citation, no invented grades, no pet_safe flag on its own."""
     for s in CURATED_SPECIES:
-        assert s["toxicity"] in ("non_toxic", "mild", "toxic"), s["slug"]
+        has_source = any("aspca.org" in c["url"] for c in s["citations"])
+        value = s.get("toxicity")
+        if value is not None:
+            assert has_source, f"{s['slug']} states toxicity={value} without an ASPCA citation"
+            assert value in ("non_toxic", "toxic"), f"{s['slug']}: ASPCA pages give toxic or non-toxic, not '{value}'"
         if s["flags"].get("pet_safe"):
-            assert s["toxicity"] == "non_toxic", f"{s['slug']} is flagged pet-safe but is {s['toxicity']}"
+            assert has_source and value == "non_toxic", f"{s['slug']} is flagged pet-safe without a non-toxic ASPCA listing"
+        if not has_source:
+            assert not re.search(r"toxic|poison|harmful to (cats|dogs|pets)|safe for (cats|dogs|pets)|wear gloves|irritates", s["care_summary"], re.I), \
+                f"{s['slug']}: care text makes a safety claim with no ASPCA source"
 
 
 def test_every_citation_is_a_labelled_web_link():
@@ -146,7 +155,7 @@ def test_horticulturist_review_fixes_in_species_data():
     assert _sp("curio-rowleyanus")["light_ideal"] == "bright_indirect"
     assert _sp("sedum-morganianum")["light_ideal"] == "bright_indirect"
     anemone = _sp("anemone-coronaria")
-    assert anemone["toxicity"] == "toxic" and "wear gloves" in anemone["care_summary"]
+    assert "toxicity" not in anemone and "gloves" not in anemone["care_summary"]  # no ASPCA page recorded for it
     assert "top two inches" in _sp("dracaena-fragrans")["care_summary"]
     assert "native_habitat" not in _sp("strelitzia-reginae")
     assert len(_sp("schlumbergera-buckleyi")["native_range"]) < 80

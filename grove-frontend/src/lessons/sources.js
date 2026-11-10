@@ -41,7 +41,7 @@ const KEW_CLEAN = {
 
 const GAP_WINTER = 'We found no page we read on how much less to water in winter than in summer. Plants usually need water less often in winter, so check the soil rather than follow a number.';
 const GAP_KNUCKLE = 'The knuckle depth (second knuckle in a pot 6 in or 15 cm or bigger, first knuckle in a small pot) is common practice, not taken from a page we read.';
-const GAP_PETS = 'We did not check pet toxicity for the plants named as examples. Several common houseplants, such as Monstera, Pothos and Philodendron, can be harmful to cats and dogs, so look up each plant before you bring it home if you have pets.';
+const GAP_PETS = 'We did not check pet toxicity for the plants named as examples. If you have cats or dogs, look up each plant on the ASPCA’s toxic and non-toxic plant list before you bring it home.';
 
 export const LESSON_SOURCES = {
   'soil-finger-test': { sources: [RHS_WATER, KEW_ORCHIDS], gaps: [GAP_WINTER, GAP_KNUCKLE] },

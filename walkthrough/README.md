@@ -24,7 +24,7 @@ lesson and log the soil test, celebration, Meet Pip, Pip's nook (tap Pip on Toda
 
 - `demo/browser-entry.js` replaces the network with `scripts/mock-core.mjs` before the app starts.
 - `scripts/mock-core.mjs` holds the fake backend. Its responses mirror the real server's shapes, and the plant guide
-  and add-plant search use the real curated species list (`fixtures/species.json`, exported from
+  and add-plant search use the real curated species list (`fixtures/species.json`, exported by `scripts/export-species.py` from
   `grove-backend/curated_species.py`).
 - `scripts/build-demo.mjs` copies `app-build/` (the production build of the frontend) into `demo/site`, adds the
   shim and local fonts, removes analytics, and marks the page `noindex`.

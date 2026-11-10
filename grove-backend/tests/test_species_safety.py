@@ -17,9 +17,16 @@ MONSTERA = {
     "common_name": "Monstera",
     "latin_name": "Monstera deliciosa",
     "family": "Araceae",
-    "toxicity": "mild",
-    "citations": [{"label": "Royal Horticultural Society", "url": "https://example.org"}],
+    "toxicity": "toxic",
+    "citations": [
+        {"label": "Royal Horticultural Society", "url": "https://example.org"},
+        {"label": "ASPCA Toxic and Non-Toxic Plants", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/x"},
+    ],
 }
+
+# The same plant as an older record: a toxicity value but no ASPCA citation behind it.
+UNSOURCED = {**MONSTERA, "id": "sp-old", "latin_name": "Old plant", "common_name": "Old", "toxicity": "mild",
+             "citations": [{"label": "Royal Horticultural Society", "url": "https://example.org"}]}
 
 
 class FakeSpecies:
@@ -97,7 +104,7 @@ def identify_client(monkeypatch):
 def test_identify_attaches_library_toxicity_and_match(identify_client):
     client = identify_client('{"commonName": "Monstera", "latinName": "Monstera deliciosa", "confidence": 0.9, "isConfident": true}', [MONSTERA])
     body = client.post("/api/plants/identify", json={"path": "x.jpg"}).json()
-    assert body["toxicity"] == "mild"
+    assert body["toxicity"] == "toxic"
     assert body["libraryMatch"]["family"] == "Araceae"
 
 
@@ -106,3 +113,9 @@ def test_identify_with_no_library_match_reports_unknown_not_safe(identify_client
     body = client.post("/api/plants/identify", json={"path": "x.jpg"}).json()
     assert body["toxicity"] is None
     assert body["libraryMatch"] is None
+
+
+def test_identify_never_returns_an_unsourced_toxicity(monkeypatch):
+    monkeypatch.setattr(server, "db", FakeDb([UNSOURCED]))
+    found = _run(server.find_library_species(None, "Old plant"))
+    assert found["toxicity"] is None
