@@ -91,3 +91,9 @@ def test_vision_call_uses_the_real_image_type():
     assert ai_service._media_type(base64.b64encode(PNG).decode()) == 'image/png'
     assert ai_service._media_type(base64.b64encode(JPEG).decode()) == 'image/jpeg'
     assert ai_service._media_type('not base64 !!') == 'image/jpeg'
+
+
+def test_new_leaf_is_a_known_care_action():
+    assert server._normalize_actions(None, ["new_leaf"]) == ["new_leaf"]
+    with pytest.raises(HTTPException):
+        server._normalize_actions(None, ["not_an_action"])

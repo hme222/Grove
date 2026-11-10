@@ -67,3 +67,15 @@ describe('MemoryJournal', () => {
     unmount();
   });
 });
+
+describe('new leaf milestone', () => {
+  it('turns the first new_leaf log into a "First new leaf" milestone and later ones into "A new leaf"', () => {
+    const months = buildJournal([
+      { id: 'l1', action: 'new_leaf', logged_at: '2026-10-03T09:00:00Z' },
+      { id: 'l2', action: 'new_leaf', logged_at: '2026-10-20T09:00:00Z', notes: 'Unfurling' },
+    ], plant);
+    const items = months.flatMap((m) => m.items).filter((i) => i.type === 'milestone' && i.action === 'new_leaf');
+    expect(items.map((i) => i.title).sort()).toEqual(['A new leaf', 'First new leaf']);
+    expect(items.find((i) => i.id === 'l2').subtitle).toBe('Unfurling');
+  });
+});

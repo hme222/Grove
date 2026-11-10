@@ -8,7 +8,7 @@ import PhotoBand from './PhotoBand';
 
 const VERB = {
   water: 'watered', top_up: 'topped up', change_water: 'changed the water', flush: 'flushed',
-  mist: 'misted', feed: 'fed', add_nutrients: 'fed', prune: 'pruned', propagate: 'propagated', repot: 'repotted',
+  mist: 'misted', feed: 'fed', add_nutrients: 'fed', prune: 'pruned', propagate: 'propagated', repot: 'repotted', new_leaf: 'spotted a new leaf',
 };
 const TILTS = [-1.2, 0.9, -0.6, 1.1];
 
@@ -53,6 +53,7 @@ export function buildJournal(logs, plant) {
 
   const firstPhoto = asc.find((l) => l.photo_url);
   const firstRepot = asc.find((l) => l.action === 'repot');
+  const firstLeaf = asc.find((l) => l.action === 'new_leaf');
   const firstBloom = asc.find((l) => /bloom|flower/i.test(l.notes || ''));
 
   const items = [];
@@ -74,6 +75,8 @@ export function buildJournal(logs, plant) {
         id: l.id, type: 'photo', logged_at: l.logged_at, photo_url: l.photo_url, notes: l.notes || '',
         first: l === firstPhoto, action: l.action || 'photo',
       });
+    } else if (l.action === 'new_leaf') {
+      items.push({ id: l.id, type: 'milestone', kicker: l === firstLeaf ? 'A first' : 'More growth', title: l === firstLeaf ? 'First new leaf' : 'A new leaf', subtitle: l.notes || 'A new leaf opened.', logged_at: l.logged_at, action: 'new_leaf', notes: l.notes || '' });
     } else if (l === firstBloom) {
       items.push({ id: l.id, type: 'milestone', kicker: 'A first', title: 'First bloom', subtitle: l.notes || 'A flower opened.', logged_at: l.logged_at, action: 'first_bloom', notes: l.notes || '' });
     } else if (l === firstRepot) {

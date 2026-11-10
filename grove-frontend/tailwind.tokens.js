@@ -28,6 +28,7 @@ module.exports = {
       "paperGreen": "#2D5016",
       "paperAccent": "#3B6D11",
       "paperPale": "#EAF3DE",
+      "leafOnCream": "#3F5A1A",
       "paperError": "#9B1C1C",
       "inputOutline": "#869A68"
     }

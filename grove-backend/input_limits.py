@@ -26,7 +26,7 @@ CARE_ACTIONS = {
     'water', 'mist', 'fertilize', 'rotate', 'prune', 'check',
     'change_water', 'flush', 'repot', 'propagate', 'photo',
     'clean', 'stake', 'inspect', 'health_check', 'soil_check',
-    'light_check', 'note',
+    'light_check', 'note', 'new_leaf',
 }
 POST_TYPES = {'plant_update', 'bouquet', 'propagation', 'milestone', 'swap_complete'}
 GOAL_TYPES = {'streak_days', 'care_logs_count', 'plant_count', 'bouquet_vase_life', 'custom'}

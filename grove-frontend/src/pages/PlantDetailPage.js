@@ -23,7 +23,8 @@ import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Droplets, Sparkles, Camera, Archive, X } from 'lucide-react';
+import { Droplets, Sparkles, Camera, Archive, Share2, X } from 'lucide-react';
+import ShareCardSheet from '../components/ShareCardSheet';
 import HealthScorePanel from '../components/HealthScorePanel';
 import MemoryJournal from '../components/MemoryJournal';
 import PhotoGallery from '../components/PhotoGallery';
@@ -46,6 +47,7 @@ export default function PlantDetailPage() {
   const [loadError, setLoadError] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [careModalOpen, setCareModalOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [biography, setBiography] = useState(null);
   const [generatingBio, setGeneratingBio] = useState(false);
   const [aiSchedule, setAiSchedule] = useState(null);
@@ -324,6 +326,14 @@ export default function PlantDetailPage() {
                 Log care
               </button>
               <button type="button"
+                onClick={() => setShareOpen(true)}
+                data-testid="plant-share-button"
+                className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
+              >
+                <Share2 className="h-4 w-4" aria-hidden="true" />
+                Share
+              </button>
+              <button type="button"
                 ref={archiveBtnRef}
                 onClick={() => setArchiveOpen(true)}
                 data-testid="plant-archive-button"
@@ -515,6 +525,7 @@ export default function PlantDetailPage() {
         </AlertDialogContent>
       </AlertDialog>
 
+      <ShareCardSheet open={shareOpen} onClose={() => setShareOpen(false)} plant={plant} logs={mergedTimeline} photoSrc={photoUrl} />
       <CareLogModal
         open={careModalOpen}
         onClose={() => setCareModalOpen(false)}

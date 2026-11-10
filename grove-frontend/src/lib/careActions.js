@@ -1,6 +1,6 @@
 // The care actions a person can log. One list, used by the single-plant log and by bulk logging, so the
 // two cannot drift. Every action has an icon and a label as well as a color: color never carries it alone.
-import { Droplets, Wind, Utensils, RotateCw, Scissors, ClipboardCheck, Hand, Sun, Sparkles, Camera, FileText } from 'lucide-react';
+import { Droplets, Wind, Utensils, RotateCw, Scissors, ClipboardCheck, Hand, Sun, Sparkles, Camera, FileText, Leaf } from 'lucide-react';
 import { Flower2 as FlowerIcon, Sprout as SproutIcon } from 'lucide-react';
 
 export const CARE_ACTIONS = [
@@ -15,6 +15,7 @@ export const CARE_ACTIONS = [
   { value: 'clean', label: 'Wipe leaves', icon: Sparkles, color: 'var(--grove-sprout)', hint: "Wipe dusty leaves with a damp cloth so they can use the light." },
   { value: 'repot', label: 'Repot', icon: FlowerIcon, color: 'var(--grove-sage)', hint: "Move it to a bigger pot with fresh soil." },
   { value: 'propagate', label: 'Propagate', icon: SproutIcon, color: 'var(--grove-sprout)', hint: "Take a cutting to grow a new plant." },
+  { value: 'new_leaf', label: 'New leaf', icon: Leaf, color: 'var(--grove-sprout)', hint: "A new leaf opened. It goes in the journal as a milestone you can share." },
   { value: 'photo', label: 'Photo', icon: Camera, color: 'var(--grove-cream)', hint: "Add a photo to the plant’s journal." },
   { value: 'note', label: 'Note', icon: FileText, color: 'var(--grove-lichen)', hint: "Write what you noticed." },
 ];

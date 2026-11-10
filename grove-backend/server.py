@@ -2372,7 +2372,7 @@ class BulkCareLogCreate(BaseModel):
 VALID_CARE_ACTIONS = {
     'water', 'mist', 'fertilize', 'rotate', 'prune', 'check',
     'change_water', 'flush', 'repot', 'propagate', 'photo',
-    'clean', 'stake', 'inspect', 'health_check', 'soil_check'
+    'clean', 'stake', 'inspect', 'health_check', 'soil_check', 'new_leaf'
 }
 
 def _normalize_actions(single: Optional[str], many: Optional[List[str]]) -> List[str]:
