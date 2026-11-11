@@ -4,6 +4,23 @@ import { buttonVariants } from '@/components/ui/button';
 import { PLAN_QUESTIONS } from '@/constants/onboardingQuiz';
 import StepScreen, { StepActions, blockedClass } from './StepScreen';
 import PhotoBand from '../PhotoBand';
+import {
+  Sprout, HeartCrack, Gift, Leaf, Trees, Briefcase, CircleHelp, Frown, Droplets, Search, FlaskConical, Sparkles, Smile,
+  LifeBuoy, CalendarCheck, SlidersHorizontal, FastForward, Target, Compass, BookOpen, Cog, Microscope,
+} from 'lucide-react';
+
+// One line icon per answer, in the same style as the rest of the app. They only decorate; the words carry the meaning.
+const ANSWER_ICONS = {
+  sprout: Sprout, 'heart-crack': HeartCrack, gift: Gift, leaf: Leaf, trees: Trees, briefcase: Briefcase, help: CircleHelp,
+  frown: Frown, droplets: Droplets, search: Search, flask: FlaskConical, sparkles: Sparkles, smile: Smile, 'life-buoy': LifeBuoy,
+  calendar: CalendarCheck, sliders: SlidersHorizontal, 'fast-forward': FastForward, target: Target, compass: Compass,
+  book: BookOpen, cog: Cog, microscope: Microscope,
+};
+const AnswerIcon = ({ name }) => {
+  const Icon = ANSWER_ICONS[name] || Leaf;
+  return <Icon className="h-5 w-5" strokeWidth={1.75} />;
+};
+
 
 const linkButton = cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2');
 
@@ -105,12 +122,18 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
               >
                 <span
                   aria-hidden="true"
+                  className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-pill', on ? 'bg-grove-lime text-grove-root' : 'bg-grove-moss text-grove-sprout')}
+                  data-testid={`icon-${question.id}-${option.id}`}
+                >
+                  <AnswerIcon name={option.icon} />
+                </span>
+                <span className="flex-1">{option.label}</span>
+                <span
+                  aria-hidden="true"
                   className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-pill border-strong', on ? 'border-grove-lime bg-grove-lime text-grove-root' : 'border-grove-fernLine')}
                 >
                   {on ? '✓' : ''}
                 </span>
-                <span className="flex-1">{option.label}</span>
-                {option.emoji && <span aria-hidden="true" className="shrink-0 text-xl leading-none" data-testid={`emoji-${question.id}-${option.id}`}>{option.emoji}</span>}
               </button>
             );
           })}

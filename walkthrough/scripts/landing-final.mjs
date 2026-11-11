@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4200);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+const p = await ctx.newPage();
+await p.goto('http://localhost:4200/'); await p.waitForTimeout(5200); await p.mouse.click(195, 300);
+await p.waitForTimeout(13000);
+await p.screenshot({ path: '.cache/landing-final.png' });
+await b.close(); server.close();

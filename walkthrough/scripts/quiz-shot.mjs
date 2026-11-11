@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4198);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+const p = await ctx.newPage(); p.setDefaultTimeout(10000);
+const $ = (id) => p.getByTestId(id);
+await p.goto('http://localhost:4198/'); await p.waitForTimeout(1500); await p.mouse.click(195, 300);
+await $('onboarding-continue').click(); await $('signup-submit').click();
+for (let i = 0; i < 3; i++) await $('onboarding-continue').click();
+await $('hemisphere-north').click(); await $('quiz-intro-start').click();
+await p.waitForTimeout(600); await $('option-q1-gift').click(); await p.waitForTimeout(300);
+await p.screenshot({ path: '.cache/quiz-emoji.png' });
+await b.close(); server.close();

@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4199);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+const p = await ctx.newPage(); p.setDefaultTimeout(10000);
+const $ = (id) => p.getByTestId(id);
+await p.goto('http://localhost:4199/'); await p.waitForTimeout(1500); await p.mouse.click(195, 300);
+await p.waitForTimeout(1200); await p.screenshot({ path: '.cache/cozy-welcome.png' });
+await $('onboarding-continue').click(); await $('signup-submit').click();
+await p.waitForTimeout(800); await p.screenshot({ path: '.cache/cozy-steps.png' });
+await $('onboarding-continue').click(); await p.waitForTimeout(800); await p.screenshot({ path: '.cache/cozy-slide1.png' });
+await b.close(); server.close();

@@ -180,7 +180,7 @@ export default function CollectionPage() {
         <nav aria-label="More ways to browse your plants" className="mb-4 grid grid-cols-3 gap-2" data-testid="plants-shortcuts">
           {[['Search', '/search', Search], ['Rooms', '/rooms', DoorOpen], ['Want list', '/wants', Heart]].map(([label, path, Icon]) => (
             <AppLink key={path} to={path} data-testid={`plants-shortcut-${label.toLowerCase().replace(' ', '-')}`}
-              className="flex min-h-[5rem] flex-col items-center justify-center gap-1.5 rounded-card border-hairline border-grove-moss bg-grove-canopy px-2 py-3 text-center font-ui text-sm font-medium text-grove-cream transition-colors hover:border-grove-fernLine active:bg-grove-moss focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime">
+              className="flex min-h-touch flex-col items-center justify-center gap-2 rounded-card border-hairline border-grove-moss bg-grove-canopy px-2 py-5 text-center font-ui text-sm font-medium text-grove-cream transition-colors hover:border-grove-fernLine active:bg-grove-moss focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime">
               <Icon className="h-6 w-6 text-grove-sprout" aria-hidden="true" />
               {label}
             </AppLink>

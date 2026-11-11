@@ -312,9 +312,20 @@ export default function SpeciesDetailPage() {
                 <PhotoBand src={species.wiki_image} className="rounded-none" testId="species-wiki-photo" />
               </div>
             </div>
-            <p className="font-latin italic text-xs text-grove-lichen mt-2">
-              Photo from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">Wikimedia Commons<span className="sr-only"> (opens in a new tab)</span></a> — CC / Public Domain
-            </p>
+            {species.wiki_image_credit ? (
+              <p className="font-ui text-xs text-grove-lichen mt-2" data-testid="species-photo-credit">
+                Photo by {species.wiki_image_credit.author},{' '}
+                {species.wiki_image_credit.license_url
+                  ? <a href={species.wiki_image_credit.license_url} target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">{species.wiki_image_credit.license}<span className="sr-only"> (opens in a new tab)</span></a>
+                  : species.wiki_image_credit.license}
+                , via{' '}
+                <a href={species.wiki_image_credit.page_url} target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">Wikimedia Commons<span className="sr-only"> (opens in a new tab)</span></a>
+              </p>
+            ) : (
+              <p className="font-latin italic text-xs text-grove-lichen mt-2">
+                Photo from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">Wikimedia Commons<span className="sr-only"> (opens in a new tab)</span></a> — CC / Public Domain
+              </p>
+            )}
           </div>
         )}
 
