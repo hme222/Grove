@@ -6,7 +6,7 @@ import LessonPlayer from './LessonPlayer';
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const CARDS = [
-  { header: 'Card 1 of 2', headline: 'First headline', body: 'Body one with <strong>bold</strong>.', cta: 'Got it &mdash; next' },
+  { header: 'Card 1 of 2', headline: 'First headline', body: 'Body one with <strong>bold</strong>.', cta: 'Got it, next' },
   { header: 'Card 2 of 2', headline: 'North &amp; south', body: 'Body two.', cta: 'Finish' },
 ];
 
@@ -38,7 +38,7 @@ test('shows the first card with its progress', () => {
 test('renders simple HTML in card text as real markup', () => {
   render();
   expect(container.querySelector('strong').textContent).toBe('bold');
-  expect(q('lesson-next').textContent).toContain('Got it — next');
+  expect(q('lesson-next').textContent).toContain('Got it, next');
 });
 
 test('next moves to the second card and back returns', () => {

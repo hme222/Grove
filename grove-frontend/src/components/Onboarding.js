@@ -139,7 +139,7 @@ function StepsStep({ onBack, onNext }) {
           ))}
         </ol>
         <p className="mt-6 font-ui text-sm text-grove-sage">You can change any answer later.</p>
-        <PhotoBand src="/photos/onboarding-forest.jpg" ratio="photo" eager className="mt-6" testId="hero-image" />
+        <PhotoBand src="/photos/room-1.jpg" ratio="photo" eager className="mt-6" testId="hero-image" />
         <StepActions
           primary={(
             <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">

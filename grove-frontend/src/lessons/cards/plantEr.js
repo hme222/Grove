@@ -8,8 +8,8 @@ export const CARDS = [
     eyebrow: "Deep breath",
     headline: "Suddenly have a plant with zero instructions?",
     body:
-      "Don&rsquo;t panic. You don&rsquo;t need to become an expert tonight &mdash; you just need to keep it stable. Three simple triage steps will stop the immediate risk while you learn the rest.",
-    cta: "I\u2019m ready &mdash; three steps",
+      "Don&rsquo;t panic. You don&rsquo;t need to become an expert tonight. You just need to keep it stable. Three simple triage steps will stop the immediate risk while you learn the rest.",
+    cta: "I\u2019m ready, three steps",
     icon: LifeBuoy,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
     ring: "text-grove-sprout",
@@ -23,7 +23,7 @@ export const CARDS = [
     headline: "Move it away from drafts.",
     body:
       "Keep your plant away from direct AC vents, radiators, and doors that keep opening. Cold drafts and heat from vents can scorch or chill leaves. A calm corner is a safe corner.",
-    cta: "Draft-safe spot &mdash; got it",
+    cta: "Draft-safe spot, got it",
     icon: Thermometer,
     accent: "from-grove-sage/15 via-grove-sage/10 to-grove-lime/10",
     ring: "text-grove-sage",
@@ -36,8 +36,8 @@ export const CARDS = [
     eyebrow: "Escape route",
     headline: "Check for drainage.",
     body:
-      "Lift the pot. Does it have drainage holes at the bottom? If it doesn&rsquo;t, <strong>don&rsquo;t pour water into it yet</strong> &mdash; water will pool and rot the roots within weeks. Keep the plant in a pot with holes, such as its nursery pot. If it sits in a decorative pot, lift the plant out to water, let it drain, then put it back.",
-    cta: "Checked the bottom &mdash; got it",
+      "Lift the pot. Does it have drainage holes at the bottom? If it doesn&rsquo;t, <strong>don&rsquo;t pour water into it yet</strong>. Water will pool and rot the roots within weeks. Keep the plant in a pot with holes, such as its nursery pot. If it sits in a decorative pot, lift the plant out to water, let it drain, then put it back.",
+    cta: "Checked the bottom, got it",
     icon: Droplets,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
     ring: "text-grove-sprout",
@@ -51,7 +51,7 @@ export const CARDS = [
     headline: "Assess the weight.",
     body:
       "Push a finger into the soil (to the second knuckle in a pot 6 in or 15 cm or bigger, the first in a small pot) and lift the pot. If it&rsquo;s soaking wet, <strong>do nothing</strong>. If the pot feels feather-light and the soil is pulling away from the edges, take it to the sink for a thorough soak. If water runs straight through, let the pot sit in a basin for 20 minutes, then drain fully.<br/><br/>If the plant is in distress, don&rsquo;t fertilize it or give it a bigger pot. If the roots are mushy or smell sour, unpot it and repot into fresh, dry mix.",
-    cta: "Weight-check &mdash; got it",
+    cta: "Weight-check, got it",
     icon: Scale,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
     ring: "text-grove-sprout",

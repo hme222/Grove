@@ -21,7 +21,7 @@ export const CARDS = [
     eyebrow: "The routine recipe",
     headline: "The habit-stack formula.",
     body:
-      "Use this one line as your template &mdash; then repeat it out loud until it feels like yours: <strong>&ldquo;After I do [Existing Habit], I will [Check My Plant].&rdquo;</strong>",
+      "Use this one line as your template. Then repeat it out loud until it feels like yours: <strong>&ldquo;After I do [Existing Habit], I will [Check My Plant].&rdquo;</strong>",
     cta: "Got the recipe",
     icon: LinkIcon,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -60,7 +60,7 @@ export const CARDS = [
     eyebrow: "60-second action",
     headline: "Pick your anchor habit.",
     body:
-      "Identify one daily habit you never skip &mdash; brushing teeth, making coffee, feeding the cat. Pair your plant check with it right now.",
+      "Identify one daily habit you never skip, like brushing teeth, making coffee, or feeding the cat. Pair your plant check with it right now.",
     cta: "Create My Habit Reminder",
     icon: Bell,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

@@ -546,7 +546,7 @@ test('the steps page and each intro slide carry their photo from the Figma frame
   signedIn();
   await mount({ replay: true });
   await click(q('welcome-continue'));
-  expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-forest.jpg');
+  expect(photo().getAttribute('data-photo')).toBe('/photos/room-1.jpg');
   await click(q('onboarding-continue'));
   expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-shelf.jpg');
   await click(q('onboarding-continue'));
@@ -799,7 +799,7 @@ describe('launch intro', () => {
     await mount({ launchIntro: true });
     expect(q('launch-intro')).not.toBeNull();
     expect(q('onboarding-welcome')).toBeNull(); // not built until the glide starts
-    await act(async () => { jest.advanceTimersByTime(3100); });
+    await act(async () => { jest.advanceTimersByTime(4600); });
     // The glide has started: the welcome screen is built underneath, hidden from assistive tech, wordmark waiting.
     expect(q('launch-intro')).not.toBeNull();
     const underlay = q('onboarding-welcome').parentElement;

@@ -156,7 +156,7 @@ function HeroShot() {
 const CARDS = [
   {
     title: 'Natural light is everything',
-    body: "Shoot near a window but out of direct sunlight. Morning light is softest. Avoid flash — it washes out the green.",
+    body: "Shoot near a window but out of direct sunlight. Morning light is softest. Skip the flash, because it washes out the green.",
     BadLabel: 'Harsh direct sun',
     GoodLabel: 'Soft indirect',
     Bad: LightBad, Good: LightGood,

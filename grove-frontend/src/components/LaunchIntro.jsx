@@ -2,9 +2,9 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FloraGroveWordmark } from '@/components/brand/FloraGroveWordmark';
 import './LaunchIntro.css';
 
-// The name is fully in by about 3s; then it glides up and shrinks into the welcome screen's own wordmark (GLIDE_MS)
+// The name is fully in by about 3s and holds until 4.5s; then it glides up and shrinks into the welcome screen's own wordmark (GLIDE_MS)
 // while the rest of the intro fades, and the welcome screen takes over exactly where the name lands.
-const GLIDE_AT_MS = 3000;
+const GLIDE_AT_MS = 4500;
 const GLIDE_MS = 800;
 
 export const reducedMotion = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
