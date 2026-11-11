@@ -35,6 +35,7 @@ import { InlineText, InlineRoom, InlineStepper } from '../components/InlineEdit'
 import { cn } from '../lib/utils';
 import { displayStatus, hasBeenCaredFor } from '../lib/careActions';
 import { buttonVariants } from '../components/ui/button';
+import ScheduleSuggestion, { HEADING_ID as SCHEDULE_HEADING_ID } from '../components/ScheduleSuggestion';
 
 export default function PlantDetailPage() {
   const { plantId } = useParams();
@@ -383,7 +384,7 @@ export default function PlantDetailPage() {
           <TabsContent value="care" className="pt-4 space-y-4">
             {/* Watering schedule */}
             <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-              <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Watering schedule</h3>
+              <h3 id={SCHEDULE_HEADING_ID} tabIndex={-1} className="font-plant text-grove-cream text-base font-semibold  mb-2 focus:outline-none">Watering schedule</h3>
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
                   <InlineStepper
@@ -425,6 +426,11 @@ export default function PlantDetailPage() {
                   )}
                 </div>
               )}
+              <ScheduleSuggestion
+                plantId={plantId}
+                days={plant.watering_frequency_days}
+                onAccept={(d) => patchPlant({ watering_frequency_days: d })}
+              />
             </div>
 
             {/* Last watered */}

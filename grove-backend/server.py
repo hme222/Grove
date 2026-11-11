@@ -38,6 +38,7 @@ from curated_species import CURATED_SPECIES
 from species_safety import scrub_species, sourced_toxicity
 import missions as missions_mod
 import soil_check as soil_check_mod
+import schedule_tuning
 import check_ins as check_ins_mod
 import notification_policy
 import tracks as tracks_mod
@@ -2252,6 +2253,8 @@ async def update_plant(plant_id: str, input: PlantUpdate, current_user: dict = D
             last_watered = datetime.fromisoformat(last_watered)
         updates['next_water_due'] = (last_watered + timedelta(days=updates['watering_frequency_days'])).isoformat()
         updates['watering_frequency_source'] = 'user'
+        updates['watering_frequency_set_at'] = now.isoformat()
+        updates['schedule_suggestion_dismissed_days'] = None
     updates['updated_at'] = datetime.now(timezone.utc).isoformat()
     await db.plants.update_one({"id": plant_id}, {"$set": updates})
     updated = await db.plants.find_one({"id": plant_id})
@@ -5242,6 +5245,36 @@ async def list_schedule_review_nudges(current_user: dict = Depends(get_current_u
             "watering_frequency_days": p.get('watering_frequency_days'),
         })
     return {"plants": due, "count": len(due)}
+
+@api_router.get("/plants/{plant_id}/schedule-suggestion")
+async def get_schedule_suggestion(plant_id: str, current_user: dict = Depends(get_current_user)):
+    """A suggested watering interval from the person's soil checks, or from the room's light. Never applied for them."""
+    plant = await db.plants.find_one({"id": plant_id, "user_id": current_user['user_id']}, {"_id": 0})
+    if not plant:
+        raise HTTPException(status_code=404, detail="Plant not found")
+    logs = await db.care_logs.find(
+        {"plant_id": plant_id, "user_id": current_user['user_id'], "action": {"$in": ["water", "soil_check"]}}, {"_id": 0}
+    ).sort("logged_at", -1).limit(60).to_list(60)
+    room_doc = await db.rooms.find_one({"user_id": current_user['user_id'], "name": plant.get('room')}) if plant.get('room') else None
+    species = await find_library_species(plant.get('species_id'), plant.get('latin_name'), plant.get('common_name'))
+    return {"suggestion": schedule_tuning.suggest(plant, logs, (room_doc or {}).get('light'), species)}
+
+
+class ScheduleSuggestionDismiss(BaseModel):
+    days: int = Field(..., ge=1, le=limits.MAX_WATERING_DAYS)
+
+
+@api_router.post("/plants/{plant_id}/schedule-suggestion/dismiss")
+async def dismiss_schedule_suggestion(plant_id: str, body: ScheduleSuggestionDismiss, current_user: dict = Depends(get_current_user)):
+    """Not now. The same number is not suggested again until the schedule changes."""
+    result = await db.plants.update_one(
+        {"id": plant_id, "user_id": current_user['user_id']},
+        {"$set": {"schedule_suggestion_dismissed_days": body.days}},
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Plant not found")
+    return {"dismissed": True}
+
 
 @api_router.post("/plants/{plant_id}/schedule-review/acknowledge")
 async def acknowledge_schedule_review(plant_id: str, current_user: dict = Depends(get_current_user)):

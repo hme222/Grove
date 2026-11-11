@@ -160,6 +160,8 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     ['POST', /^\/nook\/seen$/, () => ({ ok: true })],
     ['GET', /^\/care-logs\/due-today$/, () => []],
     ['GET', /^\/notifications\/schedule-reviews$/, () => ({ plants: [] })],
+    ['GET', /^\/plants\/[^/]+\/schedule-suggestion$/, () => ({ suggestion: null })],
+    ['POST', /^\/plants\/[^/]+\/schedule-suggestion\/dismiss$/, () => ({ dismissed: true })],
     ['GET', /^\/notifications\/unread-count$/, () => ({ unread_count: 0 })],
     ['GET', /^\/users\/me\/goals$/, () => ({ items: [] })],
     ['GET', /^\/users\/me\/notification-preferences$/, () => ({ push_care_due: false })],
