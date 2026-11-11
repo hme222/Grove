@@ -46,4 +46,5 @@ def scrub_species(species):
         out["wiki_thumbnail"] = photo["thumb_url"]
         out["wiki_image"] = photo["photo_url"]
         out["wiki_image_credit"] = {k: photo[k] for k in ("author", "license", "license_url", "page_url")}
+        out["wiki_image_credit"]["source"] = photo.get("source") or "Wikimedia Commons"
     return out

@@ -16,6 +16,12 @@ def test_every_photo_is_for_a_curated_species():
 def test_every_photo_has_a_credit_and_an_open_license():
     for slug, p in DATA.items():
         assert p["author"].strip(), slug
+        if p.get("source") == "Unsplash":
+            assert p["license"] == "Unsplash License", slug
+            assert p["thumb_url"].startswith("https://images.unsplash.com/"), slug
+            assert p["photo_url"].startswith("https://images.unsplash.com/"), slug
+            assert p["page_url"].startswith("https://unsplash.com/photos/"), slug
+            continue
         assert p["license"].startswith(("CC BY", "CC0", "Public domain")), (slug, p["license"])
         assert p["thumb_url"].startswith(("https://upload.wikimedia.org/", "https://thumb.wikimedia.org/")), slug
         assert p["photo_url"].startswith(("https://upload.wikimedia.org/", "https://thumb.wikimedia.org/")), slug

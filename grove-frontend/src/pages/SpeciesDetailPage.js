@@ -319,7 +319,7 @@ export default function SpeciesDetailPage() {
                   ? <a href={species.wiki_image_credit.license_url} target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">{species.wiki_image_credit.license}<span className="sr-only"> (opens in a new tab)</span></a>
                   : species.wiki_image_credit.license}
                 , via{' '}
-                <a href={species.wiki_image_credit.page_url} target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">Wikimedia Commons<span className="sr-only"> (opens in a new tab)</span></a>
+                <a href={species.wiki_image_credit.page_url} target="_blank" rel="noopener noreferrer" className="inline-block py-3 -my-3 underline">{species.wiki_image_credit.source || 'Wikimedia Commons'}<span className="sr-only"> (opens in a new tab)</span></a>
               </p>
             ) : (
               <p className="font-latin italic text-xs text-grove-lichen mt-2">

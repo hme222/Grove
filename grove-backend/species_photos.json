@@ -379,11 +379,21 @@
       "author": "Mark Twyning (Marktee1)",
       "license": "CC BY-SA 3.0",
       "license_url": "http://creativecommons.org/licenses/by-sa/3.0/"
+    },
+    "pachira-aquatica": {
+      "article": "A potted money tree against an orange wall",
+      "file": "Unsplash BrbUdECo_5M",
+      "thumb_url": "https://images.unsplash.com/photo-1778472259927-74bab16a5a71?w=240&q=80&fm=jpg&fit=crop",
+      "photo_url": "https://images.unsplash.com/photo-1778472259927-74bab16a5a71?w=640&q=80&fm=jpg",
+      "page_url": "https://unsplash.com/photos/BrbUdECo_5M?utm_source=floragrove&utm_medium=referral",
+      "author": "Jason Leung",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "source": "Unsplash"
     }
   },
   "skipped": {
     "rosa-juliet-ausjameson": "no photo of this cultivar with a recorded author ('Sweet Juliet' is a different rose)",
-    "dahlia-pinnata": "not one of the app's species",
-    "pachira-aquatica": "no usable photo found: Commons has a flower close-up, distant trees, or no author"
+    "dahlia-pinnata": "not one of the app's species"
   }
 }
