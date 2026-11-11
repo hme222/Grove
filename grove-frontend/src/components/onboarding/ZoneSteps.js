@@ -70,7 +70,7 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
       onBack={onBack}
       heading="Where do you grow?"
       intro="Your zip code helps us tailor seasonal care tips. We never share it. You can skip this."
-      skip={{ label: 'Skip for now', onClick: onSkip, testId: 'zone-skip' }}
+      skip={{ label: 'Skip', ariaLabel: 'Skip for now', onClick: onSkip, testId: 'zone-skip' }}
       testId="onboarding-zone"
       hero={<PhotoBand src="/photos/window-1.jpg" ratio="short" eager />}
     >
@@ -178,7 +178,7 @@ export function HemisphereStep({ onBack, onDone }) {
       onBack={onBack}
       heading="Which hemisphere do you grow in?"
       intro="The seasons run the other way in the south, so we time seasonal tips to yours. You can skip this."
-      skip={{ label: 'Skip for now', onClick: () => onDone(null), disabled: !!saving, testId: 'hemisphere-skip' }}
+      skip={{ label: 'Skip', ariaLabel: 'Skip for now', onClick: () => onDone(null), disabled: !!saving, testId: 'hemisphere-skip' }}
       testId="onboarding-hemisphere"
     >
       <div className="mt-6 flex flex-1 flex-col">

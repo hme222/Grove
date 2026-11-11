@@ -137,14 +137,31 @@
 @keyframes os-fill-in { from { transform: scale(0.5); opacity: 0.4; } to { transform: none; opacity: 1; } }
 
 .os-spark { position: absolute; width: 0.55em; height: 0.55em; color: var(--grove-sun, var(--grove-lime)); animation: os-spark-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-.os-spark-1 { top: -0.3em; right: -0.75em; animation-delay: 0.7s; }
-.os-spark-2 { top: 0.5em; right: -1.15em; width: 0.35em; height: 0.35em; animation-delay: 0.95s; }
-.os-spark-3 { top: -0.1em; right: -1.45em; width: 0.3em; height: 0.3em; animation-delay: 1.2s; }
+.os-spark-1 { top: -0.3em; right: -0.65em; animation-delay: 0.7s; }
+.os-spark-2 { top: 0.4em; right: -0.9em; width: 0.35em; height: 0.35em; animation-delay: 0.95s; }
+.os-spark-3 { top: -0.05em; right: -1.05em; width: 0.3em; height: 0.3em; animation-delay: 1.2s; }
 @keyframes os-spark-pop { from { opacity: 0; transform: scale(0) rotate(-45deg); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .os-underline, .os-fill, .os-spark { animation: none; }
 }
 
-/* The highlighter: a key word in a lesson card gets a soft marker stripe. */
-[data-testid="lesson-player"] mark { font-weight: 600; background-color: color-mix(in srgb, var(--grove-lime) 35%, transparent); color: inherit; border-radius: 0.2em; padding: 0 0.2em; }
+/* The highlighter: a key word in a lesson card gets a marker stripe that sweeps on from the left, a little uneven, as if drawn by hand.
+   It plays when the card appears and then stays. With reduced motion it is simply there. */
+[data-testid="lesson-player"] mark {
+  color: inherit;
+  font-weight: 600;
+  padding: 0 0.2em;
+  border-radius: 0.35em 0.15em 0.4em 0.2em;
+  background-image: linear-gradient(color-mix(in srgb, var(--grove-lime) 38%, transparent), color-mix(in srgb, var(--grove-lime) 38%, transparent));
+  background-repeat: no-repeat;
+  background-position: 0 65%;
+  background-size: 100% 80%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation: os-mark-draw 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
+}
+@keyframes os-mark-draw { from { background-size: 0% 80%; } to { background-size: 100% 80%; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-testid="lesson-player"] mark { animation: none; }
+}

@@ -62,10 +62,15 @@ export function WelcomeStage({ decorative = false, pinContinue = false, onContin
           <mask id="gw-mask-3" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
             <path className="gw-draw gw-draw-3" d={PEN_3} strokeWidth="10" {...DRAW} />
           </mask>
+          {/* A little wobble, so the brush lines read as drawn by hand and not as perfect curves. */}
+          <filter id="gw-rough" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="7" result="wobble" />
+            <feDisplacementMap in="SourceGraphic" in2="wobble" scale="4" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
         </defs>
-        <g fill="var(--grove-lime)">
+        <g fill="var(--grove-lime)" filter="url(#gw-rough)">
           <path className="gw-line" mask="url(#gw-mask-1)" d={LINE_1} />
-          <path className="gw-line" mask="url(#gw-mask-2)" d={LINE_2} />
+          <path className="gw-line" mask="url(#gw-mask-2)" transform="translate(0 4)" d={LINE_2} />
           <path className="gw-line" mask="url(#gw-mask-3)" d={LINE_3} />
         </g>
         <g fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round">

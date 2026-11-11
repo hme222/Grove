@@ -31,24 +31,7 @@ export function Underlined({ children, delay }) {
   return <span className="os-underline" style={delay !== undefined ? { animationDelay: `${delay}s` } : undefined}>{children}</span>;
 }
 
-// Where the person is in a short run of screens, as pills: the current one is long and lime. The words are
-// for screen readers ("1 of 2"); the pills only decorate.
-export function Pills({ count, current }) {
-  return (
-    <div className="flex items-center gap-2" data-testid="onboarding-pills">
-      <span className="sr-only">{current} of {count}</span>
-      {Array.from({ length: count }, (_, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          className={cn('h-2 rounded-pill border-hairline', i === current - 1 ? 'w-6 border-grove-lime bg-grove-lime' : 'w-2 border-grove-fernLine bg-grove-moss')}
-        />
-      ))}
-    </div>
-  );
-}
-
-export default function StepScreen({ step, stepLabel, onBack, skip, heading, eyebrow, intro, children, testId, headingId, hero, bleed }) {
+export default function StepScreen({ step, stepLabel, onBack, skip, heading, eyebrow, reserveEyebrow, intro, children, testId, headingId, hero, bleed }) {
   const headingRef = useRef(null);
 
   useEffect(() => {
@@ -90,11 +73,13 @@ export default function StepScreen({ step, stepLabel, onBack, skip, heading, eye
       )}
       {hero && <div className="mt-4">{hero}</div>}
       {eyebrow && <p className="mt-6 font-ui text-sm text-grove-sage" data-testid="onboarding-eyebrow">{eyebrow}</p>}
+      {/* A screen with no eyebrow can still keep the row, so its headline and photo line up with its neighbors. */}
+      {!eyebrow && reserveEyebrow && <p className="mt-6 font-ui text-sm invisible" aria-hidden="true">&nbsp;</p>}
       <h1
         id={headingId}
         ref={headingRef}
         tabIndex={-1}
-        className={cn(eyebrow ? 'mt-1' : 'mt-6', 'font-plant text-3xl leading-tight text-grove-cream focus:outline-none')}
+        className={cn(eyebrow || reserveEyebrow ? 'mt-1' : 'mt-6', 'font-plant text-3xl leading-tight text-grove-cream focus:outline-none')}
         data-testid="onboarding-heading"
       >
         {heading}

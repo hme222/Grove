@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
@@ -14,7 +14,7 @@ import { CheckEmailStep, ConfirmedStep } from './onboarding/EmailSteps';
 import { ZoneStep, HemisphereStep } from './onboarding/ZoneSteps';
 import { QuizIntroStep, QuestionStep } from './onboarding/QuizSteps';
 import { BuildingStep, PlanStep } from './onboarding/PlanSteps';
-import StepScreen, { StepActions, Pills, Underlined } from './onboarding/StepScreen';
+import StepScreen, { StepActions, Underlined } from './onboarding/StepScreen';
 import PhotoBand from './PhotoBand';
 import * as features from '@/lib/features';
 
@@ -110,17 +110,16 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
     <StepScreen
       heading={withEmphasis(slide.title, slide.underline, (w) => <Underlined>{w}</Underlined>)}
       eyebrow={slide.kicker}
+      reserveEyebrow
       onBack={onBack}
       skip={{ label: 'Skip', ariaLabel: 'Skip intro', onClick: onSkip, testId: 'onboarding-skip' }}
       testId={`onboarding-intro-${index + 1}`}
     >
       <div className="mt-4 flex flex-1 flex-col">
         <p className="font-ui text-base font-medium text-grove-cream">{withEmphasis(slide.lead, slide.sparkle, (w) => <Sparkled>{w}</Sparkled>)}</p>
-        <p className="mt-2 font-ui text-sm leading-relaxed text-grove-cream">{slide.body}</p>
-        {/* The photo sits just above the buttons, so it is in the same place on every screen of this run. */}
-        <div className="mt-auto pt-6">
-          <PhotoBand src={slide.photo} ratio="photo" eager={index === 0} testId="hero-image" />
-        </div>
+        <PhotoBand src={slide.photo} ratio="photo" eager={index === 0} className="mt-6" testId="hero-image" />
+        {/* The explanation sits just above the buttons, where the photo used to be. */}
+        <p className="mt-auto pt-6 font-ui text-sm leading-relaxed text-grove-cream">{slide.body}</p>
         <StepActions
           className="mt-0"
           primary={(
@@ -128,7 +127,7 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
               Continue
             </button>
           )}
-          secondary={<Pills count={SLIDES.length} current={index + 1} />}
+          secondary={<span className="sr-only">{index + 1} of {SLIDES.length}</span>}
         />
       </div>
     </StepScreen>
@@ -301,6 +300,19 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
   }, [updateUser]);
 
   const welcome = stage === 'welcome';
+  // "Welcome, Maya" is one screen, not a page: when it fits the window it cannot scroll at all. Only a window too short
+  // to hold it (a landscape phone, a very short laptop window) keeps scrolling, so nothing is ever cut off.
+  const [planFits, setPlanFits] = useState(false);
+  useLayoutEffect(() => {
+    if (stage !== 'plan') { setPlanFits(false); return undefined; }
+    const measure = () => {
+      const el = shell.current;
+      if (el) setPlanFits(el.scrollHeight <= el.clientHeight + 1);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [stage, planResult]);
   let body = null;
   if (welcome) {
     // One welcome tree for the whole time: it mounts under the intro when the name starts to glide and is never
@@ -398,7 +410,7 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
       role="dialog"
       aria-modal="true"
       aria-label={dialogLabel}
-      className={welcome ? undefined : 'no-scrollbar fixed inset-0 z-intro overflow-y-auto bg-grove-forest'}
+      className={welcome ? undefined : cn('no-scrollbar fixed inset-0 z-intro bg-grove-forest', stage === 'plan' && planFits ? 'overflow-y-hidden' : 'overflow-y-auto')}
       data-testid="onboarding-flow"
     >
       {body}

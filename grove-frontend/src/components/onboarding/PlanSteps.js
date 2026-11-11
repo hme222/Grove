@@ -57,7 +57,7 @@ export function BuildingStep({ answers, onResult, onSkip }) {
   return (
     <StepScreen
       heading={status === 'failed' ? 'We couldn’t build your plan' : 'Building your plan…'}
-      skip={status === 'failed' ? { label: 'Skip for now', onClick: onSkip, testId: 'building-skip' } : undefined}
+      skip={status === 'failed' ? { label: 'Skip', ariaLabel: 'Skip for now', onClick: onSkip, testId: 'building-skip' } : undefined}
       testId="onboarding-building"
     >
       <div className="mt-6 flex flex-1 flex-col">

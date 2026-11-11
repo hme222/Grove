@@ -299,19 +299,91 @@
       "author": "Stan Shebs",
       "license": "CC BY-SA 3.0",
       "license_url": "https://creativecommons.org/licenses/by-sa/3.0"
+    },
+    "monstera-deliciosa": {
+      "article": "Bunga Monstera (Monstera Deliciosa).jpg",
+      "file": "Bunga Monstera (Monstera Deliciosa).jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Bunga_Monstera_%28Monstera_Deliciosa%29.jpg/250px-Bunga_Monstera_%28Monstera_Deliciosa%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Bunga_Monstera_%28Monstera_Deliciosa%29.jpg/960px-Bunga_Monstera_%28Monstera_Deliciosa%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Bunga_Monstera_(Monstera_Deliciosa).jpg",
+      "author": "Aqilla Rahmi",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0"
+    },
+    "aloe-vera": {
+      "article": "+ La Finca De Aloe Vera. 03.jpg",
+      "file": "+ La Finca De Aloe Vera. 03.jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/%2B_La_Finca_De_Aloe_Vera._03.jpg/250px-%2B_La_Finca_De_Aloe_Vera._03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/%2B_La_Finca_De_Aloe_Vera._03.jpg/960px-%2B_La_Finca_De_Aloe_Vera._03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:%2B_La_Finca_De_Aloe_Vera._03.jpg",
+      "author": "Holger Uwe Schmitt",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+    },
+    "ficus-lyrata": {
+      "article": "Ficus lyrata 200718807.jpg",
+      "file": "Ficus lyrata 200718807.jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Ficus_lyrata_200718807.jpg/250px-Ficus_lyrata_200718807.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Ficus_lyrata_200718807.jpg/960px-Ficus_lyrata_200718807.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Ficus_lyrata_200718807.jpg",
+      "author": "Thalia M. Mite",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0"
+    },
+    "eucalyptus-polyanthemos": {
+      "article": "Ellipsidion sp. (5447252861).jpg",
+      "file": "Ellipsidion sp. (5447252861).jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Ellipsidion_sp._%285447252861%29.jpg/250px-Ellipsidion_sp._%285447252861%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Ellipsidion_sp._%285447252861%29.jpg/960px-Ellipsidion_sp._%285447252861%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Ellipsidion_sp._(5447252861).jpg",
+      "author": "Donald Hobern from Copenhagen, Denmark",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0"
+    },
+    "eustoma-grandiflorum": {
+      "article": "Eustoma grandiflorum (7554694282).jpg",
+      "file": "Eustoma grandiflorum (7554694282).jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Eustoma_grandiflorum_%287554694282%29.jpg/250px-Eustoma_grandiflorum_%287554694282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Eustoma_grandiflorum_%287554694282%29.jpg/960px-Eustoma_grandiflorum_%287554694282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Eustoma_grandiflorum_(7554694282).jpg",
+      "author": "Tyrrhium",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0"
+    },
+    "phalaenopsis": {
+      "article": "Phalaenopsis July 2020-2.jpg",
+      "file": "Phalaenopsis July 2020-2.jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Phalaenopsis_July_2020-2.jpg/250px-Phalaenopsis_July_2020-2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Phalaenopsis_July_2020-2.jpg/960px-Phalaenopsis_July_2020-2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Phalaenopsis_July_2020-2.jpg",
+      "author": "Alvesgaspar",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+    },
+    "dracaena-marginata": {
+      "article": "Starr 061231-3032 Dracaena marginata.jpg",
+      "file": "Starr 061231-3032 Dracaena marginata.jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Starr_061231-3032_Dracaena_marginata.jpg/250px-Starr_061231-3032_Dracaena_marginata.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Starr_061231-3032_Dracaena_marginata.jpg/960px-Starr_061231-3032_Dracaena_marginata.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Starr_061231-3032_Dracaena_marginata.jpg",
+      "author": "Forest & Kim Starr",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0"
+    },
+    "dahlia-cafe-au-lait": {
+      "article": "Dahlia \"Cafe au lait\".jpg",
+      "file": "Dahlia \"Cafe au lait\".jpg",
+      "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Dahlia_%22Cafe_au_lait%22.jpg/250px-Dahlia_%22Cafe_au_lait%22.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/3/35/Dahlia_%22Cafe_au_lait%22.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Dahlia_%22Cafe_au_lait%22.jpg",
+      "author": "Mark Twyning (Marktee1)",
+      "license": "CC BY-SA 3.0",
+      "license_url": "http://creativecommons.org/licenses/by-sa/3.0/"
     }
   },
   "skipped": {
-    "monstera-deliciosa": "no author recorded",
-    "aloe-vera": "lead image is a collage",
-    "ficus-lyrata": "lead image is a distant hedge-like tree",
-    "rosa-juliet-ausjameson": "stand-in article, not the species",
-    "eucalyptus-polyanthemos": "stand-in article, not the species",
-    "eustoma-grandiflorum": "no author recorded",
+    "rosa-juliet-ausjameson": "no photo of this cultivar with a recorded author ('Sweet Juliet' is a different rose)",
     "dahlia-pinnata": "not one of the app's species",
-    "dahlia-cafe-au-lait": "stand-in article, not the species",
-    "phalaenopsis": "no author recorded",
-    "pachira-aquatica": "lead image is a close-up of the flower only",
-    "dracaena-marginata": "lead image is a landscape"
+    "pachira-aquatica": "no usable photo found: Commons has a flower close-up, distant trees, or no author"
   }
 }

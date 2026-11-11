@@ -31,5 +31,5 @@ def test_scrub_species_adds_the_photo_and_its_credit():
 
 
 def test_species_without_a_photo_get_none():
-    sp = next(s for s in CURATED_SPECIES if s["slug"] == "aloe-vera")
+    sp = next(s for s in CURATED_SPECIES if s["slug"] == "rosa-juliet-ausjameson")
     assert "wiki_image_credit" not in scrub_species(sp)

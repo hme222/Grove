@@ -31,7 +31,7 @@ export function QuizIntroStep({ onBack, onStart, onSkip, step = 3 }) {
       onBack={onBack}
       heading={<>Four <Underlined>quick</Underlined> questions</>}
       intro="No right answers. We use them to choose your first lesson, and nothing else. Skip any question you like, and we start with the basics. About 1 minute."
-      skip={{ label: 'Skip these questions', onClick: onSkip, testId: 'quiz-intro-skip' }}
+      skip={{ label: 'Skip', ariaLabel: 'Skip these questions', onClick: onSkip, testId: 'quiz-intro-skip' }}
       testId="onboarding-quiz-intro"
       hero={<PhotoBand src="/photos/onboarding-windowsill.jpg" ratio="photo" position="bottom" eager testId="hero-image" />}
     >
@@ -87,7 +87,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
       onBack={onBack}
       heading={question.heading}
       headingId={headingId}
-      skip={{ label: 'Skip this question', onClick: onSkip, testId: 'question-skip' }}
+      skip={{ label: 'Skip', ariaLabel: 'Skip this question', onClick: onSkip, testId: 'question-skip' }}
       testId={`onboarding-${question.id}`}
     >
       {!step && (
