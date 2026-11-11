@@ -203,17 +203,27 @@ const THUMBS = CARDS.map((c, i) => ({
   label: `Show card ${i + 1} of ${CARDS.length}: ${c.title}`,
 }));
 
+// Which card is showing: the one whose center is nearest the center of the strip. Cards are narrower than the
+// strip on a wide screen, so dividing the scroll position by the strip's width picks the wrong card.
+export function nearestCard(centers, viewCenter) {
+  let best = 0;
+  for (let i = 1; i < centers.length; i += 1) {
+    if (Math.abs(centers[i] - viewCenter) < Math.abs(centers[best] - viewCenter)) best = i;
+  }
+  return best;
+}
+
 export default function PhotoGuideCards({ defaultIndex = 0 }) {
   const [index, setIndex] = useState(defaultIndex);
   const scrollerRef = useRef(null);
 
-  // Sync index -> scroll position
+  // Sync index -> scroll position. The strip itself is moved (never the page), centering the chosen card.
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
     const target = el.children[index];
-    if (target && target.scrollIntoView) {
-      target.scrollIntoView({ behavior: scrollBehavior(), inline: 'center', block: 'nearest' });
+    if (target && typeof el.scrollTo === 'function') {
+      el.scrollTo({ left: Math.max(0, target.offsetLeft - (el.clientWidth - target.offsetWidth) / 2), behavior: scrollBehavior() });
     }
   }, [index]);
 
@@ -227,9 +237,8 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
     const onScroll = () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        const w = el.clientWidth;
-        const best = Math.round(el.scrollLeft / w);
-        setIndex((cur) => (best === cur ? cur : Math.max(0, Math.min(CARDS.length - 1, best))));
+        const best = nearestCard(Array.from(el.children, (c) => c.offsetLeft + c.offsetWidth / 2), el.scrollLeft + el.clientWidth / 2);
+        setIndex((cur) => (best === cur ? cur : best));
       }, 90);
     };
     el.addEventListener('scroll', onScroll, { passive: true });
@@ -240,7 +249,7 @@ export default function PhotoGuideCards({ defaultIndex = 0 }) {
     <div className="w-full" data-testid="photo-guide-cards">
       <div
         ref={scrollerRef}
-        className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 no-scrollbar"
+        className="relative flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 no-scrollbar"
         style={{ scrollBehavior: 'smooth' }}
       >
         {CARDS.map((c, i) => (

@@ -165,6 +165,9 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
   // The launch intro plays once, before the welcome screen, for someone who is not signed in yet.
   const [introPlaying, setIntroPlaying] = useState(() => launchIntro && !user && !replay);
   const endIntro = useCallback(() => setIntroPlaying(false), []);
+  // Near the end of the intro the welcome screen mounts beneath it, so the intro's name can glide to its wordmark.
+  const [introGlide, setIntroGlide] = useState(false);
+  const startGlide = useCallback(() => setIntroGlide(true), []);
   const shell = useRef(null);
 
   useEffect(() => {
@@ -269,21 +272,27 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
 
   const welcome = stage === 'welcome';
   let body = null;
-  if (welcome && introPlaying) {
-    body = <LaunchIntro onDone={endIntro} />;
-  } else if (welcome) {
+  if (welcome) {
+    // One welcome tree for the whole time: it mounts under the intro when the name starts to glide and is never
+    // rebuilt when the intro ends, so its entrance does not restart. Until then it is hidden from assistive tech
+    // and unfocusable, and its own wordmark waits for the intro's name to land on it.
     body = (
       <>
-        <WelcomeScreen onContinue={() => setStage(user ? 'steps' : 'account')} onSkip={() => finish()} disabled={finishing} showSkip={!!user} />
-        {!user && (
-          <AppLink
-            to="/login"
-            data-testid="welcome-signin"
-            className="fixed inset-x-0 bottom-0 z-intro flex min-h-touch items-center justify-center bg-grove-forest font-ui text-sm text-grove-cream"
-          >
-            Already have an account? Sign in
-          </AppLink>
+        {(introGlide || !introPlaying) && (
+          <div className={introPlaying ? 'gw-intro-live' : undefined} aria-hidden={introPlaying ? 'true' : undefined} inert={introPlaying ? true : undefined}>
+            <WelcomeScreen onContinue={() => setStage(user ? 'steps' : 'account')} onSkip={() => finish()} disabled={finishing} showSkip={!!user} afterIntro={introGlide} />
+            {!user && !introPlaying && (
+              <AppLink
+                to="/login"
+                data-testid="welcome-signin"
+                className="fixed inset-x-0 bottom-0 z-intro flex min-h-touch items-center justify-center bg-grove-forest font-ui text-sm text-grove-cream"
+              >
+                Already have an account? Sign in
+              </AppLink>
+            )}
+          </div>
         )}
+        {introPlaying && <LaunchIntro onGlide={startGlide} onDone={endIntro} />}
       </>
     );
   } else if (stage.startsWith('intro-')) {

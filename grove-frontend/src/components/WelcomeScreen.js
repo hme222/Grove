@@ -84,7 +84,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip, short }) {
     >
       <div className={cn('mx-auto flex min-h-full w-full max-w-md flex-col px-4', short ? 'pb-12 pt-2' : 'pb-16 pt-6')}>
         <div className="flex min-h-touch items-center justify-between gap-2">
-          <FloraGroveWordmark size={30} />
+          <span data-welcome-wordmark className="inline-block"><FloraGroveWordmark size={30} /></span>
           {showSkip && skipButton(onSkip, disabled, 'flex min-h-touch min-w-touch shrink-0 items-center justify-center rounded-control text-grove-lichen hover:text-grove-cream')}
         </div>
         <h1 className={cn('max-w-full break-words font-plant text-3xl leading-tight text-grove-cream', short ? 'mt-3' : 'mt-6')}>Welcome to FloraGrove</h1>
@@ -111,7 +111,7 @@ function CompactWelcome({ onContinue, onSkip, disabled, showSkip, short }) {
   );
 }
 
-export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true }) {
+export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true, afterIntro = false }) {
   const scale = useStageScale();
   const [done, setDone] = useState(false);
   // A keyboard user cannot tap to skip the build, so any key press shows the finished screen. Sign up is on screen from the start.
@@ -131,7 +131,7 @@ export function WelcomeScreen({ onContinue, onSkip, disabled, showSkip = true })
 
   return (
     <div
-      className={`gw z-intro ${done ? 'gw-done' : ''} ${pinned ? 'gw-pinned' : ''}`}
+      className={`gw z-intro ${done ? 'gw-done' : ''} ${pinned ? 'gw-pinned' : ''} ${afterIntro ? 'gw-after-intro' : ''}`}
       style={{ '--stage-scale': scale }}
       data-testid="onboarding-welcome"
       onPointerDown={() => setDone(true)}

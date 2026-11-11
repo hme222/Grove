@@ -10,6 +10,10 @@
   from { transform: translate(32px, 40px) rotate(0deg) scale(0.55); opacity: 0; }
   to { transform: translate(39px, 34px) rotate(24deg); }
 }
+/* While the name glides to the welcome screen, everything else lets go and the screen beneath shows through. */
+.li { transition: background-color 0.6s ease; }
+.li-fading { background-color: transparent; }
+.li-fading .li-mark-box, .li-fading .li-stem-svg { opacity: 0; transition: opacity 0.5s ease; }
 @keyframes li-name { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes li-pop { 0% { opacity: 0; transform: scale(0) rotate(-45deg); } 70% { opacity: 1; transform: scale(1.25) rotate(8deg); } 100% { opacity: 1; transform: none; } }
 @keyframes li-twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.5) rotate(45deg); } }

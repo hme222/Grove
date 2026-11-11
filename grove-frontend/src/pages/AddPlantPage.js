@@ -15,16 +15,9 @@ import ToxicityBadge from '../components/ToxicityBadge';
 import PlantIdentifyScreen from './PlantIdentifyScreen';
 import { useAuth } from '../contexts/AuthContext';
 import { impactLight } from '../lib/haptics';
+import { MEDIUMS } from '../constants/growMedia';
 
 const ROOMS = ['Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Office', 'Balcony', 'Patio', 'Greenhouse', 'Hallway', 'Dining Room'];
-const MEDIUMS = [
-  { value: 'soil', label: 'Soil' },
-  { value: 'leca', label: 'LECA' },
-  { value: 'bark', label: 'Bark', orchidOnly: true },
-  { value: 'water', label: 'Water' },
-  { value: 'propagation_jar', label: 'Propagation jar' },
-  { value: 'other', label: 'Other' },
-];
 const SOURCES = [
   { value: 'nursery', label: 'Nursery' },
   { value: 'swap', label: 'Plant swap' },
@@ -336,7 +329,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
             </div>
             <div>
               <p id="addplant-grow-medium-label" className="font-ui text-xs text-grove-cream block mb-1.5">Grow medium</p>
-              <div role="group" aria-labelledby="addplant-grow-medium-label" className="flex flex-wrap gap-1.5">
+              <div role="group" aria-labelledby="addplant-grow-medium-label" aria-describedby="addplant-grow-medium-hint" className="flex flex-wrap gap-1.5">
                 {MEDIUMS.filter(m => !m.orchidOnly || selectedSpecies?.family === 'Orchidaceae' || formData.grow_medium === 'bark').map(m => (
                   <button
                     key={m.value}
@@ -347,6 +340,9 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   >{m.label}</button>
                 ))}
               </div>
+              <p id="addplant-grow-medium-hint" className="mt-2 font-ui text-sm text-grove-sage" data-testid="addplant-grow-medium-hint">
+                {(MEDIUMS.find((m) => m.value === formData.grow_medium) || {}).hint}
+              </p>
             </div>
             <div>
               <p id="addplant-acquired-from-label" className="font-ui text-xs text-grove-cream block mb-1.5">Acquired from</p>

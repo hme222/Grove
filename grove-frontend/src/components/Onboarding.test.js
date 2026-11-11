@@ -793,15 +793,26 @@ describe('launch intro', () => {
   const setMotion = (reduce) => { window.matchMedia = jest.fn().mockImplementation((query) => ({ matches: reduce && query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} })); };
   afterEach(() => { delete window.matchMedia; jest.useRealTimers(); });
 
-  test('plays before the welcome screen, then hands over after about 3.4 seconds', async () => {
+  test('plays before the welcome screen, then the name glides to the welcome wordmark and the welcome screen takes over', async () => {
     setMotion(false);
     jest.useFakeTimers();
     await mount({ launchIntro: true });
     expect(q('launch-intro')).not.toBeNull();
-    expect(q('onboarding-welcome')).toBeNull();
-    await act(async () => { jest.advanceTimersByTime(3500); });
+    expect(q('onboarding-welcome')).toBeNull(); // not built until the glide starts
+    await act(async () => { jest.advanceTimersByTime(3100); });
+    // The glide has started: the welcome screen is built underneath, hidden from assistive tech, wordmark waiting.
+    expect(q('launch-intro')).not.toBeNull();
+    const underlay = q('onboarding-welcome').parentElement;
+    expect(underlay.className).toContain('gw-intro-live');
+    expect(underlay.getAttribute('aria-hidden')).toBe('true');
+    expect(underlay.hasAttribute('inert')).toBe(true);
+    await act(async () => { jest.advanceTimersByTime(1000); });
+    // The intro has handed over; the same welcome tree stays, now live, with the sign-in link.
     expect(q('launch-intro')).toBeNull();
     expect(q('onboarding-welcome')).not.toBeNull();
+    expect(q('onboarding-welcome').parentElement.className).not.toContain('gw-intro-live');
+    expect(q('onboarding-welcome').parentElement.hasAttribute('inert')).toBe(false);
+    expect(q('welcome-signin')).not.toBeNull();
   });
 
   test('a tap skips it', async () => {

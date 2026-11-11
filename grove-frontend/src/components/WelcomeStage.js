@@ -32,7 +32,7 @@ function Sparkle({ cx, cy, r, i }) {
 export function WelcomeStage({ decorative = false, pinContinue = false, onContinue, disabled }) {
   return (
     <>
-      <div className="gw-a gw-brand" style={{ left: 20, top: 40 }}>
+      <div className="gw-a gw-brand" data-welcome-wordmark style={{ left: 20, top: 40 }}>
         <FloraGroveWordmark size={30} />
       </div>
 

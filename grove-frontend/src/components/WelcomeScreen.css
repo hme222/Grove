@@ -62,6 +62,10 @@
 .gw { --gw-pen: cubic-bezier(0.42, 0.08, 0.5, 0.96); --gw-out: cubic-bezier(0.22, 0.61, 0.36, 1); }
 
 .gw-brand   { animation: gw-fade-up 1.6s var(--gw-out) 0.3s both; }
+/* After the launch intro the wordmark is already on screen: the intro's name lands on it, so it does not fade in again. */
+.gw-after-intro .gw-brand { animation: none; }
+/* While the intro's name is still travelling to this spot, the real wordmark waits (hidden, still taking its space). */
+.gw-intro-live [data-welcome-wordmark] { visibility: hidden; }
 .gw-welcome { animation: gw-fade-up 1.6s var(--gw-out) 0.55s both; }
 .gw-stars   { transform-box: fill-box; transform-origin: center; animation: gw-pop 1s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s both; }
 /* The lime lines are drawn on like a pen: a thick stroke along each line's middle grows from its start to its end and uncovers the brush shape. */

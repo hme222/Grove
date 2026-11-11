@@ -17,7 +17,7 @@ export function QuizIntroStep({ onBack, onStart, onSkip, step = 3 }) {
       heading="Four quick questions"
       intro="No right answers. We use them to choose your first lesson, and nothing else. Skip any question you like, and we start with the basics. About 1 minute."
       testId="onboarding-quiz-intro"
-      hero={<PhotoBand src="/photos/onboarding-windowsill.jpg" ratio="photo" eager testId="hero-image" />}
+      hero={<PhotoBand src="/photos/onboarding-windowsill.jpg" ratio="photo" position="bottom" eager testId="hero-image" />}
     >
       <div className="mt-6 flex flex-1 flex-col">
         <StepActions

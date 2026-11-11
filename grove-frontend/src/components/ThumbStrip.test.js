@@ -1,7 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import ThumbStrip from './ThumbStrip';
-import PhotoGuideCards from './PhotoGuideCards';
+import PhotoGuideCards, { nearestCard } from './PhotoGuideCards';
 import PlantTiles from '../nook/PlantTiles';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -121,4 +121,25 @@ test('announce={false} drops the strip\'s own live "N of M" so a host with its o
   expect(q('[aria-live="polite"]')).not.toBeNull();
   mount(<ThumbStrip items={items} activeIndex={1} onSelect={() => {}} announce={false} />);
   expect(q('[aria-live="polite"]')).toBeNull();
+});
+
+describe('nearestCard', () => {
+  // Six cards 300 wide with 12 gap in a strip 463 wide (a tablet): card centers 150, 462, 774, ...
+  const centers = [150, 462, 774, 1086, 1398, 1710];
+  const strip = 463;
+  test('picks the card centered in the strip at each scroll position', () => {
+    centers.forEach((c, i) => {
+      const scrollLeft = c - strip / 2; // the card centered
+      expect(nearestCard(centers, scrollLeft + strip / 2)).toBe(i);
+    });
+  });
+  test('dividing by the strip width would have picked the wrong card (the old bug)', () => {
+    const scrollLeft = centers[3] - strip / 2; // card 4 centered
+    expect(Math.round(scrollLeft / strip)).not.toBe(3);
+    expect(nearestCard(centers, scrollLeft + strip / 2)).toBe(3);
+  });
+  test('handles a single card and ties by taking the earlier one', () => {
+    expect(nearestCard([100], 9999)).toBe(0);
+    expect(nearestCard([100, 200], 150)).toBe(0);
+  });
 });

@@ -101,10 +101,10 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* First-run flow on a short screen (a small phone, a phone with big browser bars, or the desktop phone preview, which is
-   756px tall): nothing here should need scrolling. The photo becomes a slim band first and goes only on the very
+   756px tall): nothing here should need scrolling. The photo becomes a shorter band (2:1) first and goes only on the very
    shortest screens; the spacing closes up. Touch targets stay at --touch-min. */
 @media (max-height: 760px) {
-  [data-testid="onboarding-flow"] [data-photo] { aspect-ratio: 3 / 1 !important; margin-top: 0.5rem; }
+  [data-testid="onboarding-flow"] [data-photo] { aspect-ratio: 2 / 1 !important; margin-top: 0.5rem; }
   [data-testid="onboarding-flow"] .os-pad { padding-top: 0.5rem; padding-bottom: 0.5rem; }
   [data-testid="onboarding-flow"] [data-testid="step-actions"] { padding-top: 0.75rem; }
   [data-testid="onboarding-flow"] [data-testid="onboarding-heading"] { margin-top: 0.5rem; font-size: 1.625rem; }

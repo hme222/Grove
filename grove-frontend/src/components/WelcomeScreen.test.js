@@ -99,3 +99,20 @@ test('tall screen: one Continue button, inside the stage', async () => {
   expect(container.querySelector('.gw-pin')).toBeNull();
   done();
 });
+
+test('both layouts carry the wordmark the launch intro glides to, and afterIntro stops it fading in again', async () => {
+  const wide = await render(430, 932);
+  expect(wide.container.querySelector('.gw-brand[data-welcome-wordmark]')).not.toBeNull();
+  expect(wide.container.querySelector('.gw').className).not.toContain('gw-after-intro');
+  wide.done();
+  const narrow = await render(195, 600);
+  expect(narrow.container.querySelector('[data-testid="onboarding-welcome"] [data-welcome-wordmark]')).not.toBeNull();
+  narrow.done();
+  window.innerWidth = 430; window.innerHeight = 932;
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  const root = createRoot(container);
+  await act(async () => { root.render(<WelcomeScreen onContinue={() => {}} onSkip={() => {}} afterIntro />); });
+  expect(container.querySelector('.gw').className).toContain('gw-after-intro');
+  act(() => root.unmount()); container.remove();
+});
