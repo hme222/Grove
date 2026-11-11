@@ -8,7 +8,7 @@ export const CARDS = [
     eyebrow: "Zero-effort consistency",
     headline: "Don\u2019t rely on memory.",
     body:
-      "To build a consistent care routine, don&rsquo;t try to remember. Instead, <strong>stack</strong> your plant check onto an unbreakable habit you already do every single day.",
+      "To build a consistent care routine, don&rsquo;t try to remember. Instead, <mark>stack</mark> your plant check onto an unbreakable habit you already do every single day.",
     cta: "I\u2019m ready to stack",
     icon: Repeat,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -21,7 +21,7 @@ export const CARDS = [
     eyebrow: "The routine recipe",
     headline: "The habit-stack formula.",
     body:
-      "Use this one line as your template. Then repeat it out loud until it feels like yours: <strong>&ldquo;After I do [Existing Habit], I will [Check My Plant].&rdquo;</strong>",
+      "Use this one line as your template. Then repeat it out loud until it feels like yours: <mark>&ldquo;After I do [Existing Habit], I will [Check My Plant].&rdquo;</mark>",
     cta: "Got the recipe",
     icon: LinkIcon,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -34,7 +34,7 @@ export const CARDS = [
     eyebrow: "The morning grind",
     headline: "Coffee grinder \u2192 Monstera.",
     body:
-      "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes 8 seconds and the smell of coffee becomes your daily cue.",
+      "&ldquo;Right after I grind my morning coffee, I will look at my Monstera&rsquo;s leaves.&rdquo; It takes <mark>8 seconds</mark> and the smell of coffee becomes your daily cue.",
     cta: "Love this one",
     icon: Coffee,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

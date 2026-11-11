@@ -16,6 +16,7 @@ import PlantIdentifyScreen from './PlantIdentifyScreen';
 import { useAuth } from '../contexts/AuthContext';
 import { impactLight } from '../lib/haptics';
 import { MEDIUMS } from '../constants/growMedia';
+import { firstPlantState, groveIsEmpty } from '../components/FirstPlantCelebration';
 
 const ROOMS = ['Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Office', 'Balcony', 'Patio', 'Greenhouse', 'Hallway', 'Dining Room'];
 const SOURCES = [
@@ -167,14 +168,18 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
     setSaving(true);
     setSaveError('');
     try {
-      await plantAPI.create({
+      const first = await groveIsEmpty(plantAPI);
+      const created = await plantAPI.create({
         ...formData,
         species_id: selectedSpecies?.id || null,
         photo_url: photoPath || null,
         photo_deferred: !photoPath,
       });
-      toast.success(`${formData.nickname || formData.common_name} added to your collection`);
-      navigate('/plants');
+      if (first) navigate('/plants', { state: firstPlantState(created && created.data) });
+      else {
+        toast.success(`${formData.nickname || formData.common_name} added to your collection`);
+        navigate('/plants');
+      }
     } catch (e) {
       // A toast fades; the message stays beside the button that failed until the next try.
       setSaveError(saveErrorMessage(e));

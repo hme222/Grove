@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AppLink } from '../components/AppLink';
 import TabStrip from '../components/TabStrip';
+import FirstPlantCelebration from '../components/FirstPlantCelebration';
 
 // Phase 14A.2 — bulk multi-action set. Matches the single-plant CareLogModal.
 
@@ -148,6 +149,7 @@ export default function CollectionPage() {
   return (
     <div>
       <SectionTutorial tutorialId="collection" />
+      <FirstPlantCelebration />
       <PageHeader title="Plants" />
 
       <div className="max-w-page mx-auto px-4 py-4">

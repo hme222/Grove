@@ -1,8 +1,8 @@
 // Lesson card text is written as simple HTML (<strong>, <em>, <br>). It comes from our own lesson files today, but
 // anything rendered with dangerouslySetInnerHTML goes through here so a future API-sourced card cannot inject markup.
-// Allowed: strong, em, b, i, br, with no attributes. Script and style are dropped with their contents; any other
+// Allowed: strong, em, b, i, br, mark (the highlighter), with no attributes. Script and style are dropped with their contents; any other
 // element is replaced by its text. Everything is re-serialized from the parsed tree, so the output is always well formed.
-const ALLOWED = new Set(['STRONG', 'EM', 'B', 'I', 'BR']);
+const ALLOWED = new Set(['STRONG', 'EM', 'B', 'I', 'BR', 'MARK']);
 const DROPPED = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'TEMPLATE']);
 
 const escapeText = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

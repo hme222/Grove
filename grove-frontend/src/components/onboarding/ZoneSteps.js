@@ -70,6 +70,7 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
       onBack={onBack}
       heading="Where do you grow?"
       intro="Your zip code helps us tailor seasonal care tips. We never share it. You can skip this."
+      skip={{ label: 'Skip for now', onClick: onSkip, testId: 'zone-skip' }}
       testId="onboarding-zone"
       hero={<PhotoBand src="/photos/window-1.jpg" ratio="short" eager />}
     >
@@ -148,11 +149,6 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
               {saving ? 'Saving…' : 'Continue'}
             </button>
           )}
-          secondary={(
-            <button type="button" onClick={onSkip} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="zone-skip">
-              Skip for now
-            </button>
-          )}
         />
       </div>
     </StepScreen>
@@ -182,6 +178,7 @@ export function HemisphereStep({ onBack, onDone }) {
       onBack={onBack}
       heading="Which hemisphere do you grow in?"
       intro="The seasons run the other way in the south, so we time seasonal tips to yours. You can skip this."
+      skip={{ label: 'Skip for now', onClick: () => onDone(null), disabled: !!saving, testId: 'hemisphere-skip' }}
       testId="onboarding-hemisphere"
     >
       <div className="mt-6 flex flex-1 flex-col">
@@ -203,11 +200,6 @@ export function HemisphereStep({ onBack, onDone }) {
           ))}
         </div>
         {error && <p role="alert" className="mt-3 font-ui text-sm text-destructive" data-testid="hemisphere-error">{error}</p>}
-        <div className="mt-auto pt-8">
-          <button type="button" onClick={() => onDone(null)} disabled={!!saving} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="hemisphere-skip">
-            Skip for now
-          </button>
-        </div>
       </div>
     </StepScreen>
   );

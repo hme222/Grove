@@ -121,3 +121,30 @@
   [data-testid="onboarding-flow"] [data-testid="onboarding-progress"] { margin-top: 0.25rem; }
   [data-testid="onboarding-flow"] [data-testid="question-why"], [data-testid="onboarding-flow"] [data-testid="question-hint"] { margin-top: 0.25rem; }
 }
+
+/* First-run flow touches. Each plays once and then stays; with reduced motion they are simply there. */
+.os-underline {
+  background-image: linear-gradient(var(--grove-lime), var(--grove-lime));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 0.15em;
+  padding-bottom: 0.1em;
+  animation: os-underline-draw 0.7s ease-out 0.5s both;
+}
+@keyframes os-underline-draw { from { background-size: 0% 0.15em; } to { background-size: 100% 0.15em; } }
+
+.os-fill { animation: os-fill-in 0.45s ease-out 0.3s both; }
+@keyframes os-fill-in { from { transform: scale(0.5); opacity: 0.4; } to { transform: none; opacity: 1; } }
+
+.os-spark { position: absolute; width: 0.55em; height: 0.55em; color: var(--grove-sun, var(--grove-lime)); animation: os-spark-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.os-spark-1 { top: -0.3em; right: -0.75em; animation-delay: 0.7s; }
+.os-spark-2 { top: 0.5em; right: -1.15em; width: 0.35em; height: 0.35em; animation-delay: 0.95s; }
+.os-spark-3 { top: -0.1em; right: -1.45em; width: 0.3em; height: 0.3em; animation-delay: 1.2s; }
+@keyframes os-spark-pop { from { opacity: 0; transform: scale(0) rotate(-45deg); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .os-underline, .os-fill, .os-spark { animation: none; }
+}
+
+/* The highlighter: a key word in a lesson card gets a soft marker stripe. */
+[data-testid="lesson-player"] mark { font-weight: 600; background-color: color-mix(in srgb, var(--grove-lime) 35%, transparent); color: inherit; border-radius: 0.2em; padding: 0 0.2em; }

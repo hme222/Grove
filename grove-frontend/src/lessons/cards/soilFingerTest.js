@@ -8,7 +8,7 @@ export const CARDS = [
     header: "Card 1 of 5",
     headline: "Erase the plant guilt.",
     body:
-      "Most plants don\u2019t die from a lack of love. They die from <strong>drowning</strong>. Throw away any rigid watering schedule that says &ldquo;water every Tuesday.&rdquo; From today, we listen to the soil, not the calendar.",
+      "Most plants don\u2019t die from a lack of love. They die from <mark>drowning</mark>. Throw away any rigid watering schedule that says &ldquo;water every Tuesday.&rdquo; From today, we listen to the soil, not the calendar.",
     cta: "I\u2019m ready to unlearn",
     icon: Heart,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -21,7 +21,7 @@ export const CARDS = [
     header: "Card 2 of 5",
     headline: "Your natural moisture sensor.",
     body:
-      "Use your index finger as a physical moisture probe. Push it into the soil <strong>up to your second knuckle</strong> in a pot 6 in (15 cm) or bigger. In a small pot, the first knuckle is enough. That&rsquo;s the whole tool. No gadgets, no apps.",
+      "Use your index finger as a physical moisture probe. Push it into the soil <mark>up to your second knuckle</mark> in a pot 6 in (15 cm) or bigger. In a small pot, the first knuckle is enough. That&rsquo;s the whole tool. No gadgets, no apps.",
     cta: "Got it, finger as probe",
     icon: Hand,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
@@ -34,7 +34,7 @@ export const CARDS = [
     header: "Card 3 of 5",
     headline: "Is it damp?",
     body:
-      "If the soil feels <strong>damp and cool</strong>, like a wrung-out sponge, walk away. <strong>No water today.</strong> Your plant is quietly drinking what it already has. A few plants, such as peace lily and ferns, like to stay lightly moist.",
+      "If the soil feels <mark>damp and cool</mark>, like a wrung-out sponge, walk away. <mark>No water today.</mark> Your plant is quietly drinking what it already has. A few plants, such as peace lily and ferns, like to stay lightly moist.",
     cta: "Walk away, got it",
     icon: Waves,
     accent: "from-grove-sage/15 via-grove-sage/10 to-grove-lime/10",
@@ -48,7 +48,7 @@ export const CARDS = [
     header: "Card 4 of 5",
     headline: "Is it dry?",
     body:
-      "If the soil feels <strong>dry and dusty</strong>, like cake crumbs falling off your finger, it&rsquo;s ready for a thorough drink. Water slowly until it runs from the drainage hole. Succulents and cacti: wait until the whole pot is dry. A few plants, such as peace lily and ferns, like to stay lightly moist, so water them as the top starts to dry.",
+      "If the soil feels <mark>dry and dusty</mark>, like cake crumbs falling off your finger, it&rsquo;s ready for a thorough drink. Water slowly until it runs from the drainage hole. Succulents and cacti: wait until the whole pot is dry. A few plants, such as peace lily and ferns, like to stay lightly moist, so water them as the top starts to dry.",
     cta: "Give it a drink, got it",
     icon: Cookie,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",

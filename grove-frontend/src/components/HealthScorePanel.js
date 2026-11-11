@@ -39,13 +39,13 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-ui text-grove-cream text-sm font-medium">Plant health</p>
-          <p className="font-latin text-xs text-grove-cream">
+          <p className="font-ui text-xs text-grove-cream">
             6-factor breakdown · tap for details
           </p>
         </div>
         <div className="text-right">
           <p className="font-plant text-grove-cream text-2xl leading-none">{total}</p>
-          <p className="font-latin text-xs text-grove-cream">/ 100</p>
+          <p className="font-ui text-xs text-grove-cream">/ 100</p>
           {isEarly && (
             <span
               data-testid="plant-health-early-reading"
@@ -78,7 +78,7 @@ export default function HealthScorePanel({ breakdown, score, careLogCount = null
                       style={{ width: `${Math.max(4, Math.min(100, f.score))}%` }}
                     />
                   </div>
-                  <span className={`font-latin text-xs w-8 text-right ${col.text}`}>{f.score}</span>
+                  <span className={`font-ui text-xs w-8 text-right ${col.text}`}>{f.score}</span>
                 </div>
               );
             })}

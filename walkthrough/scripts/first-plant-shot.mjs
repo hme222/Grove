@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4196);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+const p = await ctx.newPage(); p.setDefaultTimeout(10000);
+const $ = (id) => p.getByTestId(id);
+await p.goto('http://localhost:4196/'); await p.waitForTimeout(1500); await p.mouse.click(195, 300);
+await $('onboarding-continue').click(); await p.waitForTimeout(800); await $('signup-submit').click(); await p.waitForTimeout(1500);
+for (let i = 0; i < 3; i++) await $('onboarding-continue').click();
+await $('hemisphere-north').click(); await $('quiz-intro-skip').click(); await p.waitForTimeout(800);
+await p.evaluate(() => { history.pushState({ usr: { firstPlant: { id: 'pl_1', name: 'Monty' } }, key: 'fp', idx: 9 }, '', '/plants'); window.dispatchEvent(new PopStateEvent('popstate')); });
+await p.waitForTimeout(1500);
+await p.screenshot({ path: '.cache/b-first-plant.png' });
+console.log('celebration:', await $('first-plant-celebration').count());
+await b.close(); server.close();

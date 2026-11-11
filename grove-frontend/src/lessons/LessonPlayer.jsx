@@ -43,7 +43,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
       className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1")}
       data-testid="lesson-back"
     >
-      <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
+      <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Previous card
     </button>
   );
 

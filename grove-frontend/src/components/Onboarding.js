@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { AppLink } from '@/components/AppLink';
@@ -14,7 +14,7 @@ import { CheckEmailStep, ConfirmedStep } from './onboarding/EmailSteps';
 import { ZoneStep, HemisphereStep } from './onboarding/ZoneSteps';
 import { QuizIntroStep, QuestionStep } from './onboarding/QuizSteps';
 import { BuildingStep, PlanStep } from './onboarding/PlanSteps';
-import StepScreen, { StepActions } from './onboarding/StepScreen';
+import StepScreen, { StepActions, Pills, Underlined } from './onboarding/StepScreen';
 import PhotoBand from './PhotoBand';
 import * as features from '@/lib/features';
 
@@ -37,6 +37,7 @@ const SLIDES = [
     lead: 'FloraGrove gives you simple, clear tools to help plants thrive.',
     body: 'FloraGrove does not gamify your plants. It helps you pay attention to plant care and build a rhythm.',
     photo: '/photos/onboarding-shelf.jpg',
+    sparkle: 'thrive.',
   },
   {
     kicker: null,
@@ -44,6 +45,7 @@ const SLIDES = [
     lead: 'Whether or not you’re a plant parent, we’re here to become a part of that story.',
     body: 'FloraGrove will always explain the “why” behind any plant care suggestion',
     photo: '/photos/onboarding-plants.jpg',
+    underline: 'story',
   },
 ];
 
@@ -80,30 +82,53 @@ export function firstName(value) {
   return /^\p{L}{2,}$/u.test(word) ? word : '';
 }
 
+// Three tiny four-point stars that pop in beside a word once, then stay. Decoration only.
+function Sparkled({ children }) {
+  const star = (cls) => (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={`os-spark ${cls}`}>
+      <path d="M12 0c.8 6.5 5.5 11.2 12 12-6.5.8-11.2 5.5-12 12-.8-6.5-5.5-11.2-12-12 6.5-.8 11.2-5.5 12-12z" fill="currentColor" />
+    </svg>
+  );
+  return (
+    <span className="relative inline-block">
+      {children}
+      {star('os-spark-1')}{star('os-spark-2')}{star('os-spark-3')}
+    </span>
+  );
+}
+
+// The slide's words, with its one emphasized word marked: sparkles on `sparkle`, a lime underline on `underline`.
+function withEmphasis(text, word, wrap) {
+  const at = word ? text.indexOf(word) : -1;
+  if (at < 0) return text;
+  return <>{text.slice(0, at)}{wrap(word)}{text.slice(at + word.length)}</>;
+}
+
 function IntroStep({ index, onBack, onNext, onSkip }) {
   const slide = SLIDES[index];
   return (
-    <StepScreen heading={slide.title} eyebrow={slide.kicker} onBack={onBack} testId={`onboarding-intro-${index + 1}`}>
-      <button
-        type="button"
-        onClick={onSkip}
-        aria-label="Skip intro"
-        data-testid="onboarding-skip"
-        className="absolute right-4 top-6 flex min-h-touch min-w-touch items-center justify-center rounded-control text-grove-cream hover:text-grove-sprout"
-      >
-        <X className="h-5 w-5" aria-hidden="true" />
-      </button>
+    <StepScreen
+      heading={withEmphasis(slide.title, slide.underline, (w) => <Underlined>{w}</Underlined>)}
+      eyebrow={slide.kicker}
+      onBack={onBack}
+      skip={{ label: 'Skip', ariaLabel: 'Skip intro', onClick: onSkip, testId: 'onboarding-skip' }}
+      testId={`onboarding-intro-${index + 1}`}
+    >
       <div className="mt-4 flex flex-1 flex-col">
-        <p className="font-ui text-base font-medium text-grove-cream">{slide.lead}</p>
+        <p className="font-ui text-base font-medium text-grove-cream">{withEmphasis(slide.lead, slide.sparkle, (w) => <Sparkled>{w}</Sparkled>)}</p>
         <p className="mt-2 font-ui text-sm leading-relaxed text-grove-cream">{slide.body}</p>
-        <PhotoBand src={slide.photo} ratio="photo" eager={index === 0} className="mt-6" testId="hero-image" />
+        {/* The photo sits just above the buttons, so it is in the same place on every screen of this run. */}
+        <div className="mt-auto pt-6">
+          <PhotoBand src={slide.photo} ratio="photo" eager={index === 0} testId="hero-image" />
+        </div>
         <StepActions
+          className="mt-0"
           primary={(
             <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
               Continue
             </button>
           )}
-          secondary={<p className="font-ui text-sm text-grove-sage">{index + 1} of {SLIDES.length}</p>}
+          secondary={<Pills count={SLIDES.length} current={index + 1} />}
         />
       </div>
     </StepScreen>
@@ -113,7 +138,7 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
 // Right after the account: the three steps, numbered, so "Step 2 of 3" on the next screens means something.
 // The account is already done; the other two can be skipped.
 const STEPS = [
-  { title: 'Make your account', note: 'Done.' },
+  { title: 'Make your account', note: 'Done' },
   { title: 'Tell us where you grow', note: 'Skippable. Helps with light and seasons.' },
   { title: 'Answer four quick questions', note: 'Skippable. They only choose your first lesson.' },
 ];
@@ -127,20 +152,25 @@ function StepsStep({ onBack, onNext }) {
             <li key={item.title} className="flex items-start gap-3">
               <span
                 aria-hidden="true"
-                className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-pill font-plant text-base', i === 0 ? 'bg-grove-lime text-grove-root' : 'border-strong border-grove-lime text-grove-sprout')}
+                className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-pill font-plant text-base', i === 0 ? 'os-fill bg-grove-lime text-grove-root' : 'border-strong border-grove-lime text-grove-sprout')}
               >
                 {i === 0 ? <Check className="h-4 w-4" /> : i + 1}
               </span>
               <span>
                 <span className="block font-ui text-base font-medium text-grove-cream">{item.title}</span>
-                <span className="block font-ui text-sm text-grove-sage">{item.note}</span>
+                <span className="block font-ui text-sm text-grove-sage">
+                  {i === 0 ? <><Underlined delay={0.9}>{item.note}</Underlined>.</> : item.note}
+                </span>
               </span>
             </li>
           ))}
         </ol>
         <p className="mt-6 font-ui text-sm text-grove-sage">You can change any answer later.</p>
-        <PhotoBand src="/photos/room-1.jpg" ratio="photo" eager className="mt-6" testId="hero-image" />
+        <div className="mt-auto pt-6">
+          <PhotoBand src="/photos/room-1.jpg" ratio="photo" eager testId="hero-image" />
+        </div>
         <StepActions
+          className="mt-0"
           primary={(
             <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
               Next
@@ -368,7 +398,7 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
       role="dialog"
       aria-modal="true"
       aria-label={dialogLabel}
-      className={welcome ? undefined : 'fixed inset-0 z-intro overflow-y-auto bg-grove-forest'}
+      className={welcome ? undefined : 'no-scrollbar fixed inset-0 z-intro overflow-y-auto bg-grove-forest'}
       data-testid="onboarding-flow"
     >
       {body}

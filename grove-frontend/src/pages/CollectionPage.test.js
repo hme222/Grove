@@ -17,7 +17,7 @@ let mockParams = new URLSearchParams();
 const mockSetParams = jest.fn();
 jest.mock(
   'react-router-dom',
-  () => ({ useNavigate: () => mockNavigate, useSearchParams: () => [mockParams, mockSetParams] }),
+  () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ pathname: '/plants', state: null }), useSearchParams: () => [mockParams, mockSetParams] }),
   { virtual: true }
 );
 jest.mock('@/constants/emptyStates', () => ({ EMPTY_STATES: { collection_zero_plants: {} } }), { virtual: true });

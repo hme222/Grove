@@ -8,6 +8,7 @@ import BackButton from '../components/BackButton';
 import { Camera, Image as ImageIcon, RotateCcw, Sparkles, Edit3, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { plantAPI } from '../lib/api';
+import { firstPlantState, groveIsEmpty } from '../components/FirstPlantCelebration';
 import PlantImage from '../components/PlantImage';
 import ToxicityBadge from '../components/ToxicityBadge';
 import PetSafetyLookup from '../components/PetSafetyLookup';
@@ -124,7 +125,8 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
     setSaving(true);
     impactMedium(e?.currentTarget);
     try {
-      await plantAPI.create({
+      const first = await groveIsEmpty(plantAPI);
+      const created = await plantAPI.create({
         common_name: form.common_name,
         latin_name: form.latin_name || null,
         nickname: form.nickname || null,
@@ -138,8 +140,11 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         ai_health_summary: identified?.healthSummary || '',
         ai_health_flags: identified?.healthFlags || [],
       });
-      toast.success(`${form.nickname || form.common_name} joined your grove`);
-      navigate('/plants');
+      if (first) navigate('/plants', { state: firstPlantState(created && created.data) });
+      else {
+        toast.success(`${form.nickname || form.common_name} joined your grove`);
+        navigate('/plants');
+      }
     } catch (err) {
       toast.error(saveErrorMessage(err));
     } finally {

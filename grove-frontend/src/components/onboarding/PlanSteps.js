@@ -55,7 +55,11 @@ export function BuildingStep({ answers, onResult, onSkip }) {
 
   const done = status === 'done';
   return (
-    <StepScreen heading={status === 'failed' ? 'We couldn’t build your plan' : 'Building your plan…'} testId="onboarding-building">
+    <StepScreen
+      heading={status === 'failed' ? 'We couldn’t build your plan' : 'Building your plan…'}
+      skip={status === 'failed' ? { label: 'Skip for now', onClick: onSkip, testId: 'building-skip' } : undefined}
+      testId="onboarding-building"
+    >
       <div className="mt-6 flex flex-1 flex-col">
         {status === 'failed' ? (
           <p role="alert" className="font-ui text-sm text-destructive" data-testid="building-error">
@@ -73,7 +77,6 @@ export function BuildingStep({ answers, onResult, onSkip }) {
         {status === 'failed' && (
           <StepActions
             primary={<button type="button" onClick={run} className={cn(buttonVariants(), 'w-full')} data-testid="building-retry">Try again</button>}
-            secondary={<button type="button" onClick={onSkip} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2')} data-testid="building-skip">Skip for now</button>}
           />
         )}
       </div>

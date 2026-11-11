@@ -156,15 +156,27 @@ const fillDemoAccount = () => {
 };
 new MutationObserver(fillDemoAccount).observe(document.documentElement, { childList: true, subtree: true });
 
+// A demo note has to be seen: a lime bar down the side, a "Demo note" tag, and the same words for every note.
+// Inline styles on purpose: the page's own stylesheet only holds classes the app itself uses.
+const demoNote = (attr, text, margin) => {
+  const note = document.createElement('p');
+  note.setAttribute(attr, '');
+  note.setAttribute('data-demo-note', '');
+  note.setAttribute('role', 'note');
+  note.style.cssText = `margin:${margin};padding:12px 14px;border-radius:12px;border:1px solid var(--grove-lime);border-left-width:6px;`
+    + 'background:color-mix(in srgb, var(--grove-lime) 14%, var(--grove-canopy));color:var(--grove-cream);font-size:15px;line-height:1.45;';
+  const tag = document.createElement('strong');
+  tag.textContent = 'Demo note';
+  tag.style.cssText = 'display:inline-block;margin-right:8px;padding:1px 8px;border-radius:999px;background:var(--grove-lime);color:var(--grove-root);font-size:13px;';
+  note.append(tag, text);
+  return note;
+};
+
 // On the plant-ID result, say plainly that the answer is a sample. The real app reads the photo that was chosen.
 const markSampleResult = () => {
   for (const el of document.querySelectorAll('[data-testid="identify-review"], [data-testid="identify-low-conf"]')) {
     if (el.querySelector('[data-demo-note]')) continue;
-    const note = document.createElement('p');
-    note.setAttribute('data-demo-note', '');
-    note.setAttribute('role', 'note');
-    note.className = 'mb-3 rounded-inset border-hairline border-grove-sprout bg-grove-canopy px-3 py-2 font-ui text-sm text-grove-cream';
-    note.textContent = 'Demo note: this result is a sample. In the real app, FloraGrove reads the photo you choose.';
+    const note = demoNote('data-demo-sample', 'This result is a sample. In the real app, FloraGrove reads the photo you choose.', '0 0 12px');
     el.insertBefore(note, el.firstChild);
   }
 };
@@ -174,11 +186,15 @@ new MutationObserver(markSampleResult).observe(document.documentElement, { child
 const markPhotoNote = () => {
   const tabs = document.querySelector('[data-testid="plant-detail-tabs"]');
   if (!tabs || document.querySelector('[data-demo-photo-note]')) return;
-  const note = document.createElement('p');
-  note.setAttribute('data-demo-photo-note', '');
-  note.setAttribute('role', 'note');
-  note.className = 'mx-4 mt-3 rounded-inset border-hairline border-grove-sprout bg-grove-canopy px-3 py-2 font-ui text-sm text-grove-cream';
-  note.textContent = 'Demo note: the first three photos and the note in this story are samples. A photo you add stays in this browser tab; nothing is uploaded or saved, and it is gone when you close the demo.';
+  const note = demoNote('data-demo-photo-note', 'The first three photos and the note in this story are samples. A photo you add stays in this browser tab; nothing is uploaded or saved, and it is gone when you close the demo.', '12px 16px 0');
   tabs.parentNode.insertBefore(note, tabs);
 };
 new MutationObserver(markPhotoNote).observe(document.documentElement, { childList: true, subtree: true });
+
+// The watering suggestion is a made-up sample here. In the real app it comes from the person's own soil checks or room light.
+const markSuggestionNote = () => {
+  const card = document.querySelector('[data-testid="schedule-suggestion"]');
+  if (!card || card.parentNode.querySelector('[data-demo-suggestion-note]')) return;
+  card.parentNode.insertBefore(demoNote('data-demo-suggestion-note', 'This suggestion is a sample. In the real app it comes from your own soil checks or your room\u2019s light.', '12px 0 0'), card);
+};
+new MutationObserver(markSuggestionNote).observe(document.documentElement, { childList: true, subtree: true });

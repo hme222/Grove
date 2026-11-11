@@ -25,7 +25,30 @@ export function StepActions({ primary, secondary, className }) {
   );
 }
 
-export default function StepScreen({ step, stepLabel, onBack, heading, eyebrow, intro, children, testId, headingId, hero, bleed }) {
+// One word in a headline or line, underlined in lime. The line draws in once, then stays. With reduced motion it is
+// simply there. `delay` (seconds) lets it wait for something else on the screen, such as a step filling.
+export function Underlined({ children, delay }) {
+  return <span className="os-underline" style={delay !== undefined ? { animationDelay: `${delay}s` } : undefined}>{children}</span>;
+}
+
+// Where the person is in a short run of screens, as pills: the current one is long and lime. The words are
+// for screen readers ("1 of 2"); the pills only decorate.
+export function Pills({ count, current }) {
+  return (
+    <div className="flex items-center gap-2" data-testid="onboarding-pills">
+      <span className="sr-only">{current} of {count}</span>
+      {Array.from({ length: count }, (_, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className={cn('h-2 rounded-pill border-hairline', i === current - 1 ? 'w-6 border-grove-lime bg-grove-lime' : 'w-2 border-grove-fernLine bg-grove-moss')}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function StepScreen({ step, stepLabel, onBack, skip, heading, eyebrow, intro, children, testId, headingId, hero, bleed }) {
   const headingRef = useRef(null);
 
   useEffect(() => {
@@ -36,9 +59,21 @@ export default function StepScreen({ step, stepLabel, onBack, heading, eyebrow, 
     <div className="mx-auto flex min-h-full w-full max-w-md flex-col" data-testid={testId}>
       {bleed}
       <div className={`os-pad flex flex-1 flex-col px-4 pb-6 ${bleed ? 'pt-4' : 'pt-6'}`}>
-      {(onBack || !bleed) && (
-        <div className="flex min-h-touch items-center">
-          {onBack && <BackButton onClick={onBack} testId="onboarding-back" />}
+      {(onBack || skip || !bleed) && (
+        <div className="flex min-h-touch items-center justify-between gap-2">
+          {onBack ? <BackButton onClick={onBack} testId="onboarding-back" /> : <span />}
+          {skip && (
+            <button
+              type="button"
+              onClick={skip.onClick}
+              disabled={skip.disabled}
+              aria-label={skip.ariaLabel}
+              data-testid={skip.testId}
+              className="flex min-h-touch items-center rounded-control px-2 font-ui text-sm text-grove-cream underline underline-offset-4 hover:text-grove-sprout focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime disabled:opacity-50"
+            >
+              {skip.label}
+            </button>
+          )}
         </div>
       )}
       {step && (

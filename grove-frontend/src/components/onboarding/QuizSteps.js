@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { PLAN_QUESTIONS } from '@/constants/onboardingQuiz';
-import StepScreen, { StepActions, blockedClass } from './StepScreen';
+import StepScreen, { StepActions, Underlined, blockedClass } from './StepScreen';
 import PhotoBand from '../PhotoBand';
 import {
   Sprout, HeartCrack, Gift, Leaf, Trees, Briefcase, CircleHelp, Frown, Droplets, Search, FlaskConical, Sparkles, Smile,
@@ -22,8 +22,6 @@ const AnswerIcon = ({ name }) => {
 };
 
 
-const linkButton = cn(buttonVariants({ variant: 'ghost' }), 'w-full underline underline-offset-2');
-
 // Step 3 of 3. Four questions, and the reason for asking them is on the first screen.
 export function QuizIntroStep({ onBack, onStart, onSkip, step = 3 }) {
   return (
@@ -31,8 +29,9 @@ export function QuizIntroStep({ onBack, onStart, onSkip, step = 3 }) {
       step={step}
       stepLabel="Your plant style"
       onBack={onBack}
-      heading="Four quick questions"
+      heading={<>Four <Underlined>quick</Underlined> questions</>}
       intro="No right answers. We use them to choose your first lesson, and nothing else. Skip any question you like, and we start with the basics. About 1 minute."
+      skip={{ label: 'Skip these questions', onClick: onSkip, testId: 'quiz-intro-skip' }}
       testId="onboarding-quiz-intro"
       hero={<PhotoBand src="/photos/onboarding-windowsill.jpg" ratio="photo" position="bottom" eager testId="hero-image" />}
     >
@@ -41,11 +40,6 @@ export function QuizIntroStep({ onBack, onStart, onSkip, step = 3 }) {
           primary={(
             <button type="button" onClick={onStart} className={cn(buttonVariants(), 'w-full')} data-testid="quiz-intro-start">
               Let&apos;s go
-            </button>
-          )}
-          secondary={(
-            <button type="button" onClick={onSkip} className={linkButton} data-testid="quiz-intro-skip">
-              Skip these questions
             </button>
           )}
         />
@@ -93,6 +87,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
       onBack={onBack}
       heading={question.heading}
       headingId={headingId}
+      skip={{ label: 'Skip this question', onClick: onSkip, testId: 'question-skip' }}
       testId={`onboarding-${question.id}`}
     >
       {!step && (
@@ -160,11 +155,6 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
               data-testid="question-next"
             >
               {last ? 'See my plan' : 'Next'}
-            </button>
-          )}
-          secondary={(
-            <button type="button" onClick={onSkip} className={linkButton} data-testid="question-skip">
-              Skip this question
             </button>
           )}
         />

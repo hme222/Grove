@@ -160,8 +160,26 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     ['POST', /^\/nook\/seen$/, () => ({ ok: true })],
     ['GET', /^\/care-logs\/due-today$/, () => []],
     ['GET', /^\/notifications\/schedule-reviews$/, () => ({ plants: [] })],
-    ['GET', /^\/plants\/[^/]+\/schedule-suggestion$/, () => ({ suggestion: null })],
-    ['POST', /^\/plants\/[^/]+\/schedule-suggestion\/dismiss$/, () => ({ dismissed: true })],
+    // Demo only: a made-up sample so the suggestion card can be seen. Real suggestions come from the person's own soil checks.
+    ['GET', /^\/plants\/([\w-]+)\/schedule-suggestion$/, (b, m) => {
+      const plant = state.plants.find((p) => p.id === m[1]);
+      if (!plant || plant.suggestion_dismissed) return { suggestion: null };
+      const current = plant.watering_frequency_days || 7;
+      if (current !== 7) return { suggestion: null };
+      return { suggestion: { days: 9, current_days: 7, basis: 'soil', reason: 'Your last two soil checks found the soil still damp when watering was due.' } };
+    }],
+    ['POST', /^\/plants\/([\w-]+)\/schedule-suggestion\/dismiss$/, (b, m) => {
+      const plant = state.plants.find((p) => p.id === m[1]);
+      if (plant) plant.suggestion_dismissed = true;
+      return { dismissed: true };
+    }],
+    ['PATCH', /^\/plants\/([\w-]+)$/, (b, m) => {
+      const plant = state.plants.find((p) => p.id === m[1]);
+      if (!plant) return { __status: 404 };
+      Object.assign(plant, b);
+      if (b.watering_frequency_days) plant.watering_frequency_source = 'user';
+      return plant;
+    }],
     ['GET', /^\/notifications\/unread-count$/, () => ({ unread_count: 0 })],
     ['GET', /^\/users\/me\/goals$/, () => ({ items: [] })],
     ['GET', /^\/users\/me\/notification-preferences$/, () => ({ push_care_due: false })],
