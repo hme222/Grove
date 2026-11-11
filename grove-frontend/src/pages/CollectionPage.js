@@ -12,7 +12,7 @@ import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { EmptyState } from '../components/EmptyState';
 import { EMPTY_STATES } from '@/constants/emptyStates';
 import SectionTutorial from '../components/SectionTutorial';
-import { Plus, Check, Leaf, Flower2, AlertTriangle, ChevronRight } from 'lucide-react';
+import { Plus, Check, Leaf, Flower2, AlertTriangle, Search, DoorOpen, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AppLink } from '../components/AppLink';
@@ -176,12 +176,13 @@ export default function CollectionPage() {
             </div>
           </div>
         )}
-        <nav aria-label="More ways to browse your plants" className="mb-3 flex flex-wrap gap-2" data-testid="plants-shortcuts">
-          {[['Search', '/search'], ['Rooms', '/rooms'], ['Want list', '/wants']].map(([label, path]) => (
+        {/* The plant hub: three big tiles, like the rest of the app's cards, instead of a row of text links. */}
+        <nav aria-label="More ways to browse your plants" className="mb-4 grid grid-cols-3 gap-2" data-testid="plants-shortcuts">
+          {[['Search', '/search', Search], ['Rooms', '/rooms', DoorOpen], ['Want list', '/wants', Heart]].map(([label, path, Icon]) => (
             <AppLink key={path} to={path} data-testid={`plants-shortcut-${label.toLowerCase().replace(' ', '-')}`}
-              className="inline-flex min-h-touch items-center gap-0.5 rounded-control pl-1 pr-2 font-ui text-sm text-grove-cream underline-offset-4 hover:underline">
+              className="flex min-h-[5rem] flex-col items-center justify-center gap-1.5 rounded-card border-hairline border-grove-moss bg-grove-canopy px-2 py-3 text-center font-ui text-sm font-medium text-grove-cream transition-colors hover:border-grove-fernLine active:bg-grove-moss focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime">
+              <Icon className="h-6 w-6 text-grove-sprout" aria-hidden="true" />
               {label}
-              <ChevronRight className="h-4 w-4 text-grove-sage" aria-hidden="true" />
             </AppLink>
           ))}
         </nav>

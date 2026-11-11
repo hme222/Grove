@@ -1,0 +1,24 @@
+// Screenshot the Plants hub and the search results with their small pictures.
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4197);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 780 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+const p = await ctx.newPage(); p.setDefaultTimeout(10000);
+const $ = (id) => p.getByTestId(id);
+await p.goto('http://localhost:4197/'); await p.waitForTimeout(1500); await p.mouse.click(195, 300);
+await $('onboarding-continue').click(); await $('signup-submit').click();
+for (let i = 0; i < 3; i++) await $('onboarding-continue').click();
+await $('hemisphere-north').click(); await $('quiz-intro-start').click();
+for (let i = 0; i < 4; i++) await $('question-skip').click();
+await p.waitForTimeout(1500); await $('plan-start').click();
+for (let i = 0; i < 4; i++) await $('lesson-next').click();
+await $('soil-step-add-plant').waitFor();
+await p.evaluate(() => { history.pushState({}, '', '/plants'); dispatchEvent(new PopStateEvent('popstate')); });
+await p.waitForTimeout(1500);
+await p.screenshot({ path: '.cache/hub-plants.png' });
+await p.evaluate(() => { history.pushState({}, '', '/search'); dispatchEvent(new PopStateEvent('popstate')); });
+await p.waitForTimeout(800);
+await p.locator('input').first().fill('fern'); await p.waitForTimeout(1500);
+await p.screenshot({ path: '.cache/hub-search.png' });
+await b.close(); server.close();

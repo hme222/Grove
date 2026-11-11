@@ -5,15 +5,35 @@ import { PageHeader } from '../components/PageHeader';
 import { plantAPI, speciesAPI } from '../lib/api';
 import { LESSON_META } from '../lessons/lessonMeta';
 import { matchPlants, matchLessons } from '../lib/search';
-import { Search } from 'lucide-react';
+import { Search, Leaf } from 'lucide-react';
+import PhotoBand from '../components/PhotoBand';
+import { getFileUrl } from '../lib/api';
 
-function Row({ title, sub, to, testId }) {
+// A small picture so a name can be matched by sight. Without one, a leaf holds the place.
+function Thumb({ src, contain }) {
+  return (
+    <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-small bg-grove-moss">
+      {src ? <PhotoBand src={src} aspect="thumb" fit={contain ? 'contain' : 'cover'} className="h-full w-full rounded-none" /> : <Leaf className="h-6 w-6 text-grove-sprout opacity-60" />}
+    </span>
+  );
+}
+
+const speciesThumb = (s) => {
+  const art = s.botanical_illustration_thumb;
+  const src = art || s.bhl_primary_thumbnail || s.wiki_thumbnail || s.wiki_image;
+  return { src, contain: !!art };
+};
+
+function Row({ title, sub, to, testId, thumb }) {
   return (
     <li>
       <AppLink to={to} data-testid={testId}
-        className="block min-h-row w-full rounded-small border-hairline border-grove-moss bg-grove-canopy px-4 py-3 text-left hover:border-grove-fernLine">
-        <span className="block font-plant text-base font-semibold text-grove-cream">{title}</span>
-        {sub && <span className="block font-ui text-sm text-grove-sage">{sub}</span>}
+        className="flex min-h-row w-full items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-3 py-2 text-left hover:border-grove-fernLine">
+        {thumb && <Thumb {...thumb} />}
+        <span className="min-w-0 flex-1">
+          <span className="block font-plant text-base font-semibold text-grove-cream">{title}</span>
+          {sub && <span className="block font-ui text-sm text-grove-sage">{sub}</span>}
+        </span>
       </AppLink>
     </li>
   );
@@ -74,7 +94,7 @@ export default function SearchPage() {
             <section aria-labelledby="s-plants" className="space-y-2">
               <h2 id="s-plants" className="font-plant text-xl font-semibold text-grove-cream">Your plants</h2>
               <ul className="space-y-2">
-                {myPlants.map((p) => <Row key={p.id} testId="search-plant" title={p.nickname || p.common_name} sub={[p.latin_name, p.room].filter(Boolean).join(' · ')} to={`/plants/${p.id}`} />)}
+                {myPlants.map((p) => <Row key={p.id} testId="search-plant" title={p.nickname || p.common_name} sub={[p.latin_name, p.room].filter(Boolean).join(' · ')} to={`/plants/${p.id}`} thumb={{ src: p.photo_url ? getFileUrl(p.photo_url) : null }} />)}
               </ul>
             </section>
           )}
@@ -82,7 +102,7 @@ export default function SearchPage() {
             <section aria-labelledby="s-guides" className="mt-5 space-y-2">
               <h2 id="s-guides" className="font-plant text-xl font-semibold text-grove-cream">Plant guides</h2>
               <ul className="space-y-2">
-                {species.map((s) => <Row key={s.id} testId="search-species" title={s.common_name} sub={s.latin_name} to={`/greenhouse/${s.id}`} />)}
+                {species.map((s) => <Row key={s.id} testId="search-species" title={s.common_name} sub={s.latin_name} to={`/greenhouse/${s.id}`} thumb={speciesThumb(s)} />)}
               </ul>
             </section>
           )}
