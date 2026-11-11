@@ -9,7 +9,7 @@ const part2 = { paper: true, accent: 'from-grove-paperCard via-grove-paper to-gr
 export const LIGHT_BASICS_CARDS = [
   {
     ...part1,
-    header: 'Card 1 of 4 · Try it',
+    header: 'Card 1 of 4',
     headline: 'Try the hand test.',
     body: 'Hold your hand about a foot above the spot where your plant will go, around midday. What does the shadow look like?',
     icon: Hand,
@@ -17,7 +17,7 @@ export const LIGHT_BASICS_CARDS = [
   },
   {
     ...part1,
-    header: 'Card 2 of 4 · What it means',
+    header: 'Card 2 of 4',
     headline: 'Direct and indirect light.',
     body:
       '<strong>Direct light</strong> means the sun&rsquo;s rays land on the leaves. A crisp shadow means direct light.<br/><br/>' +
@@ -29,7 +29,7 @@ export const LIGHT_BASICS_CARDS = [
   },
   {
     ...part1,
-    header: 'Card 3 of 4 · The curtain',
+    header: 'Card 3 of 4',
     headline: 'A curtain softens the sun.',
     body:
       'A sheer curtain turns direct sun into filtered, bright indirect light. Same window, same spot, and a kinder light for leaves that scorch.<br/><br/>' +
@@ -40,7 +40,7 @@ export const LIGHT_BASICS_CARDS = [
   },
   {
     ...part1,
-    header: 'Card 4 of 4 · Read the plant',
+    header: 'Card 4 of 4',
     headline: 'Let the plant tell you.',
     body:
       'A plant stretching toward the glass, going pale, or showing crispy, scorched patches is telling you about its light.<br/><br/>' +
@@ -54,7 +54,7 @@ export const LIGHT_BASICS_CARDS = [
 export const WINDOW_MAP_CARDS = [
   {
     ...part2,
-    header: 'Card 1 of 4 · Your window',
+    header: 'Card 1 of 4',
     headline: 'Which window is yours?',
     body: 'Pick the window nearest the spot where your plant will go. Then tell us when the sun reaches it.',
     icon: MapPin,
@@ -62,7 +62,7 @@ export const WINDOW_MAP_CARDS = [
   },
   {
     ...part2,
-    header: 'Card 2 of 4 · Your room',
+    header: 'Card 2 of 4',
     headline: 'Your room, lit your way.',
     body:
       'Here is how that window lights a room. Try the other directions to see how they differ.<br/><br/>' +
@@ -75,7 +75,7 @@ export const WINDOW_MAP_CARDS = [
   },
   {
     ...part2,
-    header: 'Card 3 of 4 · What fits',
+    header: 'Card 3 of 4',
     headline: 'What fits your light.',
     body: 'Light decides which plants are happy. Here is how your spot suits them.',
     cta: 'Got it',
@@ -84,7 +84,7 @@ export const WINDOW_MAP_CARDS = [
   },
   {
     ...part2,
-    header: 'Card 4 of 4 · Your light',
+    header: 'Card 4 of 4',
     headline: 'That is your light.',
     body: 'A last look at the light you picked.',
     icon: Sparkles,

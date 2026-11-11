@@ -4,7 +4,7 @@ import { Droplets, Thermometer, LifeBuoy, Scale, ClipboardCheck } from "lucide-r
 export const CARDS = [
   {
     n: 1,
-    header: "Card 1 of 5 · The hook",
+    header: "Card 1 of 5",
     eyebrow: "Deep breath",
     headline: "Suddenly have a plant with zero instructions?",
     body:
@@ -18,7 +18,7 @@ export const CARDS = [
   },
   {
     n: 2,
-    header: "Card 2 of 5 · Step 1",
+    header: "Card 2 of 5",
     eyebrow: "Draft defense",
     headline: "Move it away from drafts.",
     body:
@@ -32,7 +32,7 @@ export const CARDS = [
   },
   {
     n: 3,
-    header: "Card 3 of 5 · Step 2",
+    header: "Card 3 of 5",
     eyebrow: "Escape route",
     headline: "Check for drainage.",
     body:
@@ -46,7 +46,7 @@ export const CARDS = [
   },
   {
     n: 4,
-    header: "Card 4 of 5 · Step 3",
+    header: "Card 4 of 5",
     eyebrow: "Moisture check",
     headline: "Assess the weight.",
     body:
@@ -60,7 +60,7 @@ export const CARDS = [
   },
   {
     n: 5,
-    header: "Card 5 of 5 · Your turn",
+    header: "Card 5 of 5",
     eyebrow: "60-second action",
     headline: "Lift your mystery plant.",
     body:

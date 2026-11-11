@@ -23,7 +23,7 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
       <div className="max-w-page mx-auto px-4 py-3">
         {/* Wraps instead of running off the edge when the reader’s text is large. */}
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
-          <div className="flex min-w-0 flex-1 basis-28 items-center gap-2">
+          <div className={cn('flex min-w-0 flex-1 basis-28 items-center', back ? 'gap-4' : 'gap-2')}>
             {back && <BackButton {...(back === true ? {} : back)} />}
             <h1 id="page-title" className="flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words"><span className="min-w-0 line-clamp-2 overflow-hidden [overflow-wrap:anywhere]">{title}</span></h1>
           </div>

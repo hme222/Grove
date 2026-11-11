@@ -52,6 +52,8 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
     if (headingRef.current) headingRef.current.focus();
   }, [index]);
 
+  // The card count is already in the sticky bar, so a header that is only "Card 1 of 5" is not repeated here.
+  const kicker = String(card.header || '').replace(/^Card \d+ of \d+( · )?/, '');
   return (
     <div className="min-h-screen bg-grove-forest flex items-start justify-center px-4 pb-4" data-testid="lesson-player">
       <div className="w-full max-w-md">
@@ -72,7 +74,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
         <div className={paper ? `overflow-hidden rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `overflow-hidden rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
           {card.photo && <PhotoBand src={card.photo} ratio="band" className="-mx-5 -mt-5 mb-4 !w-auto !rounded-none" testId="lesson-card-photo" />}
           {Icon && !card.photo && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
-          <p className={cn('mb-2 font-ui text-base', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{String(card.header || '').replace(/^Card \d+ of \d+ · /, '')}</p>
+          {kicker && <p className={cn('mb-2 font-ui text-base', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{kicker}</p>}
           <h1
             id="page-title"
             ref={headingRef}

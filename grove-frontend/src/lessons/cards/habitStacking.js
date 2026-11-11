@@ -4,7 +4,7 @@ import { Coffee, Link as LinkIcon, Cat, Bell, Repeat } from "lucide-react";
 export const CARDS = [
   {
     n: 1,
-    header: "Card 1 of 5 · The hook",
+    header: "Card 1 of 5",
     eyebrow: "Zero-effort consistency",
     headline: "Don\u2019t rely on memory.",
     body:
@@ -17,7 +17,7 @@ export const CARDS = [
   },
   {
     n: 2,
-    header: "Card 2 of 5 · The formula",
+    header: "Card 2 of 5",
     eyebrow: "The routine recipe",
     headline: "The habit-stack formula.",
     body:
@@ -30,7 +30,7 @@ export const CARDS = [
   },
   {
     n: 3,
-    header: "Card 3 of 5 · Example A",
+    header: "Card 3 of 5",
     eyebrow: "The morning grind",
     headline: "Coffee grinder \u2192 Monstera.",
     body:
@@ -43,7 +43,7 @@ export const CARDS = [
   },
   {
     n: 4,
-    header: "Card 4 of 5 · Example B",
+    header: "Card 4 of 5",
     eyebrow: "The furry friend",
     headline: "Cat bowl \u2192 desk plant.",
     body:
@@ -56,7 +56,7 @@ export const CARDS = [
   },
   {
     n: 5,
-    header: "Card 5 of 5 · Your turn",
+    header: "Card 5 of 5",
     eyebrow: "60-second action",
     headline: "Pick your anchor habit.",
     body:

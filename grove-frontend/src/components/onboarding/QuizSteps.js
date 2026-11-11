@@ -109,7 +109,8 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
                 >
                   {on ? '✓' : ''}
                 </span>
-                <span>{option.label}</span>
+                <span className="flex-1">{option.label}</span>
+                {option.emoji && <span aria-hidden="true" className="shrink-0 text-xl leading-none" data-testid={`emoji-${question.id}-${option.id}`}>{option.emoji}</span>}
               </button>
             );
           })}
