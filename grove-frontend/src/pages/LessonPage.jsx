@@ -5,10 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { lessonAPI, lightAPI } from '../lib/api';
 import { LESSON_CARDS } from '../lessons/registry';
 import { LESSON_META } from '../lessons/lessonMeta';
+import { LESSON_ACTIONS } from '../lessons/lessonQuizzes';
 import LessonPlayer from '../lessons/LessonPlayer';
 import SoilTestStep from '../lessons/SoilTestStep';
 import LessonFinalStep from '../lessons/LessonFinalStep';
 import FirstCareCelebration from '../components/FirstCareCelebration';
+import LessonCompleteCelebration from '../components/LessonCompleteCelebration';
 import { useAuth } from '../contexts/AuthContext';
 import PipPanel from '../nook/PipPanel';
 import { renderLightCard } from '../lessons/light/steps';
@@ -25,6 +27,8 @@ export default function LessonPage() {
   const [resume, setResume] = useState({ ready: false, index: 0 });
   const [pickedWindow, setPickedWindow] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
+  // Set once the save has gone through: the lesson to thank them for and the next one to offer.
+  const [finished, setFinished] = useState(null);
   const [error, setError] = useState('');
   const [saveFailed, setSaveFailed] = useState(false);
 
@@ -59,15 +63,22 @@ export default function LessonPage() {
     return <NotFoundPage title="Lesson not found" heading="That lesson isn’t here" message="It may have been renamed or removed." to="/lessons" toLabel="Back to lessons" />;
   }
 
-  const finish = async (to = '/lessons') => {
+  // Saves the lesson, then marks the moment. `quiet` skips the card when another celebration has just played.
+  const finish = async (to = '/lessons', { quiet = false } = {}) => {
     setError('');
     try {
-      await lessonAPI.complete(lessonId);
+      const res = await lessonAPI.complete(lessonId);
       // Keep the signed-in user in step, so the nook offer can follow the first lesson.
       const entry = `lesson:${lessonId}`;
       const seen = user?.tutorials_seen || [];
       if (updateUser && !seen.includes(entry)) updateUser({ tutorials_seen: [...seen, entry] });
-      navigate(to);
+      if (quiet) {
+        navigate(to);
+        return;
+      }
+      const nextId = res?.data?.queue?.find((id) => id !== lessonId) || res?.data?.up_next;
+      const next = nextId && nextId !== lessonId && LESSON_META[nextId] ? { id: nextId, title: LESSON_META[nextId].title } : null;
+      setFinished({ next, action: to !== '/lessons' ? { to, cta: LESSON_ACTIONS[lessonId]?.cta } : null });
     } catch (_e) {
       setError('Couldn\u2019t save your progress. Try again.');
     }
@@ -125,8 +136,15 @@ export default function LessonPage() {
           setCelebrate(false);
           // The celebration has played, so the nook offer may follow.
           if (updateUser) updateUser({ first_care_celebrated: true });
-          finish();
+          finish('/lessons', { quiet: true });
         }}
+      />
+      <LessonCompleteCelebration
+        open={!!finished}
+        lesson={LESSON_META[lessonId]}
+        next={finished?.next || null}
+        action={finished?.action || null}
+        onGo={(to) => navigate(to)}
       />
     </>
   );

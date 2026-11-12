@@ -7,7 +7,7 @@ import { buttonVariants } from '../components/ui/button';
 export default function MarkDoneStep({ onDone, onNotYet }) {
   return (
     <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="mark-done-step">
-      <p className="text-sm text-grove-cream mb-3">Try the step when you&apos;re ready. Mark the lesson done once you have.</p>
+      <p className="text-sm text-grove-cream mb-3">You&apos;ve reached the end. Tap Mark lesson done to finish it. Until then it stays on your list.</p>
       <div className="flex gap-2">
         <button
           type="button"

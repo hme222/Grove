@@ -20,6 +20,8 @@ import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
 import NookSettings from '../components/NookSettings';
+import { lessonPath } from '../lessons/lessonMeta';
+import ProfileLessons from '../components/ProfileLessons';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -330,7 +332,7 @@ export default function ProfilePage() {
 
         {/* Tutorials and tips — Phase 14A.2 */}
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-tutorials">
-          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Tutorials and tips</h3>
+          <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">Lessons, tutorials and tips</h3>
           <TutorialsAndTipsControls />
         </div>
 
@@ -408,6 +410,7 @@ export default function ProfilePage() {
 // Phase 14A.2 — Tutorials and tips card content. Lives at the bottom of the
 // file so the main component stays compact.
 function TutorialsAndTipsControls() {
+  const navigate = useNavigate();
   const { user, refreshUser } = useAuth();
   const { tooltipsActive, daysRemaining, resetAll } = useTooltips();
   const [savingTip, setSavingTip] = useState(false);
@@ -450,7 +453,10 @@ function TutorialsAndTipsControls() {
 
   return (
     <>
+      <ProfileLessons seen={seen} onOpen={(id) => navigate(lessonPath(id))} />
+
       {/* Tooltips toggle */}
+      <div className="mt-4 pt-4 border-t-hairline border-grove-moss">
       <SwitchRow
         label="Show tooltips"
         help={tooltipsActive
@@ -463,6 +469,7 @@ function TutorialsAndTipsControls() {
         onChange={handleTooltipToggle}
         testId="profile-tooltips-toggle"
       />
+      </div>
 
       {/* Section tutorials replay */}
       <div className="mt-4 pt-4 border-t-hairline border-grove-moss">

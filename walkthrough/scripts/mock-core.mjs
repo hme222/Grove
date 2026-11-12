@@ -75,7 +75,7 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     }],
     ['GET', /^\/lessons\/queue$/, () => queueBody()],
     ['POST', /^\/lessons\/([\w-]+)\/progress$/, (b, m) => { state.progress[m[1]] = b.card; return { ok: true }; }],
-    ['POST', /^\/lessons\/([\w-]+)\/complete$/, (b, m) => { state.completed.push(m[1]); delete state.progress[m[1]]; return { ok: true }; }],
+    ['POST', /^\/lessons\/([\w-]+)\/complete$/, (b, m) => { state.completed.push(m[1]); delete state.progress[m[1]]; return queueBody(); }],
     // Demo only: the real app reads the photo with a vision model. This returns one fixed, library-backed answer
     // whatever photo is chosen; the demo says so on the result screen.
     ['POST', /^\/plants\/identify$/, () => {

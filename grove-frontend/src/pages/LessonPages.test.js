@@ -62,6 +62,8 @@ let root;
 
 const q = (id) => container.querySelector(`[data-testid="${id}"]`);
 const click = (el) => act(() => el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+// The celebration renders in a portal, outside the test container.
+const d = (id) => document.querySelector(`[data-testid="${id}"]`);
 const flush = () => act(async () => {});
 const mount = async (ui) => {
   await act(async () => {
@@ -123,7 +125,7 @@ describe('LessonPage', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/lessons', { replace: true });
   });
 
-  test('a lesson without a soil test ends in mark done, which saves and returns to the list', async () => {
+  test('a lesson without a soil test ends in mark done, which saves and then marks the moment', async () => {
     mockParams = { lessonId: 'plant-parent-reset' };
     await mount(<LessonPage />);
     expect(q('lesson-headline').textContent).toBe('Reset one');
@@ -135,7 +137,46 @@ describe('LessonPage', () => {
     await click(q('mark-done-done'));
     await flush();
     expect(lessonAPI.complete).toHaveBeenCalledWith('plant-parent-reset');
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(d('lesson-complete')).not.toBeNull();
+    expect(document.body.textContent).toContain('You finished Plant parent reset');
+    expect(d('lesson-complete-cta').textContent).toBe('Next: Plant ER');
+    await click(d('lesson-complete-cta'));
+    expect(mockNavigate).toHaveBeenCalledWith('/lessons/plant-er');
+  });
+
+  test('the lesson-complete card can go back to the list instead', async () => {
+    mockParams = { lessonId: 'plant-parent-reset' };
+    await mount(<LessonPage />);
+    await toLastCard();
+    await passQuiz();
+    await click(q('mark-done-done'));
+    await flush();
+    await click(d('lesson-complete-list'));
     expect(mockNavigate).toHaveBeenCalledWith('/lessons');
+  });
+
+  test('with nothing left in the queue the card offers only the way back', async () => {
+    lessonAPI.complete.mockResolvedValue(queueData({ queue: [], up_next: null }));
+    mockParams = { lessonId: 'plant-parent-reset' };
+    await mount(<LessonPage />);
+    await toLastCard();
+    await passQuiz();
+    await click(q('mark-done-done'));
+    await flush();
+    expect(d('lesson-complete-cta').textContent).toBe('Back to lessons');
+    expect(d('lesson-complete-list')).toBeNull();
+  });
+
+  test('a save that never went through shows no celebration', async () => {
+    lessonAPI.complete.mockRejectedValue(new Error('network'));
+    mockParams = { lessonId: 'plant-parent-reset' };
+    await mount(<LessonPage />);
+    await toLastCard();
+    await passQuiz();
+    await click(q('mark-done-done'));
+    await flush();
+    expect(d('lesson-complete')).toBeNull();
   });
 
   test('"Not yet" returns to the list without saving', async () => {
@@ -169,6 +210,9 @@ describe('LessonPage', () => {
     await click(q('try-it-go'));
     await flush();
     expect(lessonAPI.complete).toHaveBeenCalledWith('plant-er');
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(d('lesson-complete-cta').textContent).toBe('Choose a plant');
+    await click(d('lesson-complete-cta'));
     expect(mockNavigate).toHaveBeenCalledWith('/plants');
   });
 
@@ -184,6 +228,8 @@ describe('LessonPage', () => {
     await click(q('soil-step-continue'));
     await flush();
     expect(lessonAPI.complete).toHaveBeenCalledWith('soil-finger-test');
+    expect(d('lesson-complete')).not.toBeNull();
+    await click(d('lesson-complete-list'));
     expect(mockNavigate).toHaveBeenCalledWith('/lessons');
   });
 
@@ -202,6 +248,8 @@ describe('LessonPage', () => {
     await click(q('celebration-close'));
     await flush();
     expect(lessonAPI.complete).toHaveBeenCalledWith('soil-finger-test');
+    // The first-care card has just played, so a second one does not stack on top of it.
+    expect(d('lesson-complete')).toBeNull();
     expect(mockNavigate).toHaveBeenCalledWith('/lessons');
   });
 
@@ -225,14 +273,16 @@ describe('LessonPage', () => {
 });
 
 describe('the light lesson ending', () => {
-  test('the closing card ends in the usual finish control, which saves and returns', async () => {
+  test('the closing card ends in the usual finish control, which saves and marks the moment', async () => {
     mockParams = { lessonId: 'window-map' };
     await mount(<LessonPage />);
     expect(q('closing-step')).not.toBeNull();
     await click(q('mark-done-done'));
     await flush();
     expect(lessonAPI.complete).toHaveBeenCalledWith('window-map');
-    expect(mockNavigate).toHaveBeenCalledWith('/lessons');
+    expect(d('lesson-complete')).not.toBeNull();
+    await click(d('lesson-complete-cta'));
+    expect(mockNavigate).toHaveBeenCalledWith('/lessons/plant-er');
   });
 
   test('a failed finish on the closing card shows the error and stays', async () => {
