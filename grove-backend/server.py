@@ -878,6 +878,9 @@ class UserUpdate(BaseModel):
     tooltips_enabled: Optional[bool] = None
     tooltips_dismissed: Optional[List[str]] = None
     tutorials_seen: Optional[List[str]] = None
+    # Pip is the app's guide for everyone and is on unless turned off. The peeks are only his "need help?" visits.
+    pip_enabled: Optional[bool] = None
+    pip_peeks_enabled: Optional[bool] = None
     # Phase 14C — location, hardiness zone, subscription, verification
     location_country: Optional[str] = None  # "US" | "UK" | etc.
     location_postcode: Optional[str] = None  # raw user input
