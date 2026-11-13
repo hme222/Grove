@@ -106,3 +106,13 @@ test('Open the full page closes the sheet and goes to the page', async () => {
   expect(el('help-sheet')).toBeNull();
   done();
 });
+
+test('closing gives focus back to what opened it', async () => {
+  const { container, done } = await mount();
+  await openIt(container);
+  expect(document.activeElement).not.toBe(container.querySelector('[data-testid="opener"]'));
+  await act(async () => { el('help-sheet').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+  await act(async () => {});
+  expect(document.activeElement).toBe(container.querySelector('[data-testid="opener"]'));
+  done();
+});

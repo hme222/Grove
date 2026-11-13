@@ -19,16 +19,18 @@ export { useHelpSheet } from './helpSheetContext';
 
 export function HelpSheetProvider({ children }) {
   const [open, setOpen] = useState(false);
-  const value = useMemo(() => ({ open: () => setOpen(true) }), []);
+  // Whatever had focus when the sheet opened (the Help button, or Pip), so closing can give focus back to it.
+  const opener = useRef(null);
+  const value = useMemo(() => ({ open: () => { opener.current = document.activeElement; setOpen(true); } }), []);
   return (
     <HelpSheetContext.Provider value={value}>
       {children}
-      <HelpSheet open={open} onClose={() => setOpen(false)} />
+      <HelpSheet open={open} onClose={() => setOpen(false)} opener={opener} />
     </HelpSheetContext.Provider>
   );
 }
 
-function HelpSheet({ open, onClose }) {
+function HelpSheet({ open, onClose, opener }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { pipOn } = usePipPrefs();
@@ -52,6 +54,11 @@ function HelpSheet({ open, onClose }) {
           data-testid="help-sheet"
           className="fixed inset-x-0 bottom-0 z-sheet mx-auto max-h-sheet w-full max-w-dialog overflow-y-auto rounded-t-card border-hairline border-grove-lime/40 bg-grove-canopy px-4 pb-6 pt-4 text-grove-cream"
           onOpenAutoFocus={(e) => { e.preventDefault(); if (titleRef.current) titleRef.current.focus(); }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            const back = opener && opener.current;
+            if (back && document.contains(back) && back.focus) back.focus();
+          }}
         >
           <div className="flex items-start gap-3">
             <div className="shrink-0" aria-hidden="true" data-testid="help-sheet-mark">

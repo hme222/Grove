@@ -112,6 +112,22 @@ export default function PipPeek() {
     setPhase('hidden');
   }, [pick]);
 
+  const shown = !!(peeksOn && pick && phase !== 'hidden' && !otherOpen && pathname !== '/help-my-plant');
+
+  // Sit just above the real tab bar, which grows with large text. The 72px token would let it cover the bubble.
+  useEffect(() => {
+    const nav = document.getElementById('main-nav');
+    if (!shown || !nav || !layer.current) return undefined;
+    const place = () => {
+      if (layer.current) layer.current.style.setProperty('--pip-bottom', `${nav.getBoundingClientRect().height}px`);
+    };
+    place();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(place);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [shown]);
+
   // Escape hides him when focus is on Pip or the bubble.
   useEffect(() => {
     const onKey = (e) => {
@@ -121,7 +137,7 @@ export default function PipPeek() {
     return () => document.removeEventListener('keydown', onKey);
   }, [notNow]);
 
-  if (!peeksOn || !pick || phase === 'hidden' || otherOpen || pathname === '/help-my-plant') return null;
+  if (!shown) return null;
 
   const openHelp = () => {
     if (swiped.current) { swiped.current = false; return; }
@@ -137,12 +153,12 @@ export default function PipPeek() {
   return (
     <div
       ref={layer}
-      className="pointer-events-none fixed inset-x-0 bottom-nav z-sticky flex items-end justify-end gap-2 pb-4"
+      className="pip-layer pointer-events-none fixed inset-x-0 z-sticky flex items-end justify-end gap-2 pb-4"
       data-testid="pip-peek"
     >
       {phase === 'bubble' && <p role="status" className="sr-only">Pip: {message}</p>}
       {(phase === 'bubble' || phase === 'asking') && (
-        <div role="group" aria-label="Pip" className="pointer-events-auto w-3/5 rounded-card bg-grove-cream px-4 py-3 font-ui text-sm text-grove-root" data-testid="pip-bubble">
+        <div role="group" aria-label="Pip" className="pointer-events-auto max-h-panel w-4/5 max-w-dialog overflow-y-auto rounded-card bg-grove-cream px-4 py-3 font-ui text-sm text-grove-root" data-testid="pip-bubble">
           {phase === 'asking' ? (
             <>
               <p>Want me to stop popping in?</p>
