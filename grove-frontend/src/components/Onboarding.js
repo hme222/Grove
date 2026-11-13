@@ -121,7 +121,7 @@ function IntroStep({ index, onBack, onNext, onSkip }) {
         {/* The explanation sits just above the buttons, where the photo used to be. */}
         <p className="mt-auto pt-6 font-ui text-sm leading-relaxed text-grove-cream">{slide.body}</p>
         <StepActions
-          className="mt-0"
+          className="mt-0 pt-12"
           primary={(
             <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
               Continue
@@ -144,9 +144,12 @@ const STEPS = [
 
 function StepsStep({ onBack, onNext }) {
   return (
-    <StepScreen heading="Three short steps to set up" onBack={onBack} testId="onboarding-steps">
+    <StepScreen heading="Three short steps to set up" reserveEyebrow onBack={onBack} testId="onboarding-steps">
       <div className="mt-4 flex flex-1 flex-col">
-        <ol className="space-y-4" data-testid="steps-list">
+        {/* The same shape as the intro slides: a line, the photo in the same place, then the detail below it. */}
+        <p className="min-h-12 font-ui text-base font-medium text-grove-cream">You can change any answer later.</p>
+        <PhotoBand src="/photos/room-1.jpg" ratio="photo" eager className="mt-6" testId="hero-image" />
+        <ol className="mt-4 space-y-2" data-testid="steps-list">
           {STEPS.map((item, i) => (
             <li key={item.title} className="flex items-start gap-3">
               <span
@@ -164,12 +167,8 @@ function StepsStep({ onBack, onNext }) {
             </li>
           ))}
         </ol>
-        <p className="mt-6 font-ui text-sm text-grove-sage">You can change any answer later.</p>
-        <div className="mt-auto pt-6">
-          <PhotoBand src="/photos/room-1.jpg" ratio="photo" eager testId="hero-image" />
-        </div>
         <StepActions
-          className="mt-0"
+          className="mt-0 pt-12"
           primary={(
             <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
               Next

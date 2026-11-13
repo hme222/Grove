@@ -147,13 +147,16 @@
 }
 
 /* The highlighter: a key word in a lesson card gets a marker stripe that sweeps on from the left, a little uneven, as if drawn by hand.
+   Cream text on the 28% stripe is at least 5:1 on the card colors, and the word is also set heavier, so the stripe is never the only cue.
    It plays when the card appears and then stays. With reduced motion it is simply there. */
 [data-testid="lesson-player"] mark {
   color: inherit;
+  /* The browser's own <mark> paints bright yellow under this. Cream on that yellow is about 1:1, so clear it. */
+  background-color: transparent;
   font-weight: 600;
   padding: 0 0.2em;
   border-radius: 0.35em 0.15em 0.4em 0.2em;
-  background-image: linear-gradient(color-mix(in srgb, var(--grove-lime) 38%, transparent), color-mix(in srgb, var(--grove-lime) 38%, transparent));
+  background-image: linear-gradient(color-mix(in srgb, var(--grove-lime) 28%, transparent), color-mix(in srgb, var(--grove-lime) 28%, transparent));
   background-repeat: no-repeat;
   background-position: 0 65%;
   background-size: 100% 80%;
@@ -164,4 +167,8 @@
 @keyframes os-mark-draw { from { background-size: 0% 80%; } to { background-size: 100% 80%; } }
 @media (prefers-reduced-motion: reduce) {
   [data-testid="lesson-player"] mark { animation: none; }
+}
+/* In forced-colors modes the stripe is dropped, so give the word the system's own highlight colors. */
+@media (forced-colors: active) {
+  [data-testid="lesson-player"] mark { background: Mark; color: MarkText; }
 }
