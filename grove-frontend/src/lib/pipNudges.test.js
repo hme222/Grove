@@ -1,4 +1,4 @@
-import { overdueDays, pickPeek, dismissToday, dismissCount, bumpDismissCount, hasSeenFirstPeek, markFirstPeekSeen, defaultStore } from './pipNudges';
+import { bubbleShownToday, markBubbleShown, overdueDays, pickPeek, dismissToday, dismissCount, bumpDismissCount, hasSeenFirstPeek, markFirstPeekSeen, defaultStore } from './pipNudges';
 
 const NOW = new Date(2026, 10, 13, 12, 0, 0);
 const daysAgo = (n) => new Date(NOW.getTime() - n * 86400000 - 1000).toISOString();
@@ -57,4 +57,13 @@ test('when localStorage throws, the default store keeps working from memory', ()
   expect(() => defaultStore.set('grove.test', 'x')).not.toThrow();
   expect(defaultStore.get('grove.test')).toBe('x');
   spy.mockRestore(); get.mockRestore();
+});
+
+test('the bubble is remembered per plant per day', () => {
+  const store = memoryStore();
+  expect(bubbleShownToday('a', NOW, store)).toBe(false);
+  markBubbleShown('a', NOW, store);
+  expect(bubbleShownToday('a', NOW, store)).toBe(true);
+  expect(bubbleShownToday('b', NOW, store)).toBe(false);
+  expect(bubbleShownToday('a', new Date(NOW.getTime() + 86400000), store)).toBe(false);
 });

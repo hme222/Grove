@@ -393,11 +393,18 @@ describe('LessonPage and the nook', () => {
     expect(nookAPI.state).toHaveBeenCalled();
   });
 
-  test('there is no host, and no request for the nook, without it', async () => {
+  test('Pip hosts the lesson without the room, and the room is not asked for', async () => {
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-host')).not.toBeNull();
+    expect(nookAPI.state).not.toHaveBeenCalled();
+  });
+
+  test('there is no host when Pip is turned off', async () => {
+    mockUser = { nook_enabled: true, pip_enabled: false, tutorials_seen: [] };
     mockParams = { lessonId: 'plant-er' };
     await mount(<LessonPage />);
     expect(q('lesson-host')).toBeNull();
-    expect(nookAPI.state).not.toHaveBeenCalled();
   });
 
   test('finishing a lesson tells the signed-in user, so the nook offer can follow', async () => {

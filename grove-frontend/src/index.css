@@ -172,3 +172,10 @@
 @media (forced-colors: active) {
   [data-testid="lesson-player"] mark { background: Mark; color: MarkText; }
 }
+
+/* Pip's one nudge toward the edge the first time he peeks in, hinting that he can be swiped aside. Still for reduced motion. */
+@keyframes pip-nudge { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(0.5rem); } 70% { transform: translateX(0.25rem); } }
+.pip-nudge { animation: pip-nudge 0.9s ease-in-out 0.6s 1 both; }
+@media (prefers-reduced-motion: reduce) {
+  .pip-nudge { animation: none; }
+}

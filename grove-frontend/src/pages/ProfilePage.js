@@ -20,6 +20,7 @@ import { GROVE_BRAND } from '@/constants/brand';
 import { PACT_VERSION, PACT_INTRO, PACT_SECTIONS, FINAL_COPY } from '../lib/pactContent';
 import { BadgeIcon } from '../components/BadgeIcon';
 import NookSettings from '../components/NookSettings';
+import PipSettings from '../components/PipSettings';
 import { lessonPath } from '../lessons/lessonMeta';
 import ProfileLessons from '../components/ProfileLessons';
 
@@ -336,6 +337,7 @@ export default function ProfilePage() {
           <TutorialsAndTipsControls />
         </div>
 
+        <PipSettings />
         <NookSettings />
 
         {/* About FloraGrove */}

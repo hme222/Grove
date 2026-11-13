@@ -56,6 +56,8 @@ import WishlistPage from "./pages/WishlistPage";
 import NotificationPreferencesPage from "./pages/NotificationPreferencesPage";
 import WaitlistPage from "./pages/WaitlistPage";
 import BottomNav from "./components/BottomNav";
+import { HelpSheetProvider } from "./components/help/HelpSheet";
+import PipPeek from "./components/help/PipPeek";
 import HelpMyPlantPage from "./pages/HelpMyPlantPage";
 import SearchPage from "./pages/SearchPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -139,22 +141,25 @@ function ProtectedShell() {
   useFocusMainOnRoute();
   return (
     <RequireUser>
-      <div className="min-h-screen bg-grove-forest pb-nav">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
-        >
-          Skip to content
-        </a>
-        <a
-          href="#main-nav"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-16 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
-        >
-          Skip to navigation
-        </a>
-        <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none"><Outlet /></main>
-        <BottomNav />
-      </div>
+      <HelpSheetProvider>
+        <div className="min-h-screen bg-grove-forest pb-nav">
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
+          >
+            Skip to content
+          </a>
+          <a
+            href="#main-nav"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-16 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"
+          >
+            Skip to navigation
+          </a>
+          <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none"><Outlet /></main>
+          <BottomNav />
+          <PipPeek />
+        </div>
+      </HelpSheetProvider>
     </RequireUser>
   );
 }

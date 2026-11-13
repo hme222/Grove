@@ -6,6 +6,7 @@ import { User } from 'lucide-react';
 import NotificationBell from './NotificationBell';
 import BackButton from './BackButton';
 import PhotoBand from './PhotoBand';
+import { useHelpSheet } from './help/helpSheetContext';
 
 // One header for every screen: [Back] Title ... [page action] [bell] [profile].
 // `back` is true (step back in history) or { to, where } (go to a named place).
@@ -13,6 +14,9 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const onProfile = pathname === '/profile';
+  // Help opens the help sheet over this screen. It is left out where there is no sheet, where the bell is hidden, and on the help page itself.
+  const helpSheet = useHelpSheet();
+  const showHelp = !!helpSheet && !hideBell && pathname !== '/help-my-plant';
 
   // One title per screen for the tab strip and screen-reader history (WCAG 2.4.2).
   React.useEffect(() => {
@@ -29,6 +33,17 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}
+            {showHelp && (
+              <button
+                type="button"
+                onClick={() => helpSheet.open()}
+                aria-label="Help with a plant"
+                data-testid="header-help-button"
+                className="flex h-touch items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-4 font-ui text-sm text-grove-cream hover:border-grove-fernLine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
+              >
+                Help
+              </button>
+            )}
             {!hideBell && <NotificationBell />}
             {!hideProfile && !onProfile && (
               <button

@@ -33,6 +33,7 @@ import { Droplets, Check, Leaf, X, Sparkles, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
+import { usePipPrefs } from '../lib/pipPrefs';
 import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
 import CareTextToggle from '../components/CareTextToggle';
 import UndoSnackbar from '../components/UndoSnackbar';
@@ -84,6 +85,7 @@ function getUrgencyStyle(status) {
 export default function CarePage() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
+  const { pipOn } = usePipPrefs();
   const [plants, setPlants] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -444,7 +446,7 @@ export default function CarePage() {
       </div>
 
       <section aria-labelledby="pip-heading" className="max-w-content mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
-        <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">From Pip</h2>
+        <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">{pipOn ? 'From Pip' : 'For today'}</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <LightPromptCard embedded />
           {!(allPlantsLoaded && allPlants.length === 0) && !showBanner && <DailyMissionCard embedded />}

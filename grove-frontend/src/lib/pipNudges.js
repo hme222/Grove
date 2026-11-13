@@ -18,6 +18,7 @@ export const defaultStore = {
 
 const DAY_MS = 86400000;
 const K_DISMISSED = 'grove.pip.dismissed';
+const K_SHOWN = 'grove.pip.bubbleShown';
 const K_COUNT = 'grove.pip.dismissCount';
 const K_FIRST = 'grove.pip.firstPeekSeen';
 const K_ASKED = 'grove.pip.askedToStop';
@@ -61,3 +62,18 @@ export const hasSeenFirstPeek = (store = defaultStore) => store.get(K_FIRST) ===
 export const markFirstPeekSeen = (store = defaultStore) => store.set(K_FIRST, '1');
 export const askedToStop = (store = defaultStore) => store.get(K_ASKED) === '1';
 export const markAskedToStop = (store = defaultStore) => store.set(K_ASKED, '1');
+
+// The bubble itself shows at most once a day per plant. Later visits that day show only Pip's head.
+const readShown = (store) => {
+  try { return JSON.parse(store.get(K_SHOWN) || '{}') || {}; } catch { return {}; }
+};
+export const bubbleShownToday = (plantId, now = new Date(), store = defaultStore) => readShown(store)[plantId] === dayKey(now);
+export function markBubbleShown(plantId, now = new Date(), store = defaultStore) {
+  store.set(K_SHOWN, JSON.stringify({ ...readShown(store), [plantId]: dayKey(now) }));
+}
+
+// For tests: forget everything this device has remembered about Pip.
+export function resetPipNudges() {
+  memory.clear();
+  try { window.localStorage.clear(); } catch { /* nothing to clear */ }
+}
