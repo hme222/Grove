@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { virtual: true });
-let mockUser = { id: 'u1' };
+let mockUser = { id: 'u1', pip_introduced: true };
 jest.mock('../../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser, updateUser: jest.fn() }) }));
 let mockArm = 'control';
 jest.mock('../../lib/api', () => ({
@@ -31,7 +31,7 @@ const mount = async () => {
 const el = (id) => document.querySelector(`[data-testid="${id}"]`);
 const openIt = async (c) => { await act(async () => { c.querySelector('[data-testid="opener"]').focus(); api.open(); }); await act(async () => {}); };
 
-beforeEach(() => { jest.clearAllMocks(); mockUser = { id: 'u1' }; mockArm = 'control'; });
+beforeEach(() => { jest.clearAllMocks(); mockUser = { id: 'u1', pip_introduced: true }; mockArm = 'control'; });
 
 test('closed until opened', async () => {
   const { done } = await mount();
@@ -85,16 +85,21 @@ test('Escape closes it', async () => {
   done();
 });
 
-test('with Pip off a leaf stands in for him; with Pip on there is a canvas', async () => {
-  mockUser = { id: 'u1', pip_enabled: false };
+test('a leaf stands in for Pip when he is off or has not said hello; with him on there is a canvas', async () => {
+  mockUser = { id: 'u1', pip_introduced: true, pip_enabled: false };
   let m = await mount();
   await openIt(m.container);
   expect(el('help-sheet-mark').querySelector('canvas')).toBeNull();
   m.done();
-  mockUser = { id: 'u1' };
+  mockUser = { id: 'u1', pip_introduced: true };
   m = await mount();
   await openIt(m.container);
   expect(el('help-sheet-mark').querySelector('canvas')).not.toBeNull();
+  m.done();
+  mockUser = { id: 'u1' };
+  m = await mount();
+  await openIt(m.container);
+  expect(el('help-sheet-mark').querySelector('canvas')).toBeNull();
   m.done();
 });
 

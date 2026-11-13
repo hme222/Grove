@@ -881,6 +881,8 @@ class UserUpdate(BaseModel):
     # Pip is the app's guide for everyone and is on unless turned off. The peeks are only his "need help?" visits.
     pip_enabled: Optional[bool] = None
     pip_peeks_enabled: Optional[bool] = None
+    # Set once Pip has said hello (the onboarding screen or the first-visit card). Nothing of Pip's shows before this.
+    pip_introduced: Optional[bool] = None
     # Phase 14C — location, hardiness zone, subscription, verification
     location_country: Optional[str] = None  # "US" | "UK" | etc.
     location_postcode: Optional[str] = None  # raw user input

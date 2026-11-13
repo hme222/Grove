@@ -203,6 +203,6 @@ new MutationObserver(markSuggestionNote).observe(document.documentElement, { chi
 const markPipNote = () => {
   const bubble = document.querySelector('[data-testid="pip-bubble"]');
   if (!bubble || bubble.querySelector('[data-demo-pip-note]')) return;
-  bubble.appendChild(demoNote('data-demo-pip-note', 'Nothing is really overdue in this demo. Pip uses your own watering schedule.', '10px 0 0'));
+  (bubble.firstElementChild || bubble).appendChild(demoNote('data-demo-pip-note', 'Nothing is really overdue in this demo. Pip uses your own watering schedule.', '10px 0 0'));
 };
 new MutationObserver(markPipNote).observe(document.documentElement, { childList: true, subtree: true });

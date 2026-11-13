@@ -33,7 +33,7 @@ export function HelpSheetProvider({ children }) {
 function HelpSheet({ open, onClose, opener }) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { pipOn } = usePipPrefs();
+  const { shows } = usePipPrefs();
   const pipForm = usePipForm(!!(user && user.nook_enabled));
   const titleRef = useRef(null);
   const safetyRef = useRef(null);
@@ -62,7 +62,7 @@ function HelpSheet({ open, onClose, opener }) {
         >
           <div className="flex items-start gap-3">
             <div className="shrink-0" aria-hidden="true" data-testid="help-sheet-mark">
-              {pipOn ? <PipPanel form={pipForm} scale={2} label="" /> : <Leaf className="h-8 w-8 text-grove-sprout" />}
+              {shows ? <PipPanel form={pipForm} scale={2} label="" /> : <Leaf className="h-8 w-8 text-grove-sprout" />}
             </div>
             <DialogPrimitive.Title ref={titleRef} tabIndex={-1} className="min-w-0 flex-1 self-center font-plant text-2xl text-grove-cream focus:outline-none">
               What are you seeing?

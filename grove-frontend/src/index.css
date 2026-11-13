@@ -173,11 +173,21 @@
   [data-testid="lesson-player"] mark { background: Mark; color: MarkText; }
 }
 
-/* Pip's one nudge toward the edge the first time he peeks in, hinting that he can be swiped aside. Still for reduced motion. */
-@keyframes pip-nudge { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(0.5rem); } 70% { transform: translateX(0.25rem); } }
-.pip-nudge { animation: pip-nudge 0.9s ease-in-out 0.6s 1 both; }
+/* Pip's arrival: he walks in from the right edge and stands on the tab bar. The bubble's tail points down at him. Still for reduced motion. */
+@keyframes pip-walk-in { from { transform: translateX(8rem); } to { transform: translateX(0); } }
+.pip-walk-in { animation: pip-walk-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.pip-say { position: relative; }
+.pip-say::after {
+  content: '';
+  position: absolute;
+  right: 1.75rem;
+  bottom: -0.5rem;
+  border: 0.5rem solid transparent;
+  border-top-color: var(--grove-cream);
+  border-bottom-width: 0;
+}
 @media (prefers-reduced-motion: reduce) {
-  .pip-nudge { animation: none; }
+  .pip-walk-in { animation: none; }
 }
 
 /* Pip's layer sits above the tab bar. PipPeek sets --pip-bottom to the bar's real height, which grows with large text. */

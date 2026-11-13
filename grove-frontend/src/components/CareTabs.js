@@ -12,7 +12,7 @@ export const SUBTABS = [
   // /care/goals redirect to /care/today (see App.js).
 ];
 
-// Pip's nook sits beside Progress once the person has answered the "Meet Pip" offer (yes, or not now): a first-run
+// Pip's nook sits beside Progress once the person has answered the "Pip has a room" offer (yes, or not now): a first-run
 // owner sees only the two care views, and someone who said "not now" still has a way back. /nook is its own page,
 // so this tab is a link to it, and the strip is shown there too with Pip marked as the current view.
 const PIP_TAB = { path: '/nook', label: 'Pip', testid: 'care-pip-tab' };

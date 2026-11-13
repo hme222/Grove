@@ -44,9 +44,9 @@ export default function NookOfferCard({ onDone }) {
           <PipPanel form="seed" mood="curious" animate label="Pip, a small pixel plant in a pot" />
         </div>
         <h1 id="nook-offer-title" ref={headingRef} tabIndex={-1} className="mb-2 font-plant text-2xl text-grove-root focus:outline-none">
-          Meet Pip
+          Pip has a room
         </h1>
-        <p className="mb-1 font-ui text-sm text-grove-ink">Optional: a small pixel nook that grows as you learn. It never scores your plants.</p>
+        <p className="mb-1 font-ui text-sm text-grove-ink">Optional: a small pixel room that grows as you learn. It never scores your plants.</p>
         <p className="mb-4 font-ui text-sm text-grove-inkSoft">You can change this any time in your profile.</p>
 
         {error && (
@@ -71,7 +71,7 @@ export default function NookOfferCard({ onDone }) {
             className={`${PAPER_BUTTON} flex-1`}
             data-testid="nook-offer-yes"
           >
-            Try Pip&apos;s nook
+            Try the room
           </button>
         </div>
       </div>

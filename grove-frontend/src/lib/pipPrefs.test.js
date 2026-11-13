@@ -22,20 +22,33 @@ const read = async (user) => {
 
 beforeEach(() => { jest.clearAllMocks(); });
 
-test('a user who never set anything has Pip and the peeks on', async () => {
+test('a user who never set anything has the switches on, but Pip shows nothing until he has said hello', async () => {
   const p = await read({ id: 'u1' });
   expect(p.get().pipOn).toBe(true);
+  expect(p.get().peeksPref).toBe(true);
+  expect(p.get().introduced).toBe(false);
+  expect(p.get().shows).toBe(false);
+  expect(p.get().peeksOn).toBe(false);
+  p.done();
+});
+
+test('once introduced, Pip shows and may peek', async () => {
+  const p = await read({ id: 'u1', pip_introduced: true });
+  expect(p.get().shows).toBe(true);
   expect(p.get().peeksOn).toBe(true);
   p.done();
 });
 
 test('turning Pip off turns the peeks off too, but not the other way round', async () => {
-  let p = await read({ pip_enabled: false });
+  let p = await read({ pip_enabled: false, pip_introduced: true });
   expect(p.get().pipOn).toBe(false);
+  expect(p.get().shows).toBe(false);
+  expect(p.get().peeksPref).toBe(false);
   expect(p.get().peeksOn).toBe(false);
   p.done();
-  p = await read({ pip_peeks_enabled: false });
+  p = await read({ pip_peeks_enabled: false, pip_introduced: true });
   expect(p.get().pipOn).toBe(true);
+  expect(p.get().shows).toBe(true);
   expect(p.get().peeksOn).toBe(false);
   p.done();
 });

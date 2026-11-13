@@ -14,6 +14,7 @@ import { CheckEmailStep, ConfirmedStep } from './onboarding/EmailSteps';
 import { ZoneStep, HemisphereStep } from './onboarding/ZoneSteps';
 import { QuizIntroStep, QuestionStep } from './onboarding/QuizSteps';
 import { BuildingStep, PlanStep } from './onboarding/PlanSteps';
+import PipIntroStep from './onboarding/PipIntroStep';
 import StepScreen, { StepActions, Underlined } from './onboarding/StepScreen';
 import PhotoBand from './PhotoBand';
 import * as features from '@/lib/features';
@@ -60,6 +61,7 @@ const STAGE_LABELS = {
   'quiz-intro': 'A few quick questions',
   question: 'A few quick questions',
   building: 'Building your plan',
+  'meet-pip': 'Meet Pip',
   plan: 'Your plan',
 };
 
@@ -295,8 +297,9 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
   const planReady = useCallback((result) => {
     if (updateUser) updateUser({ primary_track: result.primary_track });
     setPlanResult(result);
-    setStage('plan');
-  }, [updateUser]);
+    // Pip says hello before the plan, unless he already has (a replay, or someone who met him in the app).
+    setStage(user && user.pip_introduced ? 'plan' : 'meet-pip');
+  }, [updateUser, user]);
 
   const welcome = stage === 'welcome';
   // "Welcome, Maya" is one screen, not a page: when it fits the window it cannot scroll at all. Only a window too short
@@ -387,6 +390,8 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
     );
   } else if (stage === 'building') {
     body = <BuildingStep answers={answers} onResult={planReady} onSkip={() => finish({ planned: true })} />;
+  } else if (stage === 'meet-pip') {
+    body = <PipIntroStep onDone={() => setStage('plan')} />;
   } else if (stage === 'plan') {
     const first = planResult && planResult.queue && planResult.queue[0];
     body = (

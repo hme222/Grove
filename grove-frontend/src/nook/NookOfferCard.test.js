@@ -47,9 +47,9 @@ test('is a labeled dialog that takes focus and sits below the first-care celebra
   expect(dialog.className).toContain('z-intro');
 });
 
-test('says what the nook is and that it is optional and never scores plants', async () => {
+test('says what the room is and that it is optional and never scores plants', async () => {
   await mount();
-  expect(container.textContent).toContain('Optional: a small pixel nook that grows as you learn.');
+  expect(container.textContent).toContain('Optional: a small pixel room that grows as you learn.');
   expect(container.textContent).toContain('It never scores your plants.');
   expect(container.textContent).toContain('You can change this any time in your profile.');
   expect(container.querySelector('canvas')).not.toBeNull();

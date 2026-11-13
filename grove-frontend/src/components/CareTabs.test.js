@@ -36,7 +36,7 @@ describe('CareTabs', () => {
     expect(pip()).toBeNull();
   });
 
-  test('after the Meet Pip offer is answered, Pip sits beside Progress, even for "not now"', () => {
+  test('after the room offer is answered, Pip sits beside Progress, even for "not now"', () => {
     render({ nook_enabled: false, nook_offered_at: '2026-11-03T10:00:00Z' });
     expect([...container.querySelectorAll('a')].map((a) => a.textContent)).toEqual(['To do', 'Progress', 'Pip']);
     render({ nook_enabled: true });

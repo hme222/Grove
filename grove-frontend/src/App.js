@@ -58,6 +58,7 @@ import WaitlistPage from "./pages/WaitlistPage";
 import BottomNav from "./components/BottomNav";
 import { HelpSheetProvider } from "./components/help/HelpSheet";
 import PipPeek from "./components/help/PipPeek";
+import PipIntroGate from "./components/help/PipIntroGate";
 import HelpMyPlantPage from "./pages/HelpMyPlantPage";
 import SearchPage from "./pages/SearchPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -157,6 +158,7 @@ function ProtectedShell() {
           </a>
           <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none"><Outlet /></main>
           <BottomNav />
+          <PipIntroGate />
           <PipPeek />
         </div>
       </HelpSheetProvider>

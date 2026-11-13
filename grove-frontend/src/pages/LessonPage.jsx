@@ -23,8 +23,8 @@ export default function LessonPage() {
   const cards = LESSON_CARDS[lessonId];
   const { user, updateUser } = useAuth();
   const nookOn = !!user?.nook_enabled;
-  // Pip hosts the lesson for everyone unless turned off. The room (nookOn) only decides what the closing card shows.
-  const { pipOn } = usePipPrefs();
+  // Pip hosts the lesson for everyone who has met him, unless turned off. The room (nookOn) only decides what the closing card shows.
+  const { shows } = usePipPrefs();
   const pipForm = usePipForm(nookOn);
   const [hasPlant, setHasPlant] = useState(false);
   const [resume, setResume] = useState({ ready: false, index: 0 });
@@ -131,7 +131,7 @@ export default function LessonPage() {
         onExit={() => navigate('/lessons')}
         sources={LESSON_SOURCES[lessonId]}
         notice={saveFailed ? 'Progress isn\u2019t saving right now. You can keep reading.' : ''}
-        host={pipOn ? <PipPanel form={pipForm} label="Pip" /> : null}
+        host={shows ? <PipPanel form={pipForm} label="Pip" /> : null}
       />
       <FirstCareCelebration
         open={celebrate}

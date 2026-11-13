@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { careAPI } from '../../lib/api';
 import { usePipPrefs } from '../../lib/pipPrefs';
-import { useFirstRunBlocking } from '../../lib/firstRunGate';
+import { useOtherThingOpen } from './useOtherThingOpen';
 import { usePipForm } from '../../nook/usePipForm';
 import PipPanel from '../../nook/PipPanel';
 import { useHelpSheet } from './helpSheetContext';
@@ -22,31 +21,6 @@ import { buttonVariants } from '../ui/button';
 const COLLAPSE_MS = 8000;
 const REFETCH_MS = 60000;
 const SWIPE_PX = 40;
-const FIELD = 'input, textarea, select, [contenteditable="true"]';
-
-const fieldFocused = () => !!(document.activeElement && document.activeElement.matches && document.activeElement.matches(FIELD));
-const dialogOpen = () => !!document.querySelector('[role="dialog"]');
-
-// True while something else owns the screen: a dialog, a text field, or a first-run layer.
-function useOtherThingOpen() {
-  const gate = useFirstRunBlocking();
-  const [other, setOther] = useState(false);
-  useEffect(() => {
-    const check = () => setOther(dialogOpen() || fieldFocused());
-    check();
-    document.addEventListener('focusin', check);
-    document.addEventListener('focusout', check);
-    const observer = new MutationObserver(check);
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => {
-      document.removeEventListener('focusin', check);
-      document.removeEventListener('focusout', check);
-      observer.disconnect();
-    };
-  }, []);
-  return gate || other;
-}
-
 export default function PipPeek() {
   const { pathname } = useLocation();
   const { user } = useAuth();
@@ -153,12 +127,13 @@ export default function PipPeek() {
   return (
     <div
       ref={layer}
-      className="pip-layer pointer-events-none fixed inset-x-0 z-sticky flex items-end justify-end gap-2 pb-4"
+      className="pip-layer pointer-events-none fixed inset-x-0 z-sticky flex flex-col items-end gap-2 px-3"
       data-testid="pip-peek"
     >
       {phase === 'bubble' && <p role="status" className="sr-only">Pip: {message}</p>}
       {(phase === 'bubble' || phase === 'asking') && (
-        <div role="group" aria-label="Pip" className="pointer-events-auto max-h-panel w-4/5 max-w-dialog overflow-y-auto rounded-card bg-grove-cream px-4 py-3 font-ui text-sm text-grove-root" data-testid="pip-bubble">
+        <div role="group" aria-label="Pip" className="pip-say pointer-events-auto w-4/5 max-w-dialog rounded-card bg-grove-cream font-ui text-sm text-grove-root" data-testid="pip-bubble">
+          <div className="max-h-panel overflow-y-auto px-4 py-3">
           {phase === 'asking' ? (
             <>
               <p>Want me to stop popping in?</p>
@@ -178,8 +153,10 @@ export default function PipPeek() {
               </div>
             </>
           )}
+          </div>
         </div>
       )}
+      {/* Pip himself, standing on the tab bar. He walks in from the right with the bubble, then stays small. */}
       <button
         type="button"
         aria-label="Pip. Open help"
@@ -190,10 +167,9 @@ export default function PipPeek() {
           if (startX.current !== null && e.clientX - startX.current > SWIPE_PX) { swiped.current = true; notNow(); }
           startX.current = null;
         }}
-        className={cn('pointer-events-auto flex min-h-touch min-w-touch touch-pan-y translate-x-1/3 items-center rounded-l-card bg-grove-canopy pl-1', firstTime && phase === 'bubble' && 'pip-nudge')}
+        className={cn('pointer-events-auto -mb-1 flex min-h-touch min-w-touch touch-pan-y items-end justify-center', phase === 'bubble' && 'pip-walk-in')}
       >
-        <ChevronRight className="h-4 w-4 text-grove-sprout" aria-hidden="true" />
-        <PipPanel form={pipForm} scale={3} label="" />
+        <PipPanel form={pipForm} scale={phase === 'head' ? 3 : 4} label="" bare />
       </button>
     </div>
   );

@@ -5,10 +5,11 @@ import { pipSprite, SPRITE_WIDTH, CENTER } from './sprites';
 const BOB_MS = 700;
 const PREVIEW_MS = 5000;
 
-// Pip on a flat cream panel. Used where Pip hosts a lesson and in the nook offer.
+// Pip on a flat cream panel. Used where Pip hosts a lesson and in the nook offer. `bare` draws just him, with no panel,
+// for where he stands on the screen itself.
 // With `animate` he bobs for five seconds and then holds still. Nothing moves for
 // people who prefer reduced motion.
-export default function PipPanel({ form = 'seed', mood = 'calm', animate = false, label = 'Pip', scale = 4 }) {
+export default function PipPanel({ form = 'seed', mood = 'calm', animate = false, label = 'Pip', scale = 4, bare = false }) {
   const canvasRef = useRef(null);
   const rows = useMemo(() => pipSprite(form, mood), [form, mood]);
   const height = rows.length + 1;
@@ -40,7 +41,7 @@ export default function PipPanel({ form = 'seed', mood = 'calm', animate = false
   }, [rows, height, animate]);
 
   return (
-    <div className="inline-flex rounded-chip bg-grove-paperDeep p-3" data-testid="pip-panel">
+    <div className={bare ? 'inline-flex' : 'inline-flex rounded-chip bg-grove-paperDeep p-3'} data-testid="pip-panel">
       <canvas
         ref={canvasRef}
         width={SPRITE_WIDTH}

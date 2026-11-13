@@ -36,6 +36,8 @@ const q = (id) => container.querySelector(`[data-testid="${id}"]`);
 const text = () => container.textContent;
 const click = (el) => act(async () => { el.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
 const flush = () => act(async () => { await Promise.resolve(); });
+// Pip says hello between the building screen and the plan. Most tests just want to get past him.
+const passPip = async () => { if (q('pip-step-agree')) { await click(q('pip-step-agree')); await flush(); } };
 const type = (el, value) => act(async () => {
   const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
   setter.call(el, value);
@@ -373,8 +375,8 @@ test('the hemisphere can be skipped too, and is not asked when it is already kno
   expect(q('onboarding-quiz-intro')).not.toBeNull();
 });
 
-const toQuestions = async () => {
-  signedIn({ hemisphere: 'north' });
+const toQuestions = async (extra = {}) => {
+  signedIn({ hemisphere: 'north', ...extra });
   const onComplete = await mount();
   await click(q('zone-skip'));
   await click(q('quiz-intro-start'));
@@ -436,6 +438,7 @@ test('answers are sent once at the end, a skipped question is left out, and the 
   expect(lessonAPI.submitPlan).toHaveBeenCalledTimes(1);
   expect(lessonAPI.submitPlan).toHaveBeenCalledWith({ q1: 'gift', q3: 'save_gift', q4: 'know_basics' });
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
+  await passPip();
   expect(q('onboarding-plan')).not.toBeNull();
   expect(q('plan-lesson-title').textContent).toBe('Plant ER');
   expect(q('plan-because').textContent).toContain('I got one as a gift');
@@ -457,6 +460,7 @@ test('skipping every question still builds a plan and says the questions were sk
   await click(q('quiz-intro-skip'));
   expect(lessonAPI.submitPlan).toHaveBeenCalledWith({});
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
+  await passPip();
   expect(q('plan-lesson-title').textContent).toBe('Soil finger-test');
   expect(q('plan-because').textContent).toContain('You skipped the questions');
   await click(q('plan-explore'));
@@ -475,6 +479,7 @@ test('if the plan cannot be saved the screen says so, offers Try again and a way
   await click(q('building-retry'));
   expect(lessonAPI.submitPlan).toHaveBeenCalledTimes(2);
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
+  await passPip();
   expect(q('onboarding-plan')).not.toBeNull();
   expect(onComplete).not.toHaveBeenCalled();
 });
@@ -578,6 +583,7 @@ test('the quiz intro and the plan screen carry their photos, and the soil lesson
   expect(photo().getAttribute('data-photo')).toBe('/photos/onboarding-windowsill.jpg');
   await click(q('quiz-intro-skip'));
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
+  await passPip();
   const photos = [...container.querySelectorAll('[data-testid="hero-image"]')].map((el) => el.getAttribute('data-photo'));
   expect(photos).toEqual(['/photos/onboarding-soil.jpg']);
 });
@@ -588,6 +594,7 @@ test('a plan for another lesson has the sprouts hero', async () => {
   await click(q('zone-skip'));
   await click(q('quiz-intro-skip'));
   await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
+  await passPip();
   const photos = [...container.querySelectorAll('[data-testid="hero-image"]')].map((el) => el.getAttribute('data-photo'));
   expect(photos).toEqual(['/photos/onboarding-sprouts.jpg']);
 });
@@ -836,5 +843,58 @@ describe('launch intro', () => {
     await mount({ launchIntro: true, replay: true });
     expect(q('launch-intro')).toBeNull();
     expect(q('onboarding-welcome')).not.toBeNull();
+  });
+});
+
+
+describe('Pip says hello before the plan', () => {
+  const toPipStep = async (extra) => {
+    await toQuestions(extra);
+    await click(q('option-q1-gift'));
+    await click(q('question-next'));
+    await click(q('question-skip'));
+    await click(q('question-skip'));
+    await click(q('question-skip'));
+    await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
+  };
+
+  test('the hello comes after the plan is built and before it is shown', async () => {
+    await toPipStep();
+    expect(q('onboarding-pip')).not.toBeNull();
+    expect(q('onboarding-plan')).toBeNull();
+    expect(q('pip-step-body').textContent).toContain('I’m Pip');
+  });
+
+  test('Nice to meet you records the hello and carries on to the plan', async () => {
+    await toPipStep();
+    userAPI.updateMe.mockClear();
+    await click(q('pip-step-agree'));
+    await flush();
+    expect(userAPI.updateMe).toHaveBeenCalledWith({ pip_introduced: true });
+    expect(q('onboarding-plan')).not.toBeNull();
+  });
+
+  test('Turn me off records the hello and switches Pip off, then carries on', async () => {
+    await toPipStep();
+    userAPI.updateMe.mockClear();
+    await click(q('pip-step-off'));
+    await flush();
+    expect(userAPI.updateMe).toHaveBeenCalledWith({ pip_introduced: true, pip_enabled: false });
+    expect(q('onboarding-plan')).not.toBeNull();
+  });
+
+  test('a failed save says so and stays on the hello', async () => {
+    await toPipStep();
+    userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+    await click(q('pip-step-agree'));
+    await flush();
+    expect(q('pip-step-error').textContent).toBe('Couldn’t save that. Try again.');
+    expect(q('onboarding-plan')).toBeNull();
+  });
+
+  test('someone who has already met Pip goes straight to the plan', async () => {
+    await toPipStep({ pip_introduced: true });
+    expect(q('onboarding-pip')).toBeNull();
+    expect(q('onboarding-plan')).not.toBeNull();
   });
 });

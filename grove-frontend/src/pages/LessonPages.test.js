@@ -18,7 +18,7 @@ const mockNavigate = jest.fn();
 let mockParams = {};
 jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useParams: () => mockParams }), { virtual: true });
 
-let mockUser = { nook_enabled: false, tutorials_seen: [] };
+let mockUser = { nook_enabled: false, pip_introduced: true, tutorials_seen: [] };
 const mockUpdateUser = jest.fn();
 jest.mock('../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser, updateUser: mockUpdateUser }) }));
 
@@ -87,7 +87,7 @@ const queueData = (over = {}) => ({
 beforeEach(() => {
   jest.clearAllMocks();
   mockParams = {};
-  mockUser = { nook_enabled: false, tutorials_seen: [] };
+  mockUser = { nook_enabled: false, pip_introduced: true, tutorials_seen: [] };
   nookAPI.state.mockResolvedValue({ data: { pip: { form: 'leafy' } } });
   lessonAPI.queue.mockResolvedValue(queueData());
   lessonAPI.complete.mockResolvedValue(queueData());
@@ -386,7 +386,7 @@ describe('LessonsPage', () => {
 
 describe('LessonPage and the nook', () => {
   test('Pip hosts the lesson for people who turned the nook on', async () => {
-    mockUser = { nook_enabled: true, tutorials_seen: [] };
+    mockUser = { nook_enabled: true, pip_introduced: true, tutorials_seen: [] };
     mockParams = { lessonId: 'plant-er' };
     await mount(<LessonPage />);
     expect(q('lesson-host').querySelector('canvas').getAttribute('aria-label')).toBe('Pip');
@@ -400,8 +400,15 @@ describe('LessonPage and the nook', () => {
     expect(nookAPI.state).not.toHaveBeenCalled();
   });
 
+  test('there is no host before Pip has said hello', async () => {
+    mockUser = { nook_enabled: false, tutorials_seen: [] };
+    mockParams = { lessonId: 'plant-er' };
+    await mount(<LessonPage />);
+    expect(q('lesson-host')).toBeNull();
+  });
+
   test('there is no host when Pip is turned off', async () => {
-    mockUser = { nook_enabled: true, pip_enabled: false, tutorials_seen: [] };
+    mockUser = { nook_enabled: true, pip_introduced: true, pip_enabled: false, tutorials_seen: [] };
     mockParams = { lessonId: 'plant-er' };
     await mount(<LessonPage />);
     expect(q('lesson-host')).toBeNull();

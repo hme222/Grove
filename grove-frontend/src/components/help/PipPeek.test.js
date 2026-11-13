@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 let mockPath = '/plants';
 jest.mock('react-router-dom', () => ({ useLocation: () => ({ pathname: mockPath }) }), { virtual: true });
-let mockUser = { id: 'u1' };
+let mockUser = { id: 'u1', pip_introduced: true };
 jest.mock('../../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser, updateUser: jest.fn() }) }));
 jest.mock('../../lib/api', () => ({ careAPI: { getDueToday: jest.fn() }, userAPI: { updateMe: jest.fn() } }));
 jest.mock('../../nook/PipPanel', () => ({ __esModule: true, default: () => <span data-testid="pip-sprite" /> }));
@@ -40,7 +40,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   resetPipNudges();
   mockPath = '/plants';
-  mockUser = { id: 'u1' };
+  mockUser = { id: 'u1', pip_introduced: true };
   careAPI.getDueToday.mockResolvedValue({ data: [overdue('a', 'Pothos', 1), overdue('b', 'Monty', 3)] });
   userAPI.updateMe.mockResolvedValue({ data: {} });
 });
@@ -51,7 +51,14 @@ afterEach(() => {
 });
 
 test('shows nothing, and asks nothing, when the peeks are off', async () => {
-  mockUser = { id: 'u1', pip_peeks_enabled: false };
+  mockUser = { id: 'u1', pip_introduced: true, pip_peeks_enabled: false };
+  await mount();
+  expect(el('pip-peek')).toBeNull();
+  expect(careAPI.getDueToday).not.toHaveBeenCalled();
+});
+
+test('shows nothing, and asks nothing, until Pip has said hello', async () => {
+  mockUser = { id: 'u1' };
   await mount();
   expect(el('pip-peek')).toBeNull();
   expect(careAPI.getDueToday).not.toHaveBeenCalled();

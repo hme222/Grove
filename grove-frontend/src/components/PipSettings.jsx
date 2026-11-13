@@ -5,7 +5,7 @@ import { usePipPrefs } from '../lib/pipPrefs';
 // The profile switches for Pip. "Pip" turns him off everywhere (the Help button stays, with a leaf in his place).
 // The second switch is only his "need help?" visits, so someone can keep him in lessons and still stop the peeks.
 export default function PipSettings() {
-  const { pipOn, peeksOn, save } = usePipPrefs();
+  const { pipOn, peeksPref, save } = usePipPrefs();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const busy = useRef(false);
@@ -39,7 +39,7 @@ export default function PipSettings() {
       <SwitchRow
         label="Pip peeks in when a plant is overdue"
         help={pipOn ? 'A short note offering quick checks. Once a day per plant at most.' : 'Turn Pip on to use this.'}
-        checked={peeksOn}
+        checked={peeksPref}
         disabled={saving || !pipOn}
         onChange={(next) => change({ pip_peeks_enabled: next })}
         testId="profile-pip-peeks-toggle"

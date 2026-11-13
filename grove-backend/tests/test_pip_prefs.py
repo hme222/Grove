@@ -40,6 +40,16 @@ def test_pip_prefs_are_not_set_by_default(client):
     db, _ = client
     assert "pip_enabled" not in db.users.doc
     assert "pip_peeks_enabled" not in db.users.doc
+    assert "pip_introduced" not in db.users.doc
+
+
+def test_pip_introduced_is_saved_with_the_choice_to_turn_him_off(client):
+    db, c = client
+    res = c.patch("/api/users/me", json={"pip_introduced": True, "pip_enabled": False})
+    assert res.status_code == 200
+    assert res.json()["pip_introduced"] is True
+    assert db.users.doc["pip_introduced"] is True
+    assert db.users.doc["pip_enabled"] is False
 
 
 def test_pip_prefs_can_be_turned_off_and_on(client):
