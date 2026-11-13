@@ -158,7 +158,10 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     }],
     ['GET', /^\/nook\/state$/, () => nookState()],
     ['POST', /^\/nook\/seen$/, () => ({ ok: true })],
-    ['GET', /^\/care-logs\/due-today$/, () => []],
+    // One sample plant three days overdue, so Pip's visit can be seen. It goes away once the plant is watered.
+    ['GET', /^\/care-logs\/due-today$/, () => state.plants.slice(0, 1)
+      .filter((p) => !state.careLogList.some((l) => l.plant_id === p.id && l.action === 'water'))
+      .map((p) => ({ ...p, next_water_due: new Date(Date.now() - 3 * 86400000 - 5000).toISOString() }))],
     ['GET', /^\/notifications\/schedule-reviews$/, () => ({ plants: [] })],
     // Demo only: a made-up sample so the suggestion card can be seen. Real suggestions come from the person's own soil checks.
     ['GET', /^\/plants\/([\w-]+)\/schedule-suggestion$/, (b, m) => {

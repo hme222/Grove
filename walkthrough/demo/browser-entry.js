@@ -198,3 +198,11 @@ const markSuggestionNote = () => {
   card.parentNode.insertBefore(demoNote('data-demo-suggestion-note', 'This suggestion is a sample. In the real app it comes from your own soil checks or your room\u2019s light.', '12px 0 0'), card);
 };
 new MutationObserver(markSuggestionNote).observe(document.documentElement, { childList: true, subtree: true });
+
+// Pip's "overdue" visit is a made-up sample here. In the real app it comes from the person's own watering schedule.
+const markPipNote = () => {
+  const bubble = document.querySelector('[data-testid="pip-bubble"]');
+  if (!bubble || bubble.querySelector('[data-demo-pip-note]')) return;
+  bubble.appendChild(demoNote('data-demo-pip-note', 'Nothing is really overdue in this demo. Pip uses your own watering schedule.', '10px 0 0'));
+};
+new MutationObserver(markPipNote).observe(document.documentElement, { childList: true, subtree: true });

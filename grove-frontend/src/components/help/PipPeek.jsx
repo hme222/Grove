@@ -176,8 +176,8 @@ export default function PipPeek() {
         }}
         className={cn('pointer-events-auto flex min-h-touch min-w-touch touch-pan-y translate-x-1/3 items-center rounded-l-card bg-grove-canopy pl-1', firstTime && phase === 'bubble' && 'pip-nudge')}
       >
-        <PipPanel form={pipForm} scale={3} label="" />
         <ChevronRight className="h-4 w-4 text-grove-sprout" aria-hidden="true" />
+        <PipPanel form={pipForm} scale={3} label="" />
       </button>
     </div>
   );
