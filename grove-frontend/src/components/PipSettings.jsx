@@ -1,41 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import SwitchRow from './SwitchRow';
 import SaveError from './profile/SaveError';
+import { useInstantSave } from './profile/useInstantSave';
 import { usePipPrefs } from '../lib/pipPrefs';
 
 // The profile switches for Pip. "Pip" turns him off everywhere (the Help button stays, with a leaf in his place).
 // The second switch is only his "need help?" visits, so someone can keep him in lessons and still stop the peeks.
 export default function PipSettings({ bare = false }) {
   const { pipOn, peeksPref, save } = usePipPrefs();
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const busy = useRef(false);
-  const lastPatch = useRef(null);
+  const { run, busy: saving, error, retry } = useInstantSave();
   const pipRef = useRef(null);
   const peeksRef = useRef(null);
-  const focusRef = useRef(null);
+  const focusRef = useRef(null); // the switch that was changed, for SaveError to focus after a retry
 
-  // Resolves true when the save went through, so SaveError can move focus back to the control.
-  const change = async (patch, control) => {
-    if (busy.current) return false;
-    lastPatch.current = { patch, control };
-    focusRef.current = control.current;
-    busy.current = true;
-    setSaving(true);
-    setError('');
-    try {
-      await save(patch);
-      return true;
-    } catch (_e) {
-      setError('Couldn’t save that.');
-      return false;
-    } finally {
-      busy.current = false;
-      setSaving(false);
-    }
-  };
+  // save() updates the switches itself once it goes through, so there is nothing to apply or put back here.
+  const change = (patch, control) => run(
+    () => { focusRef.current = control.current; },
+    () => save(patch),
+    () => {},
+  );
 
-  const retry = () => (lastPatch.current ? change(lastPatch.current.patch, lastPatch.current.control) : Promise.resolve(false));
   const describedBy = error ? 'profile-pip-error' : undefined;
 
   return (

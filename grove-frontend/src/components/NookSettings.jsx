@@ -1,34 +1,29 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { nookAPI } from '../lib/api';
 import SaveError from './profile/SaveError';
+import { useInstantSave } from './profile/useInstantSave';
 import { PAPER_PANEL } from '../nook/paperStyles';
 
 // The profile switch for Pip's nook. Turning it off hides it. Nothing earned is removed.
 export default function NookSettings({ bare = false }) {
   const { user, updateUser } = useAuth();
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const busy = useRef(false);
+  const { run, busy: saving, error, retry } = useInstantSave();
   const switchRef = useRef(null);
   const on = !!user?.nook_enabled;
 
-  const toggle = async () => {
-    if (busy.current) return false;
-    busy.current = true;
-    setSaving(true);
-    setError('');
-    try {
-      const res = await nookAPI.settings({ enabled: !on });
-      if (updateUser) updateUser(res.data);
-      return true;
-    } catch (_e) {
-      setError('Couldn’t save that.');
-      return false;
-    } finally {
-      busy.current = false;
-      setSaving(false);
-    }
+  // The switch changes only once the server answers, so there is nothing to apply or put back. Try again replays
+  // this same value, not whatever the switch reads at click time.
+  const toggle = () => {
+    const next = !on;
+    return run(
+      () => {},
+      async () => {
+        const res = await nookAPI.settings({ enabled: next });
+        if (updateUser) updateUser(res.data);
+      },
+      () => {},
+    );
   };
 
   return (
@@ -55,7 +50,7 @@ export default function NookSettings({ bare = false }) {
           {on ? 'On' : 'Off'}
         </button>
       </div>
-      <SaveError tone={bare ? 'dark' : 'paper'} id="profile-nook-error" error={error} onRetry={toggle} testId="profile-nook-error" focusAfter={switchRef} />
+      <SaveError tone={bare ? 'dark' : 'paper'} id="profile-nook-error" error={error} onRetry={retry} testId="profile-nook-error" focusAfter={switchRef} />
     </div>
   );
 }
