@@ -7,9 +7,15 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const MSG = 'Couldn’t save that.';
 let api;
+const ctl = React.createRef();
 const Probe = () => {
   api = useInstantSave();
-  return <SaveError error={api.error} onRetry={api.retry} testId="err" />;
+  return (
+    <>
+      <input data-testid="ctl" ref={ctl} />
+      <SaveError id="ctl-error" error={api.error} onRetry={api.retry} testId="err" focusAfter={ctl} />
+    </>
+  );
 };
 let container;
 let root;
@@ -91,4 +97,29 @@ test('no state update after unmount', async () => {
 test('SaveError renders nothing without an error', () => {
   act(() => { root.render(<SaveError error="" onRetry={() => {}} />); });
   expect(container.innerHTML).toBe('');
+});
+
+test('the id renders on the alert', async () => {
+  await act(async () => { await api.run(jest.fn(), jest.fn().mockRejectedValue(new Error('x')), jest.fn()); });
+  expect(container.querySelector('[role="alert"]').id).toBe('ctl-error');
+});
+
+test('apply throwing reverts, sets the error, and a later run still works', async () => {
+  const revert = jest.fn();
+  await act(async () => { await api.run(() => { throw new Error('x'); }, jest.fn(), revert); });
+  expect(revert).toHaveBeenCalledTimes(1);
+  expect(api.error).toBe(MSG);
+  const persist = jest.fn().mockResolvedValue();
+  await act(async () => { await api.run(jest.fn(), persist, revert); });
+  expect(persist).toHaveBeenCalledTimes(1);
+  expect(api.error).toBe('');
+});
+
+test('focus lands on the control after a successful retry', async () => {
+  const persist = jest.fn().mockRejectedValueOnce(new Error('x')).mockResolvedValue();
+  await act(async () => { await api.run(jest.fn(), persist, jest.fn()); });
+  const btn = container.querySelector('button');
+  btn.focus();
+  await act(async () => { btn.click(); });
+  expect(document.activeElement).toBe(container.querySelector('[data-testid="ctl"]'));
 });
