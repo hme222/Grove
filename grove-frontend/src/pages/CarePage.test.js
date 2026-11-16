@@ -1,7 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import CarePage from './CarePage';
-import { careAPI, waterAPI, plantAPI, userAPI, notificationsAPI } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, userAPI, notificationsAPI, statsAPI } from '../lib/api';
 import { toast } from 'sonner';
 
 jest.mock('../lib/api', () => ({
@@ -10,6 +10,7 @@ jest.mock('../lib/api', () => ({
   plantAPI: { getAll: jest.fn() },
   userAPI: { updateMe: jest.fn() },
   notificationsAPI: { scheduleReviews: jest.fn() },
+  statsAPI: { getStats: jest.fn() },
   getFileUrl: (p) => p,
 }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn(), message: jest.fn() } }));
@@ -75,6 +76,7 @@ beforeEach(() => {
   plantAPI.getAll.mockResolvedValue({ data: { plants: DUE } });
   notificationsAPI.scheduleReviews.mockResolvedValue({ data: { plants: [] } });
   userAPI.updateMe.mockResolvedValue({ data: {} });
+  statsAPI.getStats.mockResolvedValue({ data: { check_ins: { this_week: 1, weekly_goal: 3 } } });
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -272,5 +274,21 @@ describe('end-of-round summary', () => {
     careAPI.getDueToday.mockResolvedValue({ data: [] });
     await mount();
     expect(q('round-summary')).toBeNull();
+  });
+});
+
+describe('check-ins line', () => {
+  test('reads "Check-ins this week: 1 of 3" as plain text', async () => {
+    await mount();
+    const line = q('care-checkins-line');
+    expect(line.textContent).toBe('Check-ins this week: 1 of 3');
+    expect(line.tagName).toBe('P');
+  });
+
+  test('a failed stats call hides the line and the due list still renders', async () => {
+    statsAPI.getStats.mockRejectedValue(new Error('nope'));
+    await mount();
+    expect(q('care-checkins-line')).toBeNull();
+    expect(q('care-card')).not.toBeNull();
   });
 });

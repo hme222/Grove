@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { careAPI, waterAPI, plantAPI, userAPI, getFileUrl } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, userAPI, statsAPI, getFileUrl } from '../lib/api';
 import { PageHeader, FilterChips, HeaderAction } from '../components/PageHeader';
 import { CareTabs } from '../components/CareTabs';
 import { EmptyState } from '../components/EmptyState';
@@ -34,6 +34,7 @@ import { toast } from 'sonner';
 import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 import { usePipPrefs } from '../lib/pipPrefs';
+import { checkInsLabel } from '../lib/plantPersonality';
 import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
 import CareTextToggle from '../components/CareTextToggle';
 import UndoSnackbar from '../components/UndoSnackbar';
@@ -142,6 +143,16 @@ export default function CarePage() {
       // silent \u2014 only used for empty state copy
     }
   };
+
+  // Separate and non-blocking: the due list never waits on this, and a failure just hides the line.
+  const [checkIns, setCheckIns] = useState(null);
+  useEffect(() => {
+    let live = true;
+    statsAPI.getStats()
+      .then((res) => { if (live) setCheckIns(checkInsLabel(res?.data)); })
+      .catch(() => {});
+    return () => { live = false; };
+  }, []);
 
   useEffect(() => { fetchDue(); fetchAllPlantsLite(); }, []);
 
@@ -454,6 +465,9 @@ export default function CarePage() {
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
         <WorkingTowardSection />
+        {checkIns && (
+          <p className="font-ui text-sm text-grove-sage" data-testid="care-checkins-line">Check-ins this week: {checkIns}</p>
+        )}
         <div className="pt-1">
           <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />
         </div>
