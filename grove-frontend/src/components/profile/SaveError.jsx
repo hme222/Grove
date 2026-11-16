@@ -8,7 +8,8 @@ export default function SaveError({ error, onRetry, testId, id, focusAfter }) {
   if (!error) return null;
   const retry = async () => {
     const ok = await onRetry();
-    if (ok && focusAfter && focusAfter.current) focusAfter.current.focus();
+    // Wait for React to commit: controls are disabled while saving, and focus() on a disabled control does nothing.
+    if (ok && focusAfter) setTimeout(() => { if (focusAfter.current) focusAfter.current.focus(); }, 0);
   };
   return (
     <p id={id} role="alert" className="mt-2 font-ui text-sm text-destructive" data-testid={testId}>

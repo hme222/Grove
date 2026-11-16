@@ -67,3 +67,15 @@ test('the daily tip switch saves locally first and never shows an error', async 
   expect(mockUpdateUser).toHaveBeenCalledWith({ show_daily_trivia: true });
   expect(container.querySelector('[role="alert"]')).toBeNull();
 });
+
+test('focus returns to the manual-entry switch after a successful retry', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await mount();
+  await act(async () => { q('profile-prefer-manual-toggle').click(); });
+  const retry = q('manual-entry-error').querySelector('button');
+  retry.focus();
+  await act(async () => { retry.click(); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
+  expect(q('manual-entry-error')).toBeNull();
+  expect(document.activeElement).toBe(q('profile-prefer-manual-toggle'));
+});

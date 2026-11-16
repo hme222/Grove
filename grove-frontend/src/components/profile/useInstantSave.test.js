@@ -12,7 +12,7 @@ const Probe = () => {
   api = useInstantSave();
   return (
     <>
-      <input data-testid="ctl" ref={ctl} />
+      <input data-testid="ctl" ref={ctl} disabled={api.busy} />
       <SaveError id="ctl-error" error={api.error} onRetry={api.retry} testId="err" focusAfter={ctl} />
     </>
   );
@@ -115,11 +115,13 @@ test('apply throwing reverts, sets the error, and a later run still works', asyn
   expect(api.error).toBe('');
 });
 
-test('focus lands on the control after a successful retry', async () => {
+test('focus lands on a control that is disabled while busy after a successful retry', async () => {
   const persist = jest.fn().mockRejectedValueOnce(new Error('x')).mockResolvedValue();
   await act(async () => { await api.run(jest.fn(), persist, jest.fn()); });
   const btn = container.querySelector('button');
   btn.focus();
   await act(async () => { btn.click(); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
+  expect(container.querySelector('[data-testid="ctl"]').disabled).toBe(false);
   expect(document.activeElement).toBe(container.querySelector('[data-testid="ctl"]'));
 });
