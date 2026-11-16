@@ -287,7 +287,7 @@ test('a signed-in person starts after the account step, at the zone step', async
   await mount();
   expect(q('onboarding-zone')).not.toBeNull();
   expect(q('zone-continue').getAttribute('aria-disabled')).toBe('true');
-  expect(text()).toContain('US zip codes only for now');
+  expect(text()).toContain('US ZIP codes only for now');
 });
 
 test('a found zip shows the zone as an estimate, saves, and does not ask for the hemisphere', async () => {

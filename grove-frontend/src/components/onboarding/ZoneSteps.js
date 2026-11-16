@@ -21,7 +21,7 @@ export function describeLookup(data) {
   return 'missing';
 }
 
-const SEASON_NOTE = 'US zip codes only for now. Outside the US, skip this and tell us your hemisphere next.';
+const SEASON_NOTE = 'US ZIP codes only for now. Outside the US, skip this and tell us your hemisphere next.';
 
 // Step 2 of 3, "Where do you grow?". Optional. A zone is shown only when we really have one for the zip.
 export function ZoneStep({ onBack, onSaved, onSkip }) {
@@ -69,13 +69,13 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
       stepLabel="Your space"
       onBack={onBack}
       heading="Where do you grow?"
-      intro="Your zip code helps us tailor seasonal care tips. We never share it. You can skip this."
+      intro="Your ZIP code helps us tailor seasonal care tips. We never share it. You can skip this."
       skip={{ label: 'Skip', ariaLabel: 'Skip for now', onClick: onSkip, testId: 'zone-skip' }}
       testId="onboarding-zone"
       hero={<PhotoBand src="/photos/window-1.jpg" ratio="short" eager />}
     >
       <div className="mt-6 flex flex-1 flex-col">
-        <label htmlFor="zone-zip" className="mb-1.5 block font-ui text-sm text-grove-cream">Zip code</label>
+        <label htmlFor="zone-zip" className="mb-1.5 block font-ui text-sm text-grove-cream">ZIP code</label>
         <input
           id="zone-zip"
           type="text"
