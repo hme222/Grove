@@ -10,7 +10,7 @@ const OPTIONS = [
 // Care tips: Simple / Detailed. Two chips (the one choice control), the pressed one lime and
 // marked with a check. The hint for the current choice sits under the control as visible text,
 // because a title tooltip never shows on touch. The choice is saved to the user's profile.
-export default function CareTextToggle({ value = 'simple', onChange, disabled = false }) {
+export default function CareTextToggle({ value = 'simple', onChange, disabled = false, describedBy, focusRef }) {
   const current = OPTIONS.find((o) => o.value === value) || OPTIONS[0];
   return (
     <div data-testid="care-text-toggle">
@@ -21,6 +21,8 @@ export default function CareTextToggle({ value = 'simple', onChange, disabled = 
             key={opt.value}
             type="button"
             aria-pressed={value === opt.value}
+            aria-describedby={describedBy}
+            ref={value === opt.value ? focusRef : undefined}
             disabled={disabled}
             onClick={() => onChange?.(opt.value)}
             data-testid={`care-text-${opt.value}`}

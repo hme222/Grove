@@ -2,7 +2,7 @@ import React, { useId } from 'react';
 
 // A setting that is on or off. The whole row is the control (44px or taller), the track is only a
 // picture of the state, and the state is also written out ("On" / "Off") so color is never alone.
-export default function SwitchRow({ label, help, checked, onChange, disabled = false, testId, rowTestId, className = '' }) {
+export default function SwitchRow({ label, help, checked, onChange, disabled = false, testId, rowTestId, className = '', describedBy, buttonRef }) {
   const helpId = useId();
   return (
     <div data-testid={rowTestId} className={className}>
@@ -10,7 +10,8 @@ export default function SwitchRow({ label, help, checked, onChange, disabled = f
         type="button"
         role="switch"
         aria-checked={checked}
-        aria-describedby={help ? helpId : undefined}
+        aria-describedby={[help ? helpId : null, describedBy].filter(Boolean).join(' ') || undefined}
+        ref={buttonRef}
         disabled={disabled}
         onClick={() => onChange(!checked)}
         data-testid={testId}

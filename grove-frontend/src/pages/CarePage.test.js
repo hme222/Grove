@@ -139,7 +139,9 @@ describe('Simple / Detailed care tips', () => {
     await mount();
     await act(async () => { q('care-text-detailed').click(); });
     expect(mockUpdateUser).toHaveBeenLastCalledWith({ care_text_detail: 'simple' });
-    expect(toast.error).toHaveBeenCalled();
+    expect(q('care-text-error').textContent).toContain('Try again');
+    expect(q('care-text-simple').getAttribute('aria-describedby')).toBe('care-text-error');
+    expect(toast.error).not.toHaveBeenCalled();
   });
 });
 

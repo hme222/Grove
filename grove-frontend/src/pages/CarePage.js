@@ -35,7 +35,9 @@ import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 import { usePipPrefs } from '../lib/pipPrefs';
 import { checkInsLabel } from '../lib/plantPersonality';
-import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
+import { dueLabel, careStep } from '../lib/careCopy';
+import { useCareTextDetail } from '../lib/careTextMode';
+import SaveError from '../components/profile/SaveError';
 import CareTextToggle from '../components/CareTextToggle';
 import UndoSnackbar from '../components/UndoSnackbar';
 import RoundSummaryCard from '../components/RoundSummaryCard';
@@ -103,24 +105,8 @@ export default function CarePage() {
   const [allPlantsLoaded, setAllPlantsLoaded] = useState(false); // false until the collection really loaded, so a failed fetch is never read as zero plants
   const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
   const [undoing, setUndoing] = useState(false);
-  const textMode = careTextMode(user);
-  const [savingTextMode, setSavingTextMode] = useState(false);
-
-  // Simple shows the exact step; Detailed adds why. Saved to the profile.
-  const handleTextModeChange = async (mode) => {
-    if (mode === textMode) return;
-    const previous = textMode;
-    if (updateUser) updateUser({ care_text_detail: mode });
-    setSavingTextMode(true);
-    try {
-      await userAPI.updateMe({ care_text_detail: mode });
-    } catch {
-      if (updateUser) updateUser({ care_text_detail: previous });
-      toast.error("Couldn’t save that setting. Try again.");
-    } finally {
-      setSavingTextMode(false);
-    }
-  };
+  const { mode: textMode, setMode: handleTextModeChange, busy: savingTextMode, error: textModeError, retry: retryTextMode } = useCareTextDetail();
+  const textModeRef = React.useRef(null);
 
   const fetchDue = async () => {
     try {
@@ -469,7 +455,8 @@ export default function CarePage() {
           <p className="font-ui text-sm text-grove-sage" data-testid="care-checkins-line">Check-ins this week: {checkIns}</p>
         )}
         <div className="pt-1">
-          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />
+          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} describedBy={textModeError ? 'care-text-error' : undefined} focusRef={textModeRef} />
+          <SaveError id="care-text-error" error={textModeError} onRetry={retryTextMode} testId="care-text-error" focusAfter={textModeRef} />
         </div>
       </section>
 
