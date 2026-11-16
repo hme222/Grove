@@ -74,7 +74,7 @@ test('a found code saves once after 600ms and shows the saved line with Undo', a
   await flush();
   expect(zoneAPI.lookup).toHaveBeenCalledWith('US', '10001');
   expect(userAPI.updateMe).toHaveBeenCalledTimes(1);
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'north' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001' });
   expect(q('location-saved').textContent).toContain('✓ Saved · USDA zone 7b');
   expect(q('location-saved').querySelector('button').textContent).toBe('Undo');
 });
@@ -105,7 +105,7 @@ test('Undo of a derived zone sends the previous code alone so the server re-deri
   await advance(1);
   expect(userAPI.updateMe).toHaveBeenCalledTimes(2);
   expect(userAPI.updateMe).toHaveBeenLastCalledWith({
-    location_country: 'US', location_postcode: '02139', hemisphere: 'north',
+    location_country: 'US', location_postcode: '02139',
   });
   expect(q('location-code').value).toBe('02139');
   expect(q('location-saved')).toBeNull();
@@ -152,7 +152,7 @@ test('out of order: only the latest typed code is saved', async () => {
   await act(async () => { a.resolve(found('9a')); });
   await flush();
   expect(userAPI.updateMe).toHaveBeenCalledTimes(1);
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '22222', hemisphere: 'north' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '22222' });
 });
 
 test('a failed save shows Try again and retrying saves', async () => {
@@ -190,7 +190,7 @@ test('Enter it instead: empty shows an error, filled saves the zone with Undo', 
   await act(async () => { q('location-saved').querySelector('button').click(); });
   await flush();
   // The previous zone was derived from 02139, so Undo re-derives it rather than marking it manual.
-  expect(userAPI.updateMe).toHaveBeenLastCalledWith({ location_country: 'US', location_postcode: '02139', hemisphere: 'north' });
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({ location_country: 'US', location_postcode: '02139' });
 });
 
 test('Undo of a manual zone sends the previous zone', async () => {
@@ -201,7 +201,7 @@ test('Undo of a manual zone sends the previous zone', async () => {
   await act(async () => { q('location-saved').querySelector('button').click(); });
   await advance(1);
   expect(userAPI.updateMe).toHaveBeenLastCalledWith({
-    location_country: 'US', location_postcode: '02139', hardiness_zone: '8a', hardiness_zone_system: 'USDA', hemisphere: 'north',
+    location_country: 'US', location_postcode: '02139', hardiness_zone: '8a', hardiness_zone_system: 'USDA',
   });
 });
 
@@ -213,16 +213,113 @@ test('Undo with no previous code sends the previous zone too', async () => {
   await act(async () => { q('location-saved').querySelector('button').click(); });
   await advance(1);
   expect(userAPI.updateMe).toHaveBeenLastCalledWith({
-    location_country: '', location_postcode: '', hardiness_zone: '', hemisphere: 'north',
+    location_country: '', location_postcode: '', hardiness_zone: '',
   });
 });
 
-test('a save keeps the hemisphere the person already has', async () => {
+test('a save never sends the hemisphere; the server keeps the one the person chose', async () => {
   mockUser = { ...mockUser, hemisphere: 'south' };
   await mount();
   await type(q('location-code'), '10001');
   await advance(600);
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'south' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001' });
+});
+
+// The server fills a hemisphere from a US ZIP code only when none is set.
+const serverFillsHemisphere = () => userAPI.updateMe.mockImplementation(async (patch) => {
+  const data = { ...mockUser, ...patch };
+  if (patch.location_postcode && !mockUser.hemisphere && !('hemisphere' in patch)) data.hemisphere = 'north';
+  if (patch.location_postcode) { data.hardiness_zone = '7b'; data.hardiness_zone_system = 'USDA'; data.hardiness_zone_source = 'zip-prefix'; }
+  mockUser = data;
+  return { data };
+});
+
+test('Undo of a first save clears the hemisphere the save filled in', async () => {
+  mockUser = {};
+  serverFillsHemisphere();
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  expect(mockUser.hemisphere).toBe('north');
+  await act(async () => { q('location-saved').querySelector('button').click(); });
+  await advance(1);
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({
+    location_country: '', location_postcode: '', hardiness_zone: '', hemisphere: '',
+  });
+});
+
+test('Undo leaves a hemisphere the person picked after the save', async () => {
+  serverFillsHemisphere();
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  mockUser = { ...mockUser, hemisphere: 'south' };
+  await mount();
+  await act(async () => { q('location-saved').querySelector('button').click(); });
+  await advance(1);
+  expect(userAPI.updateMe.mock.calls.at(-1)[0]).not.toHaveProperty('hemisphere');
+});
+
+test('Undo cancels a newly typed code whose lookup is still running', async () => {
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  const b = deferred();
+  zoneAPI.lookup.mockReturnValueOnce(b.promise);
+  const undoCall = deferred();
+  const respond = userAPI.updateMe.getMockImplementation();
+  userAPI.updateMe.mockImplementationOnce(async (patch) => { await undoCall.promise; return respond(patch); });
+  await type(q('location-code'), '20002');
+  await blur(q('location-code')); // what clicking Undo does first
+  await act(async () => { q('location-saved').querySelector('button').click(); });
+  await flush();
+  // The lookup for 20002 comes back while Undo's save is still on its way.
+  await act(async () => { b.resolve(found('5a')); });
+  await flush();
+  await act(async () => { undoCall.resolve(); });
+  await advance(1);
+  expect(userAPI.updateMe.mock.calls.map((c) => c[0].location_postcode)).toEqual(['10001', '02139']);
+  expect(q('location-code').value).toBe('02139');
+  expect(q('location-saved')).toBeNull();
+});
+
+test('Try again after a failed save saves the code in the field now', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  expect(q('location-error')).not.toBeNull();
+  await type(q('location-code'), '94110'); // its debounce is still waiting
+  await act(async () => { q('location-error').querySelector('button').click(); });
+  await advance(600);
+  expect(userAPI.updateMe.mock.calls.map((c) => c[0].location_postcode)).toEqual(['10001', '94110']);
+  expect(q('location-error')).toBeNull();
+  expect(q('location-saved').textContent).toContain('Saved');
+});
+
+test('typing the saved code back clears a failed save message', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  expect(q('location-error')).not.toBeNull();
+  await type(q('location-code'), '02139');
+  await advance(600);
+  expect(q('location-error')).toBeNull();
+  expect(userAPI.updateMe).toHaveBeenCalledTimes(1);
+});
+
+test('a location saved elsewhere shows when the sheet is open, unless the person has edited the field', async () => {
+  await mount();
+  mockUser = { ...mockUser, location_postcode: '10019', hardiness_zone: '7b' };
+  await mount();
+  expect(q('location-code').value).toBe('10019');
+  expect(q('zone-source-label').textContent).toContain('USDA zone 7b');
+  await type(q('location-code'), '9411');
+  mockUser = { ...mockUser, location_postcode: '60601', hardiness_zone: '6a' };
+  await mount();
+  expect(q('location-code').value).toBe('9411');
+  expect(q('zone-source-label').textContent).toContain('USDA zone 6a');
 });
 
 test('with no hemisphere set, a save lets the server derive it', async () => {
@@ -240,7 +337,7 @@ test('closing the sheet during the debounce still saves', async () => {
   act(() => root.unmount());
   await flush();
   await flush();
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'north' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001' });
   root = createRoot(container);
 });
 
@@ -253,7 +350,7 @@ test('closing the sheet during a lookup still saves', async () => {
   act(() => root.unmount());
   await act(async () => { a.resolve(found('7b')); });
   await flush();
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'north' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001' });
   root = createRoot(container);
 });
 

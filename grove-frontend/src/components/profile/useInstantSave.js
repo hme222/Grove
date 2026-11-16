@@ -49,7 +49,10 @@ export function useInstantSave() {
     return run(apply, persist, revert);
   }, [run]);
 
-  return { run, busy, error, retry };
+  // Drops a shown error once it no longer applies (the person put the old value back by hand).
+  const clear = useCallback(() => { last.current = null; if (mounted.current) setError(''); }, []);
+
+  return { run, busy, error, retry, clear };
 }
 
 export default useInstantSave;

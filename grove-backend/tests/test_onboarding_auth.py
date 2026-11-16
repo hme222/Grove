@@ -400,6 +400,29 @@ def test_an_explicit_hemisphere_beats_the_one_a_zip_would_give(profile):
     assert body["hemisphere"] == "south"
 
 
+def test_a_zip_does_not_overwrite_a_hemisphere_already_chosen(profile):
+    profile.patch("/api/users/me", json={"hemisphere": "south"})
+    body = profile.patch("/api/users/me", json={"location_country": "US", "location_postcode": "10019"}).json()
+    assert body["hemisphere"] == "south"
+    assert body["hardiness_zone"] == "7b"
+
+
+def test_an_empty_hemisphere_clears_it_and_a_later_zip_fills_it_again(profile):
+    profile.patch("/api/users/me", json={"location_country": "US", "location_postcode": "10019"})
+    body = profile.patch("/api/users/me", json={"location_country": "", "location_postcode": "", "hardiness_zone": "", "hemisphere": ""}).json()
+    assert body["hemisphere"] == ""
+    body = profile.patch("/api/users/me", json={"location_country": "US", "location_postcode": "10019"}).json()
+    assert body["hemisphere"] == "north"
+
+
+def test_an_empty_zone_clears_its_source_instead_of_marking_it_manual(profile):
+    profile.patch("/api/users/me", json={"location_country": "US", "location_postcode": "10019"})
+    body = profile.patch("/api/users/me", json={"location_country": "", "location_postcode": "", "hardiness_zone": ""}).json()
+    assert body["hardiness_zone"] == ""
+    assert body["hardiness_zone_source"] == ""
+    assert body["hardiness_zone_system"] == ""
+
+
 def test_a_zip_that_does_not_exist_stores_nothing_extra(profile):
     body = profile.patch("/api/users/me", json={"location_country": "US", "location_postcode": "00000"}).json()
     assert "hemisphere" not in body
