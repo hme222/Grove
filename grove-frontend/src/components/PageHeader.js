@@ -10,7 +10,8 @@ import { useHelpSheet } from './help/helpSheetContext';
 
 // One header for every screen: [Back] Title ... [page action] [bell] [profile].
 // `back` is true (step back in history) or { to, where } (go to a named place).
-export function PageHeader({ title, rightContent, children, hideBell, hideProfile, back }) {
+// `titleRef` makes the h1 focusable from script (tabIndex -1) so a page can send focus to it, for example when a sheet's opener is gone.
+export function PageHeader({ title, rightContent, children, hideBell, hideProfile, back, titleRef }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const onProfile = pathname === '/profile';
@@ -29,7 +30,7 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
           <div className={cn('flex min-w-0 flex-1 basis-28 items-center', back ? 'gap-4' : 'gap-2')}>
             {back && <BackButton {...(back === true ? {} : back)} />}
-            <h1 id="page-title" className="flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words"><span className="min-w-0 line-clamp-2 overflow-hidden [overflow-wrap:anywhere]">{title}</span></h1>
+            <h1 id="page-title" ref={titleRef} tabIndex={titleRef ? -1 : undefined} className={cn('flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words', titleRef && 'focus:outline-none')}><span className="min-w-0 line-clamp-2 overflow-hidden [overflow-wrap:anywhere]">{title}</span></h1>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}
