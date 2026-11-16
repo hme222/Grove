@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { careAPI, waterAPI, plantAPI, userAPI, statsAPI, getFileUrl } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, statsAPI, getFileUrl } from '../lib/api';
 import { PageHeader, FilterChips, HeaderAction } from '../components/PageHeader';
 import { CareTabs } from '../components/CareTabs';
 import { EmptyState } from '../components/EmptyState';
