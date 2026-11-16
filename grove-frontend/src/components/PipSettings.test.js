@@ -79,3 +79,22 @@ test('a failed save offers Try again, which repeats the same change', async () =
   expect(t(container, 'profile-pip-error')).toBeNull();
   done();
 });
+
+test('after a failed save the switch keeps its old value, and focus returns to it after a good retry', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  const { container, done } = await show({});
+  await act(async () => { t(container, 'profile-pip-toggle').click(); });
+  expect(t(container, 'profile-pip-toggle').getAttribute('aria-checked')).toBe('true');
+  await act(async () => { t(container, 'profile-pip-error').querySelector('button').click(); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 5)); });
+  expect(document.activeElement).toBe(t(container, 'profile-pip-toggle'));
+  done();
+});
+
+test('the save error uses the dark-surface color, readable on the moss card', async () => {
+  userAPI.updateMe.mockRejectedValue(new Error('offline'));
+  const { container, done } = await show({});
+  await act(async () => { t(container, 'profile-pip-toggle').click(); });
+  expect(t(container, 'profile-pip-error').className).toContain('text-grove-blush');
+  done();
+});

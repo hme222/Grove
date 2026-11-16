@@ -35,8 +35,8 @@ export default function NookSettings({ bare = false }) {
     <div className={bare ? '' : PAPER_PANEL} data-testid="profile-nook">
       <div className="flex items-start justify-between gap-3">
         <div>
-          {bare ? <p className="mb-1 font-plant text-base text-grove-root">Pip&rsquo;s nook</p> : <h3 className="mb-1 font-plant text-base text-grove-root">Pip&rsquo;s nook</h3>}
-          <p className="font-ui text-sm text-grove-inkSoft">
+          {bare ? <p className="mb-1 font-plant text-base text-grove-cream">Pip&rsquo;s nook</p> : <h3 className="mb-1 font-plant text-base text-grove-root">Pip&rsquo;s nook</h3>}
+          <p className={`font-ui text-sm ${bare ? 'text-grove-sage' : 'text-grove-inkSoft'}`}>
             A small pixel nook that grows as you learn. It never scores your plants. Turning it off keeps everything you&rsquo;ve earned.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function NookSettings({ bare = false }) {
           {on ? 'On' : 'Off'}
         </button>
       </div>
-      <SaveError id="profile-nook-error" error={error} onRetry={toggle} testId="profile-nook-error" focusAfter={switchRef} />
+      <SaveError tone={bare ? 'dark' : 'paper'} id="profile-nook-error" error={error} onRetry={toggle} testId="profile-nook-error" focusAfter={switchRef} />
     </div>
   );
 }
