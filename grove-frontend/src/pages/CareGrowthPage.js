@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { statsAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { CareTabs } from '../components/CareTabs';
-import { Leaf, Droplets, Clock, Sprout, TrendingUp } from 'lucide-react';
+import PersonalityCard from '../components/PersonalityCard';
+import { checkInsLabel } from '../lib/plantPersonality';
+import { Leaf, Droplets, Clock, Sprout, TrendingUp, CalendarCheck } from 'lucide-react';
 
 export default function CareGrowthPage() {
   const [stats, setStats] = useState(null);
@@ -46,6 +48,7 @@ export default function CareGrowthPage() {
     { label: 'Plants', value: stats?.total_plants || 0, icon: Leaf },
     { label: 'Care logs', value: stats?.total_care_logs || 0, icon: Droplets },
     { label: 'Hours', value: `${stats?.estimated_care_hours || 0}h`, icon: Clock },
+    { label: 'Check-ins this week', value: checkInsLabel(stats) || 'Not available', icon: CalendarCheck },
   ];
 
   return (
@@ -54,15 +57,17 @@ export default function CareGrowthPage() {
 
       <div className="max-w-content mx-auto px-4 py-4 space-y-4">
         {/* Basic tiles */}
-        <div className="grid grid-cols-3 gap-2" data-testid="growth-basic-tiles">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" data-testid="growth-basic-tiles">
           {basicTiles.map(({ label, value, icon: Icon }) => (
             <div key={label} className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
-              <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" />
+              <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" aria-hidden="true" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
               <p className="font-ui text-xs text-grove-cream">{label}</p>
             </div>
           ))}
         </div>
+
+        <PersonalityCard stats={stats} />
 
         {/* On schedule: the same overdue rule the Today list uses */}
         {stats?.plants_on_schedule != null && (stats.total_plants || 0) > 0 && (
