@@ -7,7 +7,8 @@ jest.mock('../lib/api', () => ({
   notificationAPI: { getPreferences: jest.fn(), updatePreferences: jest.fn() },
 }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
-jest.mock('react-router-dom', () => ({ useNavigate: () => jest.fn() }), { virtual: true });
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { virtual: true });
 jest.mock('../components/PageHeader', () => ({ PageHeader: ({ title }) => <h1>{title}</h1> }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -48,6 +49,17 @@ beforeEach(async () => {
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
+});
+
+test('Recent notifications is the first row and goes to /notifications', async () => {
+  const link = q('notifications-recent-link');
+  expect(link).not.toBeNull();
+  expect(link.tagName).toBe('BUTTON');
+  expect(link.textContent).toContain('Recent notifications');
+  const list = link.parentElement;
+  expect(list.firstElementChild).toBe(link);
+  await act(async () => { link.click(); });
+  expect(mockNavigate).toHaveBeenCalledWith('/notifications');
 });
 
 test('care check shows as on', () => {

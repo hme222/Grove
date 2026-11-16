@@ -117,7 +117,10 @@ test('closing gives focus back to what opened it', async () => {
   await openIt(container);
   expect(document.activeElement).not.toBe(container.querySelector('[data-testid="opener"]'));
   await act(async () => { el('help-sheet').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
-  await act(async () => {});
-  expect(document.activeElement).toBe(container.querySelector('[data-testid="opener"]'));
+  // Radix gives focus back in a setTimeout(0) after the dialog unmounts, so wait a task, not just a microtask.
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
+  const opener = container.querySelector('[data-testid="opener"]');
+  // Compare as a boolean: a failed toBe on DOM nodes crashes the Jest worker trying to serialize them.
+  expect(document.activeElement === opener).toBe(true);
   done();
 });

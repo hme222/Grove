@@ -1,7 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import CarePage from './CarePage';
-import { careAPI, waterAPI, plantAPI, userAPI, notificationsAPI } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, userAPI, notificationsAPI, statsAPI } from '../lib/api';
 import { toast } from 'sonner';
 
 jest.mock('../lib/api', () => ({
@@ -10,6 +10,7 @@ jest.mock('../lib/api', () => ({
   plantAPI: { getAll: jest.fn() },
   userAPI: { updateMe: jest.fn() },
   notificationsAPI: { scheduleReviews: jest.fn() },
+  statsAPI: { getStats: jest.fn(), getCheckIns: jest.fn() },
   getFileUrl: (p) => p,
 }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn(), message: jest.fn() } }));
@@ -75,6 +76,7 @@ beforeEach(() => {
   plantAPI.getAll.mockResolvedValue({ data: { plants: DUE } });
   notificationsAPI.scheduleReviews.mockResolvedValue({ data: { plants: [] } });
   userAPI.updateMe.mockResolvedValue({ data: {} });
+  statsAPI.getCheckIns.mockReset().mockResolvedValue({ data: { this_week: 1, weekly_goal: 3 } });
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -137,7 +139,9 @@ describe('Simple / Detailed care tips', () => {
     await mount();
     await act(async () => { q('care-text-detailed').click(); });
     expect(mockUpdateUser).toHaveBeenLastCalledWith({ care_text_detail: 'simple' });
-    expect(toast.error).toHaveBeenCalled();
+    expect(q('care-text-error').textContent).toContain('Try again');
+    expect(q('care-text-simple').getAttribute('aria-describedby')).toBe('care-text-error');
+    expect(toast.error).not.toHaveBeenCalled();
   });
 });
 
@@ -272,5 +276,43 @@ describe('end-of-round summary', () => {
     careAPI.getDueToday.mockResolvedValue({ data: [] });
     await mount();
     expect(q('round-summary')).toBeNull();
+  });
+});
+
+describe('check-ins line', () => {
+  test('reads "Check-ins this week: 1 of 3" as plain text', async () => {
+    await mount();
+    const line = q('care-checkins-line');
+    expect(line.textContent).toBe('Check-ins this week: 1 of 3');
+    expect(line.tagName).toBe('P');
+  });
+
+  test('a failed check-ins call hides the line and the due list still renders', async () => {
+    statsAPI.getCheckIns.mockRejectedValue(new Error('nope'));
+    await mount();
+    expect(q('care-checkins-line')).toBeNull();
+    expect(q('care-card')).not.toBeNull();
+  });
+
+  test('uses the light check-ins call, not the full stats', async () => {
+    await mount();
+    expect(statsAPI.getCheckIns).toHaveBeenCalled();
+    expect(statsAPI.getStats).not.toHaveBeenCalled();
+  });
+
+  test('logging care on Today updates the line', async () => {
+    jest.useFakeTimers();
+    try {
+      waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r3' } });
+      await mount();
+      expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 1 of 3');
+      statsAPI.getCheckIns.mockResolvedValue({ data: { this_week: 2, weekly_goal: 3 } });
+      await act(async () => { q('water-all-button').click(); });
+      await act(async () => { q('water-all-confirm').click(); });
+      await act(async () => { jest.advanceTimersByTime(400); });
+      expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 2 of 3');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });

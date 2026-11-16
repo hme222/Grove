@@ -5,7 +5,10 @@ import SwitchRow from '../components/SwitchRow';
 import { notificationAPI } from '../lib/api';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
-import { Bell, Mail, Moon, Gauge } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { buttonVariants } from '../components/ui/button';
+import { Bell, Mail, Moon, Gauge, ChevronRight } from 'lucide-react';
 
 export const CARE_CAP_CHOICES = [1, 2, 3];
 
@@ -45,6 +48,7 @@ const TOGGLE_GROUPS = [
 ];
 
 export default function NotificationPreferencesPage() {
+  const navigate = useNavigate();
   const [prefs, setPrefs] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -102,6 +106,17 @@ export default function NotificationPreferencesPage() {
       />
 
       <div className="max-w-column mx-auto px-4 py-4 space-y-4">
+        {/* The inbox, which used to be a button on Profile. Shown even while the settings load. */}
+        <button
+          type="button"
+          onClick={() => navigate('/notifications')}
+          data-testid="notifications-recent-link"
+          className={cn(buttonVariants({ variant: 'outline' }), 'flex w-full justify-start')}
+        >
+          <Bell className="h-4 w-4" aria-hidden="true" />
+          Recent notifications
+          <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
+        </button>
         {loadError && !loading ? (<LoadError what="your notification settings" onRetry={() => window.location.reload()} />) : loading || !prefs ? (
           <Loading label="Loading your settings" />
         ) : (

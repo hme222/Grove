@@ -200,6 +200,8 @@ export const roomAPI = {
 export const statsAPI = {
   getStats: () => api.get('/stats/me'),
   getCareHours: () => api.get('/stats/me/care-hours'),
+  // The weekly check-ins summary alone: { this_week, weekly_goal, ... }. Much lighter than getStats.
+  getCheckIns: () => api.get('/users/me/check-ins'),
 };
 
 // Bouquets

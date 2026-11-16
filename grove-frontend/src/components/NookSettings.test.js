@@ -83,6 +83,45 @@ test('a failed save shows a plain error and does not change the user', async () 
   await mount();
   await click(q('profile-nook-switch'));
   await flush();
-  expect(q('profile-nook-error').textContent).toBe('Couldn’t save that. Try again.');
+  expect(q('profile-nook-error').textContent).toContain('Couldn’t save that.');
   expect(mockUpdateUser).not.toHaveBeenCalled();
+});
+
+test('bare drops the card but keeps the switch and the error with Try again', async () => {
+  nookAPI.settings.mockRejectedValueOnce(new Error('network'));
+  await act(async () => root.render(<NookSettings bare />));
+  expect(q('profile-nook').className).not.toContain('border');
+  expect(q('profile-nook').querySelector('h3')).toBeNull();
+  await click(q('profile-nook-switch'));
+  await flush();
+  expect(q('profile-nook-error')).not.toBeNull();
+  expect(q('profile-nook-switch').getAttribute('aria-describedby')).toBe('profile-nook-error');
+  await click(q('profile-nook-error').querySelector('button'));
+  await flush();
+  expect(nookAPI.settings).toHaveBeenCalledTimes(2);
+  expect(q('profile-nook-error')).toBeNull();
+});
+
+test('after a failed save the switch keeps its old value, and focus returns to it after a good retry', async () => {
+  nookAPI.settings.mockRejectedValueOnce(new Error('network'));
+  await mount();
+  await click(q('profile-nook-switch'));
+  await flush();
+  expect(q('profile-nook-switch').getAttribute('aria-checked')).toBe('false');
+  await click(q('profile-nook-error').querySelector('button'));
+  await act(async () => { await new Promise((r) => setTimeout(r, 5)); });
+  expect(document.activeElement).toBe(q('profile-nook-switch'));
+});
+
+test('bare uses light text and the dark-surface error; the default panel uses the paper error', async () => {
+  nookAPI.settings.mockRejectedValue(new Error('network'));
+  await act(async () => root.render(<NookSettings bare />));
+  expect(q('profile-nook').innerHTML).not.toContain('text-grove-inkSoft');
+  expect(q('profile-nook').innerHTML).not.toContain('text-grove-root');
+  expect(q('profile-nook').innerHTML).toContain('text-grove-cream');
+  await click(q('profile-nook-switch'));
+  await flush();
+  expect(q('profile-nook-error').className).toContain('text-grove-blush');
+  await act(async () => root.render(<NookSettings />));
+  expect(q('profile-nook-error').className).toContain('text-grove-paperError');
 });

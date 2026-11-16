@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { careAPI, waterAPI, plantAPI, userAPI, getFileUrl } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, statsAPI, getFileUrl } from '../lib/api';
 import { PageHeader, FilterChips, HeaderAction } from '../components/PageHeader';
 import { CareTabs } from '../components/CareTabs';
 import { EmptyState } from '../components/EmptyState';
@@ -34,7 +34,10 @@ import { toast } from 'sonner';
 import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 import { usePipPrefs } from '../lib/pipPrefs';
-import { dueLabel, careStep, careTextMode } from '../lib/careCopy';
+import { checkInsLabel } from '../lib/plantPersonality';
+import { dueLabel, careStep } from '../lib/careCopy';
+import { useCareTextDetail } from '../lib/careTextMode';
+import SaveError from '../components/profile/SaveError';
 import CareTextToggle from '../components/CareTextToggle';
 import UndoSnackbar from '../components/UndoSnackbar';
 import RoundSummaryCard from '../components/RoundSummaryCard';
@@ -102,26 +105,19 @@ export default function CarePage() {
   const [allPlantsLoaded, setAllPlantsLoaded] = useState(false); // false until the collection really loaded, so a failed fetch is never read as zero plants
   const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
   const [undoing, setUndoing] = useState(false);
-  const textMode = careTextMode(user);
-  const [savingTextMode, setSavingTextMode] = useState(false);
+  const { mode: textMode, setMode: handleTextModeChange, busy: savingTextMode, error: textModeError, retry: retryTextMode } = useCareTextDetail();
+  const textModeRef = React.useRef(null);
 
-  // Simple shows the exact step; Detailed adds why. Saved to the profile.
-  const handleTextModeChange = async (mode) => {
-    if (mode === textMode) return;
-    const previous = textMode;
-    if (updateUser) updateUser({ care_text_detail: mode });
-    setSavingTextMode(true);
-    try {
-      await userAPI.updateMe({ care_text_detail: mode });
-    } catch {
-      if (updateUser) updateUser({ care_text_detail: previous });
-      toast.error("Couldn’t save that setting. Try again.");
-    } finally {
-      setSavingTextMode(false);
-    }
-  };
+  // Separate and non-blocking: the due list never waits on this, and a failure just hides the line. Read again with
+  // the due list, so logging care here updates it.
+  const [checkIns, setCheckIns] = useState(null);
+  const mountedRef = React.useRef(true);
+  useEffect(() => () => { mountedRef.current = false; }, []);
 
   const fetchDue = async () => {
+    statsAPI.getCheckIns()
+      .then((res) => { if (mountedRef.current) setCheckIns(checkInsLabel({ check_ins: res?.data })); })
+      .catch(() => {});
     try {
       const res = await careAPI.getDueToday();
       setPlants(res.data);
@@ -454,8 +450,12 @@ export default function CarePage() {
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
         <WorkingTowardSection />
+        {checkIns && (
+          <p className="font-ui text-sm text-grove-sage" data-testid="care-checkins-line">Check-ins this week: {checkIns}</p>
+        )}
         <div className="pt-1">
-          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} />
+          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} describedBy={textModeError ? 'care-text-error' : undefined} focusRef={textModeRef} />
+          <SaveError id="care-text-error" error={textModeError} onRetry={retryTextMode} testId="care-text-error" focusAfter={textModeRef} />
         </div>
       </section>
 

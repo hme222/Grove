@@ -287,7 +287,7 @@ test('a signed-in person starts after the account step, at the zone step', async
   await mount();
   expect(q('onboarding-zone')).not.toBeNull();
   expect(q('zone-continue').getAttribute('aria-disabled')).toBe('true');
-  expect(text()).toContain('US zip codes only for now');
+  expect(text()).toContain('US ZIP codes only for now');
 });
 
 test('a found zip shows the zone as an estimate, saves, and does not ask for the hemisphere', async () => {
@@ -311,7 +311,7 @@ test('a zip that is not found says so, blocks Continue, and never shows a zone',
   await mount();
   await type(q('zone-zip'), '00000');
   await flush();
-  expect(q('zone-missing').textContent).toContain('Zip not found');
+  expect(q('zone-missing').textContent).toContain('ZIP code not found');
   expect(q('zone-found')).toBeNull();
   expect(q('zone-continue').getAttribute('aria-disabled')).toBe('true');
   expect(q('zone-zip').getAttribute('aria-invalid')).toBe('true');
@@ -717,7 +717,7 @@ test('Continue on the zip step stays focusable, says why, and does nothing until
   expect(btn.disabled).toBe(false);
   expect(btn.getAttribute('aria-disabled')).toBe('true');
   const hint = container.querySelector(`#${btn.getAttribute('aria-describedby')}`);
-  expect(hint.textContent).toBe('Enter a zip or choose Skip for now');
+  expect(hint.textContent).toBe('Enter a ZIP code or choose Skip for now');
   await click(btn);
   expect(userAPI.updateMe).not.toHaveBeenCalled();
   await type(q('zone-zip'), '10019');

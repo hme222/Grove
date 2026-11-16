@@ -21,7 +21,7 @@ export function describeLookup(data) {
   return 'missing';
 }
 
-const SEASON_NOTE = 'US zip codes only for now. Outside the US, skip this and tell us your hemisphere next.';
+const SEASON_NOTE = 'US ZIP codes only for now. Outside the US, skip this and tell us your hemisphere next.';
 
 // Step 2 of 3, "Where do you grow?". Optional. A zone is shown only when we really have one for the zip.
 export function ZoneStep({ onBack, onSaved, onSkip }) {
@@ -69,13 +69,13 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
       stepLabel="Your space"
       onBack={onBack}
       heading="Where do you grow?"
-      intro="Your zip code helps us tailor seasonal care tips. We never share it. You can skip this."
+      intro="Your ZIP code helps us tailor seasonal care tips. We never share it. You can skip this."
       skip={{ label: 'Skip', ariaLabel: 'Skip for now', onClick: onSkip, testId: 'zone-skip' }}
       testId="onboarding-zone"
       hero={<PhotoBand src="/photos/window-1.jpg" ratio="short" eager />}
     >
       <div className="mt-6 flex flex-1 flex-col">
-        <label htmlFor="zone-zip" className="mb-1.5 block font-ui text-sm text-grove-cream">Zip code</label>
+        <label htmlFor="zone-zip" className="mb-1.5 block font-ui text-sm text-grove-cream">ZIP code</label>
         <input
           id="zone-zip"
           type="text"
@@ -93,7 +93,7 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
         <p id="zone-help" className="mt-1.5 font-ui text-sm text-grove-sage">{SEASON_NOTE}</p>
 
         <div id="zone-result" role="status" aria-live="polite" className="mt-4" data-testid="zone-result">
-          {state === 'checking' && <p className="font-ui text-sm text-grove-sage">Checking your zip…</p>}
+          {state === 'checking' && <p className="font-ui text-sm text-grove-sage">Checking your ZIP code…</p>}
           {state === 'found' && (
             <div className="rounded-small border-hairline border-grove-fernLine bg-grove-canopy px-4 py-3" data-testid="zone-found">
               <p className="flex items-center gap-2 font-ui text-base font-semibold text-grove-cream">
@@ -116,7 +116,7 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
             <div className="rounded-small border-hairline border-destructive bg-grove-canopy px-4 py-3" data-testid="zone-missing">
               <p className="flex items-center gap-2 font-ui text-base font-semibold text-grove-cream">
                 <AlertCircle className="h-4 w-4 text-destructive" aria-hidden="true" />
-                Zip not found
+                ZIP code not found
               </p>
               <p className="mt-1 font-ui text-sm text-grove-cream">Check the digits, or skip for now. You can add it later in Settings.</p>
             </div>
@@ -131,7 +131,7 @@ export function ZoneStep({ onBack, onSaved, onSkip }) {
 
         {!canContinue && !saving && (
           <p id="zone-continue-hint" className="mt-6 text-center font-ui text-sm text-grove-sage" data-testid="zone-continue-hint">
-            {state === 'checking' ? 'Checking your zip…' : 'Enter a zip or choose Skip for now'}
+            {state === 'checking' ? 'Checking your ZIP code…' : 'Enter a ZIP code or choose Skip for now'}
           </p>
         )}
         <StepActions

@@ -897,7 +897,8 @@ class UserUpdate(BaseModel):
     has_pets: Optional[bool] = None
     show_daily_trivia: Optional[bool] = None
     # Which half of the world the person grows in. Seasons are reversed, so seasonal tips need it.
-    hemisphere: Optional[Literal["north", "south"]] = None
+    # An empty string clears it (Undo of a location save that set it).
+    hemisphere: Optional[Literal["north", "south", ""]] = None
 
 @api_router.patch("/users/me")
 async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_user)):
@@ -914,6 +915,10 @@ async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_
             updates['hardiness_zone'] = zone
             updates['hardiness_zone_system'] = system
             updates['hardiness_zone_source'] = source
+    elif 'hardiness_zone' in updates and not updates['hardiness_zone']:
+        # An empty zone clears it, along with where it came from.
+        updates['hardiness_zone_source'] = ''
+        updates['hardiness_zone_system'] = ''
     elif 'hardiness_zone' in updates:
         # Treat explicit zone changes as manual overrides.
         updates['hardiness_zone_source'] = 'manual'
@@ -921,10 +926,11 @@ async def update_me(input: UserUpdate, current_user: dict = Depends(get_current_
             # Infer system from zone string ("H1"/"H2" etc are RHS, otherwise USDA)
             zone_val = (updates['hardiness_zone'] or '').upper()
             updates['hardiness_zone_system'] = 'RHS' if zone_val.startswith('H') else 'USDA'
-    # A US zip we recognize is in the northern hemisphere. An explicit choice always wins.
+    # A US zip we recognize is in the northern hemisphere. It only fills a hemisphere that is not set yet: a stored
+    # one (the person's choice) and an explicit one in this update always win.
     if location_changed and 'hemisphere' not in updates:
         existing = await db.users.find_one({"id": current_user['user_id']}) or {}
-        derived = hemisphere_for_zip(
+        derived = None if existing.get('hemisphere') else hemisphere_for_zip(
             updates.get('location_country', existing.get('location_country')) or '',
             updates.get('location_postcode', existing.get('location_postcode')) or '',
         )
