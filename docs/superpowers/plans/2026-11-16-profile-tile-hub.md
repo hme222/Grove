@@ -62,7 +62,7 @@
 - [ ] **Step 1: Write the failing tests.**
   - `growth-basic-tiles` has 4 tiles, and the fourth reads "Check-ins this week" and "1 of 3".
   - `personality-card` shows "The Steady Hand" for `{ total_plants: 3, plants_needing_water: 0, total_care_logs: 6 }`.
-  - With `total_plants: 0`, the card shows "Add a plant and your plant personality shows up here." and has no title.
+  - With `total_plants: 0`, the card shows `PERSONALITY_COPY.none.line` ("Add a plant and we'll start figuring out your plant personality.") and has no title.
   - There is no button in the card. It has no Generate button.
 - [ ] **Step 2: Run.** Expected: FAIL.
 - [ ] **Step 3: Implement.** Add the tile with the `CalendarCheck` icon (lucide, `aria-hidden`). Change the grid to `grid-cols-2 sm:grid-cols-4` so four tiles fit and wrap at large text. Render `PersonalityCard` under the tiles, before `growth-thriving-card`.
