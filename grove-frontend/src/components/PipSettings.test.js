@@ -9,12 +9,12 @@ jest.mock('../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser, 
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const show = async (user) => {
+const show = async (user, props = {}) => {
   mockUser = user;
   const container = document.createElement('div');
   document.body.appendChild(container);
   const root = createRoot(container);
-  await act(async () => { root.render(<PipSettings />); });
+  await act(async () => { root.render(<PipSettings {...props} />); });
   return { container, done: () => { act(() => root.unmount()); container.remove(); } };
 };
 const t = (c, id) => c.querySelector(`[data-testid="${id}"]`);
@@ -54,6 +54,28 @@ test('a failed save says so', async () => {
   userAPI.updateMe.mockRejectedValue(new Error('offline'));
   const { container, done } = await show({});
   await act(async () => { t(container, 'profile-pip-toggle').click(); });
-  expect(t(container, 'profile-pip-error').textContent).toBe('Couldn’t save that. Try again.');
+  expect(t(container, 'profile-pip-error').textContent).toContain('Couldn’t save that.');
+  done();
+});
+
+test('bare drops the card but keeps the switches', async () => {
+  const { container, done } = await show({}, { bare: true });
+  const wrap = t(container, 'profile-pip');
+  expect(wrap.className).not.toContain('rounded-card');
+  expect(wrap.querySelector('h3')).toBeNull();
+  expect(t(container, 'profile-pip-toggle')).not.toBeNull();
+  expect(t(container, 'profile-pip-peeks-toggle')).not.toBeNull();
+  done();
+});
+
+test('a failed save offers Try again, which repeats the same change', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  const { container, done } = await show({});
+  await act(async () => { t(container, 'profile-pip-toggle').click(); });
+  expect(t(container, 'profile-pip-toggle').getAttribute('aria-describedby')).toContain('profile-pip-error');
+  await act(async () => { t(container, 'profile-pip-error').querySelector('button').click(); });
+  expect(userAPI.updateMe).toHaveBeenCalledTimes(2);
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({ pip_enabled: false });
+  expect(t(container, 'profile-pip-error')).toBeNull();
   done();
 });
