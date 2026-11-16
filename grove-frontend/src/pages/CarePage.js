@@ -108,7 +108,16 @@ export default function CarePage() {
   const { mode: textMode, setMode: handleTextModeChange, busy: savingTextMode, error: textModeError, retry: retryTextMode } = useCareTextDetail();
   const textModeRef = React.useRef(null);
 
+  // Separate and non-blocking: the due list never waits on this, and a failure just hides the line. Read again with
+  // the due list, so logging care here updates it.
+  const [checkIns, setCheckIns] = useState(null);
+  const mountedRef = React.useRef(true);
+  useEffect(() => () => { mountedRef.current = false; }, []);
+
   const fetchDue = async () => {
+    statsAPI.getCheckIns()
+      .then((res) => { if (mountedRef.current) setCheckIns(checkInsLabel({ check_ins: res?.data })); })
+      .catch(() => {});
     try {
       const res = await careAPI.getDueToday();
       setPlants(res.data);
@@ -129,16 +138,6 @@ export default function CarePage() {
       // silent \u2014 only used for empty state copy
     }
   };
-
-  // Separate and non-blocking: the due list never waits on this, and a failure just hides the line.
-  const [checkIns, setCheckIns] = useState(null);
-  useEffect(() => {
-    let live = true;
-    statsAPI.getStats()
-      .then((res) => { if (live) setCheckIns(checkInsLabel(res?.data)); })
-      .catch(() => {});
-    return () => { live = false; };
-  }, []);
 
   useEffect(() => { fetchDue(); fetchAllPlantsLite(); }, []);
 

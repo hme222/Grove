@@ -10,7 +10,7 @@ jest.mock('../lib/api', () => ({
   plantAPI: { getAll: jest.fn() },
   userAPI: { updateMe: jest.fn() },
   notificationsAPI: { scheduleReviews: jest.fn() },
-  statsAPI: { getStats: jest.fn() },
+  statsAPI: { getStats: jest.fn(), getCheckIns: jest.fn() },
   getFileUrl: (p) => p,
 }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn(), message: jest.fn() } }));
@@ -76,7 +76,7 @@ beforeEach(() => {
   plantAPI.getAll.mockResolvedValue({ data: { plants: DUE } });
   notificationsAPI.scheduleReviews.mockResolvedValue({ data: { plants: [] } });
   userAPI.updateMe.mockResolvedValue({ data: {} });
-  statsAPI.getStats.mockResolvedValue({ data: { check_ins: { this_week: 1, weekly_goal: 3 } } });
+  statsAPI.getCheckIns.mockReset().mockResolvedValue({ data: { this_week: 1, weekly_goal: 3 } });
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -287,10 +287,32 @@ describe('check-ins line', () => {
     expect(line.tagName).toBe('P');
   });
 
-  test('a failed stats call hides the line and the due list still renders', async () => {
-    statsAPI.getStats.mockRejectedValue(new Error('nope'));
+  test('a failed check-ins call hides the line and the due list still renders', async () => {
+    statsAPI.getCheckIns.mockRejectedValue(new Error('nope'));
     await mount();
     expect(q('care-checkins-line')).toBeNull();
     expect(q('care-card')).not.toBeNull();
+  });
+
+  test('uses the light check-ins call, not the full stats', async () => {
+    await mount();
+    expect(statsAPI.getCheckIns).toHaveBeenCalled();
+    expect(statsAPI.getStats).not.toHaveBeenCalled();
+  });
+
+  test('logging care on Today updates the line', async () => {
+    jest.useFakeTimers();
+    try {
+      waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r3' } });
+      await mount();
+      expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 1 of 3');
+      statsAPI.getCheckIns.mockResolvedValue({ data: { this_week: 2, weekly_goal: 3 } });
+      await act(async () => { q('water-all-button').click(); });
+      await act(async () => { q('water-all-confirm').click(); });
+      await act(async () => { jest.advanceTimersByTime(400); });
+      expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 2 of 3');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });
