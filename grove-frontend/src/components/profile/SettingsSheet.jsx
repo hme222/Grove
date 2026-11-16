@@ -13,6 +13,10 @@ export default function SettingsSheet({ open, onClose, title, testId, opener, fa
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
   const innerRef = useRef(null);
+  // Radix Portal mounts its children a commit after `open`, so the body element is tracked in state (via a callback
+  // ref) and the measuring effect runs once it actually exists.
+  const [bodyEl, setBodyEl] = useState(null);
+  const setBodyRef = useCallback((node) => { bodyRef.current = node; setBodyEl(node); }, []);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
   const historyEntry = useRef(null);
@@ -63,10 +67,12 @@ export default function SettingsSheet({ open, onClose, title, testId, opener, fa
     setMore(b.scrollHeight - b.scrollTop - b.clientHeight > 1);
   }, []);
 
+  useEffect(() => { if (!open) setDragY(0); }, [open]);
+
   useEffect(() => {
-    if (!open) { setDragY(0); return undefined; }
+    if (!open || !bodyEl) { setMore(false); return undefined; }
     measure();
-    const b = bodyRef.current;
+    const b = bodyEl;
     let ro;
     if (b && typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(measure);
@@ -78,7 +84,7 @@ export default function SettingsSheet({ open, onClose, title, testId, opener, fa
       if (ro) ro.disconnect();
       window.removeEventListener('resize', measure);
     };
-  }, [open, measure]);
+  }, [open, bodyEl, measure]);
 
   // Drag down on the handle only, so it never fights scrolling the body.
   const onHandleDown = (e) => {
@@ -156,7 +162,7 @@ export default function SettingsSheet({ open, onClose, title, testId, opener, fa
           <DialogPrimitive.Description className="sr-only">{`${title} settings. Changes save by themselves.`}</DialogPrimitive.Description>
           <div className="relative flex min-h-0 flex-1 flex-col">
             <div
-              ref={bodyRef}
+              ref={setBodyRef}
               data-testid={`${testId}-body`}
               onScroll={measure}
               className="min-h-0 flex-1 overflow-y-auto px-4 pb-6"

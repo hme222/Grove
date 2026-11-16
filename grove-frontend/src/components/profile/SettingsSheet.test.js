@@ -223,3 +223,41 @@ test('a bottom fade shows only while the body can still scroll down', async () =
   expect(el('home-sheet-fade')).toBeNull();
   done();
 });
+
+test('the bottom fade shows on open, with no scroll, when the content overflows', async () => {
+  const isBody = (node) => node.getAttribute && node.getAttribute('data-testid') === 'home-sheet-body';
+  const sh = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollHeight');
+  const ch = Object.getOwnPropertyDescriptor(Element.prototype, 'clientHeight');
+  Object.defineProperty(Element.prototype, 'scrollHeight', { configurable: true, get() { return isBody(this) ? 600 : 0; } });
+  Object.defineProperty(Element.prototype, 'clientHeight', { configurable: true, get() { return isBody(this) ? 300 : 0; } });
+  try {
+    const { done } = await mount();
+    await openIt();
+    expect(el('home-sheet-fade')).not.toBeNull();
+    done();
+  } finally {
+    Object.defineProperty(Element.prototype, 'scrollHeight', sh);
+    Object.defineProperty(Element.prototype, 'clientHeight', ch);
+  }
+});
+
+test('a ResizeObserver watches the body once the sheet has mounted, so growing content updates the fade', async () => {
+  const observed = [];
+  let callback;
+  const Original = global.ResizeObserver;
+  global.ResizeObserver = class { constructor(cb) { callback = cb; } observe(n) { observed.push(n); } disconnect() {} };
+  try {
+    const { done } = await mount();
+    await openIt();
+    const body = el('home-sheet-body');
+    expect(observed).toContain(body);
+    expect(el('home-sheet-fade')).toBeNull();
+    Object.defineProperty(body, 'scrollHeight', { configurable: true, value: 600 });
+    Object.defineProperty(body, 'clientHeight', { configurable: true, value: 300 });
+    await act(async () => { callback([]); });
+    expect(el('home-sheet-fade')).not.toBeNull();
+    done();
+  } finally {
+    global.ResizeObserver = Original;
+  }
+});
