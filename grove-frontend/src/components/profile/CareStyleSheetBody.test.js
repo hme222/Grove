@@ -59,13 +59,36 @@ test('a failed care text save shows Try again under the toggle', async () => {
   expect(q('care-text-error').textContent).toContain('Try again');
 });
 
-test('the daily tip switch saves locally first and never shows an error', async () => {
-  userAPI.updateMe.mockRejectedValue(new Error('offline'));
+test('the daily tip switch saves on the device and the server', async () => {
   await mount();
   await act(async () => { q('profile-daily-trivia-toggle').click(); });
   expect(localStorage.getItem('grove_show_daily_trivia')).toBe('true');
-  expect(mockUpdateUser).toHaveBeenCalledWith({ show_daily_trivia: true });
-  expect(container.querySelector('[role="alert"]')).toBeNull();
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ show_daily_trivia: true });
+  expect(mockUser.show_daily_trivia).toBe(true);
+  expect(q('daily-trivia-error')).toBeNull();
+});
+
+test('a failed daily tip save puts the switch and the device copy back and shows Try again', async () => {
+  userAPI.updateMe.mockRejectedValue(new Error('offline'));
+  await mount();
+  await act(async () => { q('profile-daily-trivia-toggle').click(); });
+  expect(localStorage.getItem('grove_show_daily_trivia')).toBe('false');
+  expect(mockUser.show_daily_trivia).toBe(false);
+  expect(q('profile-daily-trivia-toggle').getAttribute('aria-checked')).toBe('false');
+  expect(q('daily-trivia-error').textContent).toContain('Try again');
+  expect(q('profile-daily-trivia-toggle').getAttribute('aria-describedby')).toContain('daily-trivia-error');
+});
+
+test('Try again on the daily tip saves it and returns focus to the switch', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await mount();
+  await act(async () => { q('profile-daily-trivia-toggle').click(); });
+  await act(async () => { q('daily-trivia-error').querySelector('button').click(); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
+  expect(q('daily-trivia-error')).toBeNull();
+  expect(mockUser.show_daily_trivia).toBe(true);
+  expect(localStorage.getItem('grove_show_daily_trivia')).toBe('true');
+  expect(document.activeElement).toBe(q('profile-daily-trivia-toggle'));
 });
 
 test('focus returns to the manual-entry switch after a successful retry', async () => {

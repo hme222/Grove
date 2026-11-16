@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import CareTextToggle from '../CareTextToggle';
 import SwitchRow from '../SwitchRow';
 import SaveError from './SaveError';
@@ -16,7 +16,8 @@ export default function CareStyleSheetBody() {
   const textRef = useRef(null);
   const manual = useInstantSave();
   const manualRef = useRef(null);
-  const [savingTrivia, setSavingTrivia] = useState(false);
+  const trivia = useInstantSave();
+  const triviaRef = useRef(null);
 
   const manualOn = !!user?.prefer_manual_plant_entry;
   const toggleManual = () => {
@@ -29,20 +30,16 @@ export default function CareStyleSheetBody() {
     );
   };
 
-  // Local first: the choice is kept on this device, and the server copy catches up on the next save.
-  const toggleTrivia = async () => {
-    if (savingTrivia) return;
-    const next = !showDailyTrivia(user);
-    setSavingTrivia(true);
-    writeTriviaFlag(next);
-    updateUser({ show_daily_trivia: next });
-    try {
-      await userAPI.updateMe({ show_daily_trivia: next });
-    } catch {
-      // Kept on this device already.
-    } finally {
-      setSavingTrivia(false);
-    }
+  // The flag is mirrored on this device (see dailyTrivia.js), so a failed save puts both copies back.
+  const toggleTrivia = () => {
+    const previous = showDailyTrivia(user);
+    const next = !previous;
+    const set = (on) => { writeTriviaFlag(on); updateUser({ show_daily_trivia: on }); };
+    trivia.run(
+      () => set(next),
+      () => userAPI.updateMe({ show_daily_trivia: next }),
+      () => set(previous),
+    );
   };
 
   return (
@@ -62,10 +59,13 @@ export default function CareStyleSheetBody() {
           label="Show a daily plant tip on Today"
           help="One short plant fact a day. Off unless you want it."
           checked={showDailyTrivia(user)}
-          disabled={savingTrivia}
+          disabled={trivia.busy}
           onChange={toggleTrivia}
           testId="profile-daily-trivia-toggle"
+          describedBy={trivia.error ? 'daily-trivia-error' : undefined}
+          buttonRef={triviaRef}
         />
+        <SaveError id="daily-trivia-error" error={trivia.error} onRetry={trivia.retry} testId="daily-trivia-error" focusAfter={triviaRef} />
       </div>
       <div className="border-t-hairline border-grove-moss pt-4">
         <SwitchRow
