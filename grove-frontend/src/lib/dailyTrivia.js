@@ -1,6 +1,6 @@
-// The daily plant tip on Today is off unless the person turns it on. The flag lives on the user (`show_daily_trivia`)
-// and is mirrored in localStorage, because the backend's user update does not store the field yet and a refetch of
-// the user would otherwise drop it.
+// The daily plant tip on Today is off unless the person turns it on. The flag lives on the user (`show_daily_trivia`,
+// stored by PATCH /users/me) and is mirrored in localStorage. The server copy wins when it is set; the local copy
+// covers people who chose before the server stored the field, whose choice was only ever kept on their device.
 const KEY = 'grove_show_daily_trivia';
 
 export function readTriviaFlag() {
