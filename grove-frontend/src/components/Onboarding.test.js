@@ -311,7 +311,7 @@ test('a zip that is not found says so, blocks Continue, and never shows a zone',
   await mount();
   await type(q('zone-zip'), '00000');
   await flush();
-  expect(q('zone-missing').textContent).toContain('Zip not found');
+  expect(q('zone-missing').textContent).toContain('ZIP code not found');
   expect(q('zone-found')).toBeNull();
   expect(q('zone-continue').getAttribute('aria-disabled')).toBe('true');
   expect(q('zone-zip').getAttribute('aria-invalid')).toBe('true');
@@ -717,7 +717,7 @@ test('Continue on the zip step stays focusable, says why, and does nothing until
   expect(btn.disabled).toBe(false);
   expect(btn.getAttribute('aria-disabled')).toBe('true');
   const hint = container.querySelector(`#${btn.getAttribute('aria-describedby')}`);
-  expect(hint.textContent).toBe('Enter a zip or choose Skip for now');
+  expect(hint.textContent).toBe('Enter a ZIP code or choose Skip for now');
   await click(btn);
   expect(userAPI.updateMe).not.toHaveBeenCalled();
   await type(q('zone-zip'), '10019');

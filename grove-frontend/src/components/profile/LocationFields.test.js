@@ -74,7 +74,7 @@ test('a found code saves once after 600ms and shows the saved line with Undo', a
   await flush();
   expect(zoneAPI.lookup).toHaveBeenCalledWith('US', '10001');
   expect(userAPI.updateMe).toHaveBeenCalledTimes(1);
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'north' });
   expect(q('location-saved').textContent).toContain('✓ Saved · USDA zone 7b');
   expect(q('location-saved').querySelector('button').textContent).toBe('Undo');
 });
@@ -97,16 +97,16 @@ test('the saved line reads the zone from the server, not the lookup', async () =
   expect(q('location-saved').textContent).toContain('USDA zone 7b');
 });
 
-test('Undo puts back the previous country, code and zone, announces it and keeps focus on the field', async () => {
+test('Undo of a derived zone sends the previous code alone so the server re-derives it, announces and keeps focus', async () => {
   await mount();
   await type(q('location-code'), '10001');
   await advance(600);
   await act(async () => { q('location-saved').querySelector('button').click(); });
   await advance(1);
   expect(userAPI.updateMe).toHaveBeenCalledTimes(2);
-  expect(userAPI.updateMe).toHaveBeenLastCalledWith(expect.objectContaining({
-    location_country: 'US', location_postcode: '02139', hardiness_zone: '6b',
-  }));
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({
+    location_country: 'US', location_postcode: '02139', hemisphere: 'north',
+  });
   expect(q('location-code').value).toBe('02139');
   expect(q('location-saved')).toBeNull();
   expect(q('location-status').getAttribute('role')).toBe('status');
@@ -152,7 +152,7 @@ test('out of order: only the latest typed code is saved', async () => {
   await act(async () => { a.resolve(found('9a')); });
   await flush();
   expect(userAPI.updateMe).toHaveBeenCalledTimes(1);
-  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '22222' });
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '22222', hemisphere: 'north' });
 });
 
 test('a failed save shows Try again and retrying saves', async () => {
@@ -189,5 +189,122 @@ test('Enter it instead: empty shows an error, filled saves the zone with Undo', 
   expect(q('location-saved').textContent).toContain('✓ Saved · USDA zone 7a');
   await act(async () => { q('location-saved').querySelector('button').click(); });
   await flush();
-  expect(userAPI.updateMe).toHaveBeenLastCalledWith(expect.objectContaining({ hardiness_zone: '6b' }));
+  // The previous zone was derived from 02139, so Undo re-derives it rather than marking it manual.
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({ location_country: 'US', location_postcode: '02139', hemisphere: 'north' });
+});
+
+test('Undo of a manual zone sends the previous zone', async () => {
+  mockUser = { ...mockUser, hardiness_zone: '8a', hardiness_zone_source: 'manual' };
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  await act(async () => { q('location-saved').querySelector('button').click(); });
+  await advance(1);
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({
+    location_country: 'US', location_postcode: '02139', hardiness_zone: '8a', hardiness_zone_system: 'USDA', hemisphere: 'north',
+  });
+});
+
+test('Undo with no previous code sends the previous zone too', async () => {
+  mockUser = { hemisphere: 'north' };
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  await act(async () => { q('location-saved').querySelector('button').click(); });
+  await advance(1);
+  expect(userAPI.updateMe).toHaveBeenLastCalledWith({
+    location_country: '', location_postcode: '', hardiness_zone: '', hemisphere: 'north',
+  });
+});
+
+test('a save keeps the hemisphere the person already has', async () => {
+  mockUser = { ...mockUser, hemisphere: 'south' };
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'south' });
+});
+
+test('with no hemisphere set, a save lets the server derive it', async () => {
+  mockUser = { location_country: 'US', location_postcode: '02139' };
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001' });
+});
+
+test('closing the sheet during the debounce still saves', async () => {
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(300);
+  act(() => root.unmount());
+  await flush();
+  await flush();
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'north' });
+  root = createRoot(container);
+});
+
+test('closing the sheet during a lookup still saves', async () => {
+  const a = deferred();
+  zoneAPI.lookup.mockReturnValue(a.promise);
+  await mount();
+  await type(q('location-code'), '10001');
+  await blur(q('location-code'));
+  act(() => root.unmount());
+  await act(async () => { a.resolve(found('7b')); });
+  await flush();
+  expect(userAPI.updateMe).toHaveBeenCalledWith({ location_country: 'US', location_postcode: '10001', hemisphere: 'north' });
+  root = createRoot(container);
+});
+
+test('editing the field while a lookup runs drops the old lookup', async () => {
+  const a = deferred();
+  zoneAPI.lookup.mockReturnValueOnce(a.promise);
+  await mount();
+  await type(q('location-code'), '11111');
+  await advance(600);
+  expect(q('location-status').textContent).toContain('Looking up…');
+  await type(q('location-code'), '1111');
+  await act(async () => { a.resolve(found('9a')); });
+  await flush();
+  expect(userAPI.updateMe).not.toHaveBeenCalled();
+});
+
+test('a failed save keeps showing the old saved zone, never the unsaved one', async () => {
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  expect(q('location-error').textContent).toContain('Try again');
+  expect(q('location-saved')).toBeNull();
+  expect(q('zone-source-label').textContent).toContain('USDA zone 6b');
+  expect(q('zone-source-label').textContent).not.toContain('7b');
+  expect(q('location-code').value).toBe('10001');
+});
+
+test('a failed Undo brings the saved line back and focuses Undo', async () => {
+  await mount();
+  await type(q('location-code'), '10001');
+  await advance(600);
+  userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
+  await act(async () => { q('location-saved').querySelector('button').click(); });
+  await advance(1);
+  const undoButton = q('location-saved').querySelector('button');
+  expect(q('location-undo-error').textContent).toContain('Try again');
+  expect(document.activeElement).toBe(undoButton);
+  expect(undoButton.getAttribute('aria-describedby')).toBe('location-undo-error');
+});
+
+test('retrying a failed lookup that ends not-found keeps focus on the field', async () => {
+  zoneAPI.lookup.mockRejectedValueOnce(new Error('offline'))
+    .mockResolvedValueOnce({ data: { zone: null } });
+  await mount();
+  await type(q('location-code'), '00000');
+  await advance(600);
+  expect(q('location-lookup-error').textContent).toContain('Try again');
+  await act(async () => { q('location-lookup-error').querySelector('button').click(); });
+  await advance(1);
+  expect(q('location-not-found')).not.toBeNull();
+  expect(document.activeElement).toBe(q('location-code'));
+  expect(userAPI.updateMe).not.toHaveBeenCalled();
 });

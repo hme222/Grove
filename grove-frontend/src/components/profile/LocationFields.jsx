@@ -27,6 +27,7 @@ const linkButtonClass = 'inline-flex min-h-touch items-center rounded-control fo
 
 // Stored data uses "UK"; the server also accepts "GB".
 const normalizeCountry = (c) => (['UK', 'GB', 'UNITED KINGDOM', 'GREAT BRITAIN'].includes(String(c || '').toUpperCase()) ? 'UK' : 'US');
+const DERIVED_SOURCES = ['zip-prefix', 'state-default', 'postcode-area'];
 const zoneName = (zone, system) => `${system === 'RHS' ? 'RHS' : 'USDA'} zone ${zone}`;
 const snapshot = (u) => ({
   country: u?.location_country || '',
@@ -59,11 +60,21 @@ export default function LocationFields() {
   const seq = useRef(0); // the latest code typed; older lookups are ignored
   const timer = useRef(null);
   const inflight = useRef(Promise.resolve());
+  const pending = useRef(null); // the { ctry, value } a running debounce will save
   const codeRef = useRef(null);
   const manualRef = useRef(null);
+  const undoRef = useRef(null);
+  const undoFocus = useRef(null); // the field focus returns to after a retried Undo
   const openedManual = useRef(false);
+  const userRef = useRef(user);
+  userRef.current = user;
+  const attemptRef = useRef(null);
 
-  useEffect(() => () => { clearTimeout(timer.current); seq.current += 1; }, []);
+  // Closing the sheet mid-typing must not throw the code away: save a pending debounce now, and leave seq alone
+  // so a lookup already running still saves. useInstantSave stops setting state once unmounted.
+  useEffect(() => () => {
+    if (timer.current && pending.current) attemptRef.current(pending.current.ctry, pending.current.value);
+  }, []);
 
   useEffect(() => {
     if (manualOpen && openedManual.current && manualRef.current) manualRef.current.focus();
@@ -89,9 +100,13 @@ export default function LocationFields() {
     setSaved({ text: zone ? `✓ Saved · ${zoneName(zone, data.hardiness_zone_system)}` : '✓ Saved', prev, focus });
   };
 
+  // Keep the hemisphere the person already has; when none is set, the server derives it from the ZIP code.
+  const withHemisphere = (patch, hemisphere) => (hemisphere ? { ...patch, hemisphere } : patch);
+
   const attempt = async (ctry, raw) => {
     clearTimeout(timer.current);
     timer.current = null;
+    pending.current = null;
     const value = raw.trim();
     const mine = ++seq.current;
     setLookupError('');
@@ -112,21 +127,34 @@ export default function LocationFields() {
     setStatus('idle');
     await inflight.current;
     if (mine !== seq.current) return false;
-    const prev = { ...server.current };
+    const hemisphere = userRef.current?.hemisphere || '';
+    const prev = { ...server.current, hemisphere };
     return queue(locationSave.run(
       () => setSaved(null),
       async () => {
-        const res = await userAPI.updateMe({ location_country: ctry, location_postcode: value });
+        const res = await userAPI.updateMe(withHemisphere({ location_country: ctry, location_postcode: value }, hemisphere));
         applyServer(res?.data, { country: ctry, postcode: value });
         showSaved(res?.data, prev, codeRef);
         await refresh();
       },
+      // Controller ruling: the text field keeps what the person typed. Nothing to undo locally, because the saved
+      // and current-zone lines only change after a successful save, so they still show the old saved value.
       () => {},
     ));
+  };
+  attemptRef.current = attempt;
+
+  const retryLookup = async () => {
+    const ok = await attempt(country, code);
+    // The retry may end in not-found, which removes this Try again; keep focus on the field either way.
+    setTimeout(() => { if (codeRef.current) codeRef.current.focus(); }, 0);
+    return ok;
   };
 
   const schedule = (ctry, value) => {
     clearTimeout(timer.current);
+    seq.current += 1; // a lookup still running is for a code no longer in the field
+    pending.current = { ctry, value };
     setStatus('idle');
     setLookupError('');
     timer.current = setTimeout(() => { attempt(ctry, value); }, DEBOUNCE_MS);
@@ -144,17 +172,19 @@ export default function LocationFields() {
     if (!saved) return;
     const { prev, focus } = saved;
     const shown = saved;
+    undoFocus.current = focus.current;
     undoSave.run(
       () => setSaved(null),
       async () => {
-        const patch = {
-          location_country: prev.country,
-          location_postcode: prev.postcode,
-          hardiness_zone: prev.zone,
-        };
-        if (prev.system) patch.hardiness_zone_system = prev.system;
-        if (prev.hemisphere) patch.hemisphere = prev.hemisphere;
-        const res = await userAPI.updateMe(patch);
+        // The server marks any zone it is sent as manual. A zone it derived is restored by sending back the code
+        // alone, so it derives the same zone with the right source.
+        const derived = DERIVED_SOURCES.includes(prev.source) && prev.postcode;
+        const patch = { location_country: prev.country, location_postcode: prev.postcode };
+        if (!derived) {
+          patch.hardiness_zone = prev.zone;
+          if (prev.system) patch.hardiness_zone_system = prev.system;
+        }
+        const res = await userAPI.updateMe(withHemisphere(patch, prev.hemisphere));
         clearTimeout(timer.current);
         timer.current = null;
         seq.current += 1;
@@ -170,7 +200,11 @@ export default function LocationFields() {
         setTimeout(() => { if (focus.current) focus.current.focus(); }, 0);
         await refresh();
       },
-      () => setSaved(shown),
+      () => {
+        setSaved(shown);
+        // The Undo button unmounted when it was pressed; put focus back on it once it returns.
+        setTimeout(() => { if (undoRef.current) undoRef.current.focus(); }, 0);
+      },
     );
   };
 
@@ -179,7 +213,7 @@ export default function LocationFields() {
     if (!value) { setManualError(ZONE_EMPTY); return; }
     setManualError('');
     if (value === server.current.zone) return;
-    const prev = { ...server.current };
+    const prev = { ...server.current, hemisphere: userRef.current?.hemisphere || '' };
     setAnnounce('');
     queue(zoneSave.run(
       () => setSaved(null),
@@ -237,7 +271,7 @@ export default function LocationFields() {
           data-testid="location-code"
           className={inputClass}
         />
-        <SaveError id="location-lookup-error" testId="location-lookup-error" error={lookupError} onRetry={() => attempt(country, code)} focusAfter={codeRef} />
+        <SaveError id="location-lookup-error" testId="location-lookup-error" error={lookupError} onRetry={retryLookup} />
         <SaveError id="location-error" testId="location-error" error={locationSave.error} onRetry={locationSave.retry} focusAfter={codeRef} />
       </div>
 
@@ -247,12 +281,21 @@ export default function LocationFields() {
         {saved && (
           <p data-testid="location-saved" className="flex flex-wrap items-center gap-x-3">
             <span>{saved.text}</span>
-            <button type="button" onClick={undo} disabled={undoSave.busy} className={linkButtonClass}>Undo</button>
+            <button
+              type="button"
+              ref={undoRef}
+              onClick={undo}
+              disabled={undoSave.busy}
+              aria-describedby={undoSave.error ? 'location-undo-error' : undefined}
+              className={linkButtonClass}
+            >
+              Undo
+            </button>
           </p>
         )}
         {announce && <p data-testid="location-announce">{announce}</p>}
       </div>
-      <SaveError id="location-undo-error" testId="location-undo-error" error={undoSave.error} onRetry={undoSave.retry} />
+      <SaveError id="location-undo-error" testId="location-undo-error" error={undoSave.error} onRetry={undoSave.retry} focusAfter={undoFocus} />
 
       {current.zone && !saved && (
         <p className="font-ui text-sm text-grove-sage" data-testid="zone-source-label">
