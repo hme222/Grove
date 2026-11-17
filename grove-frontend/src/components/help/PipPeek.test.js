@@ -170,3 +170,10 @@ test('if turning the peeks off fails, it says so and stays', async () => {
   expect(container.querySelector('[role="alert"]').textContent).toContain('turn it off in Profile');
   expect(el('pip-bubble')).not.toBeNull();
 });
+
+test('while Pip is shown the page reserves his height at the bottom, and gives it back when he goes', async () => {
+  await mount();
+  expect(document.documentElement.style.getPropertyValue('--pip-reserve')).toMatch(/px$/);
+  await act(async () => { el('pip-not-now').click(); });
+  expect(document.documentElement.style.getPropertyValue('--pip-reserve')).toBe('');
+});

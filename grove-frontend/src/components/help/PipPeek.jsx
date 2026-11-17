@@ -38,6 +38,7 @@ export default function PipPeek() {
   const swiped = useRef(false);
   const startX = useRef(null);
   const layer = useRef(null);
+  const head = useRef(null);
 
   // Ask for the due plants now and then (not on every tab change).
   useEffect(() => {
@@ -102,6 +103,18 @@ export default function PipPeek() {
     return () => observer.disconnect();
   }, [shown]);
 
+  // Reserve his height at the bottom of the page while he is there (index.css .app-shell), so he never covers the
+  // last card. Only his own height: the bubble is brief and sits higher.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!shown || !head.current) return undefined;
+    const reserve = () => { if (head.current) root.style.setProperty('--pip-reserve', `${Math.ceil(head.current.getBoundingClientRect().height)}px`); };
+    reserve();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(reserve);
+    if (observer) observer.observe(head.current);
+    return () => { if (observer) observer.disconnect(); root.style.removeProperty('--pip-reserve'); };
+  }, [shown]);
+
   // Escape hides him when focus is on Pip or the bubble.
   useEffect(() => {
     const onKey = (e) => {
@@ -161,6 +174,7 @@ export default function PipPeek() {
         type="button"
         aria-label="Pip. Open help"
         data-testid="pip-head"
+        ref={head}
         onClick={openHelp}
         onPointerDown={(e) => { startX.current = e.clientX; swiped.current = false; }}
         onPointerUp={(e) => {

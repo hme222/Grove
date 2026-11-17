@@ -30,6 +30,7 @@ export default function LessonPage() {
   const [resume, setResume] = useState({ ready: false, index: 0 });
   const [pickedWindow, setPickedWindow] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
+  const [loggedPlant, setLoggedPlant] = useState(null); // { plantName, actions, photo } for the first-care moment
   // Set once the save has gone through: the lesson to thank them for and the next one to offer.
   const [finished, setFinished] = useState(null);
   const [error, setError] = useState('');
@@ -87,7 +88,8 @@ export default function LessonPage() {
     }
   };
 
-  const onSoilLogged = (meta) => {
+  const onSoilLogged = (meta, logged) => {
+    if (logged) setLoggedPlant(logged);
     if (meta?.first_care_pending) setCelebrate(true);
     else finish();
   };
@@ -135,6 +137,7 @@ export default function LessonPage() {
       />
       <FirstCareCelebration
         open={celebrate}
+        logged={loggedPlant}
         onClose={() => {
           setCelebrate(false);
           // The celebration has played, so the nook offer may follow.

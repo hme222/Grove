@@ -134,7 +134,7 @@ describe('when the nook is off', () => {
 describe('the picture and what it says in words', () => {
   test('describes the nook for screen readers, with Pip\'s place', async () => {
     await mount();
-    expect(q('nook-canvas').getAttribute('aria-label')).toBe("Pip’s nook, bare. Pip is on the sill.");
+    expect(q('nook-canvas').getAttribute('aria-label')).toBe("Pip’s nook, bare. Pip is on the sill. Plant p1 is on the table.");
   });
 
   test('writes down the level, the week, what is next, and what is unlocked', async () => {
@@ -143,6 +143,13 @@ describe('the picture and what it says in words', () => {
     expect(q('nook-rhythm')).toBeNull();
     expect(q('nook-summary').textContent).not.toMatch(/days? this week/);
     expect(q('nook-next').textContent).toBe('Next in your nook: the shelf.');
+    // A new nook names the person's own plant first instead of saying nothing is there.
+    expect(q('nook-items').textContent).toBe('In the nook: Plant p1 on the table.');
+  });
+
+  test('with no plant in the room yet, it says nothing is unlocked', async () => {
+    nookAPI.state.mockResolvedValue({ data: STATE({ hero: null, plants: [] }) });
+    await mount();
     expect(q('nook-items').textContent).toBe('Nothing is unlocked yet.');
   });
 
@@ -164,7 +171,7 @@ describe('the picture and what it says in words', () => {
       }),
     });
     await mount();
-    expect(q('nook-items').textContent).toBe('In the nook: a shelf, a rug, a lamp, a hanging plant, a botanical print.');
+    expect(q('nook-items').textContent).toBe('In the nook: Plant p1 on the table, a shelf, a rug, a lamp, a hanging plant, a botanical print.');
     expect(q('nook-next').textContent).toBe('Everything is unlocked.');
     expect(q('nook-canvas').getAttribute('aria-label')).toContain('Pip is on the shelf');
   });

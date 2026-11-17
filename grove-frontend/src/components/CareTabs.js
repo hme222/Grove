@@ -22,7 +22,9 @@ const PIP_TAB = { path: '/nook', label: 'Pip', testid: 'care-pip-tab' };
 export function CareTabs() {
   const location = useLocation();
   const { user } = useAuth();
-  const showPip = !!(user?.nook_enabled || user?.nook_offered_at);
+  // On /nook itself the Pip tab always shows, so the strip there always has a current tab (someone can arrive from
+  // Pip's note before answering the offer).
+  const showPip = !!(user?.nook_enabled || user?.nook_offered_at) || location.pathname.startsWith('/nook');
   const tabs = showPip ? [...SUBTABS, PIP_TAB] : SUBTABS;
   return (
     <nav aria-label="Care views" className={`mt-1 ${TAB_STRIP_CLASS}`} data-testid="care-subtabs">

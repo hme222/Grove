@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { nookAPI } from '../lib/api';
-import PipPanel from './PipPanel';
+import NookCanvas from './NookCanvas';
 import { PAPER_BUTTON, PAPER_BUTTON_QUIET, PAPER_ERROR } from './paperStyles';
 
 // The one-time offer of Pip's nook. Either answer is recorded, so it is never shown again.
@@ -14,6 +14,16 @@ export default function NookOfferCard({ onDone }) {
   const [error, setError] = useState('');
   const busy = useRef(false);
   const headingRef = useRef(null);
+  // The room itself, so "Pip has a room" is a picture to say yes to: Pip on the sill and a plant on the table, the
+  // plant they just cared for standing in for theirs. Built here because there is no nook state before they answer.
+  const room = useMemo(() => ({
+    unlocked: [],
+    pip: { form: 'seed', location: 'sill', mood: 'curious' },
+    hero: { group: 'generic', condition: 'fine' },
+    readiness: null,
+    shelfPlants: [],
+    window: null,
+  }), []);
 
   const choose = async (enabled) => {
     // A double tap must not save twice.
@@ -45,7 +55,7 @@ export default function NookOfferCard({ onDone }) {
         onInteractOutside={(e) => e.preventDefault()}
       >
         <div className="flex justify-center mb-3">
-          <PipPanel form="seed" mood="curious" animate label="Pip, a small pixel plant in a pot" />
+          <NookCanvas view={room} scale={2} label="Pip’s room: Pip on the windowsill and a plant on the table" className="overflow-hidden rounded-inset" />
         </div>
         <DialogPrimitive.Title asChild>
           <h1 ref={headingRef} tabIndex={-1} className="mb-2 font-plant text-2xl text-grove-root focus:outline-none">

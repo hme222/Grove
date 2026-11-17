@@ -142,7 +142,7 @@ function ProtectedShell() {
   return (
     <RequireUser>
       <HelpSheetProvider>
-        <div className="min-h-screen bg-grove-forest pb-nav">
+        <div className="app-shell min-h-screen bg-grove-forest">
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-tip focus:flex focus:min-h-touch focus:items-center focus:rounded-control focus:bg-grove-lime focus:px-4 focus:font-ui focus:text-grove-root"

@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import NotificationPreferencesPage from './NotificationPreferencesPage';
+import NotificationPreferencesPage, { visibleKeys } from './NotificationPreferencesPage';
 import { notificationAPI } from '../lib/api';
 
 jest.mock('../lib/api', () => ({
@@ -9,6 +9,8 @@ jest.mock('../lib/api', () => ({
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { virtual: true });
+let mockUser = { tier: 'free' };
+jest.mock('../contexts/AuthContext', () => ({ useAuth: () => ({ user: mockUser }) }));
 jest.mock('../components/PageHeader', () => ({ PageHeader: ({ title }) => <h1>{title}</h1> }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -73,10 +75,37 @@ test('streak, bloom hour and challenge pushes are not offered to a new owner', (
   expect(container.textContent.toLowerCase()).not.toContain('streak');
 });
 
-test('care reminders, swap messages and email stay on the list', () => {
-  ['push_care_due', 'push_swap_message', 'email_digest', 'email_swap_match'].forEach((key) => {
+test('care reminders and the daily digest stay on the list', () => {
+  ['push_care_due', 'push_care_overdue', 'email_digest'].forEach((key) => {
     expect(q(`pref-row-${key}`)).not.toBeNull();
   });
+});
+
+test('with community off, swap, reaction and sitter rows are not listed, even ones on by default', () => {
+  ['push_swap_match', 'push_swap_message', 'push_kudos_received', 'push_sitter_logged', 'email_swap_match'].forEach((key) => {
+    expect(q(`pref-row-${key}`)).toBeNull();
+  });
+});
+
+test('bouquet reminders are listed only for Pro and florist accounts', async () => {
+  expect(q('pref-row-push_bouquet_reminder')).toBeNull();
+  act(() => root.unmount());
+  mockUser = { tier: 'florist_pro' };
+  root = createRoot(container);
+  await act(async () => { root.render(<NotificationPreferencesPage />); });
+  expect(q('pref-row-push_bouquet_reminder')).not.toBeNull();
+  mockUser = { tier: 'free' };
+});
+
+test('the alerts group says what they are: in-app alerts', () => {
+  expect(q('pref-group-push-notifications').textContent).toContain('In-app alerts');
+  expect(container.textContent).not.toContain('Push notifications');
+});
+
+test('visibleKeys lists a community row once community is on', () => {
+  const keys = [{ key: 'push_swap_match', feature: 'community' }, { key: 'push_care_due' }];
+  expect(visibleKeys(keys, {}, { community: false }).map((k) => k.key)).toEqual(['push_care_due']);
+  expect(visibleKeys(keys, {}, { community: true }).map((k) => k.key)).toEqual(['push_swap_match', 'push_care_due']);
 });
 
 test('someone who already turned bloom hour on can still see it to turn it off', async () => {

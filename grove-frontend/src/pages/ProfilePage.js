@@ -102,7 +102,7 @@ export default function ProfilePage() {
         <div className="flex flex-col gap-2">
           <button type="button" onClick={() => navigate('/help')} data-testid="profile-help-button" className={ROW}>
             <HelpCircle className="h-4 w-4" aria-hidden="true" />
-            Help and tutorial
+            Help &amp; tutorial
             <ChevronRight className="ml-auto h-4 w-4 text-grove-sage" aria-hidden="true" />
           </button>
           <button

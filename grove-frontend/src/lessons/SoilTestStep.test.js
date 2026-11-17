@@ -102,7 +102,52 @@ describe('SoilTestStep with plants', () => {
     });
     expect(q('soil-step-saved').textContent).toContain('Waiting is a good call.');
     await click(q('soil-step-continue'));
-    expect(onLogged).toHaveBeenCalledWith({ soil_coaching: 'Waiting is a good call.', first_care_pending: true });
+    // The plant goes with it, so the first-care moment can be about this plant.
+    expect(onLogged).toHaveBeenCalledWith(
+      { soil_coaching: 'Waiting is a good call.', first_care_pending: true },
+      { plantName: 'Monty', actions: ['soil_check'], photo: null },
+    );
+  });
+
+  test('after Water it, one tap logs the watering so Today is up to date', async () => {
+    careAPI.createLog.mockResolvedValueOnce({ data: { _meta: { soil_coaching: 'Dry soil is ready for a drink.' } } }).mockResolvedValueOnce({ data: {} });
+    await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
+    await click(q('soil-outcome-dry'));
+    await click(q('soil-decision-water'));
+    await click(q('soil-step-submit'));
+    await flush();
+    expect(q('soil-step-water-next').textContent).toContain('log it here so Today knows');
+    await click(q('soil-step-log-water'));
+    await flush();
+    expect(careAPI.createLog).toHaveBeenLastCalledWith('p1', { actions: ['water'] });
+    expect(q('soil-step-watered').textContent).toContain('Watering logged');
+    expect(q('soil-step-log-water')).toBeNull();
+  });
+
+  test('a failed watering log says why and can be tried again', async () => {
+    careAPI.createLog.mockResolvedValueOnce({ data: { _meta: {} } }).mockRejectedValueOnce(new Error('Network Error')).mockResolvedValueOnce({ data: {} });
+    await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
+    await click(q('soil-outcome-dry'));
+    await click(q('soil-decision-water'));
+    await click(q('soil-step-submit'));
+    await flush();
+    await click(q('soil-step-log-water'));
+    await flush();
+    expect(q('soil-step-water-error').textContent).toContain('Nothing was lost');
+    expect(q('soil-step-log-water').textContent).toContain('Try again');
+    await click(q('soil-step-log-water'));
+    await flush();
+    expect(q('soil-step-watered')).not.toBeNull();
+  });
+
+  test('after Wait, there is no watering prompt', async () => {
+    careAPI.createLog.mockResolvedValue({ data: { _meta: {} } });
+    await mount(<SoilTestStep hasPlant onLogged={() => {}} />);
+    await click(q('soil-outcome-damp'));
+    await click(q('soil-decision-wait'));
+    await click(q('soil-step-submit'));
+    await flush();
+    expect(q('soil-step-log-water')).toBeNull();
   });
 
   test('the decision is optional and is sent as null', async () => {

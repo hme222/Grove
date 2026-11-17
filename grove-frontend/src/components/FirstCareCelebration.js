@@ -3,7 +3,8 @@ import { Sparkles, X } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
-import { userAPI } from '../lib/api';
+import { userAPI, getFileUrl } from '../lib/api';
+import PhotoBand from './PhotoBand';
 import { success, impactLight } from '../lib/haptics';
 import { tint } from '../lib/color';
 import { shareInvite } from '../lib/share';
@@ -129,18 +130,26 @@ export default function FirstCareCelebration({ open, onClose, logged }) {
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-pill bg-grove-lime text-grove-root flex items-center justify-center mb-4">
-            <Sparkles className="h-7 w-7" />
-          </div>
+          {/* This plant's own photo when there is one, so the moment has its face; otherwise the sparkle. The other two
+              celebrations (first plant, lesson complete) keep their icons, so this is the one with a face. */}
+          {logged?.photo ? (
+            <div className="w-16 h-16 mb-4 overflow-hidden rounded-pill ring-2 ring-grove-lime" data-testid="first-care-celebration-photo">
+              <PhotoBand src={getFileUrl(logged.photo)} aspect="square" ratio="square" eager className="h-full w-full" testId="first-care-photo" />
+            </div>
+          ) : (
+            <div className="w-16 h-16 rounded-pill bg-grove-lime text-grove-root flex items-center justify-center mb-4">
+              <Sparkles className="h-7 w-7" />
+            </div>
+          )}
           <p className="font-ui text-xs font-medium text-grove-sprout">
             First care logged
           </p>
           <DialogPrimitive.Title className="font-plant text-grove-cream text-2xl mt-1">
-            Your grove remembers.
+            {logged?.plantName ? `${logged.plantName}’s first care` : 'Your grove remembers.'}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="font-ui text-sm text-grove-cream mt-2 leading-relaxed">
             {loggedSummary(logged)
-              ? `${loggedSummary(logged)} is the first entry in its timeline. Every drop, photo and note from now on joins it.`
+              ? `Your grove remembers. ${loggedSummary(logged)} is the first entry in its timeline. Every drop, photo and note from now on joins it.`
               : 'That’s the loop. Every drop, every photo, every small note from now on becomes part of your plant’s living timeline.'}
           </DialogPrimitive.Description>
           <button

@@ -3,6 +3,8 @@ import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
 import SwitchRow from '../components/SwitchRow';
 import { notificationAPI } from '../lib/api';
+import { useAuth } from '../contexts/AuthContext';
+import { COMMUNITY_ENABLED } from '../lib/features';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -15,40 +17,47 @@ export const CARE_CAP_CHOICES = [1, 2, 3];
 // Streak alerts are retired, so they are never listed. Their stored values stay on the account, untouched.
 // Bloom hour and grove challenge pushes are off by default and left out of the list for new owners.
 // Someone who already turned one on still sees it, so they can turn it off again.
-export function visibleKeys(keys, prefs) {
-  return keys.filter((item) => !item.quietByDefault || !!prefs?.[item.key]);
+// A row for a feature that is switched off for this person (`feature`) is not listed at all: it cannot send them
+// anything, and a new owner should not have to read about swaps or bouquets to find their care reminders.
+export function visibleKeys(keys, prefs, enabled = {}) {
+  return keys.filter((item) => (!item.feature || !!enabled[item.feature]) && (!item.quietByDefault || !!prefs?.[item.key]));
 }
 
 const TOGGLE_GROUPS = [
   {
-    title: 'Push notifications',
+    id: 'push-notifications', // stable test id; the title says what these are
+    title: 'In-app alerts',
     icon: Bell,
     desc: 'In-app alerts that land in your notification center.',
     keys: [
       { key: 'push_care_due', label: 'Daily care check', help: 'One message that bundles every plant due for a check.' },
       { key: 'push_care_overdue', label: 'Extra check-in nudges', help: 'A separate message when a plant has gone a while without a check. These plants are already in the daily care check.' },
-      { key: 'push_swap_match', label: 'Swap matches', help: 'When two groves align on plant wants.' },
-      { key: 'push_swap_message', label: 'Swap messages', help: 'New messages inside an active swap.' },
-      { key: 'push_kudos_received', label: 'Reactions on your posts', help: 'Leaf / light / cutting reactions from your grove.' },
-      { key: 'push_sitter_logged', label: 'Plant sitter activity', help: 'When a sitter logs care on your plants.' },
+      { key: 'push_swap_match', feature: 'community', label: 'Swap matches', help: 'When two groves align on plant wants.' },
+      { key: 'push_swap_message', feature: 'community', label: 'Swap messages', help: 'New messages inside an active swap.' },
+      { key: 'push_kudos_received', feature: 'community', label: 'Reactions on your posts', help: 'Leaf / light / cutting reactions from your grove.' },
+      { key: 'push_sitter_logged', feature: 'community', label: 'Plant sitter activity', help: 'When a sitter logs care on your plants.' },
       { key: 'push_bloom_hour', label: 'Bloom hour', help: 'Daily moments when your grove is blooming.', quietByDefault: true },
-      { key: 'push_bouquet_reminder', label: 'Bouquet reminders', help: 'Care actions for active arrangements.' },
+      { key: 'push_bouquet_reminder', feature: 'florist', label: 'Bouquet reminders', help: 'Care actions for active arrangements.' },
       { key: 'push_grove_challenge', label: 'Grove challenges', help: 'Community challenge progress in your groves.', quietByDefault: true },
     ],
   },
   {
+    id: 'email',
     title: 'Email',
     icon: Mail,
     desc: 'Daily digests and important events via email.',
     keys: [
       { key: 'email_digest', label: 'Daily digest', help: 'One calm summary email at 7am, only if you skipped the app.' },
-      { key: 'email_swap_match', label: 'Swap match emails', help: 'Immediate email when you match with another grower.' },
+      { key: 'email_swap_match', feature: 'community', label: 'Swap match emails', help: 'Immediate email when you match with another grower.' },
     ],
   },
 ];
 
 export default function NotificationPreferencesPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  // Same rule as Profile's florist row: bouquets are a Pro / florist feature.
+  const enabled = { community: COMMUNITY_ENABLED, florist: user?.tier === 'pro' || user?.tier === 'florist_pro' };
   const [prefs, setPrefs] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -121,10 +130,10 @@ export default function NotificationPreferencesPage() {
           <Loading label="Loading your settings" />
         ) : (
           <>
-            {TOGGLE_GROUPS.map(({ title, icon: Icon, desc, keys }) => (
+            {TOGGLE_GROUPS.filter(({ keys }) => visibleKeys(keys, prefs, enabled).length > 0).map(({ id, title, icon: Icon, desc, keys }) => (
               <div
-                key={title}
-                data-testid={`pref-group-${title.toLowerCase().replace(/\s+/g,'-')}`}
+                key={id}
+                data-testid={`pref-group-${id}`}
                 className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5"
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -133,7 +142,7 @@ export default function NotificationPreferencesPage() {
                 </div>
                 <p className="font-ui text-xs text-grove-cream mb-3">{desc}</p>
                 <div>
-                  {visibleKeys(keys, prefs).map((item) => <Toggle key={item.key} k={item.key} label={item.label} help={item.help} />)}
+                  {visibleKeys(keys, prefs, enabled).map((item) => <Toggle key={item.key} k={item.key} label={item.label} help={item.help} />)}
                 </div>
               </div>
             ))}
