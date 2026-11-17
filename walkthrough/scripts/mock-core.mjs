@@ -27,6 +27,15 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     unmocked: [],
   };
 
+  // Like the server's attach_species_toxicity: a plant carries its guide species' sourced pet safety (None = unknown).
+  const bySpeciesName = (p) => {
+    const names = [p.latin_name, p.common_name].map((n) => String(n || '').trim().toLowerCase()).filter(Boolean);
+    return SPECIES.find((sp) => (p.species_id && (sp.id === p.species_id || sp.slug === p.species_id))
+      || names.includes(String(sp.latin_name || '').toLowerCase()) || names.includes(String(sp.common_name || '').toLowerCase()));
+  };
+  const withSpecies = (p) => ({ ...p, species_toxicity: bySpeciesName(p)?.toxicity ?? null });
+  const rounds = {};
+
   const baseUser = () => ({
     id: 'u_maya', username: 'maya', email: 'maya@example.com', display_name: 'Maya',
     created_at: now(), tier: 'preview', onboarding_complete: false,
@@ -51,9 +60,9 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       enabled: true, level: 1, level_name: 'Bare', next_unlock: 'the shelf',
       unlocked: ['window', 'table', 'sill', 'floor'], grew: false, level_up: false, quiet: false,
       pip: { form: 'seed', location: 'sill' },
-      hero: p ? { id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null } : null,
+      hero: p ? { id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null, created_at: p.created_at, last_watered_at: p.last_watered_at } : null,
       shelf_plants: [],
-      plants: p ? [{ id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null }] : [],
+      plants: p ? [{ id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null, created_at: p.created_at, last_watered_at: p.last_watered_at }] : [],
       readiness: null, window: null,
     };
   };
@@ -132,17 +141,19 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       const photos = (plant && plant.photos) || [];
       return { photos, count: photos.length, cap: 10 };
     }],
-    ['GET', /^\/plants\/([\w-]+)$/, (b, m) => state.plants.find((p) => p.id === m[1]) || { __status: 404 }],
+    ['GET', /^\/plants\/([\w-]+)$/, (b, m) => { const p = state.plants.find((x) => x.id === m[1]); return p ? withSpecies(p) : { __status: 404 }; }],
     ['GET', /^\/plants\/([\w-]+)\/timeline$/, (b, m) => state.careLogList.filter((l) => l.plant_id === m[1]).slice().reverse()],
     ['GET', /^\/plants\/([\w-]+)\/biography$/, () => ({ biography: null, cached: false })],
     ['GET', /^\/rooms$/, () => []],
     ['GET', /^\/users\/me\/wants$/, () => ({ wants: [] })],
-    ['GET', /^\/plants$/, () => ({ plants: state.plants, total: state.plants.length, page: 1, limit: 50 })],
+    ['GET', /^\/plants$/, () => ({ plants: state.plants.map(withSpecies), total: state.plants.length, page: 1, limit: 50 })],
     ['GET', /^\/bouquets$/, () => []],
     ['POST', /^\/plants\/([\w-]+)\/care-logs$/, (b, m) => {
       state.careLogs += 1;
       const first = !state.user.first_care_celebrated;
       const key = `${b.soil_outcome || ''}:${b.soil_decision || ''}`;
+      const cared = state.plants.find((p) => p.id === m[1]);
+      if (cared && (b.actions || []).includes('water')) cared.last_watered_at = now();
       for (const action of b.actions || []) {
         state.careLogList.push({ id: `cl_${state.careLogList.length + 1}`, plant_id: m[1], action, notes: b.notes || '', soil_outcome: b.soil_outcome || null, soil_decision: b.soil_decision || null, logged_at: now(), created_at: now() });
       }
@@ -150,6 +161,28 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
         id: `cl_${state.careLogs}`, plant_id: m[1], action: (b.actions || [])[0], notes: b.notes || '', logged_at: now(),
         _meta: { first_care_pending: first, mission_just_completed: false, mission: null, actions: b.actions || [], group_id: null, logs: [], soil_coaching: COACHING[key] || '' },
       };
+    }],
+    // Same shapes as the server's water round: { watered, first_care_pending, round_id } and { undone }.
+    ['POST', /^\/plants\/water-round\/log$/, (b) => {
+      const ids = (b && b.plant_ids) || state.plants.map((p) => p.id);
+      const plants = state.plants.filter((p) => ids.includes(p.id));
+      const first = plants.length > 0 && !state.user.first_care_celebrated;
+      const roundId = plants.length ? `rnd_${Object.keys(rounds).length + 1}` : null;
+      const logIds = plants.map((p) => {
+        p.last_watered_at = now();
+        const id = `cl_${state.careLogList.length + 1}`;
+        state.careLogList.push({ id, plant_id: p.id, action: 'water', notes: '', logged_at: now(), created_at: now() });
+        return id;
+      });
+      if (roundId) rounds[roundId] = logIds;
+      state.careLogs += plants.length;
+      return { watered: plants.length, first_care_pending: first, round_id: roundId };
+    }],
+    ['POST', /^\/plants\/water-round\/([\w-]+)\/undo$/, (b, m) => {
+      const logIds = rounds[m[1]] || [];
+      state.careLogList = state.careLogList.filter((l) => !logIds.includes(l.id));
+      delete rounds[m[1]];
+      return { undone: logIds.length };
     }],
     ['POST', /^\/users\/me\/celebrate-first-care$/, () => ({ already: false })],
     ['POST', /^\/users\/me\/nook$/, (b) => {
@@ -161,7 +194,7 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     // One sample plant three days overdue, so Pip's visit can be seen. It goes away once the plant is watered.
     ['GET', /^\/care-logs\/due-today$/, () => state.plants.slice(0, 1)
       .filter((p) => !state.careLogList.some((l) => l.plant_id === p.id && l.action === 'water'))
-      .map((p) => ({ ...p, next_water_due: new Date(Date.now() - 3 * 86400000 - 5000).toISOString() }))],
+      .map((p) => ({ ...withSpecies(p), next_water_due: new Date(Date.now() - 3 * 86400000 - 5000).toISOString() }))],
     ['GET', /^\/notifications\/schedule-reviews$/, () => ({ plants: [] })],
     // Demo only: a made-up sample so the suggestion card can be seen. Real suggestions come from the person's own soil checks.
     ['GET', /^\/plants\/([\w-]+)\/schedule-suggestion$/, (b, m) => {
@@ -193,6 +226,8 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       past_plants_count: 0, total_care_logs: state.careLogs, estimated_care_hours: 0, propagation_count: 0, thriving_rate: 0,
       swap_count: 0, bouquet_count: 0, check_ins: { this_week: state.careLogs ? 1 : 0, weekly_goal: 3 }, show_advanced_analytics: false, tier: 'preview',
     })],
+    // The same summary the server returns at /users/me/check-ins (and nests under /stats/me as check_ins).
+    ['GET', /^\/users\/me\/check-ins$/, () => ({ this_week: state.careLogs ? 1 : 0, weekly_goal: 3 })],
     ['GET', /^\/stats\/me\/care-hours$/, () => (state.careLogs ? { soil_check: { count: state.careLogs, estimated_minutes: state.careLogs }, total_hours: 0 } : { total_hours: 0 })],
     ['GET', /^\/users\/me\/badges$/, () => []],
     ['GET', /^\/notifications$/, () => ({ notifications: [], unread_count: 0 })],

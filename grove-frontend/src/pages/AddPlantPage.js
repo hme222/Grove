@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 import { Search, Camera } from 'lucide-react';
 import PhotoRequirement from '../components/PhotoRequirement';
 import ToxicityBadge from '../components/ToxicityBadge';
+import { ASPCA_PLANT_LIST } from '../components/PetSafetyLookup';
+import { normalizeToxicity } from '../lib/toxicity';
 import PlantIdentifyScreen from './PlantIdentifyScreen';
 import { useAuth } from '../contexts/AuthContext';
 import { impactLight } from '../lib/haptics';
@@ -114,10 +116,14 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
   const [saveError, setSaveError] = useState('');
 
   const [searchFailed, setSearchFailed] = useState(false);
+  // The query the shown results answer. Results lag the field by the debounce, so "no match" is judged against this,
+  // not the text being typed, and never flashes before a search has finished.
+  const [searchedFor, setSearchedFor] = useState('');
   const runSearch = useCallback(async () => {
     try {
       const res = await speciesAPI.search(searchQuery);
       setSpecies(res.data);
+      setSearchedFor(searchQuery.trim());
       setSearchFailed(false);
     } catch (e) {
       // Only say so once the person has typed something; the empty-query load runs on its own.
@@ -259,6 +265,24 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                 </button>
               ))}
             </div>
+            {/* Always mounted, so screen readers hear each result count and the no-match line. */}
+            <div role="status" aria-live="polite" data-testid="species-search-status">
+              {searchedFor && !searchFailed && (species.length === 0 ? (
+                <p className="font-ui text-sm text-grove-cream" data-testid="species-no-match">
+                  No match for “{searchedFor}”. Try the common name, like “spider plant”, or add a custom plant below.
+                </p>
+              ) : (
+                <p className="sr-only">{species.length === 1 ? '1 plant found' : `${species.length} plants found`}</p>
+              ))}
+            </div>
+            {species.some((sp) => normalizeToxicity(sp.toxicity) !== 'unknown') && (
+              <p className="mt-2 font-ui text-xs text-grove-sage" data-testid="species-safety-source">
+                Pet safety is from the{' '}
+                <a href={ASPCA_PLANT_LIST} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-touch items-center text-grove-cream underline underline-offset-2">
+                  ASPCA&rsquo;s toxic and non-toxic plant list<span className="sr-only"> (opens in a new tab)</span>
+                </a>.
+              </p>
+            )}
             <button
               onClick={() => setShowSearch(false)}
               className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-4")}

@@ -163,6 +163,15 @@ def test_each_plant_row_carries_its_cover_photo_or_none():
     assert [r["photo_url"] for r in rows] == ["/uploads/a.jpg", None, None]
 
 
+def test_each_row_carries_its_care_dates_so_an_unchecked_plant_is_not_called_healthy():
+    plants = [
+        {"id": "p1", "created_at": stamp(1), "last_watered_at": stamp(5)},
+        {"id": "p2", "created_at": stamp(2)},
+    ]
+    rows = state(make_db(plants=plants))["plants"]
+    assert [(r["created_at"], r["last_watered_at"]) for r in rows] == [(stamp(1), stamp(5)), (stamp(2), None)]
+
+
 def test_plants_use_their_species_template_and_their_nickname():
     plants = [{"id": "p1", "created_at": stamp(1), "common_name": "Snake Plant", "nickname": "Sid"}]
     plant = state(make_db(plants=plants))["plants"][0]

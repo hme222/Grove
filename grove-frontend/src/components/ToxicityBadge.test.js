@@ -46,7 +46,7 @@ describe('ToxicityBadge', () => {
   test('missing toxicity shows the neutral unknown message', () => {
     const badge = render(undefined);
     expect(badge.dataset.level).toBe('unknown');
-    expect(badge.textContent).toBe('Pet safety unknown — check before bringing it home');
+    expect(badge.textContent).toBe('Pet safety unknown — check the ASPCA list');
     expect(badge.className).not.toMatch(/3B6D11/);
   });
 

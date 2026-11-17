@@ -31,6 +31,7 @@ import {
 } from '../components/ui/alert-dialog';
 import { Droplets, Check, Leaf, X, Sparkles, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { actionErrorMessage } from '../lib/errors';
 import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
 import { usePipPrefs } from '../lib/pipPrefs';
@@ -188,8 +189,9 @@ export default function CarePage() {
         setExiting(new Set());
         fetchDue();
       }, 320);
-    } catch (e) {
-      toast.error('Water round failed');
+    } catch (err) {
+      // Name the cause (connection or our side), say nothing was lost, and offer the same round again.
+      toast.error(actionErrorMessage(err, 'log that watering'), { action: { label: 'Try again', onClick: () => handleWaterAll() } });
     } finally {
       setWateringAll(false);
     }
@@ -203,8 +205,8 @@ export default function CarePage() {
       const watered = res.data.watered || 0;
       if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: [plant.id] });
       handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending }, { plantName: plantName(plant), actions: ['water'] });
-    } catch {
-      toast.error("Couldn’t save that. Check your connection and try again.");
+    } catch (err) {
+      toast.error(actionErrorMessage(err, 'log that watering'), { action: { label: 'Try again', onClick: () => handleWateredOne(plant) } });
     }
   };
 
@@ -220,7 +222,7 @@ export default function CarePage() {
       toast.success('Water round undone');
       fetchDue();
     } catch (err) {
-      toast.error(err?.response?.data?.detail || "Couldn’t undo that. Try again.");
+      toast.error(actionErrorMessage(err, 'undo that'));
     } finally {
       setUndoing(false);
       setLastRound(null);

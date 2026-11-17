@@ -31,12 +31,14 @@ await step('hemisphere', async () => { await $('hemisphere-north').click({ timeo
 await step('quiz-start', async () => { await $('quiz-intro-start').click({ timeout: 4000 }); });
 await step('q1', async () => { await root.locator('[data-testid^="option-q1"]').first().click(); await $('question-next').click(); });
 for (const q of ['q2', 'q3', 'q4']) await step(`${q}-skip`, async () => { await $('question-skip').click({ timeout: 4000 }); });
+await step('meet-pip', async () => { await $('pip-step-agree').click({ timeout: 5000 }); });
 await step('plan', async () => { await page.waitForTimeout(1200); await $('plan-start').click({ timeout: 5000 }); });
 for (let i = 1; i <= 4; i++) await step(`card-${i}`, async () => { await $('lesson-next').click({ timeout: 4000 }); });
 await step('add-plant', async () => { await $('soil-step-add-plant').click({ timeout: 4000 }); });
 await step('manual', async () => { await $('add-option-manual').click({ timeout: 4000 }); });
 await step('search', async () => { await $('species-search-input').fill('spider'); await page.waitForTimeout(800); await $('species-option').first().click({ timeout: 4000 }); });
 await step('photo', async () => { await root.getByRole('button', { name: /add a photo/i }).click({ timeout: 4000 }); await $('photo-skip').click({ timeout: 4000 }); await page.waitForTimeout(1000); });
+await step('first-plant', async () => { await $('first-plant-celebration-close').click({ timeout: 6000 }); await page.waitForTimeout(500); });
 await step('today', async () => { await page.waitForTimeout(5000); await root.getByRole('link', { name: 'Today' }).click({ timeout: 4000 }); await page.waitForTimeout(800); });
 await step('resume', async () => { await $('next-lesson-start').scrollIntoViewIfNeeded(); await $('next-lesson-start').click({ timeout: 4000 }); await page.waitForTimeout(800); });
 await step('log', async () => { await $('soil-outcome-dry').click(); await $('soil-decision-water').click(); await $('soil-step-submit').click(); await page.waitForTimeout(700); await $('soil-step-continue').click(); await page.waitForTimeout(1000); });

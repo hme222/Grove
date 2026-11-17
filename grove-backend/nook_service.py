@@ -94,6 +94,9 @@ async def build_state(
             "looks_off": bool(plant.get("looks_off")),
             # The plant's cover photo, the same field the Plants API returns.
             "photo_url": plant.get("photo_url") or None,
+            # So the tile can say "No checks yet" for a plant nobody has cared for, by the same rule as every screen.
+            "created_at": plant.get("created_at"),
+            "last_watered_at": plant.get("last_watered_at"),
         })
 
     # Quiet mode looks at every active plant. Only the list the page shows is capped.

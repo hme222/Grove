@@ -192,7 +192,7 @@ describe('Undo on Water All', () => {
 
   test('a failed undo shows the server reason and closes the bar', async () => {
     waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r1' } });
-    waterAPI.undoRound.mockRejectedValue({ response: { data: { detail: 'Too late to undo that round.' } } });
+    waterAPI.undoRound.mockRejectedValue({ response: { status: 400, data: { detail: 'Too late to undo that round.' } } });
     await mount();
     await act(async () => { q('water-all-button').click(); });
     await act(async () => { q('water-all-confirm').click(); });
@@ -276,6 +276,37 @@ describe('end-of-round summary', () => {
     careAPI.getDueToday.mockResolvedValue({ data: [] });
     await mount();
     expect(q('round-summary')).toBeNull();
+  });
+});
+
+describe('water failures say why and offer Try again', () => {
+  test('a dropped connection on Watered says nothing was lost, and Try again saves it', async () => {
+    waterAPI.logRound.mockRejectedValueOnce(new Error('Network Error')).mockResolvedValue({ data: { watered: 1, round_id: 'r9' } });
+    await mount();
+    await act(async () => { q('care-mark-done').click(); });
+    const [message, opts] = toast.error.mock.calls.at(-1);
+    expect(message).toBe('Couldn’t log that watering. Nothing was lost. Check your connection and try again.');
+    expect(opts.action.label).toBe('Try again');
+    await act(async () => { opts.action.onClick(); });
+    expect(waterAPI.logRound).toHaveBeenLastCalledWith(['p1']);
+    expect(q('undo-snackbar')).not.toBeNull();
+  });
+
+  test('a server fault on Watered says it is on our side, not the connection', async () => {
+    waterAPI.logRound.mockRejectedValue({ response: { status: 500, data: {} } });
+    await mount();
+    await act(async () => { q('care-mark-done').click(); });
+    expect(toast.error.mock.calls.at(-1)[0]).toBe('Couldn’t log that watering. That’s on our side. Try again in a moment.');
+  });
+
+  test('a failed Water all names the cause and offers Try again', async () => {
+    waterAPI.logRound.mockRejectedValue({ response: { status: 503, data: {} } });
+    await mount();
+    await act(async () => { q('water-all-button').click(); });
+    await act(async () => { q('water-all-confirm').click(); });
+    const [message, opts] = toast.error.mock.calls.at(-1);
+    expect(message).toContain('That’s on our side');
+    expect(opts.action.label).toBe('Try again');
   });
 });
 

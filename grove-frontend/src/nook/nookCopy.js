@@ -13,6 +13,7 @@ export const CONDITION_LABELS = {
   fine: STATUS_LABELS.healthy,
   'due-soon': STATUS_LABELS.needs_water,
   'needs-attention': STATUS_LABELS.urgent,
+  unchecked: STATUS_LABELS.unchecked,
 };
 
 export const PLANT_SOURCE = "From your records and Grove’s plant check";

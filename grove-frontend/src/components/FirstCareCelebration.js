@@ -24,6 +24,13 @@ function loggedSummary(logged) {
 
 export default function FirstCareCelebration({ open, onClose, logged }) {
   const hasFiredHaptic = useRef(false);
+  // What had focus as this opened, read during render: by the time an effect runs, the dialog has already moved focus
+  // to its button. Often it is inside the care form that just closed, so it may be gone when this closes.
+  // Kept after closing, because Radix asks where focus goes a tick after the dialog has gone; replaced on the next open.
+  const opener = useRef(null);
+  const wasOpen = useRef(false);
+  if (open && !wasOpen.current && typeof document !== 'undefined') opener.current = document.activeElement || document.body;
+  wasOpen.current = !!open;
 
   // Coach tips and tutorials wait while this is on screen.
   useEffect(() => (open ? holdFirstRun() : undefined), [open]);
@@ -74,6 +81,13 @@ export default function FirstCareCelebration({ open, onClose, logged }) {
       <DialogPrimitive.Content
         data-testid="first-care-celebration"
         className="pointer-events-auto"
+        onCloseAutoFocus={(e) => {
+          // Back to what opened it if it is still on the page; otherwise to the page itself, never the body.
+          e.preventDefault();
+          const back = opener.current;
+          const target = back && back !== document.body && document.contains(back) ? back : document.getElementById('main-content');
+          if (target && target.focus) target.focus();
+        }}
         onOpenAutoFocus={(e) => {
           // Land on the main action rather than the close button.
           e.preventDefault();
