@@ -12,7 +12,8 @@ const SAVED = { nook_enabled: true, nook_offered_at: '2026-10-14T10:00:00Z', noo
 let container;
 let root;
 
-const q = (id) => container.querySelector(`[data-testid="${id}"]`);
+// The dialog renders into document.body (a portal), not into the container.
+const q = (id) => document.querySelector(`[data-testid="${id}"]`);
 const click = (el) => act(() => el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
 const flush = () => act(async () => {});
 const mount = async () => {
@@ -39,7 +40,7 @@ afterEach(() => {
 test('is a labeled dialog that takes focus and sits below the first-care celebration', async () => {
   await mount();
   const dialog = q('nook-offer');
-  const heading = container.querySelector('h1');
+  const heading = document.querySelector('[data-testid="nook-offer"] h1');
   expect(dialog.getAttribute('role')).toBe('dialog');
   expect(dialog.getAttribute('aria-modal')).toBe('true');
   expect(dialog.getAttribute('aria-labelledby')).toBe(heading.id);
@@ -49,10 +50,10 @@ test('is a labeled dialog that takes focus and sits below the first-care celebra
 
 test('says what the room is and that it is optional and never scores plants', async () => {
   await mount();
-  expect(container.textContent).toContain('Optional: a small pixel room that grows as you learn.');
-  expect(container.textContent).toContain('It never scores your plants.');
-  expect(container.textContent).toContain('You can change this any time in your profile.');
-  expect(container.querySelector('canvas')).not.toBeNull();
+  expect(document.body.textContent).toContain('Optional: a small pixel room that grows as you learn.');
+  expect(document.body.textContent).toContain('It never scores your plants.');
+  expect(document.body.textContent).toContain('You can change this any time in your profile.');
+  expect(q('nook-offer').querySelector('canvas')).not.toBeNull();
 });
 
 test('yes turns the nook on and reports what was saved', async () => {
@@ -93,4 +94,26 @@ test('a failed save shows a plain error and can be tried again', async () => {
   await click(q('nook-offer-yes'));
   await flush();
   expect(onDone).toHaveBeenCalledWith(SAVED);
+});
+
+test('Escape counts as Not now, so the offer still records an answer', async () => {
+  const onDone = await mount();
+  await act(async () => { q('nook-offer').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+  await flush();
+  expect(nookAPI.settings).toHaveBeenCalledWith({ enabled: false });
+  expect(onDone).toHaveBeenCalledTimes(1);
+});
+
+test('a tap outside the card answers nothing', async () => {
+  const onDone = await mount();
+  await act(async () => { document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true })); });
+  await flush();
+  expect(nookAPI.settings).not.toHaveBeenCalled();
+  expect(onDone).not.toHaveBeenCalled();
+  expect(q('nook-offer')).not.toBeNull();
+});
+
+test('everything behind the offer is hidden from screen readers while it is open', async () => {
+  await mount();
+  expect(container.getAttribute('aria-hidden')).toBe('true');
 });
