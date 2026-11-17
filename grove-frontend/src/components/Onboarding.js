@@ -408,6 +408,12 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
   const introIndex = stage.startsWith('intro-') ? Number(stage.slice(6)) : -1;
   const dialogLabel = introIndex >= 0 ? SLIDES[introIndex].title : STAGE_LABELS[stage] || 'Welcome to FloraGrove';
 
+  // Each step starts at its top. The whole flow scrolls in this one container, and each screen focuses its headline
+  // without scrolling, so without this a step opened where the last one was scrolled to (often mid-page at large text).
+  useEffect(() => {
+    if (shell.current) shell.current.scrollTop = 0;
+  }, [stage]);
+
   return (
     <div
       ref={shell}

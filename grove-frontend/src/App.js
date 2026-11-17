@@ -110,6 +110,10 @@ function useFocusMainOnRoute() {
   const { pathname } = useLocation();
   useEffect(() => {
     if (!focusHookSeen) { focusHookSeen = true; return; }
+    // Not while a modal flow (onboarding, a dialog) holds focus: the page behind it is hidden from assistive tech, so
+    // taking focus there dropped it to the body right after "Create account".
+    const active = document.activeElement;
+    if (active && active.closest && active.closest('[aria-modal="true"]')) return;
     document.getElementById('main-content')?.focus({ preventScroll: true });
   }, [pathname]);
 }

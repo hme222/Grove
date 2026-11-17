@@ -102,6 +102,8 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
   const [species, setSpecies] = useState([]);
   const [searchQuery, setSearchQuery] = useState(presetName || '');
   const searchRef = useRef(null);
+  // "Or add custom plant" swaps the search for the form; focus follows to its first field, not the page body.
+  const focusName = useRef(false);
   // Switching from the chooser to the form moves focus to the search field, so a keyboard or screen-reader user lands on it.
   useEffect(() => { if (focusSearch) searchRef.current?.focus(); }, [focusSearch]);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
@@ -114,6 +116,13 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
   });
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+
+  useEffect(() => {
+    if (showSearch || !focusName.current) return;
+    focusName.current = false;
+    const field = document.getElementById('addplant-plant-name');
+    if (field) field.focus();
+  }, [showSearch]);
 
   const [searchFailed, setSearchFailed] = useState(false);
   // The query the shown results answer. Results lag the field by the debounce, so "no match" is judged against this,
@@ -284,7 +293,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               </p>
             )}
             <button
-              onClick={() => setShowSearch(false)}
+              onClick={() => { focusName.current = true; setShowSearch(false); }}
               className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-4")}
             >
               Or add custom plant
