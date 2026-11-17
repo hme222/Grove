@@ -4,6 +4,7 @@ import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { plantAPI, careAPI } from '../lib/api';
 import { NOTE_CHIPS } from './lessonMeta';
+import { actionErrorMessage } from '../lib/errors';
 
 const OUTCOMES = [
   { value: 'dry', label: 'Dry and dusty' },
@@ -35,6 +36,23 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(null);
   const submitting = useRef(false);
+  // After "Water it", the watering itself is one more tap here, so Today stops calling the plant due.
+  const [watered, setWatered] = useState(false);
+  const [watering, setWatering] = useState(false);
+  const [waterError, setWaterError] = useState('');
+  const logWatering = async () => {
+    if (watering) return;
+    setWatering(true);
+    setWaterError('');
+    try {
+      await careAPI.createLog(plantId, { actions: ['water'] });
+      setWatered(true);
+    } catch (e) {
+      setWaterError(actionErrorMessage(e, 'log that watering'));
+    } finally {
+      setWatering(false);
+    }
+  };
 
   useEffect(() => {
     if (!hasPlant) return undefined;
@@ -88,10 +106,35 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="soil-step-saved">
         <p className="font-plant text-grove-cream text-lg mb-1">Soil test logged</p>
         {saved.soil_coaching && <p className="text-sm text-grove-cream mb-3">{saved.soil_coaching}</p>}
+        {decision === 'water' && !watered && (
+          <>
+            <p className="text-sm text-grove-cream mb-3" data-testid="soil-step-water-next">
+              Water it now. When you’re done, log it here so Today knows it’s had a drink.
+            </p>
+            {waterError && <p role="alert" className="mb-3 text-sm text-grove-blush" data-testid="soil-step-water-error">{waterError}</p>}
+            <button
+              type="button"
+              onClick={logWatering}
+              aria-busy={watering}
+              disabled={watering}
+              className={cn(buttonVariants(), "w-full mb-2")}
+              data-testid="soil-step-log-water"
+            >
+              {watering ? 'Logging…' : waterError ? 'Try again: log the watering' : 'I watered it'}
+            </button>
+          </>
+        )}
+        {watered && (
+          <p role="status" className="text-sm text-grove-cream mb-3" data-testid="soil-step-watered">✓ Watering logged. Today is up to date.</p>
+        )}
         <button
           type="button"
-          onClick={() => onLogged(saved)}
-          className={cn(buttonVariants(), "w-full")}
+          // The plant and what was logged go with it, so the first-care moment can show this plant.
+          onClick={() => {
+            const plant = plants.find((p) => p.id === plantId);
+            onLogged(saved, plant ? { plantName: plantLabel(plant), actions: watered ? ['soil_check', 'water'] : ['soil_check'], photo: plant.photo_url || null } : null);
+          }}
+          className={cn(buttonVariants({ variant: decision === 'water' && !watered ? 'outline' : undefined }), "w-full")}
           data-testid="soil-step-continue"
         >
           Finish lesson
