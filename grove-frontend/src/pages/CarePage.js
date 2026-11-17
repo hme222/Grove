@@ -86,6 +86,9 @@ function getUrgencyStyle(status) {
   return URGENCY_STYLES[status] || URGENCY_STYLES.needs_water;
 }
 
+// One slot for a failed watering: a new failure replaces the last message instead of stacking another Try again.
+const WATER_ERROR_TOAST = 'water-error';
+
 export default function CarePage() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
@@ -124,7 +127,7 @@ export default function CarePage() {
       setPlants(res.data);
       setLoadError(false);
     } catch (e) {
-      setLoadError(true);
+      setLoadError(e || true); // the error itself, so LoadError can tell a server fault from a dropped connection
     } finally {
       setLoading(false);
     }
@@ -191,7 +194,7 @@ export default function CarePage() {
       }, 320);
     } catch (err) {
       // Name the cause (connection or our side), say nothing was lost, and offer the same round again.
-      toast.error(actionErrorMessage(err, 'log that watering'), { action: { label: 'Try again', onClick: () => handleWaterAll() } });
+      toast.error(actionErrorMessage(err, 'log that watering'), { id: WATER_ERROR_TOAST, action: { label: 'Try again', onClick: () => handleWaterAll() } });
     } finally {
       setWateringAll(false);
     }
@@ -206,7 +209,7 @@ export default function CarePage() {
       if (res.data.round_id && watered > 0) setLastRound({ roundId: res.data.round_id, count: watered, ids: [plant.id] });
       handlePlantLogged(plant.id, { first_care_pending: res.data.first_care_pending }, { plantName: plantName(plant), actions: ['water'] });
     } catch (err) {
-      toast.error(actionErrorMessage(err, 'log that watering'), { action: { label: 'Try again', onClick: () => handleWateredOne(plant) } });
+      toast.error(actionErrorMessage(err, 'log that watering'), { id: WATER_ERROR_TOAST, action: { label: 'Try again', onClick: () => handleWateredOne(plant) } });
     }
   };
 
@@ -306,7 +309,7 @@ export default function CarePage() {
       </div>
 
       <div className="max-w-content mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {loadError && !loading ? (<div className="col-span-full"><LoadError what="your plants for today" onRetry={retryLoad} /></div>) : loading ? (
+        {loadError && !loading ? (<div className="col-span-full"><LoadError what="your plants for today" onRetry={retryLoad} error={loadError} /></div>) : loading ? (
           <LoadingList label="Loading today’s care" className="col-span-full" />
         ) : filteredPlants.length === 0 && plants.length > 0 ? (
           <div className="col-span-full rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-center" data-testid="care-filter-empty">

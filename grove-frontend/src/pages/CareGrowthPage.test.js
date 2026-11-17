@@ -37,7 +37,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-const steady = { total_plants: 3, plants_needing_water: 0, total_care_logs: 6, check_ins: { this_week: 1, weekly_goal: 3 } };
+const steady = { total_plants: 3, plants_needing_water: 0, total_care_logs: 6, estimated_care_hours: 2, check_ins: { this_week: 1, weekly_goal: 3 } };
 
 test('basic tiles include a fourth check-ins tile', async () => {
   await renderWith(steady);
@@ -45,6 +45,23 @@ test('basic tiles include a fourth check-ins tile', async () => {
   expect(tiles.children).toHaveLength(4);
   expect(tiles.children[3].textContent).toContain('Check-ins this week');
   expect(tiles.children[3].textContent).toContain('1 of 3');
+});
+
+test('counts of one read as one: 1 Plant, 1 Care log, 1 Hour of care', async () => {
+  await renderWith({ ...steady, total_plants: 1, total_care_logs: 1, estimated_care_hours: 1 });
+  const text = container.querySelector('[data-testid="growth-basic-tiles"]').textContent;
+  expect(text).toContain('1Plant');
+  expect(text).toContain('1Care log');
+  expect(text).not.toContain('Care logs');
+  expect(text).toContain('1Hour of care');
+});
+
+test('with no care time yet there is no hours tile, and the last tile spans the row', async () => {
+  await renderWith({ ...steady, estimated_care_hours: 0 });
+  const tiles = container.querySelector('[data-testid="growth-basic-tiles"]');
+  expect(tiles.children).toHaveLength(3);
+  expect(tiles.textContent).not.toMatch(/0h|Hours?/);
+  expect(tiles.children[2].className).toContain('col-span-2');
 });
 
 test('check-ins tile says Not available when data is missing', async () => {

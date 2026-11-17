@@ -44,12 +44,17 @@ export default function CareGrowthPage() {
 
   const showAdvanced = !!stats?.show_advanced_analytics;
 
+  const plants = stats?.total_plants || 0;
+  const logs = stats?.total_care_logs || 0;
+  const hours = stats?.estimated_care_hours || 0;
+  // Counts read as words ("1 Care log", not "1 Care logs"). Care time shows only once there is some: "0h" tells a new
+  // owner nothing.
   const basicTiles = [
-    { label: 'Plants', value: stats?.total_plants || 0, icon: Leaf },
-    { label: 'Care logs', value: stats?.total_care_logs || 0, icon: Droplets },
-    { label: 'Hours', value: `${stats?.estimated_care_hours || 0}h`, icon: Clock },
+    { label: plants === 1 ? 'Plant' : 'Plants', value: plants, icon: Leaf },
+    { label: logs === 1 ? 'Care log' : 'Care logs', value: logs, icon: Droplets },
+    hours > 0 && { label: hours === 1 ? 'Hour of care' : 'Hours of care', value: hours, icon: Clock },
     { label: 'Check-ins this week', value: checkInsLabel(stats) || 'Not available', icon: CalendarCheck },
-  ];
+  ].filter(Boolean);
 
   return (
     <div>
@@ -58,8 +63,12 @@ export default function CareGrowthPage() {
       <div className="max-w-content mx-auto px-4 py-4 space-y-4">
         {/* Basic tiles */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" data-testid="growth-basic-tiles">
-          {basicTiles.map(({ label, value, icon: Icon }) => (
-            <div key={label} className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
+          {basicTiles.map(({ label, value, icon: Icon }, i) => (
+            <div
+              key={label}
+              // With an odd number of tiles, the last one spans the row on phones so the grid has no hole.
+              className={`rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center ${basicTiles.length % 2 && i === basicTiles.length - 1 ? 'col-span-2 sm:col-span-1' : ''}`}
+            >
               <Icon className="h-4 w-4 mx-auto text-grove-sprout mb-1" aria-hidden="true" />
               <p className="font-plant text-grove-cream text-lg">{value}</p>
               <p className="font-ui text-xs text-grove-cream">{label}</p>

@@ -52,7 +52,7 @@ export default function CollectionPage() {
       setBouquets(Array.isArray(bRes.data) ? bRes.data : (bRes.data?.bouquets || []));
       setLoadError(false);
     } catch (e) {
-      setLoadError(true);
+      setLoadError(e || true); // the error itself, so LoadError can tell a server fault from a dropped connection
     } finally {
       setLoading(false);
     }
@@ -214,7 +214,7 @@ export default function CollectionPage() {
             </button>
           </div>
         )}
-        {loadError && !loading ? (<LoadError what="plants" onRetry={retryLoad} />) : loading ? (
+        {loadError && !loading ? (<LoadError what="plants" onRetry={retryLoad} error={loadError} />) : loading ? (
           <LoadingList label="Loading your plants" />
         ) : isEmpty && roomFilter ? (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">

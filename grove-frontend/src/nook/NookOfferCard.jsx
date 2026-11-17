@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { nookAPI } from '../lib/api';
 import PipPanel from './PipPanel';
 import { PAPER_BUTTON, PAPER_BUTTON_QUIET, PAPER_ERROR } from './paperStyles';
 
 // The one-time offer of Pip's nook. Either answer is recorded, so it is never shown again.
 // It sits below the first-care celebration, so the celebration plays first.
+// Built on the same Radix dialog as the other dialogs, which traps focus and gives it back on close.
+// Escape counts as "Not now" (the offer says it can be changed any time in Profile); a tap outside the card does
+// nothing, so a stray tap can't answer for the person.
 export default function NookOfferCard({ onDone }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const busy = useRef(false);
   const headingRef = useRef(null);
-
-  useEffect(() => {
-    if (headingRef.current) headingRef.current.focus();
-  }, []);
 
   const choose = async (enabled) => {
     // A double tap must not save twice.
@@ -32,21 +32,27 @@ export default function NookOfferCard({ onDone }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-intro flex items-center justify-center bg-grove-root/80 px-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="nook-offer-title"
-      data-testid="nook-offer"
-    >
-      <div className="w-full max-w-dialog rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5 text-center">
+    <DialogPrimitive.Root open onOpenChange={(next) => { if (!next) choose(false); }}>
+      <DialogPrimitive.Portal>
+      <DialogPrimitive.Overlay className="fixed inset-0 z-intro bg-grove-root/80" />
+      <div className="pointer-events-none fixed inset-0 z-intro flex items-center justify-center px-4">
+      <DialogPrimitive.Content
+        aria-modal="true"
+        data-testid="nook-offer"
+        className="pointer-events-auto z-intro w-full max-w-dialog rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5 text-center focus:outline-none"
+        onOpenAutoFocus={(e) => { e.preventDefault(); if (headingRef.current) headingRef.current.focus(); }}
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <div className="flex justify-center mb-3">
           <PipPanel form="seed" mood="curious" animate label="Pip, a small pixel plant in a pot" />
         </div>
-        <h1 id="nook-offer-title" ref={headingRef} tabIndex={-1} className="mb-2 font-plant text-2xl text-grove-root focus:outline-none">
-          Pip has a room
-        </h1>
-        <p className="mb-1 font-ui text-sm text-grove-ink">Optional: a small pixel room that grows as you learn. It never scores your plants.</p>
+        <DialogPrimitive.Title asChild>
+          <h1 ref={headingRef} tabIndex={-1} className="mb-2 font-plant text-2xl text-grove-root focus:outline-none">
+            Pip has a room
+          </h1>
+        </DialogPrimitive.Title>
+        <DialogPrimitive.Description className="mb-1 font-ui text-sm text-grove-ink">Optional: a small pixel room that grows as you learn. It never scores your plants.</DialogPrimitive.Description>
         <p className="mb-4 font-ui text-sm text-grove-inkSoft">You can change this any time in your profile.</p>
 
         {error && (
@@ -74,7 +80,9 @@ export default function NookOfferCard({ onDone }) {
             Try the room
           </button>
         </div>
+      </DialogPrimitive.Content>
       </div>
-    </div>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }

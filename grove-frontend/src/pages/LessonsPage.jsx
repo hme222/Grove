@@ -17,7 +17,7 @@ export default function LessonsPage() {
     lessonAPI
       .queue()
       .then((res) => setData(res.data))
-      .catch(() => setFailed(true));
+      .catch((e) => setFailed(e || true));
   };
 
   useEffect(() => { load(); }, []);
@@ -31,7 +31,7 @@ export default function LessonsPage() {
       <PageHeader back title="Lessons" />
       <div className="max-w-sheet mx-auto px-4 py-4 space-y-4">
         {failed && (
-          <LoadError compact what="your lesson progress" note="The lessons themselves are fine." onRetry={load} testId="lessons-progress-failed" />
+          <LoadError compact what="your lesson progress" note="The lessons themselves are fine." onRetry={load} error={failed} testId="lessons-progress-failed" />
         )}
 
         {next && (

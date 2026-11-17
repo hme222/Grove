@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 
+// Not routed: /challenges redirects to Today while challenges are hidden for the MVP (docs/product/scope-v1.md).
+// Kept for the open decision on whether they return as optional extras.
 export default function ChallengesPage() {
   const [templates, setTemplates] = useState([]);
   const [goals, setGoals] = useState([]);

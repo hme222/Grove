@@ -41,7 +41,7 @@ export default function EncyclopediaPage() {
       setTotal(res.data.total);
       setPage(pageNum);
     } catch (e) {
-      setLoadError(true);
+      setLoadError(e || true); // the error itself, so LoadError can tell a server fault from a dropped connection
     } finally {
       setLoading(false);
       setSearching(false);
@@ -165,7 +165,7 @@ export default function EncyclopediaPage() {
         )}
 
         {/* Species Grid */}
-        {loadError && !loading ? (<LoadError what={guildsFailed ? 'the plant guide and themed guilds' : 'the plant guide'} onRetry={() => (guildsFailed ? window.location.reload() : fetchSpecies())} />) : loading || searching ? (
+        {loadError && !loading ? (<LoadError what={guildsFailed ? 'the plant guide and themed guilds' : 'the plant guide'} onRetry={() => (guildsFailed ? window.location.reload() : fetchSpecies())} error={loadError} />) : loading || searching ? (
           <LoadingList label="Loading the plant guide" />
         ) : species.length === 0 ? (
           <div className="rounded-small border-hairline border-grove-moss bg-grove-moss p-6 text-center">

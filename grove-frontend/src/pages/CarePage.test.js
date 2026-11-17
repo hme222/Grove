@@ -308,6 +308,16 @@ describe('water failures say why and offer Try again', () => {
     expect(message).toContain('That’s on our side');
     expect(opts.action.label).toBe('Try again');
   });
+
+  test('every water failure uses the same toast slot, so a second failure replaces the first', async () => {
+    waterAPI.logRound.mockRejectedValue(new Error('Network Error'));
+    await mount();
+    await act(async () => { q('care-mark-done').click(); });
+    await act(async () => { q('care-mark-done').click(); });
+    const ids = toast.error.mock.calls.map(([, opts]) => opts && opts.id);
+    expect(ids.length).toBe(2);
+    expect(new Set(ids)).toEqual(new Set(['water-error']));
+  });
 });
 
 describe('check-ins line', () => {

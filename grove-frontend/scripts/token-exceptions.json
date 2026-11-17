@@ -63,13 +63,6 @@
     "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
   },
   {
-    "file": "src/components/FirstCareCelebration.js",
-    "rule": "inline-style-number",
-    "match": "marginTop: 70",
-    "reason": "Burst origin is tuned to sit on the centre of the celebration icon; it is art placement, not layout spacing.",
-    "retireWhen": "the burst is re-anchored to the icon element instead of a typed offset."
-  },
-  {
     "file": "src/components/WelcomeScreen.css",
     "rule": "css-px",
     "match": "font-size: 26px",
