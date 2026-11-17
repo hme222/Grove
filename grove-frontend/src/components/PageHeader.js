@@ -29,7 +29,10 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
       <div className="max-w-page mx-auto px-4 py-3">
         {/* Wraps instead of running off the edge when the reader’s text is large. */}
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
-          <div className={cn('flex min-w-0 flex-1 basis-28 items-center', back ? 'gap-4' : 'gap-2')}>
+          {/* min-w-min: the title never gets narrower than its longest word, so a long title moves the buttons to
+              their own row instead of breaking "Notification" mid-word. flex-wrap lets the title go under Back at large
+              text, so the minimum is the wider of the two, not both side by side. */}
+          <div className={cn('flex min-w-min flex-1 basis-28 flex-wrap items-center', back ? 'gap-x-4' : 'gap-x-2')}>
             {back && <BackButton {...(back === true ? {} : back)} />}
             <h1 id="page-title" ref={titleRef} tabIndex={titleRef ? -1 : undefined} className={cn('flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words', titleRef && 'focus:outline-none')}><span className="min-w-0 line-clamp-2 overflow-hidden break-words">{title}</span></h1>
           </div>

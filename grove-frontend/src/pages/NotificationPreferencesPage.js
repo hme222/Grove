@@ -226,8 +226,9 @@ export default function NotificationPreferencesPage() {
               )}
             </div>
 
-            <p className="font-latin text-xs text-grove-lichen text-center py-2">
-              Wave B (cron + push + email) arrives in a future update. Toggles stored now.
+            {/* Plain words for what is true today: choices are saved; push and email delivery come later. */}
+            <p className="font-ui text-xs text-grove-sage text-center py-2" data-testid="notifications-delivery-note">
+              Push and email delivery come in a later update. Your choices are saved now.
             </p>
           </>
         )}

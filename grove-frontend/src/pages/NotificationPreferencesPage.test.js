@@ -145,3 +145,8 @@ test('a failed save puts the switch back and says the change was undone', async 
   const { toast } = require('sonner');
   expect(toast.error.mock.calls[0][0]).toMatch(/undone/);
 });
+
+test('no developer notes reach the screen', () => {
+  expect(container.textContent).not.toMatch(/Wave B|cron|Toggles stored/);
+  expect(q('notifications-delivery-note').textContent).toBe('Push and email delivery come in a later update. Your choices are saved now.');
+});
