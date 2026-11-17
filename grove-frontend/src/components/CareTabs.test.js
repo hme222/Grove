@@ -50,4 +50,10 @@ describe('CareTabs', () => {
     expect(container.querySelector('[data-testid="care-today-tab"]').hasAttribute('aria-current')).toBe(false);
     expect(pip().querySelector('canvas').getAttribute('aria-hidden')).toBe('true');
   });
+
+  test('reaching the nook before answering the offer still shows the Pip tab as current', () => {
+    render({ nook_enabled: false }, '/nook');
+    expect(pip()).not.toBeNull();
+    expect(pip().getAttribute('aria-current')).toBe('page');
+  });
 });

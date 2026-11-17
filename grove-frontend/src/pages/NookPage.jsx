@@ -125,7 +125,7 @@ export default function NookPage() {
 
       <div className="bg-grove-forest pb-2 pt-2">
         <div className="mx-auto max-w-sheet">
-          <NookCanvas view={view} label={`Pip’s nook, ${state.level_name.toLowerCase()}. Pip is on the ${state.pip.location}.`} />
+          <NookCanvas view={view} label={`Pip’s nook, ${state.level_name.toLowerCase()}. Pip is on the ${state.pip.location}.${state.hero && state.hero.name ? ` ${state.hero.name} is on the table.` : ''}`} />
         </div>
       </div>
 
@@ -161,7 +161,11 @@ export default function NookPage() {
             </p>
           )}
           <p className="font-ui text-sm text-grove-inkSoft" data-testid="nook-items">
-            {items.length > 0 ? `In the nook: ${items.join(', ')}.` : 'Nothing is unlocked yet.'}
+            {/* Their own plant is the first thing in the room, so it is named first: a new nook is not "nothing". */}
+            {(() => {
+              const inRoom = [state.hero && state.hero.name ? `${state.hero.name} on the table` : null, ...items].filter(Boolean);
+              return inRoom.length > 0 ? `In the nook: ${inRoom.join(', ')}.` : 'Nothing is unlocked yet.';
+            })()}
           </p>
         </section>
 
