@@ -38,7 +38,6 @@ import NookOfferCard from "./nook/NookOfferCard";
 import { shouldShowNookOffer } from "./nook/offerGate";
 // Phase 14C.4 — GoalsPage deprecated. Goals are now pinned locked badges
 // surfaced on /care/today. /care/goals redirects to /care/today.
-import ChallengesPage from "./pages/ChallengesPage";
 import FloristDashboard from "./pages/FloristDashboard";
 import NotificationsPage from "./pages/NotificationsPage";
 import EncyclopediaPage from "./pages/EncyclopediaPage";
@@ -331,7 +330,6 @@ function AppRoutes() {
           <Route path="/groves" element={communityOnly(<GrovesPage />)} />
           <Route path="/groves/:groveId" element={communityOnly(<GroveDetailPage />)} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/florist" element={<FloristDashboard />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/swap" element={communityOnly(<SwapPage />)} />
@@ -349,6 +347,8 @@ function AppRoutes() {
         <Route path="/care/goals" element={<Navigate to="/care/today" replace />} />
         <Route path="/care/fieldnotes" element={<Navigate to="/greenhouse" replace />} />
         <Route path="/goals" element={<Navigate to="/care/goals" replace />} />
+        {/* Hidden for the MVP (docs/product/scope-v1.md, "Too many surfaces"); pages/ChallengesPage.js is kept unrouted. */}
+        <Route path="/challenges" element={<Navigate to="/care/today" replace />} />
         <Route path="/encyclopedia" element={<Navigate to="/greenhouse" replace />} />
         <Route path="/encyclopedia/:speciesId" element={<Navigate to="/greenhouse" replace />} />
       </Routes>
