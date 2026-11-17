@@ -194,4 +194,8 @@
 .pip-layer { bottom: var(--pip-bottom, var(--nav-height)); }
 /* While Pip stands on the tab bar, the page ends his height higher, so the last card can scroll clear of him
    instead of sitting under him. PipPeek sets --pip-reserve to his measured height and clears it when he goes. */
+/* The bell panel on a phone: full width (inset by the side gutter) just under the bell; NotificationBell sets
+   --bell-top from the bell's position. From the sm breakpoint it hangs from the bell again (sm:absolute sm:top-full). */
+.bell-panel { top: var(--bell-top, 4rem); }
+@media (min-width: 640px) { .bell-panel { top: 100%; } }
 .app-shell { padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--pip-reserve, 0px)); }

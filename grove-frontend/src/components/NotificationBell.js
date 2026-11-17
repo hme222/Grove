@@ -60,6 +60,21 @@ export default function NotificationBell() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const panelRef = useRef(null);
+  const buttonRef = useRef(null);
+  const headingRef = useRef(null);
+  const [panelTop, setPanelTop] = useState(0);
+
+  // Closing gives focus back to the bell, so a screen-reader or keyboard user is not dropped onto the page.
+  const close = useCallback((restore = true) => {
+    setOpen(false);
+    if (restore) setTimeout(() => { if (buttonRef.current) buttonRef.current.focus(); }, 0);
+  }, []);
+  const toggle = () => {
+    if (open) { close(); return; }
+    // On a phone the panel spans the screen just under the bell (anchored to the bell it ran off the left edge).
+    if (buttonRef.current) setPanelTop(Math.round(buttonRef.current.getBoundingClientRect().bottom + 4));
+    setOpen(true);
+  };
 
   const fetchUnread = useCallback(async () => {
     try {
@@ -89,22 +104,24 @@ export default function NotificationBell() {
 
   useEffect(() => {
     if (open) fetchItems();
+    // Say that a panel opened by moving focus into it.
+    if (open && headingRef.current) headingRef.current.focus();
   }, [open, fetchItems]);
 
   // Click outside to close
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
-      if (panelRef.current && !panelRef.current.contains(e.target)) setOpen(false);
+      if (panelRef.current && !panelRef.current.contains(e.target)) close(false);
     };
-    const esc = (e) => e.key === 'Escape' && setOpen(false);
+    const esc = (e) => e.key === 'Escape' && close();
     document.addEventListener('mousedown', handler);
     document.addEventListener('keydown', esc);
     return () => {
       document.removeEventListener('mousedown', handler);
       document.removeEventListener('keydown', esc);
     };
-  }, [open]);
+  }, [open, close]);
 
   const handleOpen = (n) => async () => {
     try {
@@ -137,7 +154,11 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={panelRef}>
       <button
-        onClick={() => setOpen(o => !o)}
+        ref={buttonRef}
+        onClick={toggle}
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-controls={open ? 'notification-center' : undefined}
         data-testid="notification-bell"
         aria-label={`Notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
         className="relative w-touch h-touch rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
@@ -155,12 +176,16 @@ export default function NotificationBell() {
 
       {open && (
         <div
+          id="notification-center"
+          role="dialog"
+          aria-labelledby="notification-center-title"
           data-testid="notification-center"
-          className="absolute right-0 top-full z-popover mt-0.5 w-popover max-h-panel overflow-hidden rounded-card border-hairline border-grove-moss bg-grove-forest"
+          style={{ '--bell-top': `${panelTop}px` }}
+          className="bell-panel fixed inset-x-4 z-popover max-h-panel overflow-hidden rounded-card border-hairline border-grove-moss bg-grove-forest sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-0.5 sm:w-popover"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b-hairline border-grove-moss">
             <div className="flex items-center gap-2">
-              <h3 className="font-plant text-grove-cream text-base font-semibold ">Notifications</h3>
+              <h3 id="notification-center-title" ref={headingRef} tabIndex={-1} className="font-plant text-grove-cream text-base font-semibold focus:outline-none">Notifications</h3>
               {unread > 0 && (
                 <span className="font-latin text-xs text-grove-blush">{unread} new</span>
               )}
@@ -176,9 +201,11 @@ export default function NotificationBell() {
                 </button>
               )}
               <button
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-                className="text-grove-cream hover:text-grove-cream"
+                type="button"
+                onClick={() => close()}
+                aria-label="Close notifications"
+                data-testid="notification-close"
+                className="flex h-touch w-touch items-center justify-center rounded-pill text-grove-cream hover:bg-grove-moss focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -194,7 +221,7 @@ export default function NotificationBell() {
                   <Bell className="h-4 w-4 text-grove-sprout" />
                 </div>
                 <p className="font-ui text-sm text-grove-cream">Nothing new right now.</p>
-                <p className="font-latin text-xs text-grove-cream mt-0.5">We’ll ping you when your grove needs attention.</p>
+                <p className="font-latin text-xs text-grove-cream mt-0.5">We’ll let you know when a plant needs you.</p>
               </div>
             ) : (
               items.map((n) => {
@@ -241,6 +268,17 @@ export default function NotificationBell() {
                 );
               })
             )}
+          </div>
+          {/* The way to fewer (or no) notifications, from where people look for it. */}
+          <div className="border-t-hairline border-grove-moss px-4 py-2">
+            <button
+              type="button"
+              onClick={() => { close(false); navigate('/settings/notifications'); }}
+              data-testid="notification-settings-link"
+              className="flex min-h-touch w-full items-center font-ui text-sm text-grove-sprout underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
+            >
+              Notification settings
+            </button>
           </div>
         </div>
       )}
