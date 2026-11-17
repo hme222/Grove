@@ -192,3 +192,6 @@
 
 /* Pip's layer sits above the tab bar. PipPeek sets --pip-bottom to the bar's real height, which grows with large text. */
 .pip-layer { bottom: var(--pip-bottom, var(--nav-height)); }
+/* While Pip stands on the tab bar, the page ends his height higher, so the last card can scroll clear of him
+   instead of sitting under him. PipPeek sets --pip-reserve to his measured height and clears it when he goes. */
+.app-shell { padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--pip-reserve, 0px)); }
