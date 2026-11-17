@@ -91,6 +91,14 @@ describe('ToxicityBadge', () => {
     expect(panel()).toBeNull();
   });
 
+  test('a plain click (mouse, Enter, or a screen reader) opens the definition', async () => {
+    const badge = render('toxic');
+    await act(async () => { badge.click(); });
+    const def = document.body.querySelector('[data-testid="toxicity-badge-definition"]');
+    expect(def).not.toBeNull();
+    expect(def.textContent).toContain('ASPCA');
+  });
+
   test('a chip inside a link or button takes no focus', () => {
     act(() => root.render(<ToxicityBadge toxicity="toxic" interactive={false} />));
     expect(container.querySelector('[data-testid="toxicity-badge"]').hasAttribute('tabindex')).toBe(false);
