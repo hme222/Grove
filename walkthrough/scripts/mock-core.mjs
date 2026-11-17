@@ -60,9 +60,9 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       enabled: true, level: 1, level_name: 'Bare', next_unlock: 'the shelf',
       unlocked: ['window', 'table', 'sill', 'floor'], grew: false, level_up: false, quiet: false,
       pip: { form: 'seed', location: 'sill' },
-      hero: p ? { id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null, created_at: p.created_at, last_watered_at: p.last_watered_at } : null,
+      hero: p ? { id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null, created_at: p.created_at, last_watered_at: p.last_watered_at, last_care_at: p.last_care_at } : null,
       shelf_plants: [],
-      plants: p ? [{ id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null, created_at: p.created_at, last_watered_at: p.last_watered_at }] : [],
+      plants: p ? [{ id: p.id, name: p.nickname || p.common_name, group: 'generic', condition: 'fine', looks_off: false, photo_url: null, created_at: p.created_at, last_watered_at: p.last_watered_at, last_care_at: p.last_care_at }] : [],
       readiness: null, window: null,
     };
   };
@@ -154,6 +154,7 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       const key = `${b.soil_outcome || ''}:${b.soil_decision || ''}`;
       const cared = state.plants.find((p) => p.id === m[1]);
       if (cared && (b.actions || []).includes('water')) cared.last_watered_at = now();
+      if (cared) cared.last_care_at = now(); // like the server: any care log counts as a check
       for (const action of b.actions || []) {
         state.careLogList.push({ id: `cl_${state.careLogList.length + 1}`, plant_id: m[1], action, notes: b.notes || '', soil_outcome: b.soil_outcome || null, soil_decision: b.soil_decision || null, logged_at: now(), created_at: now() });
       }
@@ -170,6 +171,7 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
       const roundId = plants.length ? `rnd_${Object.keys(rounds).length + 1}` : null;
       const logIds = plants.map((p) => {
         p.last_watered_at = now();
+        p.last_care_at = now();
         const id = `cl_${state.careLogList.length + 1}`;
         state.careLogList.push({ id, plant_id: p.id, action: 'water', notes: '', logged_at: now(), created_at: now() });
         return id;

@@ -2050,7 +2050,7 @@ async def get_water_round(current_user: dict = Depends(get_current_user)):
 # Undo window for a water round. The UI offers Undo for about 8 seconds, but
 # the snackbar pauses while it has focus or hover, so the server allows longer.
 WATER_ROUND_UNDO_MINUTES = 15
-_ROUND_RESTORE_FIELDS = ("last_watered_at", "next_water_due", "status")
+_ROUND_RESTORE_FIELDS = ("last_watered_at", "last_care_at", "next_water_due", "status")
 
 
 class WaterRoundInput(BaseModel):
@@ -2084,6 +2084,7 @@ async def log_water_round(input: Optional[WaterRoundInput] = None, current_user:
                 {"id": p['id']},
                 {"$set": {
                     "last_watered_at": now.isoformat(),
+                    "last_care_at": now.isoformat(),
                     "next_water_due": (now + timedelta(days=freq)).isoformat(),
                     "status": "healthy", "updated_at": now.isoformat()
                 }}
@@ -2456,13 +2457,15 @@ async def create_care_log(plant_id: str, input: CareLogCreate, current_user: dic
                 {"id": plant_id},
                 {"$set": {
                     "last_watered_at": now.isoformat(),
+                    "last_care_at": now.isoformat(),
                     "next_water_due": (now + timedelta(days=freq)).isoformat(),
                     "status": "healthy", "updated_at": now.isoformat()
                 }}
             )
             watering_applied = True
     if not watering_applied:
-        await db.plants.update_one({"id": plant_id}, {"$set": {"updated_at": now.isoformat()}})
+        # Any care counts as a check (a soil test, a look, a note), so the plant stops reading "No checks yet".
+        await db.plants.update_one({"id": plant_id}, {"$set": {"last_care_at": now.isoformat(), "updated_at": now.isoformat()}})
     # Soil checks, looks and photos count as weekly check-ins; they are read straight from these logs.
     await check_and_award_badges(current_user['user_id'])
     # Phase 11C — mission hook + first-care celebration signal

@@ -41,3 +41,16 @@ test('a new plant is never "watered today"', () => {
   const now = new Date();
   expect(wateredToday({ created_at: now.toISOString(), last_watered_at: now.toISOString() }, now)).toBe(false);
 });
+
+test('a logged soil check counts as care, so the plant stops reading No checks yet', () => {
+  const added = '2026-10-28T12:00:00.000Z';
+  const checked = { created_at: added, last_watered_at: added, last_care_at: '2026-10-28T12:05:00.000Z', status: 'healthy' };
+  expect(hasBeenCaredFor(checked)).toBe(true);
+  expect(displayStatus(checked)).toBe('healthy');
+});
+
+test('a soil check on the day a plant was added is not a watering today', () => {
+  const added = '2026-10-28T12:00:00.000Z';
+  const checked = { created_at: added, last_watered_at: added, last_care_at: '2026-10-28T12:05:00.000Z' };
+  expect(wateredToday(checked, new Date('2026-10-28T18:00:00.000Z'))).toBe(false);
+});
