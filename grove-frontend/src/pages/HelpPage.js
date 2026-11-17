@@ -67,7 +67,7 @@ export default function HelpPage() {
   return (
     <div className="min-h-screen bg-grove-forest pb-6" data-testid="help-page">
       {/* Header */}
-      <PageHeader title="Help &amp; Tutorial" back={{ testId: 'help-back-button' }} />
+      <PageHeader title="Help &amp; tutorial" back={{ testId: 'help-back-button' }} />
 
       {/* Content */}
       <div className="max-w-page mx-auto px-4 pt-6 space-y-6">

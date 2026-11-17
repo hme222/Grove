@@ -17,7 +17,8 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
   const onProfile = pathname === '/profile';
   // Help opens the help sheet over this screen. It is left out where there is no sheet, where the bell is hidden, and on the help page itself.
   const helpSheet = useHelpSheet();
-  const showHelp = !!helpSheet && !hideBell && pathname !== '/help-my-plant';
+  const onHelpPage = pathname === '/help-my-plant';
+  const showHelp = !!helpSheet && !hideBell && !onHelpPage;
 
   // One title per screen for the tab strip and screen-reader history (WCAG 2.4.2).
   React.useEffect(() => {
@@ -30,19 +31,26 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
         <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
           <div className={cn('flex min-w-0 flex-1 basis-28 items-center', back ? 'gap-4' : 'gap-2')}>
             {back && <BackButton {...(back === true ? {} : back)} />}
-            <h1 id="page-title" ref={titleRef} tabIndex={titleRef ? -1 : undefined} className={cn('flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words', titleRef && 'focus:outline-none')}><span className="min-w-0 line-clamp-2 overflow-hidden [overflow-wrap:anywhere]">{title}</span></h1>
+            <h1 id="page-title" ref={titleRef} tabIndex={titleRef ? -1 : undefined} className={cn('flex min-h-touch min-w-0 items-center font-plant text-grove-cream text-2xl leading-tight break-words', titleRef && 'focus:outline-none')}><span className="min-w-0 line-clamp-2 overflow-hidden break-words">{title}</span></h1>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {rightContent}
+            {/* On the screen a header button leads to, it stays in its place as a "you are here" mark (not a control),
+                so the buttons never move from screen to screen. */}
+            {onHelpPage && !hideBell && (
+              <span aria-hidden="true" data-testid="header-help-current" className="flex h-touch items-center rounded-pill border-hairline border-grove-lime bg-grove-moss px-4 font-ui text-sm text-grove-cream">
+                Plant help
+              </span>
+            )}
             {showHelp && (
               <button
                 type="button"
                 onClick={() => helpSheet.open()}
-                aria-label="Help with a plant"
                 data-testid="header-help-button"
                 className="flex h-touch items-center rounded-pill border-hairline border-grove-moss bg-grove-canopy px-4 font-ui text-sm text-grove-cream hover:border-grove-fernLine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime"
               >
-                Help
+                {/* "Plant help", not "Help": it opens plant triage. The app guide is "Help & tutorial" in Profile. */}
+                Plant help
               </button>
             )}
             {!hideBell && <NotificationBell />}
@@ -57,7 +65,11 @@ export function PageHeader({ title, rightContent, children, hideBell, hideProfil
                 <User className="h-4 w-4" />
               </button>
             )}
-            {onProfile && !hideProfile && <span aria-hidden="true" className="h-touch w-touch" />}
+            {onProfile && !hideProfile && (
+              <span aria-hidden="true" data-testid="header-profile-current" className="flex h-touch w-touch items-center justify-center rounded-pill border-hairline border-grove-lime bg-grove-moss text-grove-cream">
+                <User className="h-4 w-4" />
+              </span>
+            )}
           </div>
         </div>
         {children}

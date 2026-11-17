@@ -28,7 +28,9 @@ test('the Help button shows with the sheet available, and opens it', async () =>
   const open = jest.fn();
   const { container, done } = await show({}, { open });
   expect(btn(container)).not.toBeNull();
-  expect(btn(container).getAttribute('aria-label')).toBe('Help with a plant');
+  // Its name is its visible text (label in name), and says it is plant help, not app help.
+  expect(btn(container).getAttribute('aria-label')).toBeNull();
+  expect(btn(container).textContent.trim()).toBe('Plant help');
   await act(async () => { btn(container).click(); });
   expect(open).toHaveBeenCalledTimes(1);
   done();
@@ -46,4 +48,22 @@ test('no Help button without a sheet, on the help page, or where the bell is hid
   m = await show({ hideBell: true }, { open: jest.fn() });
   expect(btn(m.container)).toBeNull();
   m.done();
+});
+
+test('on Help my plant the Plant help pill stays in its place as a you-are-here mark, not a button', async () => {
+  mockPath = '/help-my-plant';
+  const { container, done } = await show();
+  expect(btn(container)).toBeNull();
+  const mark = container.querySelector('[data-testid="header-help-current"]');
+  expect(mark.textContent.trim()).toBe('Plant help');
+  expect(mark.getAttribute('aria-hidden')).toBe('true');
+  done();
+});
+
+test('on Profile the profile button stays in its place as a you-are-here mark', async () => {
+  mockPath = '/profile';
+  const { container, done } = await show();
+  expect(container.querySelector('[data-testid="header-profile-button"]')).toBeNull();
+  expect(container.querySelector('[data-testid="header-profile-current"]')).not.toBeNull();
+  done();
 });
