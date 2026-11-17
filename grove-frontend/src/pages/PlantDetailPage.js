@@ -544,7 +544,7 @@ export default function PlantDetailPage() {
         onClose={() => setCareModalOpen(false)}
         plantId={plantId}
         plantName={plant.nickname || plant.common_name}
-        onLogged={(meta, logged) => { fetchPlant(); firstCare.celebrate(meta?.first_care_pending, logged); }}
+        onLogged={(meta, logged) => { fetchPlant(); firstCare.celebrate(meta?.first_care_pending, logged && { ...logged, photo: plant?.photo_url || null }); }}
       />
 
       <FirstCareCelebration open={firstCare.open} onClose={firstCare.close} logged={firstCare.details} />

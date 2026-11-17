@@ -242,7 +242,8 @@ export default function CarePage() {
       next.add(plantId);
       return next;
     });
-    if (meta) maybeCelebrateFirstCare(meta.first_care_pending, logged);
+    // The plant's photo goes with it, so the first-care moment shows this plant.
+    if (meta) maybeCelebrateFirstCare(meta.first_care_pending, logged && { ...logged, photo: loggedPlant?.photo_url || null });
     window.dispatchEvent(new Event('grove:mission-refresh'));
     setTimeout(() => {
       setExiting((prev) => {
