@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Heart, OctagonAlert, CircleHelp } from 'lucide-react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { getToxicityInfo } from '../lib/toxicity';
@@ -20,7 +20,6 @@ export default function ToxicityBadge({ toxicity, size = 'md', className = '', t
   const Icon = ICONS[info.icon];
   const s = SIZES[size] || SIZES.md;
   const [open, setOpen] = useState(false);
-  const touched = useRef(false);
   // A chip you can focus and tap is a real button; one inside a link or button stays plain text.
   const Chip = interactive ? 'button' : 'span';
   return (
@@ -31,8 +30,9 @@ export default function ToxicityBadge({ toxicity, size = 'md', className = '', t
             type={interactive ? 'button' : undefined}
             data-testid={testId}
             data-level={info.level}
-            onPointerDown={(e) => { touched.current = e.pointerType === 'touch'; }}
-            onClick={interactive ? () => { if (touched.current) setOpen(true); } : undefined}
+            // Any activation opens it: a tap, a click, Enter or Space, or a screen reader's double-tap. Before, only a
+            // touch-screen tap did, so a click or VoiceOver showed nothing.
+            onClick={interactive ? () => setOpen(true) : undefined}
             className={`inline-flex items-center rounded-pill border-hairline font-ui ${s.box} ${info.className} ${interactive ? 'relative cursor-help before:absolute before:inset-x-0 before:-inset-y-2 before:content-[\'\'] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime' : ''} ${className}`}
           >
             <Icon className={`${s.icon} flex-shrink-0`} aria-hidden="true" />

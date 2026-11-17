@@ -80,3 +80,10 @@ test('with no sourced pet-safety result, there is no source line', async () => {
   await settle();
   expect(q('species-safety-source')).toBeNull();
 });
+
+test('Or add custom plant moves focus to the plant name field', async () => {
+  await mount();
+  const custom = [...container.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Or add custom plant');
+  await act(async () => { custom.click(); });
+  expect(document.activeElement === q('plant-name-input')).toBe(true);
+});

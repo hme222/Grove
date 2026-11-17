@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SYMPTOMS, SAFETY_INTRO, SAFETY_CONTACTS, SAFETY_STEPS, SOIL_CHECK } from '../../lib/plantHelp';
 import { cn } from '../../lib/utils';
@@ -43,6 +43,17 @@ export default function SymptomHelp({ onLeave, withSafety = true }) {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const symptom = SYMPTOMS.find((s) => s.id === selected);
+  // Picking a symptom moves focus (and the view) to its answer, which can sit far below the chips at large text. A
+  // screen reader then reads the answer's heading, instead of the whole region being announced at once.
+  const answerRef = useRef(null);
+  const picked = useRef(false);
+  useEffect(() => {
+    if (!picked.current || !selected || !answerRef.current) return;
+    picked.current = false;
+    answerRef.current.focus({ preventScroll: true });
+    const reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (answerRef.current.scrollIntoView) answerRef.current.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+  }, [selected]);
 
   // The help_diagnosis experiment. Anyone we can't place, or if the call fails, gets the plain symptom list.
   const [arm, setArm] = useState('control');
@@ -58,6 +69,7 @@ export default function SymptomHelp({ onLeave, withSafety = true }) {
     return () => { alive = false; };
   }, []);
   const pickSymptom = (id, active) => {
+    picked.current = !active;
     setSelected(active ? null : id);
     if (!active) experimentAPI.event('help_diagnosis', 'triage_symptom_picked', { symptom: id }).catch(() => {});
   };
@@ -88,9 +100,10 @@ export default function SymptomHelp({ onLeave, withSafety = true }) {
       </div>
     </section>
 
-    <section aria-live="polite" data-testid="causes">
+    <section data-testid="causes">
       {symptom && (
         <div className="space-y-3">
+          <h2 ref={answerRef} tabIndex={-1} className="sr-only focus:outline-none" data-testid="causes-heading">{symptom.label}: what to check</h2>
           {symptom.soilCheck && (
             <div className="rounded-card border-hairline border-grove-sun/40 bg-grove-canopy p-5" data-testid="soil-check">
               <h2 className="font-plant text-xl font-semibold text-grove-cream">{SOIL_CHECK.title}</h2>

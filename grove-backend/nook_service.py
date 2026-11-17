@@ -97,6 +97,7 @@ async def build_state(
             # So the tile can say "No checks yet" for a plant nobody has cared for, by the same rule as every screen.
             "created_at": plant.get("created_at"),
             "last_watered_at": plant.get("last_watered_at"),
+            "last_care_at": plant.get("last_care_at"),
         })
 
     # Quiet mode looks at every active plant. Only the list the page shows is capped.

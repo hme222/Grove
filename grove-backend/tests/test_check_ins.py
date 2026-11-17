@@ -143,6 +143,11 @@ class Coll:
     async def count_documents(self, flt=None):
         return sum(1 for d in self.docs if _matches(d, flt or {}))
 
+    async def delete_one(self, flt):
+        hit = next((d for d in self.docs if _matches(d, flt or {})), None)
+        if hit is not None:
+            self.docs.remove(hit)
+
     async def insert_one(self, doc):
         self.docs.append(doc)
 
@@ -397,3 +402,20 @@ def test_light_reader_is_earned_by_the_old_tooltip_or_the_window_map_lesson():
     assert badge_progress.light_reader_earned(["collection", "lesson:window-map"])
     assert not badge_progress.light_reader_earned(["lesson:light-basics"])
     assert not badge_progress.light_reader_earned(None)
+
+
+def test_any_care_log_stamps_last_care_at_so_the_plant_stops_reading_no_checks_yet(make_client):
+    db, client = make_client()
+    assert "last_care_at" not in db.plants.docs[0]
+    client.post("/api/plants/p0/care-logs", json={"actions": ["soil_check"], "soil_outcome": "damp", "soil_decision": "wait"})
+    assert db.plants.docs[0]["last_care_at"]
+    assert "last_watered_at" not in db.plants.docs[0]  # a check is not a watering
+
+
+def test_undoing_a_water_round_puts_last_care_at_back(make_client):
+    db, client = make_client()
+    db.plants.docs[0]["next_water_due"] = "2000-01-01T00:00:00+00:00"
+    round_id = client.post("/api/plants/water-round/log").json()["round_id"]
+    assert db.plants.docs[0]["last_care_at"]
+    client.post(f"/api/plants/water-round/{round_id}/undo")
+    assert db.plants.docs[0].get("last_care_at") is None

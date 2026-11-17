@@ -57,3 +57,15 @@ test('the photo_check arm sees the photo check above the symptom list', async ()
   page.done();
   mockArm = null;
 });
+
+test('picking a symptom moves focus to its answer, which can sit far below the chips', async () => {
+  const page = await mountHelp();
+  const chip = page.host.querySelector('[data-testid="symptom-list"] button');
+  chip.focus();
+  await act(async () => { chip.click(); });
+  const heading = page.host.querySelector('[data-testid="causes-heading"]');
+  expect(heading).not.toBeNull();
+  expect(document.activeElement === heading).toBe(true);
+  expect(heading.textContent).toContain('what to check');
+  page.done();
+});
