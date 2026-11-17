@@ -47,7 +47,7 @@ describe('nookCopy', () => {
 
   test('every readiness step and condition has a label', () => {
     expect(Object.keys(READINESS_STEP_LABELS)).toEqual(['light-spot', 'drainage', 'soil-mix']);
-    expect(Object.keys(CONDITION_LABELS)).toEqual(['fine', 'due-soon', 'needs-attention']);
+    expect(Object.keys(CONDITION_LABELS)).toEqual(['fine', 'due-soon', 'needs-attention', 'unchecked']);
   });
 });
 

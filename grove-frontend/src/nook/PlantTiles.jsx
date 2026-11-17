@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertCircle, Check, CheckCircle2, Clock, Leaf } from 'lucide-react';
+import { AlertCircle, Check, CheckCircle2, CircleDashed, Clock, Leaf } from 'lucide-react';
 import { getFileUrl } from '../lib/api';
 import { CONDITION_LABELS } from './nookCopy';
+import { hasBeenCaredFor } from '../lib/careActions';
 import { PAPER_BUTTON_QUIET } from './paperStyles';
 import ThumbStrip from '../components/ThumbStrip';
 import PhotoBand from '../components/PhotoBand';
@@ -11,7 +12,12 @@ const CONDITION_ICONS = {
   fine: { Icon: CheckCircle2, tone: 'text-grove-paperAccent' },
   'due-soon': { Icon: Clock, tone: 'text-grove-ink' },
   'needs-attention': { Icon: AlertCircle, tone: 'text-grove-paperError' },
+  unchecked: { Icon: CircleDashed, tone: 'text-grove-inkSoft' },
 };
+
+// A plant that is fine on paper but that nobody has cared for yet reads "No checks yet", never "Healthy", the same as
+// every other screen (lib/careActions displayStatus). The sprite keeps its condition; only the words and icon change.
+export const tileCondition = (plant) => (plant.condition === 'fine' && !hasBeenCaredFor(plant) ? 'unchecked' : plant.condition);
 
 function PhotoSlot({ plant }) {
   // The plant's cover photo (`photo_url`) when it has one; the leaf tile otherwise.
@@ -93,7 +99,8 @@ export default function PlantTiles({ plants, onToggleLooksOff }) {
     >
       <ul className="flex w-max gap-3">
         {plants.map((plant) => {
-          const { Icon, tone } = CONDITION_ICONS[plant.condition] || CONDITION_ICONS.fine;
+          const condition = tileCondition(plant);
+          const { Icon, tone } = CONDITION_ICONS[condition] || CONDITION_ICONS.fine;
           return (
             <li
               key={plant.id}
@@ -105,7 +112,7 @@ export default function PlantTiles({ plants, onToggleLooksOff }) {
               <span className="flex items-start gap-1.5 font-ui text-sm text-grove-inkSoft">
                 <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${tone}`} aria-hidden="true" />
                 <span data-testid={`nook-condition-${plant.id}`}>
-                  {CONDITION_LABELS[plant.condition]}
+                  {CONDITION_LABELS[condition]}
                   {plant.looks_off ? ', marked as looking off' : ''}
                 </span>
               </span>

@@ -28,7 +28,8 @@ jest.mock('../components/PageHeader', () => ({
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const PLANT = (id, over = {}) => ({ id, name: `Plant ${id}`, group: 'pothos', condition: 'fine', looks_off: false, ...over });
+// Watered after it was added, so a fine plant reads Healthy. A plant with no watering reads No checks yet.
+const PLANT = (id, over = {}) => ({ id, name: `Plant ${id}`, group: 'pothos', condition: 'fine', looks_off: false, created_at: '2026-01-01T00:00:00Z', last_watered_at: '2026-01-05T00:00:00Z', ...over });
 
 const STATE = (over = {}) => ({
   enabled: true,
@@ -221,6 +222,14 @@ describe('plants', () => {
     expect(q('nook-condition-p1').textContent).toBe('Healthy');
     expect(q('nook-condition-p2').textContent).toBe('Due soon');
     expect(q('nook-source').textContent).toBe("From your records and Grove’s plant check");
+  });
+
+  test('a plant nobody has cared for reads No checks yet, not Healthy', async () => {
+    nookAPI.state.mockResolvedValue({ data: STATE({ plants: [PLANT('p1', { last_watered_at: null }), PLANT('p2', { last_watered_at: '2026-01-01T00:00:01Z' })] }) });
+    await mount();
+    expect(q('nook-condition-p1').textContent).toBe('No checks yet');
+    // A "watering" stamped at the moment it was added is the schedule start, not care.
+    expect(q('nook-condition-p2').textContent).toBe('No checks yet');
   });
 
   test('marking a plant as looking off saves and refreshes, and says so in words', async () => {
