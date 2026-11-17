@@ -11,10 +11,12 @@ import { Spinner } from './Loading';
 // same Try again, a smaller card. `note` adds one reassurance line ("The plant guide below still works.").
 // Retry counts survive the card being unmounted and redrawn by a page's own reload, so a second
 // failure can say "still".
+// `error` (optional) is the caught error. A server fault (an HTTP 5xx) is said as ours, never as the person's
+// connection; without it, or with no response, the card keeps the connection wording.
 const RETRIES = new Map();
 const recent = (what) => { const r = RETRIES.get(what); return r && Date.now() - r.t < 60000 ? r.n : 0; };
 
-export default function LoadError({ what = 'this page', onRetry, busy = false, compact = false, note, testId = 'load-error' }) {
+export default function LoadError({ what = 'this page', onRetry, busy = false, compact = false, note, error, testId = 'load-error' }) {
   const doRetry = onRetry || (() => window.location.reload());
   const [trying, setTrying] = useState(false);
   const [attempts, setAttempts] = useState(() => recent(what));
@@ -38,8 +40,11 @@ export default function LoadError({ what = 'this page', onRetry, busy = false, c
     }
   };
   const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
+  const status5xx = error && error.response && error.response.status >= 500;
   const body = offline
     ? 'You appear to be offline. Reconnect, then try again.'
+    : status5xx
+      ? 'FloraGrove had a problem on our side. It isn\u2019t your connection, and your plants are safe. Try again in a moment.'
     : attempts > 0
       ? `Still can\u2019t reach FloraGrove (tried ${attempts + 1} times). Your plants are safe. Try again in a minute.`
       : 'We couldn\u2019t reach FloraGrove. Check your connection and try again. If it keeps happening, it\u2019s on our side.';
