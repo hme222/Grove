@@ -195,7 +195,6 @@ test('admin rows show only for admins, below Sign out', async () => {
   const logout = el('profile-logout-button');
   ['profile-replay-onboarding-button', 'profile-admin-button'].forEach((id) => {
     expect(el(id)).not.toBeNull();
-    // eslint-disable-next-line no-bitwise
     expect(logout.compareDocumentPosition(el(id)) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
   await act(async () => { el('profile-replay-onboarding-button').click(); });
@@ -209,7 +208,6 @@ test.each([
   await mount();
   expect(!!el('profile-florist-button')).toBe(shown);
   if (shown) {
-    // eslint-disable-next-line no-bitwise
     expect(el('profile-logout-button').compareDocumentPosition(el('profile-florist-button')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   }
 });
