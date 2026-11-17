@@ -24,8 +24,9 @@ export const TOXICITY_LEVELS = {
   },
   unknown: {
     level: 'unknown',
-    label: 'Pet safety unknown — check before bringing it home',
-    definition: 'We have no ASPCA listing recorded for this plant, so don’t assume it’s safe. Check the ASPCA’s toxic and non-toxic plant list before bringing it home.',
+    // Shown for plants the person already owns as well as ones they are choosing, so the words fit both.
+    label: 'Pet safety unknown — check the ASPCA list',
+    definition: 'We have no ASPCA listing recorded for this plant, so don’t assume it’s safe. Check the ASPCA’s toxic and non-toxic plant list, and keep it out of reach until you know.',
     icon: 'unknown',
     className: 'text-grove-sage bg-grove-canopy border-grove-fernLine',
   },
