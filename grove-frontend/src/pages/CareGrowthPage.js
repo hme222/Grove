@@ -118,7 +118,13 @@ export default function CareGrowthPage() {
           <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="growth-hours-breakdown">
             <h3 className="font-plant text-grove-cream text-base font-semibold  mb-3">
               Estimated care time
-              <span className="ml-2 font-ui text-xs text-grove-cream">{careHours.total_hours}h total</span>
+              {/* Under an hour, the total is said in minutes (the sum of the rows), never "0h". */}
+              <span className="ml-2 font-ui text-xs text-grove-cream" data-testid="care-time-total">
+                {(() => {
+                  const minutes = Object.entries(careHours).filter(([k]) => k !== 'total_hours').reduce((n, [, d]) => n + ((d && d.estimated_minutes) || 0), 0);
+                  return careHours.total_hours >= 1 ? `${careHours.total_hours}h total` : `${minutes} min total`;
+                })()}
+              </span>
             </h3>
             <div className="space-y-2">
               {Object.entries(careHours)

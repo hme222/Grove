@@ -89,3 +89,10 @@ test('personality card has no buttons', async () => {
   const card = container.querySelector('[data-testid="personality-card"]');
   expect(card.querySelector('button')).toBeNull();
 });
+
+test('care time under an hour is totalled in minutes, never 0h', async () => {
+  statsAPI.getStats.mockResolvedValue({ data: steady });
+  statsAPI.getCareHours.mockResolvedValue({ data: { total_hours: 0, soil_check: { count: 1, estimated_minutes: 1 }, water: { count: 2, estimated_minutes: 4 } } });
+  await act(async () => { root.render(<CareGrowthPage />); });
+  expect(container.querySelector('[data-testid="care-time-total"]').textContent).toBe('5 min total');
+});
