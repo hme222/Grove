@@ -5,6 +5,13 @@ import { cn } from '../../lib/utils';
 import { buttonVariants } from '../ui/button';
 import { experimentAPI } from '../../lib/api';
 import PhotoCheck from '../PhotoCheck';
+import { lessonPath } from '../../lessons/lessonMeta';
+
+// The lesson button under the causes opens that lesson itself. Long, stretchy growth has one cause, too little light,
+// so it points to the light lesson; every other symptom starts from the soil finger-test.
+const SOIL_LESSON = { id: 'soil-finger-test', label: 'Learn the soil finger-test' };
+const LESSON_FOR = { leggy: { id: 'light-basics', label: 'Learn to read your spot’s light' } };
+export const lessonFor = (symptomId) => LESSON_FOR[symptomId] || SOIL_LESSON;
 
 // The pet and child safety note: who to call and what to do first. Shared by the Help my plant page and the help sheet.
 export function SafetyNote({ headingRef }) {
@@ -126,10 +133,11 @@ export default function SymptomHelp({ onLeave, withSafety = true }) {
           </ol>
           <button
             type="button"
-            onClick={() => { if (onLeave) onLeave(); navigate('/lessons'); }}
+            onClick={() => { if (onLeave) onLeave(); navigate(lessonPath(lessonFor(symptom.id).id)); }}
             className={cn(buttonVariants({ variant: 'outline' }))}
+            data-testid="symptom-lesson"
           >
-            Learn the soil finger-test
+            {lessonFor(symptom.id).label}
           </button>
         </div>
       )}
