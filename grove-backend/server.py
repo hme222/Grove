@@ -6046,10 +6046,22 @@ async def healthz():
 
 app.include_router(api_router)
 
+
+def cors_origins(env=os.environ):
+    """The addresses allowed to call the API from a browser. Local development may leave CORS_ORIGINS unset (any
+    address). With APP_ENV=production it must name the app's address: '*' together with credentials would let any
+    site make signed-in calls, so the server refuses to start instead. Spaces after commas are ignored."""
+    raw = env.get('CORS_ORIGINS', '').strip()
+    origins = [o.strip() for o in raw.split(',') if o.strip()] or ['*']
+    if env.get('APP_ENV', '').strip().lower() == 'production' and '*' in origins:
+        raise RuntimeError("CORS_ORIGINS must list the app's address (not *) when APP_ENV=production")
+    return origins
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=cors_origins(),
     allow_methods=["*"],
     allow_headers=["*"],
 )
