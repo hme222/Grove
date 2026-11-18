@@ -19,6 +19,7 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
   const [selected, setSelected] = useState(() => new Set());
   const [hint, setHint] = useState(null);
   const openerRef = React.useRef(null);
+  const titleRef = useRef(null);
   const [notes, setNotes] = useState('');
   const [logging, setLogging] = useState(false);
   const [soilOutcome, setSoilOutcome] = useState('');
@@ -102,12 +103,13 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) { handleReset(); onClose(); } }}>
-      <DialogContent className="max-w-dialog" data-testid="care-log-modal" aria-labelledby="care-log-title"
-        onOpenAutoFocus={(e) => { e.preventDefault(); openerRef.current = openerRef.current || document.activeElement; document.getElementById('care-log-title')?.focus(); }}
+      {/* The title keeps Radix's own id, so the dialog is labeled by it and Radix's missing-title check finds it. */}
+      <DialogContent className="max-w-dialog" data-testid="care-log-modal"
+        onOpenAutoFocus={(e) => { e.preventDefault(); openerRef.current = openerRef.current || document.activeElement; titleRef.current?.focus(); }}
         onCloseAutoFocus={(e) => { e.preventDefault(); const el = openerRef.current; openerRef.current = null; if (el && el.focus && document.contains(el)) el.focus(); }}
       >
         <DialogHeader>
-          <DialogTitle id="care-log-title" tabIndex={-1} className="font-plant text-grove-cream text-xl focus:outline-none">
+          <DialogTitle ref={titleRef} data-testid="care-log-title" tabIndex={-1} className="font-plant text-grove-cream text-xl focus:outline-none">
             Log care for {plantName}
           </DialogTitle>
           <p className="mt-1 text-sm font-ui text-grove-sage">
