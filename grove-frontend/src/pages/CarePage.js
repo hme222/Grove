@@ -22,7 +22,6 @@ import PhotoBand from '../components/PhotoBand';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
-import WorkingTowardSection from '../components/WorkingTowardSection';
 import DailyTriviaCard from '../components/DailyTriviaCard';
 import { notificationsAPI } from '../lib/api';
 import {
@@ -455,7 +454,8 @@ export default function CarePage() {
           <NextLessonCard embedded />
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
-        <WorkingTowardSection />
+        {/* "Working toward" (pinned badge goals) is left out while badges are dormant (scope-v1); its Manage link
+            led to the badge page. components/WorkingTowardSection.js is kept. */}
         {checkIns && (
           <p className="font-ui text-sm text-grove-sage" data-testid="care-checkins-line">Check-ins this week: {checkIns}</p>
         )}

@@ -46,7 +46,6 @@ import GuildDetailPage from "./pages/GuildDetailPage";
 import WantListPage from "./pages/WantListPage";
 import SwapsPage from "./pages/SwapsPage";
 import VerifyPage from "./pages/VerifyPage";
-import BadgesPage from "./pages/BadgesPage";
 import AdminDemoPage from "./pages/AdminDemoPage";
 import SwapPage from "./pages/SwapPage";
 import SwapMatchesPage from "./pages/SwapMatchesPage";
@@ -325,7 +324,6 @@ function AppRoutes() {
           <Route path="/greenhouse" element={<EncyclopediaPage />} />
           <Route path="/wants" element={<WantListPage />} />
           <Route path="/swaps" element={communityOnly(<SwapsPage />)} />
-          <Route path="/badges" element={<BadgesPage />} />
           <Route path="/rooms" element={<RoomPage />} />
           <Route path="/feed" element={communityOnly(<FeedPage />)} />
           <Route path="/plants/:plantId" element={<PlantDetailPage />} />
@@ -355,6 +353,8 @@ function AppRoutes() {
         <Route path="/goals" element={<Navigate to="/care/goals" replace />} />
         {/* Hidden for the MVP (docs/product/scope-v1.md, "Too many surfaces"); pages/ChallengesPage.js is kept unrouted. */}
         <Route path="/challenges" element={<Navigate to="/care/today" replace />} />
+        {/* Badges are dormant too (scope-v1, "Dormant"); pages/BadgesPage.js is kept unrouted. */}
+        <Route path="/badges" element={<Navigate to="/care/today" replace />} />
         <Route path="/encyclopedia" element={<Navigate to="/greenhouse" replace />} />
         <Route path="/encyclopedia/:speciesId" element={<Navigate to="/greenhouse" replace />} />
       </Routes>
