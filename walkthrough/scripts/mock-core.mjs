@@ -24,6 +24,13 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     completed: [],
     careLogs: 0,
     careLogList: [],
+    // The server's defaults for a new account (grove-backend/notification_policy.py DEFAULT_NOTIFICATION_PREFS).
+    notificationPrefs: {
+      push_care_due: true, push_care_overdue: false, push_swap_match: false, push_swap_message: false,
+      push_kudos_received: false, push_sitter_logged: true, push_bloom_hour: false, push_bouquet_reminder: true,
+      push_grove_challenge: false, email_digest: true, email_swap_match: true, quiet_hours_enabled: true,
+      quiet_hours_start: '21:00', quiet_hours_end: '08:00', care_daily_cap: 1,
+    },
     unmocked: [],
   };
 
@@ -220,7 +227,8 @@ export function createCore({ now = () => '2026-11-03T10:00:00-05:00', today = ()
     }],
     ['GET', /^\/notifications\/unread-count$/, () => ({ unread_count: 0 })],
     ['GET', /^\/users\/me\/goals$/, () => ({ items: [] })],
-    ['GET', /^\/users\/me\/notification-preferences$/, () => ({ push_care_due: false })],
+    ['GET', /^\/users\/me\/notification-preferences$/, () => ({ ...state.notificationPrefs })],
+    ['PATCH', /^\/users\/me\/notification-preferences$/, (b) => Object.assign(state.notificationPrefs, b) && { ...state.notificationPrefs }],
     ['GET', /^\/missions\/daily$/, () => ({ __status: 404 })],
     // Quiet, honest screens for places a reviewer may wander. Numbers follow what Maya has actually done.
     ['GET', /^\/stats\/me$/, () => ({
