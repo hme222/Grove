@@ -102,8 +102,9 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
   const [species, setSpecies] = useState([]);
   const [searchQuery, setSearchQuery] = useState(presetName || '');
   const searchRef = useRef(null);
-  // "Or add custom plant" swaps the search for the form; focus follows to its first field, not the page body.
-  const focusName = useRef(false);
+  // Swapping the search for the form (a species picked, or "Or add custom plant") or back ("Change") unmounts the
+  // control that had focus. Focus follows to the field named here, not the page body.
+  const focusNext = useRef(null);
   // Switching from the chooser to the form moves focus to the search field, so a keyboard or screen-reader user lands on it.
   useEffect(() => { if (focusSearch) searchRef.current?.focus(); }, [focusSearch]);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
@@ -118,10 +119,11 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
   const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
-    if (showSearch || !focusName.current) return;
-    focusName.current = false;
-    const field = document.getElementById('addplant-plant-name');
-    if (field) field.focus();
+    const target = focusNext.current;
+    if (!target) return;
+    focusNext.current = null;
+    if (showSearch) searchRef.current?.focus();
+    else document.getElementById(target)?.focus();
   }, [showSearch]);
 
   const [searchFailed, setSearchFailed] = useState(false);
@@ -261,7 +263,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               {species.map(sp => (
                 <button
                   key={sp.id}
-                  onClick={() => selectSpecies(sp)}
+                  onClick={() => { focusNext.current = 'addplant-nickname'; selectSpecies(sp); }}
                   data-testid="species-option"
                   className="w-full text-left rounded-inset border-hairline border-grove-moss bg-grove-moss px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
                 >
@@ -293,7 +295,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               </p>
             )}
             <button
-              onClick={() => { focusName.current = true; setShowSearch(false); }}
+              onClick={() => { focusNext.current = 'addplant-plant-name'; setShowSearch(false); }}
               className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-4")}
             >
               Or add custom plant
@@ -309,7 +311,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                 </div>
                 <button
                   type="button"
-                  onClick={() => { setSelectedSpecies(null); setShowSearch(true); setFormData(prev => ({...prev, common_name: '', latin_name: ''})); }}
+                  onClick={() => { focusNext.current = 'search'; setSelectedSpecies(null); setShowSearch(true); setFormData(prev => ({...prev, common_name: '', latin_name: ''})); }}
                   className="text-xs font-ui text-grove-sprout hover:text-grove-sprout"
                 >Change</button>
               </div>

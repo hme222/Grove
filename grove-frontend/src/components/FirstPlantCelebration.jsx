@@ -72,6 +72,8 @@ export default function FirstPlantCelebration() {
               e.preventDefault();
               e.currentTarget?.querySelector('[data-testid="first-plant-celebration-cta"]')?.focus();
             }}
+            // What had focus before it opened (the add-plant form) is gone, so focus goes to the page, not the body.
+            onCloseAutoFocus={(e) => { e.preventDefault(); document.getElementById('main-content')?.focus({ preventScroll: true }); }}
           >
             <div className="grove-celebrate-pop relative w-full rounded-card border-hairline border-grove-lime/40 bg-grove-canopy px-6 py-8">
               <div className="pointer-events-none absolute inset-0 flex items-start justify-center" aria-hidden="true">

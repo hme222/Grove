@@ -59,13 +59,14 @@ export default function RoomPage() {
           <EmptyState
             photo="/photos/room-1.jpg"
             title="No rooms yet"
-            description="Add rooms to your plants to organize them by location."
+            description="Open a plant and tap Add room. Plants with a room show up here, sorted by where they live."
             action={
               <AppLink
-                to="/add-plant"
+                to="/plants"
                 className={cn(buttonVariants())}
+                data-testid="rooms-empty-cta"
               >
-                Add a Plant
+                Go to my plants
               </AppLink>
             }
           />

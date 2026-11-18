@@ -154,13 +154,13 @@ export default function CollectionPage() {
 
       <div className="max-w-page mx-auto px-4 py-4">
         {!loadError && (
-          <div className="mb-3 flex items-center justify-between gap-2" data-testid="collection-toolbar">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2" data-testid="collection-toolbar">
             <p className="font-ui text-sm text-grove-sage" data-testid="collection-count">
               {!showViewSwitch && !loading && totalCount > 0
                 ? `${totalCount} ${showingBouquets ? (totalCount === 1 ? 'bouquet' : 'bouquets') : totalCount === 1 ? 'plant' : 'plants'}${roomFilter ? ' shown' : ''}`
                 : ''}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
             {!showingBouquets && !isEmpty && (
               <HeaderAction
                 onClick={() => { if (selectionMode) { exitSelectionMode(); } else { setSelectionMode(true); setSelected(new Set()); setBulkActions(new Set()); } }}
@@ -238,7 +238,7 @@ export default function CollectionPage() {
               </AppLink>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-2 sm:gap-3" data-testid="collection-bouquet-grid">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(max(6.5rem,30%),1fr))] gap-2 sm:gap-3" data-testid="collection-bouquet-grid">
               {bouquets.map(b => (
                 <BouquetTile key={`b-${b.id}`} bouquet={b} />
               ))}
@@ -247,7 +247,9 @@ export default function CollectionPage() {
         ) : isEmpty ? (
           <EmptyState config={EMPTY_STATES.collection_zero_plants} />
         ) : (
-          <div className="grid grid-cols-3 gap-2 sm:gap-3" data-testid="collection-grid">
+          /* Layout rule, not a token value: at most three columns, each at least 6.5rem, so at 200% text the grid
+             drops to fewer columns instead of cutting plant names to two letters. The bouquet grid matches. */
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(max(6.5rem,30%),1fr))] gap-2 sm:gap-3" data-testid="collection-grid">
             {filteredPlants.map(item => (
               <PlantCard
                 key={`p-${item.id}`}

@@ -87,3 +87,14 @@ test('Or add custom plant moves focus to the plant name field', async () => {
   await act(async () => { custom.click(); });
   expect(document.activeElement === q('plant-name-input')).toBe(true);
 });
+
+test('Picking a species moves focus to the nickname field, and Change brings it back to the search', async () => {
+  await mount();
+  await typeSearch('spider');
+  await settle();
+  await act(async () => { q('species-option').click(); });
+  expect(document.activeElement === q('plant-nickname-input')).toBe(true);
+  const change = [...container.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Change');
+  await act(async () => { change.click(); });
+  expect(document.activeElement === q('species-search-input')).toBe(true);
+});

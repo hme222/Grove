@@ -51,6 +51,8 @@ export default function NookOfferCard({ onDone }) {
         data-testid="nook-offer"
         className="pointer-events-auto z-intro w-full max-w-dialog rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5 text-center focus:outline-none"
         onOpenAutoFocus={(e) => { e.preventDefault(); if (headingRef.current) headingRef.current.focus(); }}
+        // What had focus before it opened (the first-care celebration) is gone, so focus goes to the page, not the body.
+        onCloseAutoFocus={(e) => { e.preventDefault(); document.getElementById('main-content')?.focus({ preventScroll: true }); }}
         onPointerDownOutside={(e) => e.preventDefault()}
         onInteractOutside={(e) => e.preventDefault()}
       >

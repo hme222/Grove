@@ -12,6 +12,7 @@ import PhotoGuideCards from '../components/PhotoGuideCards';
 import { photoCredits } from '../lib/photoCredits';
 import { ExternalLink } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { COMMUNITY_ENABLED } from '../lib/features';
 
 const TUTORIAL_SECTIONS = [
   {
@@ -43,7 +44,7 @@ const TUTORIAL_SECTIONS = [
   {
     id: 'reminders',
     title: 'Reminders',
-    content: 'FloraGrove sends at most one reminder a day, and only when plants need a check. You can turn it off or change it in Profile, under Notifications.',
+    content: 'FloraGrove sends one reminder a day at most, and only when plants need a check. You can turn it off, or allow up to three a day, in Profile under Notifications.',
   },
   {
     id: 'bouquets',
@@ -52,6 +53,7 @@ const TUTORIAL_SECTIONS = [
   },
   {
     id: 'groves',
+    community: true,
     title: 'Groves (community groups)',
     content: "A grove is never a single tree. Join or create groves to see what other members are growing, share updates, and swap cuttings. It’s a quieter, more intentional feed.",
   },
@@ -80,7 +82,8 @@ export default function HelpPage() {
 
         {/* Tutorial Accordion */}
         <Accordion type="single" collapsible className="space-y-2">
-          {TUTORIAL_SECTIONS.map((section) => (
+          {/* Community sections only while community is on (lib/features.js); otherwise they describe a page nobody can reach. */}
+          {TUTORIAL_SECTIONS.filter((section) => COMMUNITY_ENABLED || !section.community).map((section) => (
             <AccordionItem
               key={section.id}
               value={section.id}

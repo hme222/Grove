@@ -22,7 +22,6 @@ import PhotoBand from '../components/PhotoBand';
 import FirstCareCelebration from '../components/FirstCareCelebration';
 import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import SectionTutorial from '../components/SectionTutorial';
-import WorkingTowardSection from '../components/WorkingTowardSection';
 import DailyTriviaCard from '../components/DailyTriviaCard';
 import { notificationsAPI } from '../lib/api';
 import {
@@ -404,7 +403,7 @@ export default function CarePage() {
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
                         aria-label={`Log care for ${plant.nickname || plant.common_name}`}
-                        className={cn(buttonVariants(), "relative min-w-0 flex-1 overflow-hidden")}
+                        className={cn(buttonVariants(), "relative min-w-fit grow overflow-hidden")}
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
@@ -413,7 +412,7 @@ export default function CarePage() {
                         onClick={(e) => handleWateredOne(plant, e.currentTarget)}
                         aria-label={`Mark ${plant.nickname || plant.common_name} watered`}
                         data-testid="care-mark-done"
-                        className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-0 flex-1 overflow-hidden")}
+                        className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-fit grow overflow-hidden")}
                       >
                         <Check className="h-4 w-4" aria-hidden="true" />
                         Watered
@@ -455,7 +454,8 @@ export default function CarePage() {
           <NextLessonCard embedded />
           {user?.nook_enabled ? <PipNoteCard embedded /> : <DailyTriviaCard embedded />}
         </div>
-        <WorkingTowardSection />
+        {/* "Working toward" (pinned badge goals) is left out while badges are dormant (scope-v1); its Manage link
+            led to the badge page. components/WorkingTowardSection.js is kept. */}
         {checkIns && (
           <p className="font-ui text-sm text-grove-sage" data-testid="care-checkins-line">Check-ins this week: {checkIns}</p>
         )}
