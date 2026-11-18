@@ -260,6 +260,8 @@ function AppRoutes() {
   const handleOfferDone = (saved) => {
     updateUser(saved);
     setOfferDone(true);
+    // "Try the room" shows the room, so the yes does something the person can see.
+    if (saved?.nook_enabled) navigate('/nook');
   };
 
   const firstRunOpen = flowOpen || showQuiz || showOffer;

@@ -117,3 +117,17 @@ test('everything behind the offer is hidden from screen readers while it is open
   await mount();
   expect(container.getAttribute('aria-hidden')).toBe('true');
 });
+
+test('when it closes, focus goes to the page rather than the body', async () => {
+  const main = document.createElement('main');
+  main.id = 'main-content';
+  main.tabIndex = -1;
+  document.body.appendChild(main);
+  await mount();
+  await click(q('nook-offer-no'));
+  await flush();
+  await act(async () => { root.render(null); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 20)); });
+  expect(document.activeElement).toBe(main);
+  main.remove();
+});

@@ -56,3 +56,20 @@ test('the grove counts as empty only when the list says so, and a failed check i
   expect(await groveIsEmpty({ getAll: async () => ({ data: { plants: [{ id: 'a' }], total: 1 } }) })).toBe(false);
   expect(await groveIsEmpty({ getAll: async () => { throw new Error('offline'); } })).toBe(false);
 });
+
+test('when it closes, focus goes to the page rather than the body', async () => {
+  const main = document.createElement('main');
+  main.id = 'main-content';
+  main.tabIndex = -1;
+  document.body.appendChild(main);
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  const root = createRoot(container);
+  mockLocation = { pathname: '/plants', state: firstPlantState({ id: 'p1', common_name: 'Pothos' }) };
+  await act(async () => { root.render(<FirstPlantCelebration />); });
+  mockLocation = { pathname: '/plants', state: null };
+  await act(async () => { root.render(<FirstPlantCelebration key="closed" />); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 20)); });
+  expect(document.activeElement).toBe(main);
+  act(() => root.unmount()); container.remove(); main.remove();
+});
