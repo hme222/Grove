@@ -404,7 +404,7 @@ export default function CarePage() {
                         onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
                         aria-label={`Log care for ${plant.nickname || plant.common_name}`}
-                        className={cn(buttonVariants(), "relative min-w-0 flex-1 overflow-hidden")}
+                        className={cn(buttonVariants(), "relative min-w-fit grow overflow-hidden")}
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         Log care
@@ -413,7 +413,7 @@ export default function CarePage() {
                         onClick={(e) => handleWateredOne(plant, e.currentTarget)}
                         aria-label={`Mark ${plant.nickname || plant.common_name} watered`}
                         data-testid="care-mark-done"
-                        className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-0 flex-1 overflow-hidden")}
+                        className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-fit grow overflow-hidden")}
                       >
                         <Check className="h-4 w-4" aria-hidden="true" />
                         Watered
