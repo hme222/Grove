@@ -7,6 +7,7 @@ import { PageHeader, HeaderAction } from '../components/PageHeader';
 import { AppLink } from '../components/AppLink';
 import { Bell, Trophy, Droplets, Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import { COMMUNITY_ENABLED } from '../lib/features';
 
 const NOTIFICATION_ICONS = {
   goal_completed: Trophy,
@@ -92,7 +93,10 @@ export default function NotificationsPage() {
           <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 text-center">
             <Bell className="h-12 w-12 text-grove-sage mx-auto mb-3" />
             <p className="text-sm text-grove-cream">No notifications yet</p>
-            <p className="text-xs text-grove-cream mt-1">We’ll let you know about care reminders and grove activity</p>
+            <p className="text-xs text-grove-cream mt-1" data-testid="notifications-empty-body">
+              {/* Grove activity only exists while community is on (lib/features.js). */}
+              {COMMUNITY_ENABLED ? 'We’ll let you know about care reminders and grove activity.' : 'We’ll let you know about care reminders.'}
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
