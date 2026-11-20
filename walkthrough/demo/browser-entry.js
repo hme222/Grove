@@ -13,6 +13,31 @@ try {
 const isMock = (url) => /^https?:\/\/mock\.local\/api\//.test(url);
 const LATENCY_MS = 90;
 
+// Failure switch, so the error states can be reached by clicking (the fake backend never fails on its own):
+//   ?fail=offline   no answer at all (a dropped connection)
+//   ?fail=500       a server fault        ?fail=402   free photo IDs used up      ?fail=429   a cost cap was hit
+// By default only actions that change something fail (Watered, saves), so the app still loads. Add
+// &failpath=plants/identify,water to fail only requests whose path contains one of those words, reads included.
+const FAIL = (() => {
+  const p = new URLSearchParams(window.location.search);
+  const mode = p.get('fail');
+  if (!['offline', '500', '402', '429'].includes(mode)) return null;
+  return { mode, paths: (p.get('failpath') || '').split(',').map((s) => s.trim()).filter(Boolean) };
+})();
+if (FAIL) console.info('[demo] failure switch on:', FAIL.mode, FAIL.paths.length ? FAIL.paths.join(', ') : '(every request that changes something)');
+const failure = (method, url) => {
+  if (!FAIL || !isMock(url)) return null;
+  const path = new URL(url).pathname;
+  const hit = FAIL.paths.length ? FAIL.paths.some((s) => path.includes(s)) : method !== 'GET';
+  if (!hit) return null;
+  if (FAIL.mode === 'offline') return { offline: true };
+  const status = Number(FAIL.mode);
+  const detail = status === 402 ? { code: 'free_id_limit', message: 'You’ve used your 3 free photo IDs. You can still add a plant by searching for its name.' }
+    : status === 429 ? { code: 'fair_use_daily', message: 'You’ve reached today’s photo limit. It resets over the next 24 hours. You can still add a plant by searching for its name.' }
+      : 'Server error (demo failure switch).';
+  return { status, body: { detail } };
+};
+
 // Photos a reviewer picks stay in this tab: the upload gets a made-up address, and images asking for it are
 // pointed at the picked file. Nothing is sent anywhere.
 const PICKED = new Map();
@@ -86,7 +111,9 @@ class DemoXHR {
   send(bodyText) {
     const run = () => {
       if (this._aborted) return;
-      const out = isMock(this._url) ? respond(this._method, this._url, bodyText) : { status: 404, body: {} };
+      const fail = failure(this._method, this._url);
+      if (fail && fail.offline) { this.readyState = 4; this._emit('error'); this._emit('loadend'); return; }
+      const out = fail || (isMock(this._url) ? respond(this._method, this._url, bodyText) : { status: 404, body: {} });
       const text = JSON.stringify(out.body);
       this.status = out.status; this.statusText = out.status === 200 ? 'OK' : 'Not Found';
       this.responseText = text; this.response = this.responseType === 'json' ? out.body : text;
@@ -103,7 +130,10 @@ window.fetch = (input, init = {}) => {
   const url = typeof input === 'string' ? input : input.url;
   if (typeof url === 'string' && PICKED.has(url)) return realFetch(PICKED.get(url));
   if (!isMock(url)) return realFetch(input, init);
-  const out = respond((init.method || 'GET').toUpperCase(), url, init.body);
+  const method = (init.method || 'GET').toUpperCase();
+  const fail = failure(method, url);
+  if (fail && fail.offline) return new Promise((_, reject) => setTimeout(() => reject(new TypeError('Failed to fetch')), LATENCY_MS));
+  const out = fail || respond(method, url, init.body);
   return new Promise((r) => setTimeout(() => r(new Response(JSON.stringify(out.body), { status: out.status, headers: { 'content-type': 'application/json' } })), LATENCY_MS));
 };
 

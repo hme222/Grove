@@ -72,8 +72,10 @@ def test_prompt_carries_the_soil_answer():
 
 @pytest.fixture
 def make_client(monkeypatch):
-    def build(mode="on", ai=True):
+    def build(mode="on", ai=True, pro=True):
         db = FakeDb()
+        if pro:  # sick-plant diagnosis is Pro only, so the arm's user is Pro unless a test says otherwise
+            db.users.docs.append({"id": "u1", "tier": "pro"})
         monkeypatch.setattr(server, "db", db)
         monkeypatch.setenv("EXPERIMENT_HELP_DIAGNOSIS", mode)
         monkeypatch.setattr(experiments, "ai_ready", lambda: ai)

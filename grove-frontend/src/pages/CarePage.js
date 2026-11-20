@@ -28,7 +28,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '../components/ui/alert-dialog';
-import { Droplets, Check, Leaf, X, Sparkles, Search } from 'lucide-react';
+import { Droplets, Check, Leaf, X, Sparkles, Search, Hand } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionErrorMessage } from '../lib/errors';
 import { impactLight, impactMedium } from '../lib/haptics';
@@ -36,6 +36,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { usePipPrefs } from '../lib/pipPrefs';
 import { checkInsLabel } from '../lib/plantPersonality';
 import { dueLabel, careStep } from '../lib/careCopy';
+import { hasBeenCaredFor } from '../lib/careActions';
 import { useCareTextDetail } from '../lib/careTextMode';
 import SaveError from '../components/profile/SaveError';
 import CareTextToggle from '../components/CareTextToggle';
@@ -97,6 +98,8 @@ export default function CarePage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [careModalPlant, setCareModalPlant] = useState(null);
+  // A plant nobody has checked yet opens the care dialog with the soil test already chosen.
+  const [careModalSoilFirst, setCareModalSoilFirst] = useState(false);
   const [wateringAll, setWateringAll] = useState(false);
   const [confirmWaterAll, setConfirmWaterAll] = useState(false);
   const waterAllRef = React.useRef(null);
@@ -284,7 +287,7 @@ export default function CarePage() {
             <p role="status" className="font-ui text-sm text-grove-sage" data-testid="care-filter-status">
               {filteredPlants.length} {filteredPlants.length === 1 ? 'plant' : 'plants'} shown
             </p>
-            {filteredPlants.length > 0 && (
+            {filteredPlants.length > 1 && (
               <HeaderAction
                 ref={waterAllRef}
                 icon={Droplets}
@@ -377,7 +380,7 @@ export default function CarePage() {
                         {dueLabel(plant)}
                       </p>
                       {user?.has_pets && (
-                        <ToxicityBadge toxicity={plant.species_toxicity} size="sm" className="mt-1.5" testId="care-card-toxicity" />
+                        <ToxicityBadge toxicity={plant.species_toxicity} className="mt-1.5" testId="care-card-toxicity" />
                       )}
                       {(status === 'urgent' || status === 'needs_water') && (
                         <p data-testid="care-card-step" className="font-ui text-xs text-grove-cream mt-0.5 leading-snug">
@@ -400,13 +403,13 @@ export default function CarePage() {
 
                     <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2">
                       <button
-                        onClick={(e) => { impactLight(e.currentTarget); setCareModalPlant(plant); }}
+                        onClick={(e) => { impactLight(e.currentTarget); setCareModalSoilFirst(!hasBeenCaredFor(plant)); setCareModalPlant(plant); }}
                         data-testid="care-quick-action"
-                        aria-label={`Log care for ${plant.nickname || plant.common_name}`}
+                        aria-label={`${hasBeenCaredFor(plant) ? 'Log care for' : 'Check the soil of'} ${plant.nickname || plant.common_name}`}
                         className={cn(buttonVariants(), "relative min-w-fit grow overflow-hidden")}
                       >
-                        <Droplets className="h-3.5 w-3.5" />
-                        Log care
+                        {hasBeenCaredFor(plant) ? <Droplets className="h-3.5 w-3.5" /> : <Hand className="h-3.5 w-3.5" aria-hidden="true" />}
+                        {hasBeenCaredFor(plant) ? 'Log care' : 'Check the soil'}
                       </button>
                       <button
                         onClick={(e) => handleWateredOne(plant, e.currentTarget)}
@@ -528,6 +531,7 @@ export default function CarePage() {
           onClose={() => setCareModalPlant(null)}
           plantId={careModalPlant.id}
           plantName={careModalPlant.nickname || careModalPlant.common_name}
+          initialActions={careModalSoilFirst ? ['soil_check'] : undefined}
           onLogged={(meta, logged) => {
             const pid = careModalPlant.id;
             setCareModalPlant(null);

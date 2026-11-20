@@ -34,7 +34,7 @@ Three tiers:
 | **Pip** | Pip's note, weekly rhythm with the nudge off by default |
 | **Journal and check-ins** | Memory journal, weekly check-ins |
 | **Profile** | Settings, notifications, Simple / Detailed, pets |
-| **Business** | Free, no ads, reminders free, stated in the upgrade copy. Pricing is undecided |
+| **Business** | Free, no ads, reminders free, stated in the upgrade copy. Pricing is a draft to test, not validated: Founding Member presale $29.99 one-time (100 spots, a year of Pro), public price $39.99 a year from App Store launch, $4.99 a month. Full plan, open items and where it differs from this file in `pricing-and-launch.md`. None of it is built in the app yet (only a `tier` field exists) |
 
 ## Dormant
 

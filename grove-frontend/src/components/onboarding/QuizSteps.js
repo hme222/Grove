@@ -111,7 +111,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
                 onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`option-${question.id}-${option.id}`}
                 className={cn(
-                  'flex min-h-touch w-full items-center gap-3 rounded-small border-hairline px-4 py-3 text-left font-ui text-base text-grove-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime',
+                  'flex min-h-touch w-full flex-wrap items-center gap-x-3 gap-y-1 rounded-small border-hairline px-4 py-3 text-left font-ui text-base text-grove-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime',
                   on ? 'border-grove-lime bg-grove-moss' : 'border-grove-fernLine bg-grove-canopy hover:border-grove-lime',
                 )}
               >
@@ -122,7 +122,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
                 >
                   <AnswerIcon name={option.icon} />
                 </span>
-                <span className="flex-1">{option.label}</span>
+                <span className="min-w-36 flex-1">{option.label}</span>
                 <span
                   aria-hidden="true"
                   className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-pill border-strong', on ? 'border-grove-lime bg-grove-lime text-grove-root' : 'border-grove-fernLine')}
@@ -134,17 +134,20 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
           })}
         </div>
         <p className="mt-3 font-ui text-base text-grove-sage" data-testid="question-why">{question.why}</p>
-        {/* The hint's row is always there, so picking an answer does not move the buttons under the thumb. */}
-        <p
-          id={blocked ? hintId : undefined}
-          className={cn('mt-6 text-center font-ui text-sm text-grove-sage', !blocked && 'invisible')}
-          aria-hidden={blocked ? undefined : true}
-          data-testid="question-hint"
-        >
-          Choose an option to continue
-        </p>
         <StepActions
           className="pt-2"
+          // The hint's row is always there, so picking an answer does not move the buttons under the thumb. It lives in
+          // the sticky action zone with the button, so it is never hidden behind it.
+          note={(
+            <p
+              id={blocked ? hintId : undefined}
+              className={cn('text-center font-ui text-sm text-grove-sage', !blocked && 'invisible')}
+              aria-hidden={blocked ? undefined : true}
+              data-testid="question-hint"
+            >
+              Choose an option to continue
+            </p>
+          )}
           primary={(
             <button
               type="button"
@@ -154,7 +157,7 @@ export function QuestionStep({ index, value, onPick, onNext, onSkip, onBack, ste
               className={cn(buttonVariants(), 'w-full', blocked && blockedClass)}
               data-testid="question-next"
             >
-              {last ? 'See my plan' : 'Next'}
+              {last ? 'See my plan' : 'Continue'}
             </button>
           )}
         />

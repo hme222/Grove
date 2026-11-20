@@ -4,6 +4,9 @@
 // Toxic and Non-Toxic Plants page, and the ASPCA gives two answers (toxic, non-toxic), so there is no "mild" level here.
 // Only an explicit non-toxic value may read as "Non-toxic to cats and dogs". A missing, empty, or unrecognized value
 // (including an old "mild") is "unknown", never safe.
+// Ratings are held back for launch: the backend sends no value until PET_SAFETY_LABELS=on (set once the ASPCA has
+// given written permission to show its listings), so every plant reads as "unknown" and links to the ASPCA's list.
+// The unknown wording therefore has to be true both for a plant with no listing and for one whose rating is held back.
 // Every level carries its own icon and words, so meaning never rests on color.
 // Every level's text is at least 4.5:1 against the dark forest surface.
 
@@ -25,8 +28,8 @@ export const TOXICITY_LEVELS = {
   unknown: {
     level: 'unknown',
     // Shown for plants the person already owns as well as ones they are choosing, so the words fit both.
-    label: 'Pet safety unknown — check the ASPCA list',
-    definition: 'We have no ASPCA listing recorded for this plant, so don’t assume it’s safe. Check the ASPCA’s toxic and non-toxic plant list, and keep it out of reach until you know.',
+    label: 'Check pet safety on the ASPCA list',
+    definition: 'FloraGrove doesn’t show a pet-safety rating for this plant, so don’t assume it’s safe. Check the ASPCA’s toxic and non-toxic plant list, and keep it out of reach until you know.',
     icon: 'unknown',
     className: 'text-grove-sage bg-grove-canopy border-grove-fernLine',
   },

@@ -43,7 +43,7 @@ export default function AccountStep({ config, onBack, onDone }) {
     if (!looksLikeEmail(email)) {
       next.email = suggestEmail(email) ? 'That email looks incomplete.' : 'That email doesn’t look right. Check it and try again.';
     }
-    if (password.length < 6) next.password = 'Use at least 6 characters.';
+    if (password.length < 8) next.password = 'Use at least 8 characters.';
     else if (confirm !== password) next.confirm = 'The two passwords don’t match. Check them and try again.';
     setErrors(next);
     if (Object.keys(next).length) {
@@ -157,7 +157,7 @@ export default function AccountStep({ config, onBack, onDone }) {
               value={password}
               onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors((x) => ({ ...x, password: undefined })); }}
               autoComplete="new-password"
-              placeholder="At least 6 characters"
+              placeholder="At least 8 characters"
               testId="signup-password"
               toggleTestId="signup-password-toggle"
               invalid={!!errors.password}

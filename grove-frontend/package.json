@@ -67,9 +67,10 @@
     "tokens": "node scripts/generate-tokens.js",
     "prestart": "npm run tokens",
     "prebuild": "npm run tokens",
-    "check:tokens": "node scripts/generate-tokens.js --check && node scripts/check-tokens.js && node scripts/check-computed-tokens.js",
+    "check:tokens": "node scripts/generate-tokens.js --check && node scripts/check-tokens.js && node scripts/check-computed-tokens.js && node scripts/check-landing-tokens.js",
     "lint": "eslint src --ext .js,.jsx --max-warnings 0",
-    "verify": "npm run check:tokens && npm run lint && craco test --watchAll=false && craco build"
+    "verify": "npm run check:tokens && npm run check:primitives && npm run lint && craco test --watchAll=false && craco build",
+    "check:primitives": "node scripts/check-primitives.js"
   },
   "browserslist": {
     "production": [

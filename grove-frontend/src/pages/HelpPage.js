@@ -57,11 +57,7 @@ const TUTORIAL_SECTIONS = [
     title: 'Groves (community groups)',
     content: "A grove is never a single tree. Join or create groves to see what other members are growing, share updates, and swap cuttings. It’s a quieter, more intentional feed.",
   },
-  {
-    id: 'mission',
-    title: 'Our mission',
-    content: GROVE_BRAND.mission,
-  },
+  // The mission is the card at the top of the page, so it is not repeated as a section here.
 ];
 
 export default function HelpPage() {

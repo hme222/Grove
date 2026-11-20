@@ -75,14 +75,19 @@ function build() {
   // Token utility names for tailwind-merge (src/lib/utils.js), so `rounded-small` can replace `rounded-card`.
   const names = { aspectRatio: theme.aspectRatio, borderRadius: theme.borderRadius, borderWidth: theme.borderWidth, maxWidth: theme.maxWidth, maxHeight: theme.maxHeight, boxShadow: theme.boxShadow, zIndex: theme.zIndex };
   const namesJs = `${banner.replace('/*', '//').replace(' */', '')}\nexport const tokenNames = ${JSON.stringify(Object.fromEntries(Object.entries(names).map(([k, v]) => [k, Object.keys(v)])), null, 2)};\nexport const aspectRatios = ${JSON.stringify(theme.aspectRatio, null, 2)};\n`;
-  return { css, js, namesJs };
+  // The sales-page draft (grove-sales) and the iPhone shell are not part of the React app, so each gets the same colors as its own file.
+  const landingCss = `${banner}\n:root {\n${Object.entries(tokens.color).map(([name, hex]) => `  --grove-${kebab(name)}: ${hex};`).join('\n')}\n}\n`;
+  const mobileJs = `${banner.replace('/*', '//').replace(' */', '')}\nexport const colors = ${JSON.stringify(tokens.color, null, 2)};\n`;
+  return { css, js, namesJs, landingCss, mobileJs };
 }
 
-const { css, js, namesJs } = build();
+const { css, js, namesJs, landingCss, mobileJs } = build();
 const outputs = [
   [path.join(root, 'src', 'styles', 'tokens.generated.css'), css],
   [path.join(root, 'tailwind.tokens.js'), js],
   [path.join(root, 'src', 'styles', 'tokens.generated.js'), namesJs],
+  [path.join(root, '..', 'grove-sales', 'tokens.generated.css'), landingCss],
+  [path.join(root, '..', 'grove-mobile', 'theme.generated.js'), mobileJs],
 ];
 
 if (process.argv.includes('--check')) {

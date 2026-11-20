@@ -96,7 +96,7 @@ def sign_in_as(user_id, email="a@b.c"):
 
 
 def register(api, email="maya.r88@gmail.com", **extra):
-    res = api.post("/api/auth/register", json={"email": email, "password": "secret1", **extra})
+    res = api.post("/api/auth/register", json={"email": email, "password": "secret12", **extra})
     assert res.status_code == 200, res.text
     return res.json()
 
@@ -161,7 +161,7 @@ def test_a_taken_username_gets_digits_added(api):
 
 def test_duplicate_email_is_still_refused(api):
     register(api, email="dup@x.com")
-    res = api.post("/api/auth/register", json={"email": "dup@x.com", "password": "secret1"})
+    res = api.post("/api/auth/register", json={"email": "dup@x.com", "password": "secret12"})
     assert res.status_code == 400
     assert res.json()["detail"] == "Email already registered"
 
@@ -480,3 +480,8 @@ def test_the_old_one_screen_quiz_body_still_works(profile):
     body = profile.post("/api/users/me/quiz", json={"answers": ["forget"]}).json()
     assert body["primary_track"] == "steady_sprout"
     assert "matched" not in body
+
+
+def test_a_password_needs_eight_characters(api):
+    assert api.post("/api/auth/register", json={"email": "short@x.com", "password": "seven77"}).status_code == 422
+    assert api.post("/api/auth/register", json={"email": "ok@x.com", "password": "eight888"}).status_code == 200

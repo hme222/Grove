@@ -1,8 +1,8 @@
 """A small in-memory stand-in for the database, shared by the nook tests.
 
-It supports exactly what the nook code uses: equality filters, `$ne`, `$in`,
-`find().sort().limit().to_list()`, and `$set` / `$unset` / `$addToSet` updates, including
-dotted keys such as `readiness_plant.steps.drainage`.
+It supports exactly what the tests use: equality filters, `$ne`, `$in`, `$gte`,
+`find().sort().limit().to_list()`, and `$set` / `$unset` / `$addToSet` / `$inc` updates, including
+dotted keys such as `readiness_plant.steps.drainage` and `ai_usage.free_ids_used`.
 """
 
 
@@ -12,6 +12,8 @@ def matches(doc, flt):
             if "$ne" in value and doc.get(key) == value["$ne"]:
                 return False
             if "$in" in value and doc.get(key) not in value["$in"]:
+                return False
+            if "$gte" in value and not (doc.get(key) is not None and doc.get(key) >= value["$gte"]):
                 return False
         elif doc.get(key) != value:
             return False
@@ -68,6 +70,12 @@ class Collection:
             _set_path(doc, key, value)
         for key in update.get("$unset", {}):
             doc.pop(key, None)
+        for key, value in update.get("$inc", {}).items():
+            parts = key.split(".")
+            target = doc
+            for part in parts[:-1]:
+                target = target.setdefault(part, {})
+            target[parts[-1]] = target.get(parts[-1], 0) + value
         for key, value in update.get("$addToSet", {}).items():
             items = doc.setdefault(key, [])
             if value not in items:
@@ -76,5 +84,5 @@ class Collection:
 
 class FakeDb:
     def __init__(self):
-        for name in ("users", "plants", "care_logs", "user_missions", "user_badges", "badges", "species", "experiment_events"):
+        for name in ("users", "plants", "care_logs", "user_missions", "user_badges", "badges", "species", "experiment_events", "ai_usage"):
             setattr(self, name, Collection())

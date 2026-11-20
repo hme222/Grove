@@ -1,0 +1,75 @@
+{
+  "note": "Hex colors in the sales-page draft and the iPhone shell that are not design tokens. Checked by scripts/check-landing-tokens.js; run in npm run check:tokens.",
+  "exceptions": [
+    {
+      "file": "grove-sales/index.html",
+      "match": "#C9CFBA",
+      "count": 1,
+      "reason": "the landing page's soft body-text tone (--sage); the nearest token, sage, is #C3CBB1, a visibly different shade",
+      "retireWhen": "the landing text tones are added to design/tokens.json or moved to the app's sage"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#A9B09A",
+      "count": 1,
+      "reason": "the landing page's muted caption tone (--lichen); the token lichen is #C8D0B6, lighter",
+      "retireWhen": "the landing text tones are added to design/tokens.json or moved to the app's lichen"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#3A4A26",
+      "count": 1,
+      "reason": "the landing page's hairline color (--line), between the tokens moss and canopy",
+      "retireWhen": "a hairline token is added to design/tokens.json"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#E6E7D6",
+      "count": 1,
+      "reason": "text in the header pill, a one-off off-white",
+      "retireWhen": "the pill uses the cream token"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#8E9878",
+      "count": 1,
+      "reason": "placeholder text in the waitlist field, a one-off gray-green",
+      "retireWhen": "the field uses a token for placeholders"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#050604",
+      "count": 1,
+      "reason": "the phone-frame screenshots' black bezel, darker than any token",
+      "retireWhen": "a bezel token is added or the frame moves to the app's phone-frame tokens"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#3A2A12",
+      "count": 1,
+      "reason": "the draft banner's background. It is a warning for the owner and disappears when nothing is missing",
+      "retireWhen": "the draft banner is removed from the shipped page"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#8A6A2A",
+      "count": 1,
+      "reason": "the draft banner's border, same reason",
+      "retireWhen": "the draft banner is removed from the shipped page"
+    },
+    {
+      "file": "grove-sales/index.html",
+      "match": "#F4E3B9",
+      "count": 1,
+      "reason": "the draft banner's text, same reason",
+      "retireWhen": "the draft banner is removed from the shipped page"
+    },
+    {
+      "file": "grove-mobile/app.json",
+      "match": "#202D14",
+      "count": 2,
+      "reason": "the forest token (#202D14) for the app background and the Android icon background; app.json cannot import theme.generated.js",
+      "retireWhen": "app.json becomes app.config.js and reads the color from theme.generated.js"
+    }
+  ]
+}

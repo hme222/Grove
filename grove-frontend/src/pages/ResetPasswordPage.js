@@ -30,8 +30,8 @@ export default function ResetPasswordPage() {
   const submit = async (e) => {
     e.preventDefault();
     if (busy || !token) return;
-    if (password.length < 6) {
-      setError('Use at least 6 characters.');
+    if (password.length < 8) {
+      setError('Use at least 8 characters.');
       document.getElementById('reset-password')?.focus();
       return;
     }
@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
           ) : (
             <form onSubmit={submit} noValidate>
               <h1 className="mb-1 font-plant text-2xl text-grove-cream">Choose a new password</h1>
-              <p className="mb-6 font-ui text-sm text-grove-cream">At least 6 characters.</p>
+              <p className="mb-6 font-ui text-sm text-grove-cream">At least 8 characters.</p>
               <PasswordField
                 id="reset-password"
                 label="New password"

@@ -20,6 +20,9 @@ import { impactLight } from '../lib/haptics';
 import { MEDIUMS } from '../constants/growMedia';
 import { firstPlantState, groveIsEmpty } from '../components/FirstPlantCelebration';
 
+// How many matches the list shows at once; the rest are reached by typing more of the name.
+const MAX_RESULTS_SHOWN = 6;
+
 const ROOMS = ['Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Office', 'Balcony', 'Patio', 'Greenhouse', 'Hallway', 'Dining Room'];
 const SOURCES = [
   { value: 'nursery', label: 'Nursery' },
@@ -245,7 +248,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   data-testid="species-search-input"
                   className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset pl-10 pr-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
-                  placeholder="Search by common or latin name…"
+                  placeholder="Search by name…"
                 />
               </div>
             </div>
@@ -259,8 +262,9 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                 <LoadError compact what="the plant search" note="You can still add a custom plant below." onRetry={runSearch} testId="search-failed" />
               </div>
             )}
-            <div className="space-y-1 max-h-96 overflow-y-auto">
-              {species.map(sp => (
+            {/* The first few matches in the page itself, not a scrolling box inside the page that cuts a card in half. */}
+            <div className="space-y-1">
+              {species.slice(0, MAX_RESULTS_SHOWN).map(sp => (
                 <button
                   key={sp.id}
                   onClick={() => { focusNext.current = 'addplant-nickname'; selectSpecies(sp); }}
@@ -270,12 +274,17 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   <p className="font-ui text-grove-cream text-sm font-medium">{sp.common_name}</p>
                   <p className="font-latin text-xs text-grove-cream">{sp.latin_name}</p>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
-                    <ToxicityBadge toxicity={sp.toxicity} size="sm" testId="species-option-toxicity" interactive={false} />
+                    <ToxicityBadge toxicity={sp.toxicity} testId="species-option-toxicity" interactive={false} />
                     <span className="text-xs font-ui text-grove-cream">Check about every {sp.default_watering_days}d</span>
                   </div>
                 </button>
               ))}
             </div>
+            {species.length > MAX_RESULTS_SHOWN && (
+              <p className="mt-2 font-ui text-sm text-grove-sage" data-testid="species-more">
+                Showing {MAX_RESULTS_SHOWN} of {species.length}. Type more of the name to narrow it down.
+              </p>
+            )}
             {/* Always mounted, so screen readers hear each result count and the no-match line. */}
             <div role="status" aria-live="polite" data-testid="species-search-status">
               {searchedFor && !searchFailed && (species.length === 0 ? (
@@ -350,7 +359,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                 onChange={(e) => setFormData(prev => ({...prev, nickname: e.target.value}))}
                 data-testid="plant-nickname-input"
                 className="w-full bg-grove-forest border-hairline border-grove-moss rounded-inset px-4 py-3 text-sm font-ui text-grove-cream placeholder:text-grove-sage focus:outline-none focus:ring-2 focus:ring-grove-lime"
-                placeholder="Give your plant a name"
+                placeholder="A name for it"
               />
             </div>
             <div>

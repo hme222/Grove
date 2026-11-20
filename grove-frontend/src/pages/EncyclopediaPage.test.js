@@ -60,3 +60,18 @@ test('species thumbnails go through PhotoBand, not a raw img', async () => {
   const card = q('species-card');
   expect(card.querySelector('[data-testid="photo-band"]')).not.toBeNull();
 });
+
+test('the guide names its pet-safety source once when any listed species carries a sourced label', async () => {
+  guildAPI.list.mockResolvedValue({ data: { guilds: [] } });
+  encyclopediaAPI.getSpecies.mockResolvedValue({ data: { species: [{ id: 's1', common_name: 'Pothos', latin_name: 'Epipremnum', family: 'Araceae', toxicity: 'toxic' }], total: 1 } });
+  await act(async () => { root.render(<EncyclopediaPage />); });
+  await flush();
+  expect(q('guide-safety-source').textContent).toMatch(/ASPCA/);
+});
+
+test('no source line when no listed species has a sourced pet-safety label', async () => {
+  guildAPI.list.mockResolvedValue({ data: { guilds: [] } });
+  await act(async () => { root.render(<EncyclopediaPage />); });
+  await flush();
+  expect(q('guide-safety-source')).toBeNull();
+});

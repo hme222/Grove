@@ -186,5 +186,5 @@ failure even when the code plainly distinguishes them. Rendering is the only
 check that finds it — scoring rule 2 restated as a gate.
 
 Grove notes for the gates: the paper family's contrast pairs are listed in `design/README.md`; `paperBorder` is
-decorative only. Toxicity chips are 30px tall with an extended hit area (`ToxicityBadge.js`, `before:-inset-y-2`):
+decorative only. Toxicity chips are 30px tall with an extended hit area (`ToxicityBadge.js`, `before:-top-2 before:-bottom-2.5`):
 hit-test it, do not read the class.

@@ -35,7 +35,7 @@ from hardiness_zones import (
 )
 from seed import apply_sourced_safety, seed_database
 from curated_species import CURATED_SPECIES
-from species_safety import scrub_species, sourced_toxicity
+from species_safety import scrub_species, shown_safety_text, shown_toxicity
 import missions as missions_mod
 import soil_check as soil_check_mod
 import schedule_tuning
@@ -508,7 +508,7 @@ async def get_user_stats(user_id: str) -> dict:
 class RegisterInput(BaseModel):
     username: Optional[str] = Field(None, max_length=limits.MAX_USERNAME)  # left out by the sign-up flow: made from the email
     email: str
-    password: str = Field(min_length=6, max_length=limits.MAX_PASSWORD)
+    password: str = Field(min_length=8, max_length=limits.MAX_PASSWORD)
     display_name: Optional[str] = Field(None, max_length=60)
 
     @field_validator('email')
@@ -709,7 +709,7 @@ class ForgotPasswordBody(BaseModel):
 
 class ResetPasswordBody(BaseModel):
     token: str = Field(min_length=1, max_length=200)
-    password: str = Field(min_length=6, max_length=limits.MAX_PASSWORD)
+    password: str = Field(min_length=8, max_length=limits.MAX_PASSWORD)
 
 
 @api_router.post("/auth/password/forgot")
@@ -1996,7 +1996,7 @@ async def attach_species_toxicity(plants):
     """
     docs = await db.species.find({}, {"_id": 0, "slug": 1, "latin_name": 1, "common_name": 1, "toxicity": 1, "citations": 1, "care_summary": 1}).to_list(500)
     for d in docs:
-        d["toxicity"] = sourced_toxicity(d)
+        d["toxicity"] = shown_toxicity(d)
         d["care_step"] = care_step_for(d.get("slug")) or watering_sentence(d.get("care_summary"))
     index = species_name_index(docs, "toxicity")
     tips = species_name_index(docs, "care_step")
@@ -2748,6 +2748,31 @@ async def _resolve_image_b64(payload: IdentifyPlantInput) -> str:
 
 import experiments  # noqa: E402
 import photo_diagnosis  # noqa: E402
+import entitlements  # noqa: E402
+
+
+async def _ai_guard(current_user: dict, *, uses_free_id: bool = False, needs_pro: bool = False) -> bool:
+    """Refuse before any model call is made. Returns whether the account is Pro.
+
+    402 means the plan doesn't include it (Pro only, or the free photo IDs are used up); 429 means a cost cap was hit.
+    Both carry a code and words that say what the person can still do. See entitlements.py.
+    """
+    user = await db.users.find_one({"id": current_user["user_id"]}) or {}
+    pro = entitlements.is_pro(user)
+    if needs_pro and not pro:
+        raise HTTPException(status_code=402, detail=entitlements.pro_required_detail())
+    if uses_free_id and not pro and entitlements.free_ids_left(user) <= 0:
+        raise HTTPException(status_code=402, detail=entitlements.free_limit_detail())
+    cap = await entitlements.over_cap(db, current_user["user_id"])
+    if cap:
+        raise HTTPException(status_code=429, detail=entitlements.cap_detail(cap))
+    return pro
+
+
+@api_router.get("/entitlements/me")
+async def my_entitlements(current_user: dict = Depends(get_current_user)):
+    user = await db.users.find_one({"id": current_user["user_id"]}) or {}
+    return entitlements.summary(user)
 
 
 class ExperimentEventInput(BaseModel):
@@ -2786,6 +2811,7 @@ async def diagnose_photo(body: DiagnosePhotoInput, current_user: dict = Depends(
     """The photo check. Only people in the photo_check arm can use it, and only after a soil answer."""
     if experiments.assign(current_user["user_id"]) != "photo_check":
         raise HTTPException(status_code=403, detail="The photo check isn't available")
+    await _ai_guard(current_user, needs_pro=entitlements.diagnosis_requires_pro())
     if body.soil_answer == "not_checked":
         return {"needsSoilCheck": True, "message": "Check the soil first: push a finger in two knuckles deep, then tell us how it feels."}
     img_b64 = await _resolve_image_b64(body)
@@ -2797,6 +2823,7 @@ async def diagnose_photo(body: DiagnosePhotoInput, current_user: dict = Depends(
         logger.exception("diagnose_photo Claude error")
         await _log_experiment_event(current_user["user_id"], experiments.HELP_DIAGNOSIS, "photo_check_failed")
         return {"error": "diagnosis_unavailable", "message": "The photo check isn't available right now. The symptom list still works."}
+    await entitlements.record_call(db, current_user["user_id"], "diagnosis")
     await _log_experiment_event(
         current_user["user_id"], experiments.HELP_DIAGNOSIS, "photo_check_result",
         {"confidence": result["confidence"], "soil": body.soil_answer})
@@ -2832,8 +2859,12 @@ IDENTIFY_PROMPT = (
 )
 
 
+IDENTIFY_SAFETY_MIN_CONFIDENCE = 0.7
+
+
 @api_router.post("/plants/identify")
 async def identify_plant(input: IdentifyPlantInput, current_user: dict = Depends(get_current_user)):
+    pro = await _ai_guard(current_user, uses_free_id=True)
     img_b64 = await _resolve_image_b64(input)
     # Default response shape — used both for AI-fail and low-confidence paths
     fallback = {
@@ -2877,6 +2908,7 @@ async def identify_plant(input: IdentifyPlantInput, current_user: dict = Depends
                 "severity": str(f.get('severity') or 'low'),
                 "suggestion": str(f.get('suggestion') or '')[:240],
             })
+    await entitlements.record_call(db, current_user["user_id"], "identify")
     out = {
         "identified": is_confident and bool(common),
         "isConfident": is_confident,
@@ -2898,8 +2930,15 @@ async def identify_plant(input: IdentifyPlantInput, current_user: dict = Depends
     # matched traits and top guesses, add e.g. "matchedTraits": [str] and
     # "alternatives": [{"commonName", "latinName", "confidence"}] to IDENTIFY_PROMPT.
     match = await find_library_species(latin_name=latin) if latin else None
-    out["toxicity"] = (match or {}).get('toxicity')
+    # Pet safety is sent only for a confident identification (the same 0.7 bar the app uses for its
+    # "we think this might be" screen). A shaky guess reads as unknown, never as non-toxic.
+    confident_id = out["identified"] and confidence >= IDENTIFY_SAFETY_MIN_CONFIDENCE
+    out["toxicity"] = (match or {}).get('toxicity') if confident_id else None
     out["libraryMatch"] = library_match_summary(match)
+    # A free ID is used only by a confident identification, so a blurry photo never costs one of the three.
+    if out["identified"] and not pro:
+        await entitlements.use_free_id(db, current_user["user_id"])
+        out["freeIdsLeft"] = max(0, entitlements.free_ids_left(await db.users.find_one({"id": current_user["user_id"]}) or {}))
     return out
 
 
@@ -2957,11 +2996,13 @@ def _safe_box(box: dict) -> Optional[dict]:
 @api_router.post("/plants/scan-room")
 async def scan_room(input: IdentifyPlantInput, current_user: dict = Depends(get_current_user)):
     """Scan a room photo and identify every visible plant using Claude vision."""
+    await _ai_guard(current_user)
     img_b64 = await _resolve_image_b64(input)
     fallback = {"plantsFound": 0, "roomDescription": "", "plants": []}
     try:
         response = await call_claude_vision(ROOM_SCAN_SYSTEM, ROOM_SCAN_PROMPT, img_b64)
         parsed = parse_json_response(response)
+        await entitlements.record_call(db, current_user["user_id"], "scan_room")
     except Exception:
         logger.exception("scan_room Claude error")
         return {**fallback, "error": "scan_failed", "message": "Room scan unavailable — try adding plants individually."}
@@ -3495,6 +3536,7 @@ async def identify_bouquet(bouquet_id: str, current_user: dict = Depends(get_cur
     # Check if bouquet has a photo
     if not bouquet.get('photo_url'):
         raise HTTPException(status_code=400, detail="Upload a bouquet photo first to identify flowers")
+    await _ai_guard(current_user)
     try:
         # Download the photo
         photo_data, _ = get_object(bouquet['photo_url'])
@@ -3505,6 +3547,7 @@ common_name, latin_name, estimated_stem_count, vase_life_days (realistic integer
 care_instructions (2 sentences), ai_confidence (0.0-1.0).
 Return ONLY valid JSON array: [{ "common_name": "...", "latin_name": "...", "estimated_stem_count": N, "vase_life_days": N, "care_instructions": "...", "ai_confidence": 0.N }]"""
         response = await call_claude_vision(system, prompt, image_base64)
+        await entitlements.record_call(db, current_user["user_id"], "identify_bouquet")
         flowers_data = parse_json_response(response)
         if isinstance(flowers_data, dict) and 'flowers' in flowers_data:
             flowers_data = flowers_data['flowers']
@@ -4358,6 +4401,13 @@ async def startup():
     except Exception:
         logger.exception("Could not apply sourced pet-safety data")
     await seed_trivia(db)
+    try:
+        # The AI cost caps count a person's recent calls (entitlements.over_cap). The monthly cap looks back 30 days,
+        # so a record can go after 35.
+        await db.ai_usage.create_index([("user_id", 1), ("at", -1)])
+        await db.ai_usage.create_index("at", expireAfterSeconds=35 * 24 * 3600)
+    except Exception:
+        logger.exception("Could not create the ai_usage indexes (non-fatal)")
     logger.info("Grove API ready")
 
 @app.on_event("shutdown")
@@ -4811,6 +4861,8 @@ async def list_guilds(current_user: dict = Depends(get_optional_user)):
     guilds = await db.guilds.find({}, {"_id": 0}).to_list(100)
     if not guilds:
         return {"guilds": []}
+    for g in guilds:
+        g["design_notes"] = shown_safety_text(g.get("design_notes"))
     # Hydrate species previews (id + name + first photo) for each guild
     all_species_ids = list({sid for g in guilds for sid in g.get('species_ids', [])})
     species_lookup = {}
@@ -4850,6 +4902,7 @@ async def get_guild_detail(slug: str, current_user: dict = Depends(get_optional_
     guild = await db.guilds.find_one({"slug": slug}, {"_id": 0})
     if not guild:
         raise HTTPException(status_code=404, detail="Guild not found")
+    guild["design_notes"] = shown_safety_text(guild.get("design_notes"))
     rows = await db.species.find(
         {"id": {"$in": guild.get('species_ids', [])}},
         {"_id": 0},

@@ -41,7 +41,7 @@ const mount = async (props = {}) => {
   const onClose = props.onClose || jest.fn();
   const onLogged = props.onLogged || jest.fn();
   await act(async () => {
-    root.render(<CareLogModal open onClose={onClose} plantId="p1" plantName="Monty" onLogged={onLogged} />);
+    root.render(<CareLogModal open onClose={onClose} plantId="p1" plantName="Monty" onLogged={onLogged} initialActions={props.initialActions} />);
   });
   return { onClose, onLogged };
 };
@@ -176,4 +176,33 @@ test('a single wipe is named in words, and several actions are counted', async (
   await click(q('care-log-submit'));
   await flush();
   expect(toast.success).toHaveBeenCalledWith('2 actions logged for Monty');
+});
+
+describe('opened from a plant nobody has checked (soil test first)', () => {
+  test('the title and intro name the soil check, and the soil test is already chosen', async () => {
+    await mount({ initialActions: ['soil_check'] });
+    expect(container.querySelector('[data-mock="title"]').textContent).toBe('Check the soil of Monty');
+    expect(q('care-soil-fields')).not.toBeNull();
+    expect(container.textContent).toContain('Press a finger into the soil');
+  });
+
+  test('the soil fields come before the action grid', async () => {
+    await mount({ initialActions: ['soil_check'] });
+    const fields = q('care-soil-fields');
+    const grid = q('care-action-grid');
+    expect(fields.compareDocumentPosition(grid) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  test('saving without saying what was felt asks for it, as before', async () => {
+    await mount({ initialActions: ['soil_check'] });
+    await click(q('care-log-submit'));
+    expect(q('care-soil-error').textContent).toMatch(/dry or damp/);
+    expect(careAPI.createLog).not.toHaveBeenCalled();
+  });
+
+  test('opened any other way it is the usual dialog: nothing chosen, grid first', async () => {
+    await mount();
+    expect(container.querySelector('[data-mock="title"]').textContent).toBe('Log care for Monty');
+    expect(q('care-soil-fields')).toBeNull();
+  });
 });

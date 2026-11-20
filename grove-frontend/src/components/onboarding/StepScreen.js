@@ -14,10 +14,13 @@ export const blockedClass = 'border-strong border-grove-fernLine bg-grove-moss t
 // The action zone at the foot of a step: the main action, then one 44px secondary slot (a link-style
 // button, a counter, or empty). Every step has the same two rows, so the main button sits at the same
 // height from the bottom edge on every screen.
-export function StepActions({ primary, secondary, className }) {
+// `note` is a line that belongs to the main button (a hint for why it is not ready). It sits above the button inside the
+// sticky zone, so it is never scrolled under the button.
+export function StepActions({ primary, secondary, note, className }) {
   return (
-    <div className={cn('mt-auto pt-8', className)} data-testid="step-actions">
+    <div className={cn('os-actions mt-auto bg-grove-forest pt-8', className)} data-testid="step-actions">
       <div className="flex flex-col gap-2">
+        {note}
         {primary}
         <div className="flex min-h-touch items-center justify-center">{secondary}</div>
       </div>
@@ -41,7 +44,7 @@ export default function StepScreen({ step, stepLabel, onBack, skip, heading, eye
   return (
     <div className="mx-auto flex min-h-full w-full max-w-md flex-col" data-testid={testId}>
       {bleed}
-      <div className={`os-pad flex flex-1 flex-col px-4 pb-6 ${bleed ? 'pt-4' : 'pt-6'}`}>
+      <div className={`os-pad flex flex-1 flex-col px-4 ${bleed ? 'pt-4' : 'pt-6'}`}>
       {(onBack || skip || !bleed) && (
         <div className="flex min-h-touch items-center justify-between gap-2">
           {onBack ? <BackButton onClick={onBack} testId="onboarding-back" /> : <span />}

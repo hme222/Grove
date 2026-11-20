@@ -5,6 +5,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { AppLink } from '@/components/AppLink';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import LaunchIntro from '@/components/LaunchIntro';
+import { launchIntroSeen, markLaunchIntroSeen } from '@/lib/launchIntroSeen';
 import { useAuth } from '@/contexts/AuthContext';
 import { authAPI, userAPI } from '@/lib/api';
 import { lessonPath } from '@/lessons/lessonMeta';
@@ -173,7 +174,7 @@ function StepsStep({ onBack, onNext }) {
           className="mt-0 pt-12"
           primary={(
             <button type="button" onClick={onNext} className={cn(buttonVariants(), 'w-full')} data-testid="onboarding-continue">
-              Next
+              Continue
             </button>
           )}
         />
@@ -192,8 +193,10 @@ export function Onboarding({ onComplete, replay = false, launchIntro = false }) 
   const [planResult, setPlanResult] = useState(null);
   const [finishing, setFinishing] = useState(false);
   const [finishError, setFinishError] = useState('');
-  // The launch intro plays once, before the welcome screen, for someone who is not signed in yet.
-  const [introPlaying, setIntroPlaying] = useState(() => launchIntro && !user && !replay);
+  // The launch intro plays once, before the welcome screen, for someone who is not signed in yet and has not seen it
+  // on this device. A return visit signed out goes straight to the welcome screen.
+  const [introPlaying, setIntroPlaying] = useState(() => launchIntro && !user && !replay && !launchIntroSeen());
+  useEffect(() => { if (introPlaying) markLaunchIntroSeen(); }, [introPlaying]);
   const endIntro = useCallback(() => setIntroPlaying(false), []);
   // Near the end of the intro the welcome screen mounts beneath it, so the intro's name can glide to its wordmark.
   const [introGlide, setIntroGlide] = useState(false);

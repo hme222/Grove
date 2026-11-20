@@ -24,11 +24,12 @@ def bad(model, **fields):
 
 
 def test_register_needs_a_real_email_and_a_usable_password():
-    server.RegisterInput(email="a@b.co", password="secret1")
-    bad(server.RegisterInput, email="nope", password="secret1")
+    server.RegisterInput(email="a@b.co", password="secret12")
+    bad(server.RegisterInput, email="nope", password="secret12")
     bad(server.RegisterInput, email="a@b.co", password="1")
+    bad(server.RegisterInput, email="a@b.co", password="secret1")  # 7 characters: one short of the minimum
     bad(server.RegisterInput, email="a@b.co", password="x" * 200)
-    bad(server.RegisterInput, email="a@b.co", password="secret1", username="u" * 200)
+    bad(server.RegisterInput, email="a@b.co", password="secret12", username="u" * 200)
 
 
 def test_watering_interval_is_a_sane_number_of_days():

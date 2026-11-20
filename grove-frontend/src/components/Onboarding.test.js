@@ -173,8 +173,8 @@ test('an email that looks incomplete is explained and a fix is offered, nothing 
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya@gmail');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret1');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret12');
   await click(q('signup-submit'));
   expect(auth.register).not.toHaveBeenCalled();
   expect(q('signup-email').getAttribute('aria-invalid')).toBe('true');
@@ -190,7 +190,7 @@ test('a short password is refused with a reason', async () => {
   await type(q('signup-email'), 'maya@gmail.com');
   await type(q('signup-password'), '123');
   await click(q('signup-submit'));
-  expect(text()).toContain('Use at least 6 characters.');
+  expect(text()).toContain('Use at least 8 characters.');
   expect(auth.register).not.toHaveBeenCalled();
 });
 
@@ -198,8 +198,8 @@ test('a confirm password that does not match is refused, and nothing is created'
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret2');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret22');
   await click(q('signup-submit'));
   expect(text()).toContain('The two passwords don’t match.');
   expect(auth.register).not.toHaveBeenCalled();
@@ -219,11 +219,11 @@ test('creating an account sends no username, uses the first name from the email,
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya.r88@gmail.com');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret1');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret12');
   await click(q('signup-submit'));
   await flush();
-  expect(auth.register).toHaveBeenCalledWith(undefined, 'maya.r88@gmail.com', 'secret1', 'Maya');
+  expect(auth.register).toHaveBeenCalledWith(undefined, 'maya.r88@gmail.com', 'secret12', 'Maya');
   expect(q('onboarding-steps')).not.toBeNull();
   await pastIntro();
   expect(q('onboarding-zone')).not.toBeNull();
@@ -236,8 +236,8 @@ test('with verification on, a new unconfirmed account is sent to the check-your-
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret1');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret12');
   await click(q('signup-submit'));
   await flush();
   expect(q('onboarding-check-email')).not.toBeNull();
@@ -251,8 +251,8 @@ test('an email that is already registered offers sign in, and stays on the step'
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret1');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret12');
   await click(q('signup-submit'));
   await flush();
   expect(q('signup-form-error').textContent).toContain('Email already registered');
@@ -267,8 +267,8 @@ test('Open email app opens a picker that Escape closes', async () => {
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya@gmail.com');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret1');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret12');
   await click(q('signup-submit'));
   await flush();
   await click(q('open-email-app'));
@@ -392,7 +392,7 @@ test('the quiz intro says why it asks and offers to skip all of it', async () =>
   expect(q('quiz-intro-skip')).not.toBeNull();
 });
 
-test('each question says why it is asked, needs a pick for Next, and can be skipped', async () => {
+test('each question says why it is asked, needs a pick to continue, and can be skipped', async () => {
   await toQuestions();
   expect(q('onboarding-progress').textContent).toBe('Step 3 of 3 · Question 1 of 4');
   expect(q('question-why').textContent).toMatch(/^Why we ask:/);
@@ -726,7 +726,7 @@ test('Continue on the zip step stays focusable, says why, and does nothing until
   expect(q('zone-continue').getAttribute('aria-describedby')).toBeNull();
 });
 
-test('Next on a question stays focusable, says why, and does nothing until an option is chosen', async () => {
+test('Continue on a question stays focusable, says why, and does nothing until an option is chosen', async () => {
   await toQuestions();
   const btn = q('question-next');
   expect(btn.disabled).toBe(false);
@@ -776,8 +776,8 @@ test('with the zip step held back, a new account goes straight to the hemisphere
   await mount();
   await toAccount();
   await type(q('signup-email'), 'maya.r88@gmail.com');
-  await type(q('signup-password'), 'secret1');
-  await type(q('signup-confirm'), 'secret1');
+  await type(q('signup-password'), 'secret12');
+  await type(q('signup-confirm'), 'secret12');
   await click(q('signup-submit'));
   await flush();
   await pastIntro();
@@ -798,7 +798,8 @@ test('with the zip step held back, someone who already has a hemisphere starts a
 
 describe('launch intro', () => {
   const setMotion = (reduce) => { window.matchMedia = jest.fn().mockImplementation((query) => ({ matches: reduce && query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} })); };
-  afterEach(() => { delete window.matchMedia; jest.useRealTimers(); });
+  beforeEach(() => { window.localStorage.clear(); });
+  afterEach(() => { delete window.matchMedia; jest.useRealTimers(); window.localStorage.clear(); });
 
   test('plays before the welcome screen, then the name glides to the welcome wordmark and the welcome screen takes over', async () => {
     setMotion(false);
@@ -806,7 +807,7 @@ describe('launch intro', () => {
     await mount({ launchIntro: true });
     expect(q('launch-intro')).not.toBeNull();
     expect(q('onboarding-welcome')).toBeNull(); // not built until the glide starts
-    await act(async () => { jest.advanceTimersByTime(4600); });
+    await act(async () => { jest.advanceTimersByTime(2400); });
     // The glide has started: the welcome screen is built underneath, hidden from assistive tech, wordmark waiting.
     expect(q('launch-intro')).not.toBeNull();
     const underlay = q('onboarding-welcome').parentElement;
@@ -820,6 +821,26 @@ describe('launch intro', () => {
     expect(q('onboarding-welcome').parentElement.className).not.toContain('gw-intro-live');
     expect(q('onboarding-welcome').parentElement.hasAttribute('inert')).toBe(false);
     expect(q('welcome-signin')).not.toBeNull();
+  });
+
+  test('plays on the first visit only: a return visit signed out goes straight to the welcome screen', async () => {
+    setMotion(false);
+    await mount({ launchIntro: true });
+    expect(q('launch-intro')).not.toBeNull();
+    act(() => root.unmount());
+    root = createRoot(container);
+    await mount({ launchIntro: true });
+    expect(q('launch-intro')).toBeNull();
+    expect(q('onboarding-welcome')).not.toBeNull();
+  });
+
+  test('still plays when storage is blocked', async () => {
+    setMotion(false);
+    const get = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+    const set = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+    await mount({ launchIntro: true });
+    expect(q('launch-intro')).not.toBeNull();
+    get.mockRestore(); set.mockRestore();
   });
 
   test('a tap skips it', async () => {

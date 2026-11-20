@@ -157,11 +157,17 @@ export default function EncyclopediaPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search the plant guide by common or Latin name"
-            placeholder="Search species by common or Latin name"
+            placeholder="Search species by name"
             className="h-12 rounded-control border-hairline bg-grove-canopy pl-10"
             data-testid="greenhouse-search"
           />
         </div>
+        )}
+        {/* The chips on the cards are not tappable (each card is a link), so the source is stated once here. */}
+        {!loadError && !loading && species.some((s) => s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown') && (
+          <p className="font-ui text-xs text-grove-sage" data-testid="guide-safety-source">
+            Pet safety labels are based on ASPCA listings for cats and dogs.
+          </p>
         )}
 
         {/* Species Grid */}
@@ -202,7 +208,7 @@ export default function EncyclopediaPage() {
                     <div className="flex flex-wrap items-center gap-2 mt-2">
                       <span className="min-w-0 max-w-full break-words text-xs text-grove-sage">{s.family}</span>
                       {s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown' && (
-                        <ToxicityBadge toxicity={s.toxicity} size="sm" className="max-w-full" interactive={false} />
+                        <ToxicityBadge toxicity={s.toxicity} className="max-w-full" interactive={false} />
                       )}
                     </div>
                   </div>

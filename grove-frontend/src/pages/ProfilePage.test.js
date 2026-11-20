@@ -201,15 +201,11 @@ test('admin rows show only for admins, below Sign out', async () => {
   expect(mockNavigate).toHaveBeenCalledWith('/first-run');
 });
 
-test.each([
-  ['free', false], ['pro', true], ['florist_pro', true],
-])('the Florist Pro row for tier %s: %s', async (tier, shown) => {
+// The florist dashboard is held back from v1 (lib/features FLORIST_ENABLED is off), so no tier sees its row.
+test.each([['free'], ['pro'], ['florist_pro']])('no Florist Pro row while florist pages are held back (tier %s)', async (tier) => {
   mockUser = { ...mockUser, tier };
   await mount();
-  expect(!!el('profile-florist-button')).toBe(shown);
-  if (shown) {
-    expect(el('profile-logout-button').compareDocumentPosition(el('profile-florist-button')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-  }
+  expect(el('profile-florist-button')).toBeNull();
 });
 
 test('Sign out calls logout', async () => {
