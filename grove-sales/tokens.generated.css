@@ -1,0 +1,32 @@
+/* GENERATED from design/tokens.json by scripts/generate-tokens.js. Do not edit by hand. */
+:root {
+  --grove-night: #0B0F08;
+  --grove-understory: #172010;
+  --grove-forest: #202D14;
+  --grove-canopy: #2D3B1A;
+  --grove-moss: #3C4D26;
+  --grove-well: #1C2416;
+  --grove-fern-line: #64793F;
+  --grove-input-line: #4E6232;
+  --grove-lime: #92B44B;
+  --grove-root: #1A2410;
+  --grove-sprout: #C3D98A;
+  --grove-cream: #F4F1E6;
+  --grove-sage: #C3CBB1;
+  --grove-lichen: #C8D0B6;
+  --grove-sun: #E8D77A;
+  --grove-bloom: #E57A9C;
+  --grove-blush: #F7B4C8;
+  --grove-paper: #F5F0E8;
+  --grove-ink: #1A1A17;
+  --grove-paper-card: #FDFAF6;
+  --grove-paper-deep: #EDE5D8;
+  --grove-paper-border: #D3C9B8;
+  --grove-ink-soft: #2B2B26;
+  --grove-paper-green: #2D5016;
+  --grove-paper-accent: #3B6D11;
+  --grove-paper-pale: #EAF3DE;
+  --grove-leaf-on-cream: #3F5A1A;
+  --grove-paper-error: #9B1C1C;
+  --grove-input-outline: #869A68;
+}

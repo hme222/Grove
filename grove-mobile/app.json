@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "FloraGrove",
+    "slug": "floragrove",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "FloraGrove uses the camera so you can take a photo of a plant.",
+        "NSPhotoLibraryUsageDescription": "FloraGrove uses your photos so you can add a picture of a plant."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#202D14",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "backgroundColor": "#202D14"
+  }
+}

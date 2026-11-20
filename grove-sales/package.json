@@ -1,0 +1,10 @@
+{
+  "name": "grove-sales",
+  "private": true,
+  "version": "0.1.0",
+  "description": "The Founding Member sales page, a draft. Not deployed: Vercel serves grove-landing only.",
+  "scripts": {
+    "test": "node --test test/offer-copy.test.mjs",
+    "check:offer": "node scripts/check-offer.mjs"
+  }
+}
