@@ -12,6 +12,9 @@ os.environ.setdefault("JWT_SECRET", "test-secret")
 server = pytest.importorskip("server", reason="server dependencies are not installed")
 from fastapi.testclient import TestClient  # noqa: E402
 
+from fakes import Collection  # noqa: E402
+import species_safety  # noqa: E402
+
 MONSTERA = {
     "id": "sp-monstera",
     "common_name": "Monstera",
@@ -50,6 +53,9 @@ class FakeSpecies:
 class FakeDb:
     def __init__(self, species):
         self.species = FakeSpecies(species)
+        # identify now checks the account and records the call (entitlements.py), so it needs these two as well
+        self.users = Collection()
+        self.ai_usage = Collection()
 
 
 def _run(coro):
@@ -108,6 +114,16 @@ def test_identify_attaches_library_toxicity_and_match(identify_client):
     assert body["libraryMatch"]["family"] == "Araceae"
 
 
+def test_identify_low_confidence_reports_unknown_even_with_a_library_match(identify_client):
+    for model_json in (
+        '{"commonName": "Monstera", "latinName": "Monstera deliciosa", "confidence": 0.5, "isConfident": true}',
+        '{"commonName": "Monstera", "latinName": "Monstera deliciosa", "confidence": 0.9, "isConfident": false}',
+    ):
+        client = identify_client(model_json, [MONSTERA])
+        body = client.post("/api/plants/identify", json={"path": "x.jpg"}).json()
+        assert body["toxicity"] is None
+
+
 def test_identify_with_no_library_match_reports_unknown_not_safe(identify_client):
     client = identify_client('{"commonName": "Mystery fern", "latinName": "Fernus mysterium", "confidence": 0.8, "isConfident": true}', [MONSTERA])
     body = client.post("/api/plants/identify", json={"path": "x.jpg"}).json()
@@ -119,3 +135,36 @@ def test_identify_never_returns_an_unsourced_toxicity(monkeypatch):
     monkeypatch.setattr(server, "db", FakeDb([UNSOURCED]))
     found = _run(server.find_library_species(None, "Old plant"))
     assert found["toxicity"] is None
+
+
+# --- Held-back mode (PET_SAFETY_LABELS unset): a link to the ASPCA list, no rating, no repeated listing. ---
+
+def test_labels_off_shows_no_rating_even_for_a_sourced_species(monkeypatch):
+    monkeypatch.setattr(species_safety, "LABELS_ENABLED", False)
+    assert species_safety.shown_toxicity(MONSTERA) is None
+    assert species_safety.scrub_species(MONSTERA)["toxicity"] is None
+    assert species_safety.sourced_toxicity(MONSTERA) == "toxic"  # the record keeps its sourced value
+
+
+def test_labels_off_identify_sends_no_rating(identify_client, monkeypatch):
+    monkeypatch.setattr(species_safety, "LABELS_ENABLED", False)
+    client = identify_client('{"commonName": "Monstera", "latinName": "Monstera deliciosa", "confidence": 0.9, "isConfident": true}', [MONSTERA])
+    assert client.post("/api/plants/identify", json={"path": "x.jpg"}).json()["toxicity"] is None
+
+
+def test_labels_off_care_text_does_not_repeat_an_aspca_listing(monkeypatch):
+    monkeypatch.setattr(species_safety, "LABELS_ENABLED", False)
+    toxic = "Bright light. The ASPCA lists it as toxic to cats and dogs, so keep it out of reach."
+    assert species_safety.shown_safety_text(toxic) == "Bright light. Keep it out of reach of pets and children."
+    assert species_safety.shown_safety_text("Full sun. The ASPCA lists it as non-toxic to cats and dogs.") == "Full sun."
+    notes = "swap in Cast Iron Plant, which the ASPCA lists as non-toxic to cats and dogs. Keep Pothos high."
+    assert species_safety.shown_safety_text(notes) == "swap in Cast Iron Plant. Keep Pothos high."
+    from curated_species import CURATED_SPECIES
+    from curated_guilds import CURATED_GUILDS
+    for text in [s["care_summary"] for s in CURATED_SPECIES] + [g.get("design_notes", "") for g in CURATED_GUILDS]:
+        assert "ASPCA lists" not in species_safety.shown_safety_text(text)
+
+
+def test_labels_on_leaves_care_text_alone():
+    text = "Bright light. The ASPCA lists it as toxic to cats and dogs, so keep it out of reach."
+    assert species_safety.shown_safety_text(text) == text
