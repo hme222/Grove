@@ -65,11 +65,11 @@ export function WelcomeStage({ decorative = false, pinContinue = false, onContin
           {/* A little wobble, so the brush lines read as drawn by hand and not as perfect curves. */}
           <filter id="gw-rough" x="-5%" y="-5%" width="110%" height="110%">
             <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="7" result="wobble" />
-            <feDisplacementMap in="SourceGraphic" in2="wobble" scale="4" xChannelSelector="R" yChannelSelector="G" />
+            <feDisplacementMap in="SourceGraphic" in2="wobble" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
         <g fill="var(--grove-lime)" filter="url(#gw-rough)">
-          <path className="gw-line" mask="url(#gw-mask-1)" d={LINE_1} />
+          <path className="gw-line" mask="url(#gw-mask-1)" transform="translate(0 6)" d={LINE_1} />
           <path className="gw-line" mask="url(#gw-mask-2)" transform="translate(0 4)" d={LINE_2} />
           <path className="gw-line" mask="url(#gw-mask-3)" d={LINE_3} />
         </g>

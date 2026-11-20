@@ -70,3 +70,21 @@ test('a failed check says so, keeps the soil answer, and points to the list', as
   expect(q('photo-check-failed').textContent).toContain('symptom list');
   expect(q('photo-check-choose')).not.toBeNull();
 });
+
+test('a Pro-only refusal is shown in the server\'s own words, not as a broken photo', async () => {
+  plantAPI.upload.mockResolvedValue({ data: { path: 'p/1.jpg' } });
+  plantAPI.diagnosePhoto.mockRejectedValue({ response: { status: 402, data: { detail: { code: 'pro_required', message: 'Sick-plant diagnosis is part of FloraGrove Pro. The symptom checker on Help my plant is free.' } } } });
+  act(() => { q('soil-dry').click(); });
+  await pickPhoto();
+  expect(q('photo-check-refused').textContent).toContain('part of FloraGrove Pro');
+  expect(q('photo-check-failed')).toBeNull();
+});
+
+test('any other failure still reads as "we couldn\'t check that photo"', async () => {
+  plantAPI.upload.mockResolvedValue({ data: { path: 'p/1.jpg' } });
+  plantAPI.diagnosePhoto.mockRejectedValue({ response: { status: 500, data: {} } });
+  act(() => { q('soil-dry').click(); });
+  await pickPhoto();
+  expect(q('photo-check-failed')).not.toBeNull();
+  expect(q('photo-check-refused')).toBeNull();
+});

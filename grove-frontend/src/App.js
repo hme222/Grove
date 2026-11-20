@@ -3,7 +3,7 @@ import { holdFirstRun } from "./lib/firstRunGate";
 import { Spinner } from './components/Loading';
 import "@/App.css";
 import "@/lib/microAnimations.css";
-import { COMMUNITY_ENABLED, GUILDS_ENABLED } from "./lib/features";
+import { COMMUNITY_ENABLED, GUILDS_ENABLED, FLORIST_ENABLED } from './lib/features';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TooltipProvider } from "./contexts/TooltipContext";
@@ -118,8 +118,11 @@ function useFocusMainOnRoute() {
 }
 
 // Signed-in screens that fill the whole viewport and carry their own chrome (no tab bar).
-function ProtectedFullScreen() {
+// `withHelp` gives the screen the help sheet, so its header keeps the Plant help button in the same place as every
+// other screen. It is left off for the lesson player and the verify flow, which are focused tasks.
+function ProtectedFullScreen({ withHelp = false }) {
   useFocusMainOnRoute();
+  const page = <ErrorBoundary><Outlet /></ErrorBoundary>;
   return (
     <RequireUser>
       <a
@@ -128,7 +131,9 @@ function ProtectedFullScreen() {
       >
         Skip to content
       </a>
-      <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none"><ErrorBoundary><Outlet /></ErrorBoundary></main>
+      <main id="main-content" tabIndex={-1} aria-labelledby="page-title" className="focus:outline-none">
+        {withHelp ? <HelpSheetProvider>{page}</HelpSheetProvider> : page}
+      </main>
     </RequireUser>
   );
 }
@@ -301,11 +306,14 @@ function AppRoutes() {
         <Route path="/waitlist" element={<WaitlistPage />} />
 
         {/* Signed in, full screen with no tab bar (see Deliberate departures in design/README.md). */}
-        <Route element={<ProtectedFullScreen />}>
-          <Route path="/lessons/:lessonId" element={<LessonPage />} />
+        <Route element={<ProtectedFullScreen withHelp />}>
           <Route path="/greenhouse/:speciesId" element={<SpeciesDetailPage />} />
           <Route path="/guilds/:slug" element={guildsOnly(<GuildDetailPage />)} />
-          <Route path="/verify" element={<VerifyPage />} />
+        </Route>
+        <Route element={<ProtectedFullScreen />}>
+          <Route path="/lessons/:lessonId" element={<LessonPage />} />
+          {/* Verification is part of swapping; its only link is on the Swaps page, so it waits for the community flag too. */}
+          <Route path="/verify" element={communityOnly(<VerifyPage />)} />
           <Route path="/admin/demo" element={<AdminDemoPage />} />
         </Route>
 
@@ -334,7 +342,8 @@ function AppRoutes() {
           <Route path="/groves" element={communityOnly(<GrovesPage />)} />
           <Route path="/groves/:groveId" element={communityOnly(<GroveDetailPage />)} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/florist" element={<FloristDashboard />} />
+          {/* Hidden for v1 like badges and challenges (lib/features FLORIST_ENABLED, docs/product/launch-checklist.md). */}
+          <Route path="/florist" element={FLORIST_ENABLED ? <FloristDashboard /> : <Navigate to="/care/today" replace />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/swap" element={communityOnly(<SwapPage />)} />
           <Route path="/swaps/matches" element={communityOnly(<SwapMatchesPage />)} />

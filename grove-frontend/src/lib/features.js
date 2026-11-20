@@ -11,3 +11,8 @@ export const GUILDS_ENABLED = process.env.REACT_APP_GUILDS === 'on';
 // winter lows and changes nothing about indoor care. Hemisphere, which sets the season, is still asked.
 // Turn on with REACT_APP_ZIP_ZONE=on, for example once outdoor plants are supported.
 export const ZIP_ZONE_ENABLED = process.env.REACT_APP_ZIP_ZONE === 'on';
+
+// The florist dashboard (portfolio and insights for Pro florists) is held back from v1: florists need their own
+// discovery before Grove designs for them (docs/product/confirmed-context.md), and there is no way to pay for Pro yet.
+// Turn on with REACT_APP_FLORIST=on. The page and API stay in the codebase.
+export const FLORIST_ENABLED = process.env.REACT_APP_FLORIST === 'on';

@@ -249,7 +249,12 @@ export default function CollectionPage() {
         ) : (
           /* Layout rule, not a token value: at most three columns, each at least 6.5rem, so at 200% text the grid
              drops to fewer columns instead of cutting plant names to two letters. The bouquet grid matches. */
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(max(6.5rem,30%),1fr))] gap-2 sm:gap-3" data-testid="collection-grid">
+          /* With one or two plants the tiles are bigger (two columns), so a first plant is a real tile with its status on
+             one line, not a 105px square in the corner of an empty page. From three plants it is the usual three columns. */
+          <div
+            className={`grid gap-2 sm:gap-3 ${filteredPlants.length <= 2 ? 'grid-cols-[repeat(auto-fill,minmax(max(6.5rem,45%),1fr))]' : 'grid-cols-[repeat(auto-fill,minmax(max(6.5rem,30%),1fr))]'}`}
+            data-testid="collection-grid"
+          >
             {filteredPlants.map(item => (
               <PlantCard
                 key={`p-${item.id}`}

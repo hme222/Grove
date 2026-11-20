@@ -20,6 +20,19 @@ one-time moments (quiz, first-care celebration, Meet Pip) replay.
 Welcome, quiz (you can skip questions), plan, soil finger-test lesson, add a plant (try "spider"), Today, resume the
 lesson and log the soil test, celebration, Meet Pip, Pip's nook (tap Pip on Today).
 
+## Trigger an error on purpose
+
+The fake backend never fails by itself, so add a switch to the address to see the error states:
+
+- `?fail=offline` a dropped connection (no answer)
+- `?fail=500` a server fault
+- `?fail=402` the free photo IDs are used up
+- `?fail=429` a cost cap was hit
+
+By default only actions that change something fail (Watered, saves), so the app still loads. To fail specific requests,
+including reads, add `&failpath=` with words from the request path, for example `?fail=402&failpath=plants/identify`.
+Reload the page to go back to normal.
+
 ## How it works
 
 - `demo/browser-entry.js` replaces the network with `scripts/mock-core.mjs` before the app starts.

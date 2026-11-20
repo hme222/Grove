@@ -15,8 +15,9 @@ import { impactLight, impactMedium, success, spawnRipple } from '../lib/haptics'
 // Heavier-feedback actions get medium impact; lighter ones get a light tap.
 const HEAVY_ACTIONS = new Set(['fertilize', 'repot', 'propagate', 'prune']);
 
-export default function CareLogModal({ open, onClose, plantId, plantName, onLogged }) {
-  const [selected, setSelected] = useState(() => new Set());
+// `initialActions` are chosen when the dialog opens (a plant nobody has checked opens with the soil test chosen).
+export default function CareLogModal({ open, onClose, plantId, plantName, onLogged, initialActions }) {
+  const [selected, setSelected] = useState(() => new Set(initialActions || []));
   const [hint, setHint] = useState(null);
   const openerRef = React.useRef(null);
   const titleRef = useRef(null);
@@ -101,49 +102,9 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
     }
   };
 
-  return (
-    <Dialog open={open} onOpenChange={(o) => { if (!o) { handleReset(); onClose(); } }}>
-      {/* The title keeps Radix's own id, so the dialog is labeled by it and Radix's missing-title check finds it. */}
-      <DialogContent className="max-w-dialog" data-testid="care-log-modal"
-        onOpenAutoFocus={(e) => { e.preventDefault(); openerRef.current = openerRef.current || document.activeElement; titleRef.current?.focus(); }}
-        onCloseAutoFocus={(e) => { e.preventDefault(); const el = openerRef.current; openerRef.current = null; if (el && el.focus && document.contains(el)) el.focus(); }}
-      >
-        <DialogHeader>
-          <DialogTitle ref={titleRef} data-testid="care-log-title" tabIndex={-1} className="font-plant text-grove-cream text-xl focus:outline-none">
-            Log care for {plantName}
-          </DialogTitle>
-          <p className="mt-1 text-sm font-ui text-grove-sage">
-            Tap every action you just did. They&apos;ll log together as one sweep.
-          </p>
-        </DialogHeader>
-
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] gap-2 my-4" data-testid="care-action-grid">
-          {CARE_ACTIONS.map(({ value, label, icon: Icon, color }) => {
-            const isOn = selected.has(value);
-            return (
-              <button
-                key={value}
-                onClick={(e) => { setHint(value); toggleAction(e, value); }}
-                onFocus={() => setHint(value)}
-                data-testid={`care-action-${value}`}
-                aria-pressed={isOn}
-                className={`relative overflow-hidden flex min-h-touch flex-col items-center gap-1 p-3 rounded-control border-hairline transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-cream focus-visible:ring-offset-2 focus-visible:ring-offset-grove-moss ${
-                  isOn
-                    ? 'border-grove-lime bg-grove-canopy'
-                    : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
-                }`}
-              >
-                <Icon className="h-5 w-5" style={{ color }} strokeWidth={isOn ? 2.2 : 1.75} />
-                <span className={`text-xs font-ui text-grove-cream ${isOn ? 'font-semibold' : ''}`}>{label}</span>
-              </button>
-            );
-          })}
-        </div>
-        <p id="care-action-hint-text" aria-live="polite" data-testid="care-action-hint" className="font-ui text-sm text-grove-sage">
-          {count === 0 ? 'Pick at least one action to log. Tap one to see what it means.' : ''}{count === 0 && hint ? ' ' : ''}{hint ? `${CARE_ACTIONS.find((a) => a.value === hint)?.label}: ${CARE_ACTIONS.find((a) => a.value === hint)?.hint}` : ''}
-        </p>
-
-        {selected.has('soil_check') && (
+  // The soil test fields. A plant nobody has checked opens with the soil test chosen, and then they come first.
+  const soilFirst = !!initialActions?.includes('soil_check');
+  const soilFields = selected.has('soil_check') ? (
           <div className="mb-3 p-3 bg-grove-forest border-hairline border-grove-moss rounded-control" data-testid="care-soil-fields">
             <p className="text-xs font-ui text-grove-cream mb-2">Push a finger into the soil, to the second knuckle in a pot 6 in (15 cm) or bigger and the first in a small pot. What did you feel?</p>
             <div className="flex gap-2 mb-2">
@@ -185,7 +146,54 @@ export default function CareLogModal({ open, onClose, plantId, plantName, onLogg
               </p>
             )}
           </div>
-        )}
+        
+  ) : null;
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) { handleReset(); onClose(); } }}>
+      {/* The title keeps Radix's own id, so the dialog is labeled by it and Radix's missing-title check finds it. */}
+      <DialogContent className="max-w-dialog" data-testid="care-log-modal"
+        onOpenAutoFocus={(e) => { e.preventDefault(); openerRef.current = openerRef.current || document.activeElement; titleRef.current?.focus(); }}
+        onCloseAutoFocus={(e) => { e.preventDefault(); const el = openerRef.current; openerRef.current = null; if (el && el.focus && document.contains(el)) el.focus(); }}
+      >
+        <DialogHeader>
+          <DialogTitle ref={titleRef} data-testid="care-log-title" tabIndex={-1} className="px-8 font-plant text-grove-cream text-xl focus:outline-none">
+            {soilFirst ? 'Check the soil of' : 'Log care for'} {plantName}
+          </DialogTitle>
+          <p className="mt-1 text-sm font-ui text-grove-sage">
+            {soilFirst ? 'Press a finger into the soil, then tell us what you felt. You can add anything else you did below.' : 'Tap every action you just did. They\'ll log together as one sweep.'}
+          </p>
+        </DialogHeader>
+
+        {soilFirst && <div className="mt-4">{soilFields}</div>}
+
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] gap-2 my-4" data-testid="care-action-grid">
+          {CARE_ACTIONS.map(({ value, label, icon: Icon, color }) => {
+            const isOn = selected.has(value);
+            return (
+              <button
+                key={value}
+                onClick={(e) => { setHint(value); toggleAction(e, value); }}
+                onFocus={() => setHint(value)}
+                data-testid={`care-action-${value}`}
+                aria-pressed={isOn}
+                className={`relative overflow-hidden flex min-h-touch flex-col items-center gap-1 p-3 rounded-control border-hairline transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-grove-cream focus-visible:ring-offset-2 focus-visible:ring-offset-grove-moss ${
+                  isOn
+                    ? 'border-grove-lime bg-grove-canopy'
+                    : 'border-grove-moss bg-grove-forest hover:border-grove-fernLine'
+                }`}
+              >
+                <Icon className="h-5 w-5" style={{ color }} strokeWidth={isOn ? 2.2 : 1.75} />
+                <span className={`text-xs font-ui text-grove-cream ${isOn ? 'font-semibold' : ''}`}>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+        <p id="care-action-hint-text" aria-live="polite" data-testid="care-action-hint" className="font-ui text-sm text-grove-sage">
+          {count === 0 ? 'Pick at least one action to log. Tap one to see what it means.' : ''}{count === 0 && hint ? ' ' : ''}{hint ? `${CARE_ACTIONS.find((a) => a.value === hint)?.label}: ${CARE_ACTIONS.find((a) => a.value === hint)?.hint}` : ''}
+        </p>
+
+        {!soilFirst && soilFields}
 
         {count > 0 && (
           <div

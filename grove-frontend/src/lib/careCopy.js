@@ -1,3 +1,5 @@
+import { hasBeenCaredFor } from './careActions';
+
 // Care-card wording. Gentle by default: say what happened (last watered, or due N days ago),
 // not that someone is late (survey: strict-new owners chose gentle 9 of 12).
 // The days-since number stays on the card so no information is lost.
@@ -17,6 +19,9 @@ export function dueLabel(plant, now = new Date()) {
   if (!plant?.next_water_due) return 'Schedule needed';
   const diffDays = Math.ceil((new Date(plant.next_water_due).getTime() - now.getTime()) / DAY_MS);
   if (diffDays < 0) {
+    // A plant nobody has cared for reads "No checks yet" on every screen (displayStatus). Its watering date is just the day
+    // it was added, so it is never "last watered N days ago" or "due N days ago": that would call a day-one plant late.
+    if (!hasBeenCaredFor(plant)) return 'No checks yet';
     const since = daysSince(plant.last_watered_at, now);
     return since != null
       ? `Last watered ${plural(since, 'day')} ago`

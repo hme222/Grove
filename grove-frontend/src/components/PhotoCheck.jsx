@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from './ui/button';
 import { plantAPI, experimentAPI } from '../lib/api';
+import { refusalFrom } from '../lib/errors';
 
 // "Check with a photo", the treatment arm of the help_diagnosis experiment (see grove-backend/experiments.py).
 // The soil question comes first and the photo can't be sent without it: a photo can't show how wet the soil is.
@@ -17,7 +18,8 @@ const log = (event, props) => { experimentAPI.event(EXPERIMENT, event, props).ca
 
 export default function PhotoCheck() {
   const [soil, setSoil] = useState(null);
-  const [status, setStatus] = useState('idle'); // idle | working | done | failed | rejected
+  const [status, setStatus] = useState('idle'); // idle | working | done | failed | rejected | refused
+  const [refusal, setRefusal] = useState('');
   const [result, setResult] = useState(null);
   const [noneFit, setNoneFit] = useState(false);
   const fileRef = useRef(null);
@@ -36,7 +38,10 @@ export default function PhotoCheck() {
       if (res.data.error || res.data.needsSoilCheck) { setStatus('failed'); return; }
       setResult(res.data);
       setStatus('done');
-    } catch {
+    } catch (e) {
+      // The server can say no in words: sick-plant diagnosis is Pro only, or a cost cap was reached.
+      const refused = refusalFrom(e);
+      if (refused) { setRefusal(refused.message); setStatus('refused'); return; }
       setStatus('failed');
     }
   };
@@ -83,6 +88,9 @@ export default function PhotoCheck() {
       )}
 
       <div aria-live="polite" data-testid="photo-check-result">
+        {status === 'refused' && (
+          <p className="mt-4 font-ui text-sm text-grove-cream" data-testid="photo-check-refused">{refusal}</p>
+        )}
         {status === 'failed' && (
           <p className="mt-4 font-ui text-sm text-grove-cream" data-testid="photo-check-failed">
             We couldn’t check that photo. Your answer is kept. Try again, or use the symptom list below.

@@ -14,6 +14,7 @@ import { Leaf, Droplets, Sun, Sprout, Bug, BookOpen, ExternalLink, ShieldAlert, 
 import SectionTutorial from '../components/SectionTutorial';
 import ToxicityBadge from '../components/ToxicityBadge';
 import PetSafetyLookup from '../components/PetSafetyLookup';
+import { getToxicityInfo } from '../lib/toxicity';
 import { toast } from 'sonner';
 import PhotoBand from '../components/PhotoBand';
 
@@ -194,7 +195,7 @@ export default function SpeciesDetailPage() {
                 testId="species-illustration"
               />
               <p className="px-3 py-1.5 font-latin italic text-xs text-grove-lichen bg-grove-canopy">
-                {species.botanical_illustration_title || 'Botanical illustration'} — {species.botanical_illustration_license || 'Public Domain'}
+                {[species.botanical_illustration_title || 'Botanical illustration', species.botanical_illustration_credit, species.botanical_illustration_license].filter(Boolean).join(' — ')}
               </p>
             </div>
           )}
@@ -212,10 +213,10 @@ export default function SpeciesDetailPage() {
                 <ToxicityBadge toxicity={species.toxicity} testId="species-toxicity" />
                 <PetSafetyLookup toxicity={species.toxicity} testId="species-safety-lookup" />
                 <p className="mt-1.5 font-ui text-xs text-grove-sage" data-testid="species-safety-line">
-                  Based on ASPCA listings for cats and dogs. Even non-toxic plants can upset a stomach, and small children should not chew any plant. If something was eaten:
+                  {getToxicityInfo(species.toxicity).level === 'unknown' ? '' : 'Based on ASPCA listings for cats and dogs. '}Even non-toxic plants can upset a stomach, and small children should not chew any plant. If something was eaten:
                 </p>
                 <AppLink to="/help-my-plant" className="inline-flex min-h-touch items-center font-ui text-sm text-grove-cream underline underline-offset-2" data-testid="species-poison-help">
-                  Open Help my plant for who to call
+                  Open Plant help for who to call
                 </AppLink>
               </div>
             </div>

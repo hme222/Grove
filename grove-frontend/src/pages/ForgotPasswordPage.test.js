@@ -50,13 +50,13 @@ test('a dropped connection is not told as "sent"', async () => {
   expect(q('forgot-error').textContent).toMatch(/connection/);
 });
 
-test('a new password of five characters is refused without asking the server', async () => {
+test('a new password of seven characters is refused without asking the server', async () => {
   globalThis.__search = 'token=abc';
   await act(async () => { root.render(<ResetPasswordPage />); });
-  await type('reset-password', '12345');
+  await type('reset-password', '1234567');
   await submit('reset-submit');
   expect(authAPI.resetPassword).not.toHaveBeenCalled();
-  expect(q('reset-error').textContent).toMatch(/at least 6/);
+  expect(q('reset-error').textContent).toMatch(/at least 8/);
 });
 
 test('a good password goes to the server with the link code and ends on a sign-in button', async () => {

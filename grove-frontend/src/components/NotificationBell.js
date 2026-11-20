@@ -153,6 +153,7 @@ export default function NotificationBell() {
 
   return (
     <div className="relative" ref={panelRef}>
+      {/* While its panel is open the bell wears the same "you are here" ring as the profile button on Profile. */}
       <button
         ref={buttonRef}
         onClick={toggle}
@@ -161,7 +162,7 @@ export default function NotificationBell() {
         aria-controls={open ? 'notification-center' : undefined}
         data-testid="notification-bell"
         aria-label={`Notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
-        className="relative w-touch h-touch rounded-pill border-hairline border-grove-moss bg-grove-canopy text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150"
+        className={`relative w-touch h-touch rounded-pill border-hairline text-grove-cream hover:border-grove-fernLine flex items-center justify-center transition-colors duration-150 ${open ? 'border-grove-lime bg-grove-moss' : 'border-grove-moss bg-grove-canopy'}`}
       >
         <Bell className="h-4 w-4" />
         {unread > 0 && (

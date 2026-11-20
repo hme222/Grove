@@ -6,7 +6,7 @@ import { buttonVariants } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { notificationAPI } from '../lib/api';
 import { usePipPrefs } from '../lib/pipPrefs';
-import { ZIP_ZONE_ENABLED } from '../lib/features';
+import { ZIP_ZONE_ENABLED, FLORIST_ENABLED } from '../lib/features';
 import { PageHeader } from '../components/PageHeader';
 import SettingsSheet from '../components/profile/SettingsSheet';
 import TutorialsSheetBody from '../components/profile/TutorialsSheetBody';
@@ -66,13 +66,15 @@ export default function ProfilePage() {
 
       <div className="max-w-column mx-auto px-4 py-4 space-y-4">
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-identity-card">
-          <div className="flex items-center gap-4">
-            <div aria-hidden="true" className="w-16 h-16 shrink-0 rounded-pill bg-grove-moss flex items-center justify-center border-hairline border-grove-moss">
+          {/* Layout rule, not a token value: the 8rem minimum (min-w-32) is in rem so at 200% text the name drops under the
+              avatar instead of being squeezed into a column too narrow to hold a word. */}
+          <div className="flex flex-wrap items-center gap-4">
+            <div aria-hidden="true" className="w-16 h-16 shrink-0 rounded-pill bg-grove-canopy flex items-center justify-center border-hairline border-grove-fernLine">
               <span className="font-plant text-grove-sprout text-2xl">
                 {(user?.display_name || user?.username || 'G')[0].toUpperCase()}
               </span>
             </div>
-            <div className="min-w-0">
+            <div className="min-w-32 flex-1">
               <h2 className="font-plant text-grove-cream text-xl break-words">{user?.display_name || user?.username}</h2>
               <p className="font-latin text-xs text-grove-cream break-words">@{user?.username}</p>
               {user?.location && <p className="font-ui text-xs text-grove-cream mt-0.5 break-words">{user.location}</p>}
@@ -128,7 +130,7 @@ export default function ProfilePage() {
           Sign out
         </button>
 
-        {isPro && (
+        {isPro && FLORIST_ENABLED && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
             <h3 className="font-plant text-grove-cream text-base font-semibold mb-3">Florist Pro</h3>
             <button

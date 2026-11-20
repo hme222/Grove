@@ -40,7 +40,8 @@ jest.mock('../components/ui/alert-dialog', () => {
   };
 });
 jest.mock('../components/EmptyState', () => ({ EmptyState: ({ config }) => <div data-testid="empty-state">{config?.heading}</div> }));
-jest.mock('../components/CareLogModal', () => () => null);
+let mockModalProps = null;
+jest.mock('../components/CareLogModal', () => (props) => { mockModalProps = props; return null; });
 jest.mock('../components/DailyMissionCard', () => () => null);
 jest.mock('../components/NextLessonCard', () => () => null);
 jest.mock('../components/FirstCareCelebration', () => () => null);
@@ -62,6 +63,10 @@ const DUE = [
   },
 ];
 
+// "Water all" is only offered when two or more plants are due.
+const TWO_DUE = [DUE[0], { ...DUE[0], id: 'p2', nickname: 'Fern', status: 'needs_water' }];
+const useTwoDue = () => careAPI.getDueToday.mockResolvedValue({ data: TWO_DUE });
+
 let container;
 let root;
 const q = (id) => container.querySelector(`[data-testid="${id}"]`) || document.body.querySelector(`[data-testid="${id}"]`);
@@ -72,6 +77,7 @@ const mount = async () => {
 beforeEach(() => {
   jest.clearAllMocks();
   mockUser = {};
+  mockModalProps = null;
   careAPI.getDueToday.mockResolvedValue({ data: DUE });
   plantAPI.getAll.mockResolvedValue({ data: { plants: DUE } });
   notificationsAPI.scheduleReviews.mockResolvedValue({ data: { plants: [] } });
@@ -147,12 +153,56 @@ describe('Simple / Detailed care tips', () => {
 
 describe('Water All asks first', () => {
   test('opening it does not water anything until confirmed, and Not yet cancels', async () => {
+    useTwoDue();
     await mount();
     await act(async () => { q('water-all-button').click(); });
     expect(q('water-all-dialog').textContent).toContain('Water all');
     expect(waterAPI.logRound).not.toHaveBeenCalled();
     await act(async () => { q('water-all-cancel').click(); });
     expect(waterAPI.logRound).not.toHaveBeenCalled();
+  });
+});
+
+describe('Water all is for more than one plant', () => {
+  test('with one plant due there is no Water all, only that card\'s Watered', async () => {
+    await mount();
+    expect(q('water-all-button')).toBeNull();
+    expect(q('care-mark-done')).not.toBeNull();
+  });
+
+  test('with two plants due Water all is offered', async () => {
+    useTwoDue();
+    await mount();
+    expect(q('water-all-button')).not.toBeNull();
+  });
+});
+
+describe('a plant nobody has checked leads with the soil check', () => {
+  const added = daysAgo(1);
+  const NEW = [{ id: 'p9', common_name: 'Spider Plant', status: 'needs_water', next_water_due: daysAgo(0), created_at: added, last_watered_at: added }];
+
+  test('its main button reads "Check the soil" and opens the care dialog with the soil test chosen', async () => {
+    careAPI.getDueToday.mockResolvedValue({ data: NEW });
+    await mount();
+    const btn = q('care-quick-action');
+    expect(btn.textContent).toBe('Check the soil');
+    expect(btn.getAttribute('aria-label')).toBe('Check the soil of Spider Plant');
+    await act(async () => { btn.click(); });
+    expect(mockModalProps.initialActions).toEqual(['soil_check']);
+  });
+
+  test('Watered stays a one-tap button beside it', async () => {
+    careAPI.getDueToday.mockResolvedValue({ data: NEW });
+    await mount();
+    expect(q('care-mark-done').textContent).toBe('Watered');
+  });
+
+  test('a plant that has been cared for keeps "Log care" and opens the dialog with nothing chosen', async () => {
+    await mount();
+    const btn = q('care-quick-action');
+    expect(btn.textContent).toBe('Log care');
+    await act(async () => { btn.click(); });
+    expect(mockModalProps.initialActions).toBeUndefined();
   });
 });
 
@@ -179,6 +229,7 @@ describe('Undo on Water All', () => {
   test('after Water All, Undo reverts the round', async () => {
     waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r1', first_care_pending: false } });
     waterAPI.undoRound.mockResolvedValue({ data: { undone: 1 } });
+    useTwoDue();
     await mount();
     await act(async () => { q('water-all-button').click(); });
     await act(async () => { q('water-all-confirm').click(); });
@@ -193,6 +244,7 @@ describe('Undo on Water All', () => {
   test('a failed undo shows the server reason and closes the bar', async () => {
     waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r1' } });
     waterAPI.undoRound.mockRejectedValue({ response: { status: 400, data: { detail: 'Too late to undo that round.' } } });
+    useTwoDue();
     await mount();
     await act(async () => { q('water-all-button').click(); });
     await act(async () => { q('water-all-confirm').click(); });
@@ -296,11 +348,12 @@ describe('water failures say why and offer Try again', () => {
     waterAPI.logRound.mockRejectedValue({ response: { status: 500, data: {} } });
     await mount();
     await act(async () => { q('care-mark-done').click(); });
-    expect(toast.error.mock.calls.at(-1)[0]).toBe('Couldn’t log that watering. That’s on our side. Try again in a moment.');
+    expect(toast.error.mock.calls.at(-1)[0]).toBe('Couldn’t log that watering. That’s on our side, and nothing was saved. Try again in a moment.');
   });
 
   test('a failed Water all names the cause and offers Try again', async () => {
     waterAPI.logRound.mockRejectedValue({ response: { status: 503, data: {} } });
+    useTwoDue();
     await mount();
     await act(async () => { q('water-all-button').click(); });
     await act(async () => { q('water-all-confirm').click(); });
@@ -345,6 +398,7 @@ describe('check-ins line', () => {
     jest.useFakeTimers();
     try {
       waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r3' } });
+      useTwoDue();
       await mount();
       expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 1 of 3');
       statsAPI.getCheckIns.mockResolvedValue({ data: { this_week: 2, weekly_goal: 3 } });

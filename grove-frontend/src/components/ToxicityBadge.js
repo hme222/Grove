@@ -5,20 +5,17 @@ import { getToxicityInfo } from '../lib/toxicity';
 
 const ICONS = { safe: Heart, danger: OctagonAlert, unknown: CircleHelp };
 
-const SIZES = {
-  sm: { box: 'px-2.5 py-1 min-h-6 text-xs gap-1.5', icon: 'h-3.5 w-3.5' },
-  md: { box: 'px-2.5 py-1 min-h-6 text-xs gap-1.5', icon: 'h-3.5 w-3.5' },
-};
+const BOX = 'px-2.5 py-1 min-h-6 text-xs gap-1.5';
+const ICON = 'h-3.5 w-3.5';
 
 // One pet-safety chip for every place a species appears: Add Plant, plant ID,
 // plant detail, and the Greenhouse species page. Icon + words + color.
 // Its meaning shows in a small panel on hover, on keyboard focus and on tap (Escape or a tap elsewhere closes it).
 // `interactive={false}` is for a chip that sits inside a link or button (a list row): it still explains itself on hover,
 // but takes no focus and no tap, so the row stays one control; the full panel is on the plant's own page.
-export default function ToxicityBadge({ toxicity, size = 'md', className = '', testId = 'toxicity-badge', interactive = true }) {
+export default function ToxicityBadge({ toxicity, className = '', testId = 'toxicity-badge', interactive = true }) {
   const info = getToxicityInfo(toxicity);
   const Icon = ICONS[info.icon];
-  const s = SIZES[size] || SIZES.md;
   const [open, setOpen] = useState(false);
   // A chip you can focus and tap is a real button; one inside a link or button stays plain text.
   const Chip = interactive ? 'button' : 'span';
@@ -33,9 +30,9 @@ export default function ToxicityBadge({ toxicity, size = 'md', className = '', t
             // Any activation opens it: a tap, a click, Enter or Space, or a screen reader's double-tap. Before, only a
             // touch-screen tap did, so a click or VoiceOver showed nothing.
             onClick={interactive ? () => setOpen(true) : undefined}
-            className={`inline-flex items-center rounded-pill border-hairline font-ui ${s.box} ${info.className} ${interactive ? 'relative cursor-help before:absolute before:inset-x-0 before:-inset-y-2 before:content-[\'\'] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime' : ''} ${className}`}
+            className={`inline-flex items-center rounded-pill border-hairline font-ui ${BOX} ${info.className} ${interactive ? 'relative cursor-help before:absolute before:inset-x-0 before:-top-2 before:-bottom-2.5 before:content-[\'\'] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime' : ''} ${className}`}
           >
-            <Icon className={`${s.icon} flex-shrink-0`} aria-hidden="true" />
+            <Icon className={`${ICON} flex-shrink-0`} aria-hidden="true" />
             <span>{info.label}</span>
           </Chip>
         </TooltipPrimitive.Trigger>

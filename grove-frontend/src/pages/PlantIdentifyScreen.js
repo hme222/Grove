@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { saveErrorMessage } from '../lib/errors';
+import { saveErrorMessage, refusalFrom } from '../lib/errors';
 import { Spinner } from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -33,11 +33,14 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
   const [editing, setEditing] = useState({}); // {field: bool}
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
+  // A refusal from the server (free photo IDs used up, or a cost cap), worded for the person. Retrying can't fix it.
+  const [refusal, setRefusal] = useState(null);
 
   const handleFile = async (file) => {
     if (!file) return;
     setStep('scanning');
     setScanProgress({ species: false, health: false, nickname: false });
+    setRefusal(null);
     try {
       const fd = new FormData();
       fd.append('file', file);
@@ -60,6 +63,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         res = await plantAPI.identify({ path });
       } catch (identifyErr) {
         // The photo is safe on the server; keep it and offer retry or manual entry.
+        setRefusal(refusalFrom(identifyErr));
         setStep('failed');
         return;
       }
@@ -108,11 +112,13 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       });
       setStep(!data.identified || (data.confidence || 0) < 0.7 ? 'low_confidence' : 'review');
     } catch (e) {
+      setRefusal(refusalFrom(e));
       setStep('failed');
     }
   };
 
   const reset = () => {
+    setRefusal(null);
     setStep('capture');
     setPhotoPath(null);
     setIdentified(null);
@@ -242,18 +248,34 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       <div className="max-w-form mx-auto px-4 py-4" data-testid="identify-failed">
         <PlantImage src={photoPath} tone="plant" rounded="lg" className="w-full h-photoFrame mb-3" />
         <div className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
-          <p className="font-ui text-grove-cream text-sm font-medium mb-1">Identification unavailable</p>
-          <p className="font-ui text-xs text-grove-sage leading-snug">
-            The photo is saved. The identify service didn't answer, so this isn't a problem with your photo. Try again, or enter the details yourself.
-          </p>
-          <div className="grid grid-cols-2 gap-2 mt-4">
-            <button onClick={retryIdentify} data-testid="identify-retry" className={cn(buttonVariants(), "flex items-center justify-center gap-1.5")}>
-              <RotateCcw className="h-3.5 w-3.5" /> Try again
-            </button>
-            <button onClick={onSwitchToManual} data-testid="identify-go-manual" className={cn(buttonVariants({ variant: 'outline' }))}>
-              Enter manually
-            </button>
-          </div>
+          {refusal ? (
+            <>
+              <p className="font-ui text-grove-cream text-sm font-medium mb-1" data-testid="identify-refused-title">
+                {refusal.code === 'free_id_limit' ? 'Free photo IDs used' : 'Photo ID limit reached'}
+              </p>
+              <p className="font-ui text-xs text-grove-sage leading-snug" data-testid="identify-refused-message">{refusal.message}</p>
+              <div className="mt-4">
+                <button onClick={onSwitchToManual} data-testid="identify-go-manual" className={cn(buttonVariants(), 'w-full')}>
+                  Search by name
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="font-ui text-grove-cream text-sm font-medium mb-1">Identification unavailable</p>
+              <p className="font-ui text-xs text-grove-sage leading-snug">
+                The photo is saved. The identify service didn't answer, so this isn't a problem with your photo. Try again, or enter the details yourself.
+              </p>
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                <button onClick={retryIdentify} data-testid="identify-retry" className={cn(buttonVariants(), "flex items-center justify-center gap-1.5")}>
+                  <RotateCcw className="h-3.5 w-3.5" /> Try again
+                </button>
+                <button onClick={onSwitchToManual} data-testid="identify-go-manual" className={cn(buttonVariants({ variant: 'outline' }))}>
+                  Enter manually
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );
@@ -277,6 +299,13 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
         >
           {confidenceText(identified?.confidence) || `Confidence: ${confidencePct}%`}
         </p>
+        {typeof identified?.freeIdsLeft === 'number' && (
+          <p data-testid="identify-free-left" className="font-ui text-xs text-grove-lichen mt-1">
+            {identified.freeIdsLeft === 0
+              ? 'That was your last free photo ID. You can still add plants by name.'
+              : `${identified.freeIdsLeft} free photo ${identified.freeIdsLeft === 1 ? 'ID' : 'IDs'} left.`}
+          </p>
+        )}
         <p data-testid="identify-why" className="font-ui text-xs text-grove-cream mt-1 leading-snug">
           <span className="font-semibold">Why: </span>
           {identifyWhy(identified)}
@@ -285,13 +314,15 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
           <p className="italic font-ui text-xs font-medium text-grove-sage mt-2">"{identified.message}"</p>
         )}
         {/* Pet safety is from FloraGrove's species library. If the user renames the
-            species, the library match no longer applies, so it reads as unknown. */}
+            species, the library match no longer applies, so it reads as unknown.
+            A low-confidence guess also reads as unknown: a "non-toxic" answer for the
+            wrong plant is the one mistake that can hurt a pet. */}
         <ToxicityBadge
-          toxicity={speciesEdited ? null : identified?.toxicity}
+          toxicity={speciesEdited || lowConf ? null : identified?.toxicity}
           className="mt-2"
           testId="identify-toxicity"
         />
-        <PetSafetyLookup toxicity={speciesEdited ? null : identified?.toxicity} className="block" testId="identify-safety-lookup" />
+        <PetSafetyLookup toxicity={speciesEdited || lowConf ? null : identified?.toxicity} className="block" testId="identify-safety-lookup" />
       </div>
       <div className="h-px bg-grove-moss my-3" />
 

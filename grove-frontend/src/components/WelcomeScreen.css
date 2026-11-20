@@ -43,7 +43,8 @@
    46pt button lands at about 35 CSS px. Grow the hit area so it is never under --touch-min on
    screen, keeping the button's center where the artwork puts it. */
 .gw-stage > .gw-cta {
-  --cta-h: max(46px, calc(var(--touch-min) / var(--stage-scale, 1)));
+  /* The extra 1px stops the scaled height rounding to 43.99 on screen, just under the 44px minimum. */
+  --cta-h: max(46px, calc(var(--touch-min) / var(--stage-scale, 1) + 1px));
   min-height: var(--cta-h);
   margin-top: calc((46px - var(--cta-h)) / 2);
 }

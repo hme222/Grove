@@ -55,8 +55,8 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
   // The card count is already in the sticky bar, so a header that is only "Card 1 of 5" is not repeated here.
   const kicker = String(card.header || '').replace(/^Card \d+ of \d+( · )?/, '');
   return (
-    <div className="min-h-screen bg-grove-forest flex items-start justify-center px-4 pb-4" data-testid="lesson-player">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-grove-forest flex items-start justify-center px-4" data-testid="lesson-player">
+      <div className="flex min-h-screen w-full max-w-md flex-col">
         {/* Back and the card count stay in view on a long card (the window-map page is over 1100px tall). */}
         <div className="sticky top-0 z-sticky -mx-4 mb-4 flex items-center justify-between gap-2 bg-grove-forest px-4 py-3" data-testid="lesson-chrome">
           <BackButton onClick={onExit} where="lessons" testId="lesson-exit" />
@@ -86,7 +86,9 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           <p className={cn('text-base leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
         </div>
 
-        <div className="mt-4">
+        {/* The Next and Previous row sits at the bottom of the screen on every card (and stays there while a long card
+            scrolls), so the main button is in the same place from card to card. Cards with their own controls keep them in the flow. */}
+        <div className={custom || (isLast && renderFinalCard) ? 'mt-4' : 'mt-auto pt-4'}>
           {custom ? (
             <>
               {paper ? (
@@ -101,7 +103,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           ) : isLast && renderFinalCard ? (
             renderFinalCard(card)
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="sticky bottom-0 -mx-4 flex flex-wrap gap-2 bg-grove-forest px-4 pb-4 pt-3">
               {backButton}
               <button
                 type="button"
@@ -117,7 +119,7 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
         </div>
         <p role="status" className={notice ? 'mt-3 font-ui text-sm text-grove-cream' : 'sr-only'} data-testid="lesson-notice">{notice}</p>
         {sources && (sources.sources?.length > 0 || sources.gaps?.length > 0) && (
-          <Disclosure title="Sources for this lesson" testId="lesson-sources" className="mt-6">
+          <Disclosure title="Sources for this lesson" testId="lesson-sources" className="mb-4 mt-6">
             <ul className="space-y-3">
               {sources.sources.map((src) => (
                 <li key={src.url} className="font-ui text-base text-grove-sage">
