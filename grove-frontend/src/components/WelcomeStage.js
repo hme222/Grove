@@ -32,22 +32,22 @@ function Sparkle({ cx, cy, r, i }) {
 export function WelcomeStage({ decorative = false, pinContinue = false, onContinue, disabled }) {
   return (
     <>
-      <div className="gw-a gw-brand" data-welcome-wordmark style={{ left: 20, top: 40 }}>
+      <div className="gw-a gw-brand" data-welcome-wordmark style={{ left: 20, top: 24 }}>
         <FloraGroveWordmark size={30} />
       </div>
 
-      <h1 className="gw-a gw-welcome" style={{ left: 20, top: 138 }}>
+      <h1 className="gw-a gw-welcome" style={{ left: 20, top: 104 }}>
         <span className="gw-welcome-to">Welcome to Flora</span>
         <span className="gw-welcome-grove">Grove</span>
       </h1>
 
-      <p className="gw-a gw-def" style={{ left: 184, top: 231, width: 236 }}>
+      <p className="gw-a gw-def" style={{ left: 184, top: 200, width: 236 }}>
         A <b className="gw-serif-bold">grove</b> is a small group of trees growing closely together
       </p>
 
       <img className="gw-a gw-forest" src={photoSrc('/photos/welcome-forest-edited.jpg')} alt="" style={{ left: 14, top: 330, width: 402, height: 272 }} />
 
-      <p className="gw-a gw-lower gw-safe" style={{ left: 103, top: 650 }}>
+      <p className="gw-a gw-lower gw-safe" style={{ left: 91, top: 650 }}>
         FloraGrove is a <b>safe space</b> to learn about plants.
       </p>
 
@@ -69,17 +69,17 @@ export function WelcomeStage({ decorative = false, pinContinue = false, onContin
           </filter>
         </defs>
         <g fill="var(--grove-lime)" filter="url(#gw-rough)">
-          <path className="gw-line" mask="url(#gw-mask-1)" transform="translate(0 6)" d={LINE_1} />
+          <path className="gw-line" mask="url(#gw-mask-1)" transform="translate(0 -28)" d={LINE_1} />
           <path className="gw-line" mask="url(#gw-mask-2)" transform="translate(0 4)" d={LINE_2} />
-          <path className="gw-line" mask="url(#gw-mask-3)" d={LINE_3} />
+          <path className="gw-line" mask="url(#gw-mask-3)" transform="translate(-12 0)" d={LINE_3} />
         </g>
         <g fill="none" stroke="var(--grove-lime)" strokeLinecap="round" strokeLinejoin="round">
-          <path className="gw-draw gw-draw-4" pathLength="1" strokeDasharray="1 2" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
+          <path className="gw-draw gw-draw-4" transform="translate(194 3) scale(1.17 1) translate(-215 0)" pathLength="1" strokeDasharray="1 2" strokeWidth="2" d="M215 675C235 673 259 672 277 673C259 676 239 678 222 680C239 682 255 682 268 683C255 685 243 685 235 686C247 686 259 685 267 685" />
         </g>
         <g className="gw-a gw-stars" fill="var(--grove-sun)">
-          <Sparkle cx={277} cy={133} r={5.5} i={1} />
-          <Sparkle cx={270.5} cy={136} r={4.5} i={2} />
-          <Sparkle cx={279} cy={140} r={4.5} i={3} />
+          <Sparkle cx={277} cy={99} r={5.5} i={1} />
+          <Sparkle cx={270.5} cy={102} r={4.5} i={2} />
+          <Sparkle cx={279} cy={106} r={4.5} i={3} />
         </g>
       </svg>
 

@@ -43,10 +43,10 @@ for (const name of Object.keys(tokens.shadcn)) {
   if (!tw.includes(`rgb(var(--${name}) / <alpha-value>)`)) failures.push(`tailwind.config.js: --${name} is not consumed as rgb(var(--${name}) / <alpha-value>)`);
 }
 
-// Font-size floor: no text under 14px (0.875rem). Scans source CSS and inline styles for literal sizes, resolves the
+// Font-size floor: no text under 16px (1rem). Scans source CSS and inline styles for literal sizes, resolves the
 // Tailwind text-* scale from tokens.json, and checks that each sub-14px rule in a library stylesheet we ship
 // (sonner's toast and action button) is overridden in src/index.css.
-const FLOOR_PX = 14;
+const FLOOR_PX = 16;
 const toPx = (n, unit) => (unit === 'rem' || unit === 'em' ? n * 16 : n);
 for (const [name, [size]] of Object.entries(tokens.fontSize)) {
   const m = size.match(/^([\d.]+)(rem|px)$/);

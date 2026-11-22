@@ -311,7 +311,7 @@ export default function CarePage() {
         </button>
       </div>
 
-      <div className="max-w-content mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="max-w-content mx-auto px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {loadError && !loading ? (<div className="col-span-full"><LoadError what="your plants for today" onRetry={retryLoad} error={loadError} /></div>) : loading ? (
           <LoadingList label="Loading today’s care" className="col-span-full" />
         ) : filteredPlants.length === 0 && plants.length > 0 ? (
@@ -352,75 +352,75 @@ export default function CarePage() {
                   className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-pill ${style.dot}`}
                 />
 
-                <div className="flex flex-wrap gap-3 px-4 py-3">
-                  <AppLink
-                    to={`/plants/${plant.id}`}
-                    state={{ name: plant.nickname || plant.common_name }}
-                    className="flex-shrink-0 w-20 h-20 rounded-chip overflow-hidden border-hairline border-grove-moss bg-grove-moss flex items-center justify-center"
-                    aria-label={`Open ${plant.nickname || plant.common_name}`}
-                  >
-                    {plant.photo_url ? (
-                      <PhotoBand src={getFileUrl(plant.photo_url)} aspect="thumb" className="h-full w-full rounded-none" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Leaf className="h-7 w-7 text-grove-sprout opacity-40" />
-                      </div>
-                    )}
-                  </AppLink>
+                <div className="space-y-4 p-4 pl-5">
+                  <div className="flex flex-wrap gap-4">
+                    <AppLink
+                      to={`/plants/${plant.id}`}
+                      state={{ name: plant.nickname || plant.common_name }}
+                      className="flex-shrink-0 w-20 h-20 rounded-chip overflow-hidden border-hairline border-grove-fernLine/40 bg-grove-canopy flex items-center justify-center"
+                      aria-label={`Open ${plant.nickname || plant.common_name}`}
+                    >
+                      {plant.photo_url ? (
+                        <PhotoBand src={getFileUrl(plant.photo_url)} aspect="thumb" className="h-full w-full rounded-none" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Leaf className="h-9 w-9 text-grove-sprout opacity-70" aria-hidden="true" />
+                        </div>
+                      )}
+                    </AppLink>
 
-                  <div className="flex min-w-0 flex-1 basis-40 flex-col justify-between">
-                    <div>
+                    <div className="min-w-0 flex-1 basis-40 space-y-1.5">
                       <div className="flex items-center gap-2">
                         <span className={`inline-block w-2 h-2 rounded-pill ${style.dot}`} aria-hidden="true" />
                         <h2 className="font-plant text-grove-cream text-base font-semibold truncate">
                           {plant.nickname || plant.common_name}
                         </h2>
                       </div>
-                      <p className={`font-ui text-xs mt-1 ${style.label}`}>
+                      <p className={`font-ui text-xs ${style.label}`}>
                         {dueLabel(plant)}
                       </p>
                       {user?.has_pets && (
-                        <ToxicityBadge toxicity={plant.species_toxicity} className="mt-1.5" testId="care-card-toxicity" />
+                        <ToxicityBadge toxicity={plant.species_toxicity} className="mt-2" testId="care-card-toxicity" />
                       )}
                       {(status === 'urgent' || status === 'needs_water') && (
-                        <p data-testid="care-card-step" className="font-ui text-xs text-grove-cream mt-0.5 leading-snug">
+                        <p data-testid="care-card-step" className="font-ui text-xs text-grove-cream leading-snug">
                           {plant.care_tip || careStep(plant)}
                         </p>
                       )}
                       {textMode === 'detailed' && plant.status_reason && (status === 'urgent' || status === 'needs_water') && (
                         <p
                           data-testid="care-card-status-reason"
-                          className="font-ui text-xs text-grove-sage mt-0.5 leading-snug"
+                          className="font-ui text-xs text-grove-sage leading-snug"
                         >
                           <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
                       )}
-                      <p className="font-latin text-xs text-grove-cream mt-0.5 truncate">
+                      <p className="font-latin text-xs text-grove-cream truncate">
                         {plant.latin_name || plant.common_name}
                         {plant.room && <span className="text-grove-sage"> · {plant.room}</span>}
                       </p>
                     </div>
+                  </div>
 
-                    <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2">
-                      <button
-                        onClick={(e) => { impactLight(e.currentTarget); setCareModalSoilFirst(!hasBeenCaredFor(plant)); setCareModalPlant(plant); }}
-                        data-testid="care-quick-action"
-                        aria-label={`${hasBeenCaredFor(plant) ? 'Log care for' : 'Check the soil of'} ${plant.nickname || plant.common_name}`}
-                        className={cn(buttonVariants(), "relative min-w-fit grow overflow-hidden")}
-                      >
-                        {hasBeenCaredFor(plant) ? <Droplets className="h-3.5 w-3.5" /> : <Hand className="h-3.5 w-3.5" aria-hidden="true" />}
-                        {hasBeenCaredFor(plant) ? 'Log care' : 'Check the soil'}
-                      </button>
-                      <button
-                        onClick={(e) => handleWateredOne(plant, e.currentTarget)}
-                        aria-label={`Mark ${plant.nickname || plant.common_name} watered`}
-                        data-testid="care-mark-done"
-                        className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-fit grow overflow-hidden")}
-                      >
-                        <Check className="h-4 w-4" aria-hidden="true" />
-                        Watered
-                      </button>
-                    </div>
+                  <div className="flex min-w-0 flex-wrap items-center gap-3">
+                    <button
+                      onClick={(e) => { impactLight(e.currentTarget); setCareModalSoilFirst(!hasBeenCaredFor(plant)); setCareModalPlant(plant); }}
+                      data-testid="care-quick-action"
+                      aria-label={`${hasBeenCaredFor(plant) ? 'Log care for' : 'Check the soil of'} ${plant.nickname || plant.common_name}`}
+                      className={cn(buttonVariants(), "relative min-w-fit grow overflow-hidden")}
+                    >
+                      {hasBeenCaredFor(plant) ? <Droplets className="h-3.5 w-3.5" /> : <Hand className="h-3.5 w-3.5" aria-hidden="true" />}
+                      {hasBeenCaredFor(plant) ? 'Log care' : 'Check the soil'}
+                    </button>
+                    <button
+                      onClick={(e) => handleWateredOne(plant, e.currentTarget)}
+                      aria-label={`Mark ${plant.nickname || plant.common_name} watered`}
+                      data-testid="care-mark-done"
+                      className={cn(buttonVariants({ variant: 'outline' }), "relative min-w-fit grow overflow-hidden")}
+                    >
+                      <Check className="h-4 w-4" aria-hidden="true" />
+                      Watered
+                    </button>
                   </div>
                 </div>
               </article>

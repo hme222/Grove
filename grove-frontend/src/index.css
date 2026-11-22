@@ -84,7 +84,7 @@
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* Sonner ships its own 1px border, 13px text and 12px action button. The app floor is 14px (--text-sm) and borders
+/* Sonner ships its own 1px border, 13px text and 12px action button. The app floor is 16px (--text-sm) and borders
    are the hairline token, so the toast is bound to both here. scripts/check-computed-tokens.js fails if a library
    rule below 14px is not overridden in this file. */
 [data-sonner-toaster] [data-sonner-toast][data-styled="true"] {

@@ -27,7 +27,8 @@
 .gw-welcome { white-space: nowrap; line-height: 1; font-weight: normal; }
 .gw-welcome-to { font-weight: 300; font-size: 26px; }
 .gw-welcome-grove { font-family: var(--font-display); font-weight: 700; font-size: 29px; }
-.gw-def, .gw-safe { font-size: 17px; line-height: 20px; }
+.gw-def { font-size: 19px; line-height: 23px; }
+.gw-safe { font-size: 18px; line-height: 22px; }
 .gw-safe { white-space: nowrap; }
 .gw-safe b { font-weight: 700; }
 .gw-serif-bold { font-family: var(--font-display); font-weight: 700; font-size: 18px; }

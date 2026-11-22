@@ -79,7 +79,7 @@
   {
     "file": "src/components/WelcomeScreen.css",
     "rule": "css-px",
-    "match": "font-size: 17px",
+    "match": "font-size: 19px",
     "reason": "Type sizes inside the welcome stage, a 430pt composition canvas scaled as one picture; a size has no meaning outside that coordinate space.",
     "retireWhen": "the welcome stage is rebuilt as responsive layout or its art becomes an SVG with a viewBox."
   },
