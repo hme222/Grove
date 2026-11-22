@@ -2,15 +2,17 @@ import React from 'react';
 import { AppLink } from './AppLink';
 import { StatusDot } from './StatusDot';
 import { getFileUrl } from '../lib/api';
-import { Leaf, Droplet } from 'lucide-react';
+import { Leaf, Droplet, ChevronRight } from 'lucide-react';
+import { aspectRatios } from '@/styles/tokens.generated';
 import PhotoBand from './PhotoBand';
 import { wateredToday, displayStatus } from '../lib/careActions';
 
-export default function PlantCard({ plant, selected, onSelect, selectionMode }) {
+// `featured` is the lone first plant: a wide tile (2:1) with a chevron, so it reads as something to open.
+export default function PlantCard({ plant, selected, onSelect, selectionMode, featured = false }) {
   const photoUrl = getFileUrl(plant.photo_url);
 
   const selecting = Boolean(selectionMode && onSelect);
-  const tileClass = `relative rounded-chip border-hairline border-grove-moss overflow-hidden aspect-square w-full text-left transition-colors duration-150 hover:border-grove-fernLine ${
+  const tileClass = `relative rounded-chip border-hairline border-grove-moss overflow-hidden ${featured ? '' : 'aspect-square'} w-full text-left transition-colors duration-150 hover:border-grove-fernLine ${
         selected ? 'ring-2 ring-grove-lime' : ''
       }`;
   const content = (
@@ -20,7 +22,7 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
           src={photoUrl}
           // The card already prints the name. Only describe the photo when the printed name is a nickname.
           alt={plant.nickname && plant.nickname !== plant.common_name ? plant.common_name : ''}
-          aspect="square"
+          aspect={featured ? 'wide' : 'square'}
           className="rounded-none"
           testId="plant-card-photo"
         />
@@ -49,7 +51,8 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
         <div className="flex min-w-0 justify-start">
           <StatusDot status={displayStatus(plant)} showLabel={displayStatus(plant) !== 'healthy'} className="rounded-control bg-grove-night/80 py-0.5 pl-1 pr-2" />
         </div>
-        <div className="min-w-0 px-0.5">
+        <div className="flex min-w-0 items-end justify-between gap-2 px-0.5">
+        <div className="min-w-0">
           <p className="font-plant text-base leading-tight text-grove-cream truncate">
             {plant.nickname || plant.common_name}
           </p>
@@ -64,6 +67,8 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode }) 
               {plant.latin_name}
             </p>
           )}
+        </div>
+          {featured && !selectionMode && <ChevronRight className="mb-1 h-6 w-6 shrink-0 text-grove-cream" aria-hidden="true" />}
         </div>
       </div>
     </>

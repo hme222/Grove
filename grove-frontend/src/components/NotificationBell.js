@@ -62,7 +62,6 @@ export default function NotificationBell() {
   const panelRef = useRef(null);
   const buttonRef = useRef(null);
   const headingRef = useRef(null);
-  const [panelTop, setPanelTop] = useState(0);
 
   // Closing gives focus back to the bell, so a screen-reader or keyboard user is not dropped onto the page.
   const close = useCallback((restore = true) => {
@@ -71,8 +70,6 @@ export default function NotificationBell() {
   }, []);
   const toggle = () => {
     if (open) { close(); return; }
-    // On a phone the panel spans the screen just under the bell (anchored to the bell it ran off the left edge).
-    if (buttonRef.current) setPanelTop(Math.round(buttonRef.current.getBoundingClientRect().bottom + 4));
     setOpen(true);
   };
 
@@ -176,13 +173,15 @@ export default function NotificationBell() {
       </button>
 
       {open && (
+        <>
+        {/* A drawer from the right edge. The page stays visible on the left under a scrim; tapping it closes the drawer. */}
+        <div aria-hidden="true" onClick={() => close()} className="fixed inset-0 z-popover bg-grove-night/60" data-testid="notification-scrim" />
         <div
           id="notification-center"
           role="dialog"
           aria-labelledby="notification-center-title"
           data-testid="notification-center"
-          style={{ '--bell-top': `${panelTop}px` }}
-          className="bell-panel fixed inset-x-4 z-popover max-h-panel overflow-hidden rounded-card border-hairline border-grove-moss bg-grove-forest sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-0.5 sm:w-popover"
+          className="fixed inset-y-0 right-0 z-popover flex w-popover max-w-full flex-col overflow-hidden rounded-l-card border-hairline border-grove-moss bg-grove-forest"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b-hairline border-grove-moss">
             <div className="flex items-center gap-2">
@@ -213,7 +212,7 @@ export default function NotificationBell() {
             </div>
           </div>
 
-          <div className="overflow-y-auto max-h-panel" data-testid="notification-list">
+          <div className="min-h-0 flex-1 overflow-y-auto" data-testid="notification-list">
             {loading ? (
               <Loading label="Loading notifications" className="py-10" />
             ) : items.length === 0 ? (
@@ -282,6 +281,7 @@ export default function NotificationBell() {
             </button>
           </div>
         </div>
+        </>
       )}
     </div>
   );

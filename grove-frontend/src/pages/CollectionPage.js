@@ -252,7 +252,7 @@ export default function CollectionPage() {
           /* With one or two plants the tiles are bigger (two columns), so a first plant is a real tile with its status on
              one line, not a 105px square in the corner of an empty page. From three plants it is the usual three columns. */
           <div
-            className={`grid gap-2 sm:gap-3 ${filteredPlants.length <= 2 ? 'grid-cols-[repeat(auto-fill,minmax(max(6.5rem,45%),1fr))]' : 'grid-cols-[repeat(auto-fill,minmax(max(6.5rem,30%),1fr))]'}`}
+            className={`grid gap-2 sm:gap-3 ${filteredPlants.length === 1 && plants.length === 1 ? 'grid-cols-1' : filteredPlants.length <= 2 ? 'grid-cols-[repeat(auto-fill,minmax(max(6.5rem,45%),1fr))]' : 'grid-cols-[repeat(auto-fill,minmax(max(6.5rem,30%),1fr))]'}`}
             data-testid="collection-grid"
           >
             {filteredPlants.map(item => (
@@ -262,8 +262,20 @@ export default function CollectionPage() {
                 selected={selected.has(item.id)}
                 onSelect={toggleSelect}
                 selectionMode={selectionMode}
+                featured={plants.length === 1 && filteredPlants.length === 1}
               />
             ))}
+            {/* A lone first plant: a way to add the next one sits right under it. */}
+            {plants.length === 1 && filteredPlants.length === 1 && !selectionMode && (
+              <AppLink
+                to="/add-plant"
+                data-testid="collection-add-next"
+                className="mt-1 flex min-h-touch items-center justify-center gap-2 rounded-card border-hairline border-dashed border-grove-fernLine px-4 py-5 font-ui text-base text-grove-sage hover:border-grove-lime hover:text-grove-cream"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                Add another plant
+              </AppLink>
+            )}
           </div>
         )}
       </div>
