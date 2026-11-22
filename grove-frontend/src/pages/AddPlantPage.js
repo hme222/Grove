@@ -308,7 +308,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
             {species.some((sp) => normalizeToxicity(sp.toxicity) !== 'unknown') && (
               <p className="mt-2 font-ui text-xs text-grove-sage" data-testid="species-safety-source">
                 Pet safety is from the{' '}
-                <a href={ASPCA_PLANT_LIST} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-touch items-center text-grove-cream underline underline-offset-2">
+                <a href={ASPCA_PLANT_LIST} target="_blank" rel="noopener noreferrer" className="text-grove-cream underline underline-offset-2">
                   ASPCA&rsquo;s toxic and non-toxic plant list<span className="sr-only"> (opens in a new tab)</span>
                 </a>.
               </p>

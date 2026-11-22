@@ -13,6 +13,7 @@ module.exports = {
       "lime": "#92B44B",
       "root": "#1A2410",
       "sprout": "#C3D98A",
+      "marker": "#B9E24E",
       "cream": "#F4F1E6",
       "sage": "#C3CBB1",
       "lichen": "#C8D0B6",
