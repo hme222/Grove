@@ -67,8 +67,8 @@
     {
       "file": "grove-mobile/app.json",
       "match": "#202D14",
-      "count": 2,
-      "reason": "the forest token (#202D14) for the app background and the Android icon background; app.json cannot import theme.generated.js",
+      "count": 3,
+      "reason": "the forest token (#202D14) for the app background, the splash background and the Android icon background; app.json cannot import theme.generated.js",
       "retireWhen": "app.json becomes app.config.js and reads the color from theme.generated.js"
     }
   ]

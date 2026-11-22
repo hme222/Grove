@@ -10,8 +10,10 @@
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "FloraGrove uses the camera so you can take a photo of a plant.",
-        "NSPhotoLibraryUsageDescription": "FloraGrove uses your photos so you can add a picture of a plant."
-      }
+        "NSPhotoLibraryUsageDescription": "FloraGrove uses your photos so you can add a picture of a plant.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,6 +23,20 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },
-    "backgroundColor": "#202D14"
+    "backgroundColor": "#202D14",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#202D14",
+          "resizeMode": "contain"
+        }
+      ]
+    ]
   }
 }
