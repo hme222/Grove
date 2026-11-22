@@ -7,6 +7,8 @@ import { LESSON_META } from '@/lessons/lessonMeta';
 import { answerLabel } from '@/constants/onboardingQuiz';
 import StepScreen, { StepActions } from './StepScreen';
 import PhotoBand from '../PhotoBand';
+import PipMark from '../../nook/PipMark';
+import { PIP_LOADING } from '../../lib/pipIntroCopy';
 
 const HOLD_MS = 600;
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -71,7 +73,13 @@ export function BuildingStep({ answers, onResult, onSkip }) {
               <Item done={done}>Reading your answers</Item>
               <Item done={done}>Picking your first lesson</Item>
             </ul>
-            <p className="mt-4 font-ui text-sm text-grove-sage">This takes a few seconds.</p>
+            <div className="mt-8 flex items-start gap-4 rounded-card border-hairline border-grove-moss bg-grove-canopy p-4" data-testid="building-pip">
+              <PipMark scale={3} className="shrink-0" />
+              <div>
+                <p className="font-ui text-base text-grove-cream">{PIP_LOADING.line}</p>
+                <p className="mt-2 font-ui text-base text-grove-sage">{PIP_LOADING.note}</p>
+              </div>
+            </div>
           </>
         )}
         {status === 'failed' && (

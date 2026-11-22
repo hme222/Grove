@@ -868,53 +868,26 @@ describe('launch intro', () => {
 });
 
 
-describe('Pip says hello before the plan', () => {
-  const toPipStep = async (extra) => {
-    await toQuestions(extra);
+describe('Pip is introduced while the plan is being built', () => {
+  const toLastQuestion = async () => {
+    await toQuestions();
     await click(q('option-q1-gift'));
     await click(q('question-next'));
     await click(q('question-skip'));
     await click(q('question-skip'));
     await click(q('question-skip'));
-    await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
   };
 
-  test('the hello comes after the plan is built and before it is shown', async () => {
-    await toPipStep();
-    expect(q('onboarding-pip')).not.toBeNull();
-    expect(q('onboarding-plan')).toBeNull();
-    expect(q('pip-step-body').textContent).toContain('I’m Pip');
+  test('the loading screen introduces Pip, with how to turn him off', async () => {
+    await toLastQuestion();
+    expect(q('onboarding-building')).not.toBeNull();
+    expect(q('building-pip').textContent).toContain('I’m Pip');
+    expect(q('building-pip').textContent).toContain('turn me off any time in Profile');
   });
 
-  test('Nice to meet you records the hello and carries on to the plan', async () => {
-    await toPipStep();
-    userAPI.updateMe.mockClear();
-    await click(q('pip-step-agree'));
-    await flush();
-    expect(userAPI.updateMe).toHaveBeenCalledWith({ pip_introduced: true });
-    expect(q('onboarding-plan')).not.toBeNull();
-  });
-
-  test('Turn me off records the hello and switches Pip off, then carries on', async () => {
-    await toPipStep();
-    userAPI.updateMe.mockClear();
-    await click(q('pip-step-off'));
-    await flush();
-    expect(userAPI.updateMe).toHaveBeenCalledWith({ pip_introduced: true, pip_enabled: false });
-    expect(q('onboarding-plan')).not.toBeNull();
-  });
-
-  test('a failed save says so and stays on the hello', async () => {
-    await toPipStep();
-    userAPI.updateMe.mockRejectedValueOnce(new Error('offline'));
-    await click(q('pip-step-agree'));
-    await flush();
-    expect(q('pip-step-error').textContent).toBe('Couldn’t save that. Try again.');
-    expect(q('onboarding-plan')).toBeNull();
-  });
-
-  test('someone who has already met Pip goes straight to the plan', async () => {
-    await toPipStep({ pip_introduced: true });
+  test('there is no separate Meet Pip step: the plan follows the loading screen', async () => {
+    await toLastQuestion();
+    await act(async () => { await new Promise((r) => setTimeout(r, 700)); });
     expect(q('onboarding-pip')).toBeNull();
     expect(q('onboarding-plan')).not.toBeNull();
   });

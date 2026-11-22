@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '../lib/utils';
 import { buttonVariants } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { careAPI, waterAPI, plantAPI, statsAPI, getFileUrl } from '../lib/api';
+import { careAPI, waterAPI, plantAPI, getFileUrl } from '../lib/api';
 import { PageHeader, FilterChips, HeaderAction } from '../components/PageHeader';
 import { CareTabs } from '../components/CareTabs';
 import { EmptyState } from '../components/EmptyState';
@@ -33,13 +33,9 @@ import { toast } from 'sonner';
 import { actionErrorMessage } from '../lib/errors';
 import { impactLight, impactMedium } from '../lib/haptics';
 import { useAuth } from '../contexts/AuthContext';
-import { usePipPrefs } from '../lib/pipPrefs';
-import { checkInsLabel } from '../lib/plantPersonality';
 import { dueLabel, careStep } from '../lib/careCopy';
 import { hasBeenCaredFor } from '../lib/careActions';
 import { useCareTextDetail } from '../lib/careTextMode';
-import SaveError from '../components/profile/SaveError';
-import CareTextToggle from '../components/CareTextToggle';
 import UndoSnackbar from '../components/UndoSnackbar';
 import RoundSummaryCard from '../components/RoundSummaryCard';
 
@@ -92,7 +88,6 @@ const WATER_ERROR_TOAST = 'water-error';
 export default function CarePage() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
-  const { shows } = usePipPrefs();
   const [plants, setPlants] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -111,19 +106,12 @@ export default function CarePage() {
   const [allPlantsLoaded, setAllPlantsLoaded] = useState(false); // false until the collection really loaded, so a failed fetch is never read as zero plants
   const [lastRound, setLastRound] = useState(null); // { roundId, count } while Undo is offered
   const [undoing, setUndoing] = useState(false);
-  const { mode: textMode, setMode: handleTextModeChange, busy: savingTextMode, error: textModeError, retry: retryTextMode } = useCareTextDetail();
-  const textModeRef = React.useRef(null);
+  const { mode: textMode } = useCareTextDetail();
 
-  // Separate and non-blocking: the due list never waits on this, and a failure just hides the line. Read again with
-  // the due list, so logging care here updates it.
-  const [checkIns, setCheckIns] = useState(null);
   const mountedRef = React.useRef(true);
   useEffect(() => () => { mountedRef.current = false; }, []);
 
   const fetchDue = async () => {
-    statsAPI.getCheckIns()
-      .then((res) => { if (mountedRef.current) setCheckIns(checkInsLabel({ check_ins: res?.data })); })
-      .catch(() => {});
     try {
       const res = await careAPI.getDueToday();
       setPlants(res.data);
@@ -283,7 +271,7 @@ export default function CarePage() {
           </div>
         )}
         {!loading && !loadError && plants.length > 0 && (
-          <div className="flex items-center justify-between gap-2">
+          <div className={cn('flex items-center justify-between gap-2', filteredPlants.length <= 1 && 'sr-only')}>
             <p role="status" className="font-ui text-sm text-grove-sage" data-testid="care-filter-status">
               {filteredPlants.length} {filteredPlants.length === 1 ? 'plant' : 'plants'} shown
             </p>
@@ -434,23 +422,8 @@ export default function CarePage() {
         {!loading && plants.length > 0 && <SetupNote />}
       </div>
 
-      {/* Phase 14C.4 — Daily plant trivia (Supplement v1 Part D.7).
-          Positioned below the care queue so the urgent count + plant grid
-          remain the primary above-the-fold focus. */}
-      <div className="max-w-content mx-auto px-4 pb-4">
-        <button
-          type="button"
-          onClick={() => navigate('/help-my-plant')}
-          data-testid="help-my-plant-entry"
-          className="block w-full rounded-card border-hairline border-grove-moss bg-grove-canopy p-5 text-left hover:border-grove-fernLine"
-        >
-          <p className="font-plant text-base font-semibold text-grove-cream">Something look off?</p>
-          <p className="mt-0.5 font-ui text-sm text-grove-sage">Yellow leaves, drooping, bugs. Get quick checks to try first.</p>
-        </button>
-      </div>
-
       <section aria-labelledby="pip-heading" className="max-w-content mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
-        <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">{shows ? 'From Pip' : 'For today'}</h2>
+        <h2 id="pip-heading" className="font-plant text-xl font-semibold text-grove-cream pt-2">For today</h2>
         <div className="divide-y-hairline divide-grove-fernLine/25 rounded-card border-hairline border-grove-moss bg-grove-canopy px-5" data-testid="pip-note">
           <LightPromptCard embedded />
           {!(allPlantsLoaded && allPlants.length === 0) && !showBanner && <DailyMissionCard embedded />}
@@ -459,13 +432,6 @@ export default function CarePage() {
         </div>
         {/* "Working toward" (pinned badge goals) is left out while badges are dormant (scope-v1); its Manage link
             led to the badge page. components/WorkingTowardSection.js is kept. */}
-        {checkIns && (
-          <p className="font-ui text-sm text-grove-sage" data-testid="care-checkins-line">Check-ins this week: {checkIns}</p>
-        )}
-        <div className="pt-1">
-          <CareTextToggle value={textMode} onChange={handleTextModeChange} disabled={savingTextMode} describedBy={textModeError ? 'care-text-error' : undefined} focusRef={textModeRef} />
-          <SaveError id="care-text-error" error={textModeError} onRetry={retryTextMode} testId="care-text-error" focusAfter={textModeRef} />
-        </div>
       </section>
 
       <AlertDialog open={confirmWaterAll} onOpenChange={setConfirmWaterAll}>

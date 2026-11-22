@@ -117,37 +117,13 @@ describe('filter chips', () => {
   });
 });
 
-describe('Simple / Detailed care tips', () => {
-  test('Simple is the default: the exact step, no why', async () => {
+describe('Simple care tips on Today', () => {
+  // The Simple / Detailed switch lives in Profile > Care style, so Today no longer carries it.
+  test('Simple is the default: the exact step, no why, and no switch on this page', async () => {
     await mount();
-    expect(q('care-text-simple').getAttribute('aria-pressed')).toBe('true');
     expect(q('care-card-step').textContent).toBe("Check the top inch of soil. Water if it's dry.");
     expect(q('care-card-status-reason')).toBeNull();
-  });
-
-  test('Detailed adds the why', async () => {
-    mockUser = { care_text_detail: 'detailed' };
-    await mount();
-    expect(q('care-text-detailed').getAttribute('aria-pressed')).toBe('true');
-    expect(q('care-card-step')).not.toBeNull();
-    expect(q('care-card-status-reason').textContent).toBe("Why: It's on a 7-day schedule, so the soil may be dry by now.");
-  });
-
-  test('choosing Detailed saves it to the profile', async () => {
-    await mount();
-    await act(async () => { q('care-text-detailed').click(); });
-    expect(mockUpdateUser).toHaveBeenCalledWith({ care_text_detail: 'detailed' });
-    expect(userAPI.updateMe).toHaveBeenCalledWith({ care_text_detail: 'detailed' });
-  });
-
-  test('a failed save puts the old choice back and says so', async () => {
-    userAPI.updateMe.mockRejectedValue(new Error('offline'));
-    await mount();
-    await act(async () => { q('care-text-detailed').click(); });
-    expect(mockUpdateUser).toHaveBeenLastCalledWith({ care_text_detail: 'simple' });
-    expect(q('care-text-error').textContent).toContain('Try again');
-    expect(q('care-text-simple').getAttribute('aria-describedby')).toBe('care-text-error');
-    expect(toast.error).not.toHaveBeenCalled();
+    expect(q('care-text-simple')).toBeNull();
   });
 });
 
@@ -373,41 +349,3 @@ describe('water failures say why and offer Try again', () => {
   });
 });
 
-describe('check-ins line', () => {
-  test('reads "Check-ins this week: 1 of 3" as plain text', async () => {
-    await mount();
-    const line = q('care-checkins-line');
-    expect(line.textContent).toBe('Check-ins this week: 1 of 3');
-    expect(line.tagName).toBe('P');
-  });
-
-  test('a failed check-ins call hides the line and the due list still renders', async () => {
-    statsAPI.getCheckIns.mockRejectedValue(new Error('nope'));
-    await mount();
-    expect(q('care-checkins-line')).toBeNull();
-    expect(q('care-card')).not.toBeNull();
-  });
-
-  test('uses the light check-ins call, not the full stats', async () => {
-    await mount();
-    expect(statsAPI.getCheckIns).toHaveBeenCalled();
-    expect(statsAPI.getStats).not.toHaveBeenCalled();
-  });
-
-  test('logging care on Today updates the line', async () => {
-    jest.useFakeTimers();
-    try {
-      waterAPI.logRound.mockResolvedValue({ data: { watered: 1, round_id: 'r3' } });
-      useTwoDue();
-      await mount();
-      expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 1 of 3');
-      statsAPI.getCheckIns.mockResolvedValue({ data: { this_week: 2, weekly_goal: 3 } });
-      await act(async () => { q('water-all-button').click(); });
-      await act(async () => { q('water-all-confirm').click(); });
-      await act(async () => { jest.advanceTimersByTime(400); });
-      expect(q('care-checkins-line').textContent).toBe('Check-ins this week: 2 of 3');
-    } finally {
-      jest.useRealTimers();
-    }
-  });
-});

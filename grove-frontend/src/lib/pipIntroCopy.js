@@ -1,4 +1,10 @@
 // What Pip says when he introduces himself. One place, so the onboarding screen and the first-visit card say the same thing.
+// While the plan is being built, Pip says hello in a few words. The turn-off choice comes later, on the first visit to Today.
+export const PIP_LOADING = {
+  line: 'Hi, I’m Pip, your plant helper. While I put your plan together: I’ll point out when a plant needs attention and where to find help.',
+  note: 'You can turn me off any time in Profile.',
+};
+
 export const PIP_INTRO = {
   title: 'Meet Pip',
   body: 'Hi, I’m Pip. I’ll point out when a plant needs attention and where to find help. You can turn me off any time in Profile.',

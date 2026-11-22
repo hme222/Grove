@@ -18,7 +18,7 @@ export const blockedClass = 'border-strong border-grove-fernLine bg-grove-moss t
 // sticky zone, so it is never scrolled under the button.
 export function StepActions({ primary, secondary, note, className }) {
   return (
-    <div className={cn('os-actions mt-auto bg-grove-forest pt-8', className)} data-testid="step-actions">
+    <div className={cn('os-actions mt-auto bg-grove-forest pt-4', className)} data-testid="step-actions">
       <div className="flex flex-col gap-2">
         {note}
         {primary}

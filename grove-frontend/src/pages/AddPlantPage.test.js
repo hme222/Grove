@@ -99,23 +99,23 @@ test('Picking a species moves focus to the nickname field, and Change brings it 
   expect(document.activeElement === q('species-search-input')).toBe(true);
 });
 
-test('a long list of matches shows six in the page and says how to narrow the rest, with no scrolling box', async () => {
+test('a long list of matches shows four in the page and says how to narrow the rest, with no scrolling box', async () => {
   const many = Array.from({ length: 9 }, (_, i) => ({ ...spider, id: `sp-${i}`, common_name: `Fern ${i}` }));
   speciesAPI.search.mockResolvedValue({ data: many });
   await mount();
   await typeSearch('fern');
   await settle();
-  expect(container.querySelectorAll('[data-testid="species-option"]')).toHaveLength(6);
-  expect(q('species-more').textContent).toBe('Showing 6 of 9. Type more of the name to narrow it down.');
+  expect(container.querySelectorAll('[data-testid="species-option"]')).toHaveLength(4);
+  expect(q('species-more').textContent).toBe('Showing 4 of 9. Type more of the name to narrow it down.');
   expect(container.querySelector('.overflow-y-auto')).toBeNull();
 });
 
-test('six or fewer matches show no "showing" line', async () => {
-  const few = Array.from({ length: 6 }, (_, i) => ({ ...spider, id: `sp-${i}`, common_name: `Fern ${i}` }));
+test('four or fewer matches show no "showing" line', async () => {
+  const few = Array.from({ length: 4 }, (_, i) => ({ ...spider, id: `sp-${i}`, common_name: `Fern ${i}` }));
   speciesAPI.search.mockResolvedValue({ data: few });
   await mount();
   await typeSearch('fern');
   await settle();
-  expect(container.querySelectorAll('[data-testid="species-option"]')).toHaveLength(6);
+  expect(container.querySelectorAll('[data-testid="species-option"]')).toHaveLength(4);
   expect(q('species-more')).toBeNull();
 });

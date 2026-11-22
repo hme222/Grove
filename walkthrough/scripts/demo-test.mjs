@@ -9,7 +9,7 @@ const out = process.argv[3];
 fs.mkdirSync(out, { recursive: true });
 const server = await startServer(4175);
 const browser = await chromium.launch();
-const viewport = mode === 'mobile' ? { width: 390, height: 844 } : { width: 1280, height: 900 };
+const viewport = mode === 'mobile' ? { width: Number(process.env.W || 390), height: Number(process.env.H || 844) } : { width: 1280, height: 900 };
 const ctx = await browser.newContext({ viewport, deviceScaleFactor: mode === 'mobile' ? 2 : 1 });
 const page = await ctx.newPage();
 page.setDefaultTimeout(5000);
@@ -20,7 +20,7 @@ page.on('request', (r) => { const u = r.url(); if (!u.startsWith('http://localho
 const root = mode === 'mobile' ? page : page.frameLocator('iframe').first();
 const $ = (id) => root.getByTestId(id);
 let n = 0; const fails = [];
-const step = async (label, fn) => { try { await fn(); console.log('ok  ', label); } catch (e) { console.log('FAIL', label); fails.push(label + ': ' + e.message.split('\n')[0]); } await page.waitForTimeout(450); await page.screenshot({ timeout: 15000, path: `${out}/${String(++n).padStart(2, '0')}-${label}.png` }); };
+const step = async (label, fn) => { try { await fn(); console.log('ok  ', label); } catch (e) { console.log('FAIL', label); fails.push(label + ': ' + e.message.split('\n')[0]); } await page.waitForTimeout(450); if (process.env.AUDIT) { const m = await page.evaluate(() => { window.scrollTo(0, 99999); const over = Math.round(window.scrollY); window.scrollTo(0, 0); const sc = [...document.querySelectorAll('html, body, body *')].filter((e) => ['auto', 'scroll'].includes(getComputedStyle(e).overflowY) && e.scrollHeight > e.clientHeight + 2 && e.clientHeight > 100).map((e) => (e.getAttribute('data-testid') || e.tagName) + ' ' + (e.scrollHeight - e.clientHeight)); return { over, sc }; }); console.log('SCROLL', label, m.over > 2 || m.sc.length ? 'NEEDS ' + m.over + 'px ' + m.sc.join(',') : 'fits'); } await page.screenshot({ timeout: 15000, path: `${out}/${String(++n).padStart(2, '0')}-${label}.png` }); };
 
 await page.goto('http://localhost:4175/', { timeout: 30000 });
 await page.waitForTimeout(1200);
@@ -31,7 +31,6 @@ await step('hemisphere', async () => { await $('hemisphere-north').click({ timeo
 await step('quiz-start', async () => { await $('quiz-intro-start').click({ timeout: 4000 }); });
 await step('q1', async () => { await root.locator('[data-testid^="option-q1"]').first().click(); await $('question-next').click(); });
 for (const q of ['q2', 'q3', 'q4']) await step(`${q}-skip`, async () => { await $('question-skip').click({ timeout: 4000 }); });
-await step('meet-pip', async () => { await $('pip-step-agree').click({ timeout: 5000 }); });
 await step('plan', async () => { await page.waitForTimeout(1200); await $('plan-start').click({ timeout: 5000 }); });
 for (let i = 1; i <= 4; i++) await step(`card-${i}`, async () => { await $('lesson-next').click({ timeout: 4000 }); });
 await step('add-plant', async () => { await $('soil-step-add-plant').click({ timeout: 4000 }); });

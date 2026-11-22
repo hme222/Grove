@@ -41,6 +41,11 @@ export function WelcomeStage({ decorative = false, pinContinue = false, onContin
         <span className="gw-welcome-grove">Grove</span>
       </h1>
 
+      {/* The green line is one long line: it leaves the first swoosh, runs behind the definition, and picks up again as the second. */}
+      <svg className="gw-lines" viewBox={`0 0 ${STAGE_W} ${STAGE_H}`} width={STAGE_W} height={STAGE_H} aria-hidden="true">
+        <path className="gw-draw gw-draw-c" pathLength="1" strokeDasharray="1 2" fill="none" stroke="var(--grove-lime)" strokeWidth="1.8" strokeLinecap="round" d="M172.5 222.2C205 224 255 280 299.5 276.2" />
+      </svg>
+
       <p className="gw-a gw-def" style={{ left: 184, top: 200, width: 236 }}>
         A <b className="gw-serif-bold">grove</b> is a small group of trees growing closely together
       </p>

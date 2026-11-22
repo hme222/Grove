@@ -110,7 +110,7 @@
 /* First-run flow on a short screen (a small phone, a phone with big browser bars, or the desktop phone preview, which is
    756px tall): nothing here should need scrolling. The photo becomes a shorter band (2:1) first and goes only on the very
    shortest screens; the spacing closes up. Touch targets stay at --touch-min. */
-@media (max-height: 760px) {
+@media (max-height: 900px) {
   [data-testid="onboarding-flow"] [data-photo] { aspect-ratio: 2 / 1 !important; margin-top: 0.5rem; }
   [data-testid="onboarding-flow"] .os-pad { padding-top: 0.5rem; --os-pb: 0.5rem; }
   [data-testid="onboarding-flow"] [data-testid="step-actions"] { padding-top: 0.75rem; }
@@ -119,7 +119,7 @@
   [data-testid="onboarding-flow"] [role="radio"] { padding-top: 0.25rem; padding-bottom: 0.25rem; }
   [data-testid="onboarding-flow"] [data-testid="question-why"] { margin-top: 0.5rem; }
 }
-@media (max-height: 700px) {
+@media (max-height: 780px) {
   [data-testid="onboarding-flow"] [data-photo] { display: none; }
   [data-testid="onboarding-flow"] [data-testid="onboarding-heading"] { font-size: 1.5rem; }
   [data-testid="onboarding-flow"] .os-pad { --os-pb: 0px; }
