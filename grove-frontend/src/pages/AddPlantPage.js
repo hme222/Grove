@@ -270,7 +270,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   key={sp.id}
                   onClick={() => { focusNext.current = 'addplant-nickname'; selectSpecies(sp); }}
                   data-testid="species-option"
-                  className="flex w-full items-center gap-3 text-left rounded-inset border-hairline border-grove-moss bg-grove-moss px-3 py-2 hover:border-grove-fernLine transition-colors duration-150"
+                  className="flex w-full items-center gap-3 text-left rounded-inset border-hairline border-grove-moss bg-grove-moss px-3 py-1.5 hover:border-grove-fernLine transition-colors duration-150"
                 >
                   {/* A photo of the plant, so a name that is new to someone can be checked by sight. */}
                   <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-chip bg-grove-canopy" data-testid="species-option-photo">
@@ -291,7 +291,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               ))}
             </div>
             {species.length > MAX_RESULTS_SHOWN && (
-              <p className="mt-2 font-ui text-sm text-grove-sage" data-testid="species-more">
+              <p className="mt-1 font-ui text-sm text-grove-sage" data-testid="species-more">
                 Showing {MAX_RESULTS_SHOWN} of {species.length}. Type more of the name to narrow it down.
               </p>
             )}
@@ -306,7 +306,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               ))}
             </div>
             {species.some((sp) => normalizeToxicity(sp.toxicity) !== 'unknown') && (
-              <p className="mt-2 font-ui text-xs text-grove-sage" data-testid="species-safety-source">
+              <p className="mt-1 font-ui text-xs text-grove-sage" data-testid="species-safety-source">
                 Pet safety is from the{' '}
                 <a href={ASPCA_PLANT_LIST} target="_blank" rel="noopener noreferrer" className="text-grove-cream underline underline-offset-2">
                   ASPCA&rsquo;s toxic and non-toxic plant list<span className="sr-only"> (opens in a new tab)</span>
@@ -315,7 +315,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
             )}
             <button
               onClick={() => { focusNext.current = 'addplant-plant-name'; setShowSearch(false); }}
-              className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-4")}
+              className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-2")}
             >
               Or add custom plant
             </button>

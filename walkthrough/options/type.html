@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grove: type check</title>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/tokens.css">
+<style>
+@font-face{font-family:'Trial';src:url('/fonts/trial/trial.woff2') format('woff2'),url('/fonts/trial/trial.otf') format('opentype'),url('/fonts/trial/trial.ttf') format('truetype');font-weight:100 900}
+*{box-sizing:border-box}body{margin:0;background:#11190a;color:var(--grove-cream);font-family:var(--font-ui);font-size:16px}
+h1{font-family:var(--font-display);font-size:30px;margin:24px 24px 4px}.sub{margin:0 24px 14px;color:var(--grove-sage);max-width:60ch}
+.st{margin:0 24px 14px;padding:10px 14px;border:1px solid var(--grove-fern-line);border-radius:12px;max-width:60ch}
+.row{display:flex;gap:24px;padding:0 24px 40px;flex-wrap:wrap}.col{width:390px}.col h3{margin:0 0 8px}
+.ph{background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;padding:22px}
+.card{background:var(--grove-moss);border:1px solid var(--grove-fern-line);border-radius:20px;padding:18px;margin-top:16px}
+.d{font-weight:600}.cur .d{font-family:var(--font-display)}.new .d{font-family:'Trial',var(--font-display)}
+.w{font-size:30px;line-height:1.1}.h{font-size:24px;margin:0 0 8px}.s{font-size:20px}.sm{font-size:16px}
+.new .b{font-family:'Trial',var(--font-ui)}.cur .b{font-family:var(--font-ui)}
+</style></head><body>
+<h1>Type check: current pairing vs a trial font</h1>
+<p class="sub">Left is what the app uses now (Cormorant Garamond for headings, Alegreya Sans for text). Right uses a font you drop into <code>walkthrough/options/fonts/trial/</code> as <code>trial.woff2</code>, <code>trial.otf</code> or <code>trial.ttf</code>. Until you do, the right side falls back to the current heading font.</p>
+<div class="st" id="st">Checking…</div>
+<div class="row" id="r"></div>
+<script>
+const col=(cls,title)=>`<div class="col ${cls}"><h3>${title}</h3><div class="ph"><div class="d w">Welcome to FloraGrove</div><div class="card"><div class="d h">Erase the plant guilt.</div><div class="b sm">Most plants don’t die from a lack of love. They die from drowning. Throw away any rigid watering schedule.</div></div><div class="card"><div class="d s">Spider Plant</div><div class="b sm" style="font-style:italic">Chlorophytum comosum</div><div class="b sm">Check about every 7 days</div></div><div class="card"><div class="d h">One reminder a day, only when needed</div><div class="b sm">We send a single message when plants need a check.</div></div></div></div>`;
+document.getElementById('r').innerHTML=col('cur','Now: Cormorant Garamond')+col('new','Trial font (headings and text)');
+document.fonts.load("600 24px Trial").then(f=>{const ok=document.fonts.check("600 24px Trial")&&f.length>0;document.getElementById('st').textContent=ok?'Trial font loaded. The right column is using it.':'No trial font found yet. The right column shows the fallback.'});
+</script></body></html>
