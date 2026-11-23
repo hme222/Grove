@@ -216,7 +216,7 @@ export default function SpeciesDetailPage() {
           )}
 
           {(species.latin_name || '').trim().toLowerCase() !== (species.common_name || '').trim().toLowerCase() && (
-            <p className="font-latin text-lg italic text-grove-cream">{species.latin_name}</p>
+            <p className="font-scientific text-lg italic text-grove-cream">{species.latin_name}</p>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center px-2.5 py-1 rounded-pill bg-grove-canopy text-grove-cream text-xs font-ui min-h-6 border-hairline border-grove-moss">
@@ -402,7 +402,7 @@ export default function SpeciesDetailPage() {
                   >
                     <div className="flex items-baseline justify-between gap-2 mb-1">
                       <span className="font-ui text-sm font-medium text-grove-cream">{c.common_name}</span>
-                      <span className="font-latin italic text-xs text-grove-cream">{c.latin_name}</span>
+                      <span className="font-scientific italic text-xs text-grove-cream">{c.latin_name}</span>
                     </div>
                     {c.reasoning && <p className="font-ui text-xs text-grove-cream leading-snug">{c.reasoning}</p>}
                   </AppLink>

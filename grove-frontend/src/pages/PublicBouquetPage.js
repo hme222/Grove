@@ -93,7 +93,7 @@ export default function PublicBouquetPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-ui text-grove-cream text-sm font-medium">{f.common_name}</p>
-                      <p className="font-latin text-xs text-grove-blush">{f.latin_name}</p>
+                      <p className="font-scientific text-xs text-grove-blush">{f.latin_name}</p>
                     </div>
                     <span className="inline-flex items-center rounded-pill border-hairline border-grove-bloom/25 bg-grove-bloom/15 px-2.5 py-1 text-xs font-ui text-grove-blush min-h-6">
                       {f.vase_life_days}d life

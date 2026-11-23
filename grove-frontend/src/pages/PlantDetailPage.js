@@ -289,7 +289,7 @@ export default function PlantDetailPage() {
                 />
               </h1>
               {plant.latin_name && (
-                <p className="font-latin text-grove-cream text-xs mt-0.5">
+                <p className="font-scientific text-grove-cream text-xs mt-0.5">
                   {plant.latin_name}
                   {plant.ai_identified && !plant.ai_species_confirmed && (
                     <span

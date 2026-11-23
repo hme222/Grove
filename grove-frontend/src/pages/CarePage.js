@@ -383,7 +383,7 @@ export default function CarePage() {
                           <span className="font-semibold">Why: </span>{plant.status_reason}
                         </p>
                       )}
-                      <p className="font-latin text-xs text-grove-cream truncate">
+                      <p className="font-scientific text-xs text-grove-cream truncate">
                         {plant.latin_name || plant.common_name}
                         {plant.room && <span className="text-grove-sage"> · {plant.room}</span>}
                       </p>

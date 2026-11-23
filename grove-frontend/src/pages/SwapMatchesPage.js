@@ -112,7 +112,7 @@ export default function SwapMatchesPage() {
                   )}
                 </div>
                 {their_plant?.latin_name && (
-                  <p className="font-latin italic text-xs text-grove-lichen mt-0.5 truncate">
+                  <p className="font-scientific italic text-xs text-grove-lichen mt-0.5 truncate">
                     {their_plant.latin_name}
                   </p>
                 )}

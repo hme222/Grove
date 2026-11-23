@@ -282,7 +282,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block font-ui text-grove-cream text-base font-medium">{sp.common_name}</span>
-                    <span className="block font-latin text-sm text-grove-cream">{sp.latin_name}</span>
+                    <span className="block font-scientific text-sm text-grove-cream">{sp.latin_name}</span>
                     <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
                       <ToxicityBadge toxicity={sp.toxicity} testId="species-option-toxicity" interactive={false} />
                     </span>
@@ -326,7 +326,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 flex items-center justify-between">
                 <div>
                   <p className="font-ui text-grove-cream text-sm font-medium">{selectedSpecies.common_name}</p>
-                  <p className="font-latin text-xs text-grove-cream">{selectedSpecies.latin_name}</p>
+                  <p className="font-scientific text-xs text-grove-cream">{selectedSpecies.latin_name}</p>
                 </div>
                 <button
                   type="button"

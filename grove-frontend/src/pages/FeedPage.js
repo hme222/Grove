@@ -353,7 +353,7 @@ export default function FeedPage() {
                     <p className="font-ui text-sm text-grove-cream mt-1.5">{post.caption}</p>
                   )}
                   {post.plant_latin_name && (
-                    <p className="font-latin text-xs text-grove-cream mt-0.5">{post.plant_latin_name}</p>
+                    <p className="font-scientific text-xs text-grove-cream mt-0.5">{post.plant_latin_name}</p>
                   )}
 
                   {/* Actions: 3 reactions (leaf / light / cutting) + comments */}

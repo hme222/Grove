@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-const url = 'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Cormorant+Garamond:wght@500;600;700&display=swap';
+const url = 'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap';
 const dir = path.resolve('public/fonts');
 fs.mkdirSync(dir, { recursive: true });
 const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';

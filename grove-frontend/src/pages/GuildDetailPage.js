@@ -111,7 +111,7 @@ export default function GuildDetailPage() {
                 >
                   <div className="flex items-baseline justify-between gap-2 mb-1">
                     <span className="font-plant text-base text-grove-cream">{s.common_name}</span>
-                    <span className="font-latin italic text-xs text-grove-cream">{s.latin_name}</span>
+                    <span className="font-scientific italic text-xs text-grove-cream">{s.latin_name}</span>
                   </div>
                   {s.toxicity && <ToxicityBadge toxicity={s.toxicity} className="mb-1.5" interactive={false} />}
                   <div className="flex flex-wrap gap-3 mt-1.5 text-xs font-ui text-grove-sage">

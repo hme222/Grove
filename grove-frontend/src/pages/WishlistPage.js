@@ -62,7 +62,7 @@ export default function WishlistPage() {
                 <div className="flex-1 min-w-0">
                   <p className="font-ui text-grove-cream text-sm font-medium truncate">{item.common_name || 'Unknown plant'}</p>
                   {item.latin_name && (
-                    <p className="font-latin text-xs text-grove-cream italic truncate">{item.latin_name}</p>
+                    <p className="font-scientific text-xs text-grove-cream italic truncate">{item.latin_name}</p>
                   )}
                 </div>
                 <button

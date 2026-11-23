@@ -292,7 +292,7 @@ export default function PlantIdentifyScreen({ onSwitchToManual }) {
       <div className="mb-3">
         <p className="font-ui text-xs text-grove-lichen">{lowConf ? 'We think this might be…' : 'Identified'}</p>
         <h1 className="font-plant text-grove-cream text-lg leading-tight">{identified?.commonName || 'Plant'}</h1>
-        {identified?.latinName && <p className="font-latin text-xs text-grove-sprout">{identified.latinName}</p>}
+        {identified?.latinName && <p className="font-scientific text-xs text-grove-sprout">{identified.latinName}</p>}
         <p
           data-testid="identify-confidence"
           className={`font-ui text-xs mt-1 ${lowConf ? 'text-grove-sun' : 'text-grove-sage'}`}

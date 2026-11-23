@@ -76,6 +76,13 @@
   font-family: var(--font-ui);
   font-style: italic;
 }
+/* A plant's scientific name (Latin binomial): Cormorant Garamond italic, the display family's own drawn italic. */
+.font-scientific {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
 .font-ui {
   font-family: var(--font-ui), system-ui, sans-serif;
 }

@@ -62,7 +62,7 @@ export default function PlantCard({ plant, selected, onSelect, selectionMode, fe
               <span>Watered today</span>
             </p>
           ) : plant.latin_name && (
-            <p className="font-latin text-grove-sage text-xs truncate">
+            <p className="font-scientific text-grove-sage text-xs truncate">
               {plant.latin_name}
             </p>
           )}
