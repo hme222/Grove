@@ -3,7 +3,6 @@ import { AppLink } from './AppLink';
 import { StatusDot } from './StatusDot';
 import { getFileUrl } from '../lib/api';
 import { Leaf, Droplet, ChevronRight } from 'lucide-react';
-import { aspectRatios } from '@/styles/tokens.generated';
 import PhotoBand from './PhotoBand';
 import { wateredToday, displayStatus } from '../lib/careActions';
 

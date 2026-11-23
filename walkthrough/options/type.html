@@ -2,25 +2,68 @@
 <title>Grove: type check (trial fonts, local only)</title>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/tokens.css">
 <style>
-@font-face{font-family:'T-Fenul';src:url('/fonts/trial/fenul.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'T-Fenul';src:url('/fonts/trial/fenul.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
 @font-face{font-family:'T-Reckless';src:url('/fonts/trial/reckless.woff2') format('woff2');font-weight:100 900;font-style:normal}
 @font-face{font-family:'T-Reckless';src:url('/fonts/trial/reckless-italic.woff2') format('woff2');font-weight:100 900;font-style:italic}
-@font-face{font-family:'T-Serrif';src:url('/fonts/trial/serrif.woff2') format('woff2');font-weight:100 900}
-@font-face{font-family:'T-Tobias';src:url('/fonts/trial/tobias.woff2') format('woff2');font-weight:100 900}
-@font-face{font-family:'T-Teodor';src:url('/fonts/trial/teodor.woff2') format('woff2');font-weight:100 900}
+@font-face{font-family:'T-Serrif';src:url('/fonts/trial/serrif.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Tobias';src:url('/fonts/trial/tobias.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Teodor';src:url('/fonts/trial/teodor.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Fellix';src:url('/fonts/trial/fellix.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Hellix';src:url('/fonts/trial/hellix.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Gellix';src:url('/fonts/trial/gellix.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Yellix';src:url('/fonts/trial/yellix.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Roobert';src:url('/fonts/trial/roobert.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Haffer';src:url('/fonts/trial/haffer.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Matter';src:url('/fonts/trial/matter.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Saans';src:url('/fonts/trial/saans.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Avantt';src:url('/fonts/trial/avantt.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Jokker';src:url('/fonts/trial/jokker.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Booton';src:url('/fonts/trial/booton.woff2') format('woff2');font-weight:100 900;font-style:oblique 0deg 20deg}
+@font-face{font-family:'T-Greed';src:url('/fonts/trial/greed-std-regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'T-Greed';src:url('/fonts/trial/greed-std-italic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'T-Greed';src:url('/fonts/trial/greed-std-semibold.woff2') format('woff2');font-weight:600 900;font-style:normal}
+@font-face{font-family:'T-GreedN';src:url('/fonts/trial/greed-narrow-regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'T-GreedN';src:url('/fonts/trial/greed-narrow-italic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'T-GreedN';src:url('/fonts/trial/greed-narrow-semibold.woff2') format('woff2');font-weight:600 900;font-style:normal}
 *{box-sizing:border-box}body{margin:0;background:#11190a;color:var(--grove-cream);font-family:var(--font-ui);font-size:16px}
-h1{font-family:var(--font-display);font-size:30px;margin:24px 24px 4px}.sub{margin:0 24px 14px;color:var(--grove-sage);max-width:70ch}
-.row{display:flex;gap:22px;padding:0 24px 40px;flex-wrap:wrap}.col{width:330px}.col h3{margin:0 0 8px;font-size:16px}
-.ph{background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;padding:20px}
-.card{background:var(--grove-moss);border:1px solid var(--grove-fern-line);border-radius:20px;padding:16px;margin-top:14px}
-.d{font-weight:600}.w{font-size:30px;line-height:1.1}.h{font-size:24px;margin:0 0 8px}.s{font-size:20px}.sm{font-size:16px}
-.f-cur .d{font-family:var(--font-display)}.f-fen .d{font-family:'T-Fenul'}.f-rec .d{font-family:'T-Reckless'}.f-ser .d{font-family:'T-Serrif'}.f-tob .d{font-family:'T-Tobias'}.f-teo .d{font-family:'T-Teodor'}
-.b{font-family:var(--font-ui)}.it{font-style:italic}
+h1{font-family:var(--font-display);font-size:30px;margin:24px 24px 4px}h2{font-family:var(--font-display);font-size:26px;margin:30px 24px 4px}.sub{margin:0 24px 14px;color:var(--grove-sage);max-width:72ch}
+.row{display:flex;gap:20px;padding:0 24px 30px;flex-wrap:wrap}.col{width:300px}.col h3{margin:0 0 8px;font-size:16px}
+.ph{background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;padding:18px}
+.card{background:var(--grove-moss);border:1px solid var(--grove-fern-line);border-radius:20px;padding:14px;margin-top:12px}
+.hd{font-family:var(--font-display);font-weight:600}
+.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--grove-fern-line);border-radius:14px;padding:10px 12px;margin-top:8px;background:var(--grove-canopy)}
+.btn{margin-top:10px;height:44px;border-radius:12px;background:var(--grove-lime);color:var(--grove-root);display:flex;align-items:center;justify-content:center}
+.sci{display:grid;grid-template-columns:230px 1fr 1fr;gap:6px 24px;padding:0 24px 40px;max-width:980px}.sci b{font-weight:400;color:var(--grove-sage)}
+.lat{font-size:20px}.lat.s{font-size:16px}
+.note{margin:0 24px 14px;padding:10px 14px;border:1px solid var(--grove-fern-line);border-radius:12px;max-width:72ch}
 </style></head><body>
-<h1>Type check: headings in trial fonts</h1>
-<p class="sub">Trial fonts, on this computer only (the trial license is for internal testing, so they are not in git and not deployed). Body text stays Alegreya Sans in every column; only headings change.</p>
-<div class="row" id="r"></div>
+<h1>Type check</h1>
+<p class="sub">Trial fonts, on this computer only (the trial license is for internal testing, so they are not in git and not deployed). All 34 trial fonts from your folder, in three sections: headings, text and buttons, and scientific names. Documan is a static font (regular only); the rest are variable.</p>
+<h2>1. Headings: Cormorant Garamond vs everything else</h2>
+<p class="sub">Same card, same copy. Only the heading font changes (names, card titles, welcome line). Text stays Alegreya Sans.</p>
+<div class="row" id="r0"></div>
+<h2>2. Text and buttons: Alegreya Sans vs trial sans</h2>
+<p class="sub">Same card, same copy, 16px body. Only the sans changes.</p>
+<div class="row" id="r1"></div>
+<h2>3. Scientific names (italic)</h2>
+<p class="sub">Latin names are set in italic by convention. Each row shows the name at 20px and at 16px. Fonts with only a slant axis may show a slanted upright instead of a drawn italic; Reckless has a drawn italic.</p>
+<div class="sci" id="r2"></div>
 <script>
-const C=[['f-cur','Now: Cormorant Garamond'],['f-fen','Fenul'],['f-rec','Reckless'],['f-ser','Serrif'],['f-tob','Tobias'],['f-teo','Teodor']];
-document.getElementById('r').innerHTML=C.map(([c,t])=>`<div class="col ${c}"><h3>${t}</h3><div class="ph"><div class="d w">Welcome to FloraGrove</div><div class="card"><div class="d h">Erase the plant guilt.</div><div class="b sm">Most plants don’t die from a lack of love. They die from drowning. Throw away any rigid watering schedule.</div></div><div class="card"><div class="d s">Spider Plant</div><div class="b sm it">Chlorophytum comosum</div><div class="b sm">Check about every 7 days</div></div><div class="card"><div class="d sm" style="font-size:18px">One reminder a day, only when needed</div><div class="b sm">We send a single message when plants need a check.</div></div><div class="d s" style="margin-top:16px">Your plants · 1 2 3 4 5 6 7 8 9</div></div></div>`).join('');
+const NOW_FACES=[['Cormorant Garamond (now)',"var(--font-display)"],['Alegreya Sans (now)',"var(--font-ui)"]];
+fetch('/trial-fonts.json').then(r=>r.json()).then(man=>{
+  const css=man.map(m=>{
+    const f=m.kind==='static'?'font-weight:400':'font-weight:100 900';
+    let out=`@font-face{font-family:'A-${m.slug}';src:url('${m.file}') format('woff2');${f};font-style:${m.italic?'normal':(m.kind==='static'?'normal':'oblique 0deg 20deg')}}`;
+    if(m.italic) out+=`@font-face{font-family:'A-${m.slug}';src:url('${m.italic}') format('woff2');${f};font-style:italic}`;
+    return out;}).join('\n');
+  const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+  const F=man.map(m=>[m.name+(m.italic?' (drawn italic)':''),`'A-${m.slug}'`,m.slug]);
+  const H=[['Cormorant Garamond (now)','var(--font-display)',600],['Alegreya Sans bold','var(--font-ui)',700],...F.map(([n,f])=>[n,f,600]),['Greed Narrow',"'T-GreedN'",600]];
+  document.getElementById('r0').innerHTML=H.map(([n,f,w])=>`<div class="col"><h3>${n}</h3><div class="ph"><div style="font-family:${f},serif;font-weight:${w};font-size:30px;line-height:1.1">Welcome to FloraGrove</div><div class="card"><div style="font-family:${f};font-weight:${w};font-size:24px">Erase the plant guilt.</div><p style="margin:8px 0 0;line-height:1.5">Most plants don’t die from a lack of love. They die from drowning.</p></div><div class="card"><div style="font-family:${f};font-weight:${w};font-size:20px">Spider Plant</div><div style="color:var(--grove-sage)">No checks yet</div></div><div style="font-family:${f};font-weight:${w};font-size:20px;margin-top:14px">Today · Plants · Learn</div></div></div>`).join('');
+  const S=[['Alegreya Sans (now)','var(--font-ui)'],...F.map(([n,f])=>[n,f]),['Greed Narrow',"'T-GreedN'"]];
+  document.getElementById('r1').innerHTML=S.map(([n,f])=>`<div class="col" style="font-family:${f},var(--font-ui)"><h3 style="font-family:var(--font-ui)">${n}</h3><div class="ph"><div class="hd" style="font-size:24px">Erase the plant guilt.</div><p style="margin:8px 0 0;line-height:1.5">Most plants don’t die from a lack of love. They die from drowning. Throw away any rigid watering schedule.</p><div class="card"><div class="hd" style="font-size:20px">Spider Plant</div><div>Check about every 7 days</div><div style="color:var(--grove-sage)">No checks yet</div></div><div class="opt">💧 Water it or move it to the sun</div><div class="btn">Check the soil</div></div></div>`).join('');
+  const L=[['Alegreya Sans italic (now)','var(--font-ui)'],['Cormorant Garamond italic','var(--font-display)'],...F.map(([n,f])=>[n,f]),['Greed Narrow italic',"'T-GreedN'"]];
+  const N=['Chlorophytum comosum','Monstera deliciosa','Epipremnum aureum'];
+  document.getElementById('r2').innerHTML=L.map(([n,f])=>`<b>${n}</b><span class="lat" style="font-family:${f},serif;font-style:italic">${N[0]}<br>${N[1]}</span><span class="lat s" style="font-family:${f},serif;font-style:italic">${N[0]} · Araceae<br>${N[2]}</span>`).join('');
+});
 </script></body></html>

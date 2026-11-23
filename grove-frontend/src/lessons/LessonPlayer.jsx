@@ -71,19 +71,30 @@ export default function LessonPlayer({ cards, renderFinalCard, renderCard, onExi
           </div>
         )}
 
-        <div className={paper ? `overflow-hidden rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `overflow-hidden rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy p-5`}>
+        <div className={paper ? `overflow-hidden rounded-card border-hairline border-grove-paperBorder bg-gradient-to-br ${card.accent || ''} p-5` : `overflow-hidden rounded-card border-hairline border-grove-moss bg-gradient-to-br ${card.accent || ''} bg-grove-canopy ${card.compactIntro ? 'p-4' : 'p-5'}`}>
           {card.photo && <PhotoBand src={card.photo} ratio="band" className="-mx-5 -mt-5 mb-4 !w-auto !rounded-none" testId="lesson-card-photo" />}
-          {Icon && !card.photo && <Icon className={`h-8 w-8 mb-4 ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
+          {Icon && !card.photo && <Icon className={`h-8 w-8 ${card.compactIntro ? 'mb-2' : 'mb-4'} ${card.ring || 'text-grove-sprout'}`} strokeWidth={1.75} aria-hidden="true" />}
           {kicker && <p className={cn('mb-2 font-ui text-base', paper ? 'text-grove-inkSoft' : 'text-grove-sage')}>{kicker}</p>}
           <h1
             id="page-title"
             ref={headingRef}
             tabIndex={-1}
-            className={cn('font-plant text-2xl mb-3 focus:outline-none', paper ? 'text-grove-root' : 'text-grove-cream')}
+            className={cn('font-plant focus:outline-none', card.compactIntro ? 'text-xl mb-2' : 'text-2xl mb-3', paper ? 'text-grove-root' : 'text-grove-cream')}
             data-testid="lesson-headline"
             dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.headline) }}
           />
-          <p className={cn('text-base leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
+          {card.compactIntro ? (
+            // The how-to folds into one line once the card has its own questions, so the questions fit the screen.
+            <details className="group" data-testid="lesson-intro-more">
+              <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between font-ui text-base text-grove-sprout underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime">
+                How to do the test
+                <span aria-hidden="true" className="transition-transform group-open:rotate-90">&rsaquo;</span>
+              </summary>
+              <p className={cn('text-base leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
+            </details>
+          ) : (
+            <p className={cn('text-base leading-relaxed', paper ? 'text-grove-ink' : 'text-grove-cream')} dangerouslySetInnerHTML={{ __html: sanitizeLessonHtml(card.body) }} />
+          )}
         </div>
 
         {/* The Next and Previous row sits at the bottom of the screen on every card (and stays there while a long card

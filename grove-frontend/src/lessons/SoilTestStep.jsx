@@ -177,7 +177,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
   };
 
   return (
-    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 space-y-3" data-testid="soil-step">
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-4 space-y-3" data-testid="soil-step">
       {plants.length > 1 && (
         <label className="block text-xs font-ui text-grove-cream">
           Which plant?

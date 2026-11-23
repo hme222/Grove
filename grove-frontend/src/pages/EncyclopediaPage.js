@@ -5,17 +5,22 @@ import { guildIcon } from '../lib/guildIcon';
 import { GUILDS_ENABLED } from '../lib/features';
 import React, { useState, useEffect } from 'react';
 import AppLink from '../components/AppLink';
-import { encyclopediaAPI, guildAPI } from '../lib/api';
+import { encyclopediaAPI, guildAPI, lessonAPI } from '../lib/api';
+import { LESSON_META, lessonPath } from '../lessons/lessonMeta';
+import Pager from '../components/Pager';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { PageHeader } from '../components/PageHeader';
 import { Input } from '@/components/ui/input';
 import SectionTutorial from '../components/SectionTutorial';
 import { Search, Leaf, ChevronRight } from 'lucide-react';
 import { getToxicityInfo } from '../lib/toxicity';
-import { cn } from '../lib/utils';
-import { buttonVariants } from '../components/ui/button';
 import PhotoBand from '../components/PhotoBand';
 
 const GUILD_PLACEHOLDERS = 4;
+// Three species at a time, so the guide fits the screen without scrolling. The server pages the list, so a search pages the same way.
+export const GUIDE_PER_PAGE = 3;
+const TAB_KEY = 'grove-learn-tab';
+const readTab = () => { try { return window.sessionStorage.getItem(TAB_KEY) === 'guide' ? 'guide' : 'lessons'; } catch { return 'lessons'; } };
 
 export default function EncyclopediaPage() {
   const [species, setSpecies] = useState([]);
@@ -28,6 +33,8 @@ export default function EncyclopediaPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [tab, setTab] = useState(readTab);
+  const [nextLessons, setNextLessons] = useState([]);
 
   const fetchSpecies = async (query = '', pageNum = 1) => {
     const isSearch = query.length >= 2;
@@ -36,7 +43,7 @@ export default function EncyclopediaPage() {
 
     try {
       setLoadError(false);
-      const res = await encyclopediaAPI.getSpecies({ q: query, page: pageNum, limit: 20 });
+      const res = await encyclopediaAPI.getSpecies({ q: query, page: pageNum, limit: GUIDE_PER_PAGE });
       setSpecies(res.data.species);
       setTotal(res.data.total);
       setPage(pageNum);
@@ -64,6 +71,20 @@ export default function EncyclopediaPage() {
 
   useEffect(() => { fetchSpecies(); }, []);
 
+  // The next two lessons, for the Lessons segment. A failure just leaves the card on its own.
+  useEffect(() => {
+    let alive = true;
+    Promise.resolve(lessonAPI?.queue?.())
+      .then((res) => { if (alive) setNextLessons((res?.data?.queue || []).filter((id) => LESSON_META[id]).slice(0, 2)); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  const changeTab = (value) => {
+    setTab(value);
+    try { window.sessionStorage.setItem(TAB_KEY, value); } catch { /* storage can be blocked */ }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery.length >= 2 || searchQuery.length === 0) {
@@ -78,18 +99,48 @@ export default function EncyclopediaPage() {
       <SectionTutorial tutorialId="greenhouse" />
       <PageHeader title="Learn" />
 
-      <div className="max-w-page mx-auto px-4 py-4 space-y-4">
-        <AppLink to="/lessons" data-testid="learn-lessons-card"
-          className="block w-full overflow-hidden rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss text-left transition-colors duration-200 hover:border-grove-sun/80">
-          <PhotoBand src="/photos/watering-1.jpg" ratio="band" className="rounded-none" eager />
-          <span className="flex items-center justify-between gap-3 p-5">
-            <span className="min-w-0">
-              <span className="block font-plant text-base font-semibold text-grove-cream">Short lessons</span>
-              <span className="mt-1 block font-ui text-sm leading-snug text-grove-sage">Watering, light and soil, explained in a few minutes each.</span>
-            </span>
-            <ChevronRight className="h-5 w-5 shrink-0 text-grove-sage" aria-hidden="true" />
-          </span>
-        </AppLink>
+      <div className="max-w-page mx-auto px-4 pb-4 pt-2">
+        <Tabs value={tab} onValueChange={changeTab}>
+          <TabsList aria-label="Learn views" data-testid="learn-tabs">
+            <TabsTrigger value="lessons" data-testid="learn-tab-lessons">Lessons</TabsTrigger>
+            <TabsTrigger value="guide" data-testid="learn-tab-guide">Plant guide</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="lessons" className="space-y-3" data-testid="learn-lessons-panel">
+            <AppLink to="/lessons" data-testid="learn-lessons-card"
+              className="block w-full overflow-hidden rounded-card border-hairline border-grove-sun/25 bg-gradient-to-br from-grove-canopy to-grove-moss text-left transition-colors duration-200 hover:border-grove-sun/80">
+              <PhotoBand src="/photos/watering-1.jpg" ratio="band" className="rounded-none" eager />
+              <span className="flex items-center justify-between gap-3 p-5">
+                <span className="min-w-0">
+                  <span className="block font-plant text-base font-semibold text-grove-cream">Short lessons</span>
+                  <span className="mt-1 block font-ui text-sm leading-snug text-grove-sage">Watering, light and soil, explained in a few minutes each.</span>
+                </span>
+                <ChevronRight className="h-5 w-5 shrink-0 text-grove-sage" aria-hidden="true" />
+              </span>
+            </AppLink>
+            {nextLessons.length > 0 && (
+              <ul className="space-y-2" data-testid="learn-next-lessons">
+                {nextLessons.map((id, i) => (
+                  <li key={id}>
+                    <AppLink
+                      to={lessonPath(id)}
+                      data-testid={`learn-lesson-${id}`}
+                      className="flex w-full items-center gap-3 rounded-small border-hairline border-grove-moss bg-grove-canopy px-3 py-2 text-left hover:border-grove-fernLine"
+                    >
+                      <PhotoBand src={LESSON_META[id].thumb} aspect="thumb" className="h-14 w-14" testId="lesson-thumb" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-ui text-sm text-grove-sage">{i === 0 ? 'Up next' : 'After that'}</span>
+                        <span className="block font-ui text-sm font-medium text-grove-cream">{LESSON_META[id].title}</span>
+                      </span>
+                      <ChevronRight className="h-5 w-5 shrink-0 text-grove-sage" aria-hidden="true" />
+                    </AppLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </TabsContent>
+
+          <TabsContent value="guide" className="space-y-3" data-testid="learn-guide-panel">
         {/* Guilds row — Phase 14B.2 */}
         {guildsFailed && !loadError && !searchQuery && (
           <LoadError compact what="the themed guilds" note="The plant guide below still works." testId="guilds-failed" />
@@ -146,10 +197,6 @@ export default function EncyclopediaPage() {
         )}
 
         {/* Search */}
-        <div className="flex items-center justify-between">
-          <h2 className="font-plant text-xl font-semibold text-grove-cream">Plant guide</h2>
-          {!loadError && !loading && <span className="font-ui text-xs text-grove-sage">{total} species</span>}
-        </div>
         {!loadError && (
         <div className="relative">
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-grove-sage" aria-hidden="true" />
@@ -170,7 +217,7 @@ export default function EncyclopediaPage() {
           </p>
         )}
 
-        {/* Species Grid */}
+        {/* Species list: three at a time */}
         {loadError && !loading ? (<LoadError what={guildsFailed ? 'the plant guide and themed guilds' : 'the plant guide'} onRetry={() => (guildsFailed ? window.location.reload() : fetchSpecies())} error={loadError} />) : loading || searching ? (
           <LoadingList label="Loading the plant guide" />
         ) : species.length === 0 ? (
@@ -180,13 +227,13 @@ export default function EncyclopediaPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-2">
             {species.map((s) => (
               <AppLink
                 key={s.id}
                 to={`/greenhouse/${s.id}`}
                 state={{ name: s.common_name }}
-                className="block w-full text-left rounded-card border-hairline border-grove-moss bg-grove-moss p-5 cursor-pointer hover:border-grove-fernLine transition-all duration-150"
+                className="block w-full text-left rounded-card border-hairline border-grove-moss bg-grove-moss p-4 cursor-pointer hover:border-grove-fernLine transition-all duration-150"
                 data-testid="species-card"
               >
                 <div className="flex items-start gap-3">
@@ -205,7 +252,7 @@ export default function EncyclopediaPage() {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-plant text-grove-cream text-base font-semibold break-words">{s.common_name}</h3>
                     <p className="text-xs italic text-grove-sage break-words">{s.latin_name}</p>
-                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
                       <span className="min-w-0 max-w-full break-words text-xs text-grove-sage">{s.family}</span>
                       {s.toxicity && getToxicityInfo(s.toxicity).level !== 'unknown' && (
                         <ToxicityBadge toxicity={s.toxicity} className="max-w-full" interactive={false} />
@@ -214,35 +261,19 @@ export default function EncyclopediaPage() {
                   </div>
                 </div>
                 {s.care_summary && (
-                  <p className="text-sm text-grove-cream mt-3 line-clamp-2">{s.care_summary}</p>
+                  <p className="text-sm text-grove-cream mt-2 line-clamp-1">{s.care_summary}</p>
                 )}
               </AppLink>
             ))}
           </div>
         )}
 
-        {/* Pagination */}
-        {total > 20 && (
-          <div className="flex items-center justify-center gap-2 pt-4">
-            <button
-              onClick={() => fetchSpecies(searchQuery, page - 1)}
-              disabled={page === 1}
-              className={cn(buttonVariants({ variant: 'outline' }), 'disabled:border-grove-moss disabled:text-grove-lichen disabled:opacity-100')}
-            >
-              Previous
-            </button>
-            <span className="text-xs text-grove-cream">
-              Page {page} of {Math.ceil(total / 20)}
-            </span>
-            <button
-              onClick={() => fetchSpecies(searchQuery, page + 1)}
-              disabled={page >= Math.ceil(total / 20)}
-              className={cn(buttonVariants({ variant: 'outline' }), 'disabled:border-grove-moss disabled:text-grove-lichen disabled:opacity-100')}
-            >
-              Next
-            </button>
-          </div>
+        {/* Pagination: Previous / "1 to 3 of 40" / Next */}
+        {!loadError && !loading && !searching && (
+          <Pager page={page} pageSize={GUIDE_PER_PAGE} total={total} onPage={(n) => fetchSpecies(searchQuery, n)} label="Plant guide pages" testId="guide-pager" />
         )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

@@ -1,0 +1,209 @@
+[
+ {
+  "name": "Aguzzo",
+  "slug": "aguzzo",
+  "file": "/fonts/trial/all/aguzzo.woff2",
+  "kind": "vf",
+  "italic": "/fonts/trial/all/aguzzo-italic.woff2"
+ },
+ {
+  "name": "Avantt",
+  "slug": "avantt",
+  "file": "/fonts/trial/all/avantt.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Azeret",
+  "slug": "azeret",
+  "file": "/fonts/trial/all/azeret.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Bagoss",
+  "slug": "bagoss",
+  "file": "/fonts/trial/all/bagoss.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Booton",
+  "slug": "booton",
+  "file": "/fonts/trial/all/booton.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Cassette",
+  "slug": "cassette",
+  "file": "/fonts/trial/all/cassette.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Concrette",
+  "slug": "concrette",
+  "file": "/fonts/trial/all/concrette.woff2",
+  "kind": "vf",
+  "italic": "/fonts/trial/all/concrette-italic.woff2"
+ },
+ {
+  "name": "Coolkit",
+  "slug": "coolkit",
+  "file": "/fonts/trial/all/coolkit.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Coxx",
+  "slug": "coxx",
+  "file": "/fonts/trial/all/coxx.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Dazzed",
+  "slug": "dazzed",
+  "file": "/fonts/trial/all/dazzed.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Denim",
+  "slug": "denim",
+  "file": "/fonts/trial/all/denim.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Documan",
+  "slug": "documan",
+  "file": "/fonts/trial/all/documan.woff2",
+  "kind": "static"
+ },
+ {
+  "name": "Fellix",
+  "slug": "fellix",
+  "file": "/fonts/trial/all/fellix.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Fenul",
+  "slug": "fenul",
+  "file": "/fonts/trial/all/fenul.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Gellix",
+  "slug": "gellix",
+  "file": "/fonts/trial/all/gellix.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Greed",
+  "slug": "greed",
+  "file": "/fonts/trial/all/greed.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Haffer",
+  "slug": "haffer",
+  "file": "/fonts/trial/all/haffer.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Hellix",
+  "slug": "hellix",
+  "file": "/fonts/trial/all/hellix.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Jokker",
+  "slug": "jokker",
+  "file": "/fonts/trial/all/jokker.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Lazzer",
+  "slug": "lazzer",
+  "file": "/fonts/trial/all/lazzer.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Matter",
+  "slug": "matter",
+  "file": "/fonts/trial/all/matter.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Ofform",
+  "slug": "ofform",
+  "file": "/fonts/trial/all/ofform.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Panell",
+  "slug": "panell",
+  "file": "/fonts/trial/all/panell.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Perfektta",
+  "slug": "perfektta",
+  "file": "/fonts/trial/all/perfektta.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Post",
+  "slug": "post",
+  "file": "/fonts/trial/all/post.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Reckless",
+  "slug": "reckless",
+  "file": "/fonts/trial/all/reckless.woff2",
+  "kind": "vf",
+  "italic": "/fonts/trial/all/reckless-italic.woff2"
+ },
+ {
+  "name": "Roobert",
+  "slug": "roobert",
+  "file": "/fonts/trial/all/roobert.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Saans",
+  "slug": "saans",
+  "file": "/fonts/trial/all/saans.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Season",
+  "slug": "season",
+  "file": "/fonts/trial/all/season.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Serrif",
+  "slug": "serrif",
+  "file": "/fonts/trial/all/serrif.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Teodor",
+  "slug": "teodor",
+  "file": "/fonts/trial/all/teodor.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Tobias",
+  "slug": "tobias",
+  "file": "/fonts/trial/all/tobias.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Wallop",
+  "slug": "wallop",
+  "file": "/fonts/trial/all/wallop.woff2",
+  "kind": "vf"
+ },
+ {
+  "name": "Yellix",
+  "slug": "yellix",
+  "file": "/fonts/trial/all/yellix.woff2",
+  "kind": "vf"
+ }
+]

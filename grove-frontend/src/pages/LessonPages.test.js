@@ -337,19 +337,46 @@ describe('LessonPage resume and progress', () => {
   });
 });
 
+// Radix tabs switch on mouse down.
+const openTab = (name) => act(() => q(`lessons-tab-${name}`).dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 0 })));
+const rows = () => container.querySelectorAll('[data-testid^="lesson-row-"]');
+
 describe('LessonsPage', () => {
-  test('shows the next lesson, what comes after it, and all six lessons', async () => {
+  test('opens on Up next: the next lesson and what comes after it, with no list', async () => {
     await mount(<LessonsPage />);
     expect(q('lessons-up-next').textContent).toContain('Plant ER');
     expect(q('lessons-then').textContent).toBe('After that: Soil finger-test');
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
+    expect(rows().length).toBe(0);
+  });
+
+  test('All lists the catalog five at a time and pages through it', async () => {
+    await mount(<LessonsPage />);
+    await openTab('all');
+    expect(rows().length).toBe(5);
+    expect(q('lessons-all-pager-count').textContent).toBe('1 to 5 of 6');
+    expect(q('lessons-all-pager-prev').disabled).toBe(true);
+    await click(q('lessons-all-pager-next'));
+    expect(rows().length).toBe(1);
+    expect(q('lesson-row-window-map')).not.toBeNull();
+    expect(q('lessons-all-pager-count').textContent).toBe('6 to 6 of 6');
+    expect(q('lessons-all-pager-next').disabled).toBe(true);
+  });
+
+  test('the list follows the catalog length: a hundred ids make twenty pages of five', async () => {
+    const ids = Array.from({ length: 100 }, (_, i) => (i < 6 ? ['soil-finger-test', 'plant-parent-reset', 'plant-er', 'habit-stacking', 'light-basics', 'window-map'][i] : `x-${i}`));
+    lessonAPI.queue.mockResolvedValue(queueData({ library: ids }));
+    await mount(<LessonsPage />);
+    await openTab('all');
+    // Ids the app has no lesson for are left out, so the count is the real catalog, never the server's list.
+    expect(q('lessons-all-pager-count').textContent).toBe('1 to 5 of 6');
   });
 
   test('the library marks the suggested next light lesson', async () => {
     lessonAPI.queue.mockResolvedValue(queueData({ completed: ['light-basics'], up_next: 'window-map' }));
     await mount(<LessonsPage />);
+    await openTab('all');
+    await click(q('lessons-all-pager-next'));
     expect(q('lesson-row-window-map').textContent).toContain('Up next');
-    expect(q('lesson-row-habit-stacking').textContent).not.toContain('Up next');
   });
 
   test('start opens the next lesson', async () => {
@@ -361,26 +388,41 @@ describe('LessonsPage', () => {
   test('a row opens its lesson, and finished lessons say Done', async () => {
     lessonAPI.queue.mockResolvedValue(queueData({ queue: ['soil-finger-test'], completed: ['plant-er'] }));
     await mount(<LessonsPage />);
+    expect(q('lessons-then')).toBeNull();
+    await openTab('all');
     expect(q('lesson-row-plant-er').textContent).toContain('Done');
     expect(q('lesson-row-soil-finger-test').textContent).not.toContain('Done');
-    expect(q('lessons-then')).toBeNull();
     await click(q('lesson-row-habit-stacking'));
     expect(mockNavigate).toHaveBeenCalledWith('/lessons/habit-stacking');
   });
 
-  test('when everything is finished it says so and still lists the library', async () => {
+  test('Done lists only finished lessons, and says so when there are none', async () => {
+    await mount(<LessonsPage />);
+    await openTab('done');
+    expect(q('lessons-done-empty').textContent).toContain('Nothing finished yet');
+    lessonAPI.queue.mockResolvedValue(queueData({ completed: ['plant-er', 'habit-stacking'] }));
+    act(() => root.unmount());
+    root = createRoot(container);
+    await mount(<LessonsPage />);
+    await openTab('done');
+    expect(Array.from(rows()).map((r) => r.getAttribute('data-testid'))).toEqual(['lesson-row-plant-er', 'lesson-row-habit-stacking']);
+  });
+
+  test('when everything is finished it says so and still lists the library under All', async () => {
     lessonAPI.queue.mockResolvedValue(queueData({ queue: [], completed: ['plant-er', 'soil-finger-test'] }));
     await mount(<LessonsPage />);
     expect(q('lessons-all-done')).not.toBeNull();
     expect(q('lessons-up-next')).toBeNull();
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
+    await openTab('all');
+    expect(rows().length).toBe(5);
   });
 
   test('if lessons cannot be loaded it says so and still lists the six lessons', async () => {
     lessonAPI.queue.mockRejectedValue(new Error('network'));
     await mount(<LessonsPage />);
     expect(container.querySelector('[role="alert"]').textContent).toContain('lesson progress');
-    expect(container.querySelectorAll('[data-testid^="lesson-row-"]').length).toBe(6);
+    await openTab('all');
+    expect(q('lessons-all-pager-count').textContent).toBe('1 to 5 of 6');
   });
 });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buttonVariants } from './ui/button';
 import { notificationAPI, userAPI } from '../lib/api';
@@ -12,7 +12,34 @@ const write = (k) => { try { window.localStorage.setItem(k, '1'); } catch { /* s
 
 // Two short questions, asked once after someone has a plant, one at a time in the same card:
 // how many reminders they want, and whether pets share the home. Each has equal ways to answer.
-export default function SetupNote() {
+// As a sheet, a question rises over the page above the tab bar with the page dimmed behind it, so it asks once and then
+// gets out of the way instead of taking space in the list. The page behind stays readable; the question has to be answered
+// (or put off with its own button) before the page can be used.
+function Frame({ sheet, label, testId, children }) {
+  const ref = useRef(null);
+  useEffect(() => { if (sheet && ref.current) ref.current.focus({ preventScroll: true }); }, [sheet]);
+  if (!sheet) {
+    return <section aria-label={label} data-testid={testId} className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">{children}</section>;
+  }
+  return (
+    <>
+      <div aria-hidden="true" className="fixed inset-0 z-sheet bg-grove-night/60" />
+      <section
+        ref={ref}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+        data-testid={testId}
+        className="fixed inset-x-0 bottom-nav z-sheet mx-auto max-w-column rounded-t-card border-hairline border-grove-moss bg-grove-forest p-5 pb-6 focus:outline-none"
+      >
+        {children}
+      </section>
+    </>
+  );
+}
+
+export default function SetupNote({ sheet = false }) {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
   const [remindersOn, setRemindersOn] = useState(false);
@@ -48,7 +75,7 @@ export default function SetupNote() {
 
   if (!remindersDone && remindersOn) {
     return (
-      <section aria-label="Reminders" data-testid="reminder-note" className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
+      <Frame sheet={sheet} label="Reminders" testId="reminder-note">
         <p className="font-plant text-base font-semibold text-grove-cream">One reminder a day, only when needed</p>
         <p className="mt-1 font-ui text-sm text-grove-sage">We send a single message when plants need a check. You can turn it off any time.</p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -56,14 +83,14 @@ export default function SetupNote() {
           <button type="button" onClick={turnOffReminders} data-testid="reminder-off" className={equal}>Turn off</button>
           <button type="button" onClick={() => navigate('/settings/notifications')} className={quiet}>Settings</button>
         </div>
-      </section>
+      </Frame>
     );
   }
 
   const askPets = user && (user.has_pets === undefined || user.has_pets === null) && !petsSkipped && (remindersDone || !remindersOn);
   if (askPets) {
     return (
-      <section aria-label="Pets" data-testid="pets-note" className="rounded-card border-hairline border-grove-moss bg-grove-canopy p-5">
+      <Frame sheet={sheet} label="Pets" testId="pets-note">
         <p className="font-plant text-base font-semibold text-grove-cream">Do you have pets at home?</p>
         <p className="mt-1 font-ui text-sm text-grove-sage">If you do, we&rsquo;ll show whether each of your plants is safe for them.</p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -71,7 +98,7 @@ export default function SetupNote() {
           <button type="button" disabled={saving} onClick={() => answerPets(false)} data-testid="pets-no" className={equal}>No pets</button>
           <button type="button" onClick={skipPets} className={quiet}>Not now</button>
         </div>
-      </section>
+      </Frame>
     );
   }
   return null;

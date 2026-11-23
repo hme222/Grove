@@ -25,7 +25,8 @@ import { useFirstCareCelebration } from '../nook/useFirstCareCelebration';
 import { Dialog, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Droplets, Sparkles, Camera, Archive, Share2, X } from 'lucide-react';
+import { Droplets, Sparkles, Camera, Archive, Share2, X, BookOpen, Info } from 'lucide-react';
+import IconCircle from '../components/IconCircle';
 import ShareCardSheet from '../components/ShareCardSheet';
 import HealthScorePanel from '../components/HealthScorePanel';
 import MemoryJournal from '../components/MemoryJournal';
@@ -37,6 +38,13 @@ import { cn } from '../lib/utils';
 import { displayStatus, hasBeenCaredFor } from '../lib/careActions';
 import { buttonVariants } from '../components/ui/button';
 import ScheduleSuggestion, { HEADING_ID as SCHEDULE_HEADING_ID } from '../components/ScheduleSuggestion';
+
+const PLANT_TABS = [
+  { value: 'care', label: 'Care', icon: Droplets, testId: 'plant-tab-care' },
+  { value: 'timeline', label: 'Journal', icon: BookOpen, testId: 'plant-tab-journal' },
+  { value: 'photos', label: 'Photos', icon: Camera, testId: 'plant-tab-photos' },
+  { value: 'about', label: 'About', icon: Info, testId: 'plant-tab-about' },
+];
 
 export default function PlantDetailPage() {
   const { plantId } = useParams();
@@ -250,7 +258,7 @@ export default function PlantDetailPage() {
       {/* Header with photo */}
       <div className="relative">
         <div className="w-full bg-grove-moss overflow-hidden relative">
-          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-hero" testId="plant-detail-hero" />
+          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-40" testId="plant-detail-hero" />
           {/* Upload photo */}
           <label className="absolute top-3 right-3 cursor-pointer rounded-pill focus-within:ring-2 focus-within:ring-grove-lime">
             <input type="file" accept="image/*" onChange={handlePhotoUpload} className="peer sr-only" />
@@ -314,7 +322,7 @@ export default function PlantDetailPage() {
                   Grows in {String(plant.grow_medium || 'soil').replace('_', ' ')}
                 </span>
               </div>
-              <ToxicityBadge toxicity={plant.species_toxicity} className="mt-1.5" testId="plant-toxicity" />
+              <ToxicityBadge toxicity={plant.species_toxicity} className="mt-1" testId="plant-toxicity" />
               <PetSafetyLookup toxicity={plant.species_toxicity} className="block" testId="plant-safety-lookup" />
               <p className="mt-1 font-ui text-xs text-grove-sage" data-testid="plant-safety-line">
                 {getToxicityInfo(plant.species_toxicity).level === 'unknown' ? '' : 'Based on ASPCA listings for cats and dogs. '}If a pet or child ate any of it:
@@ -354,18 +362,24 @@ export default function PlantDetailPage() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="max-w-page mx-auto px-4 py-4" data-testid="plant-detail-tabs">
-        <Tabs defaultValue="timeline">
-          <TabsList className="border-b-hairline border-grove-moss">
-            <TabsTrigger value="timeline">Journal</TabsTrigger>
-            <TabsTrigger value="photos" data-testid="plant-tab-photos">Photos</TabsTrigger>
-            <TabsTrigger value="care">Care</TabsTrigger>
-            <TabsTrigger value="notes">Notes</TabsTrigger>
-            <TabsTrigger value="stats">Stats</TabsTrigger>
+      {/* Four equal tabs, each with a colored icon above its word. Care opens first: it is what someone came to do. */}
+      <div className="max-w-page mx-auto px-4 py-3" data-testid="plant-detail-tabs">
+        <Tabs defaultValue="care">
+          <TabsList className="grid grid-cols-4 gap-0 overflow-visible border-b-hairline border-grove-moss">
+            {PLANT_TABS.map(({ value, label, icon, testId }) => (
+              <TabsTrigger
+                key={value}
+                value={value}
+                data-testid={testId}
+                className="group flex-col justify-center gap-1 py-2 text-base"
+              >
+                <IconCircle icon={icon} onGroup />
+                {label}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          {/* Timeline Tab */}
+          {/* Journal tab */}
           <TabsContent value="timeline" className="pt-4">
             <MemoryJournal
               logs={mergedTimeline}
@@ -378,13 +392,13 @@ export default function PlantDetailPage() {
             />
           </TabsContent>
 
-          {/* Photos Tab — Phase 14A.2 */}
+          {/* Photos tab — Phase 14A.2 */}
           <TabsContent value="photos" className="pt-4">
             <PhotoGallery plantId={plantId} plantName={plant.nickname || plant.common_name} onChanged={fetchPlant} />
           </TabsContent>
 
           {/* Care Tab */}
-          <TabsContent value="care" className="pt-4 space-y-4">
+          <TabsContent value="care" className="pt-3 space-y-3">
             {/* Watering schedule */}
             <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
               <h3 id={SCHEDULE_HEADING_ID} tabIndex={-1} className="font-plant text-grove-cream text-base font-semibold  mb-2 focus:outline-none">Watering schedule</h3>
@@ -467,8 +481,9 @@ export default function PlantDetailPage() {
             </div>
           </TabsContent>
 
-          {/* Notes Tab */}
-          <TabsContent value="notes" className="pt-4">
+          {/* About tab: the plant's notes and details, then how it is doing. */}
+          <TabsContent value="about" className="pt-4">
+
             <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
               <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Notes</h3>
               <p className="font-ui text-sm text-grove-cream whitespace-pre-wrap">
@@ -494,10 +509,7 @@ export default function PlantDetailPage() {
                 </div>
               </div>
             </div>
-          </TabsContent>
-
-          {/* Stats Tab */}
-          <TabsContent value="stats" className="pt-4">
+            <div className="mt-3">
             <div className="space-y-3">
               <HealthScorePanel
                 breakdown={plant.health_breakdown}
@@ -521,6 +533,8 @@ export default function PlantDetailPage() {
                 </div>
               </div>
             </div>
+            </div>
+          
             </div>
           </TabsContent>
         </Tabs>

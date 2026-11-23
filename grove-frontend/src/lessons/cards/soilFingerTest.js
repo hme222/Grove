@@ -63,6 +63,7 @@ export const CARDS = [
     body:
       "Go to your nearest plant right now. Press your finger into the soil, to the second knuckle (the first in a small pot). Then tap what you found below. There is no wrong answer.",
     cta: "Log my first soil test",
+    compactIntro: true,
     icon: Timer,
     accent: "from-grove-lime/15 via-grove-lime/10 to-grove-lime/10",
     ring: "text-grove-sprout",

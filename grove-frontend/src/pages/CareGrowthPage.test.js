@@ -26,6 +26,9 @@ async function renderWith(stats) {
   });
 }
 
+// Progress shows one page at a time (numbers, personality, schedule); this moves to the next one.
+const nextPage = async () => { await act(async () => { container.querySelector('[data-testid="growth-pages-next"]').click(); }); };
+
 beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -72,6 +75,7 @@ test('check-ins tile says Not available when data is missing', async () => {
 
 test('personality card shows the title and line', async () => {
   await renderWith(steady);
+  await nextPage();
   const card = container.querySelector('[data-testid="personality-card"]');
   expect(card.textContent).toContain('Plant personality');
   expect(card.textContent).toContain('The Steady Hand');
@@ -79,6 +83,7 @@ test('personality card shows the title and line', async () => {
 
 test('personality card with no plants shows the line only', async () => {
   await renderWith({ total_plants: 0, total_care_logs: 0, plants_needing_water: 0 });
+  await nextPage();
   const card = container.querySelector('[data-testid="personality-card"]');
   expect(card.textContent).toContain("Add a plant and we'll start figuring out your plant personality.");
   expect(card.querySelector('.font-plant:not(h3)')).toBeNull();
@@ -86,6 +91,7 @@ test('personality card with no plants shows the line only', async () => {
 
 test('personality card has no buttons', async () => {
   await renderWith(steady);
+  await nextPage();
   const card = container.querySelector('[data-testid="personality-card"]');
   expect(card.querySelector('button')).toBeNull();
 });
@@ -94,5 +100,7 @@ test('care time under an hour is totalled in minutes, never 0h', async () => {
   statsAPI.getStats.mockResolvedValue({ data: steady });
   statsAPI.getCareHours.mockResolvedValue({ data: { total_hours: 0, soil_check: { count: 1, estimated_minutes: 1 }, water: { count: 2, estimated_minutes: 4 } } });
   await act(async () => { root.render(<CareGrowthPage />); });
+  await nextPage();
+  await nextPage();
   expect(container.querySelector('[data-testid="care-time-total"]').textContent).toBe('5 min total');
 });

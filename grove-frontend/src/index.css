@@ -206,4 +206,8 @@
 .pip-layer { bottom: var(--pip-bottom, var(--nav-height)); }
 /* While Pip stands on the tab bar, the page ends his height higher, so the last card can scroll clear of him
    instead of sitting under him. PipPeek sets --pip-reserve to his measured height and clears it when he goes. */
-.app-shell { padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--pip-reserve, 0px)); }
+.app-shell { box-sizing: border-box; padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--pip-reserve, 0px)); }
+/* A page that asks for min-h-screen would be one screen tall plus the shell's bottom padding, so every page scrolled by the tab
+   bar's height even when its content was short. Inside the shell a page fills the screen minus that padding instead. */
+#main-content > .min-h-screen,
+#main-content > * > .min-h-screen { min-height: calc(100vh - var(--nav-height) - env(safe-area-inset-bottom) - var(--pip-reserve, 0rem)); }

@@ -6,6 +6,7 @@ import { PageHeader } from '../components/PageHeader';
 import { CareTabs } from '../components/CareTabs';
 import PersonalityCard from '../components/PersonalityCard';
 import { checkInsLabel } from '../lib/plantPersonality';
+import SwipePages from '../components/SwipePages';
 import { Leaf, Droplets, Clock, Sprout, TrendingUp, CalendarCheck } from 'lucide-react';
 
 export default function CareGrowthPage() {
@@ -60,7 +61,13 @@ export default function CareGrowthPage() {
     <div>
       <PageHeader title="Progress"><CareTabs /></PageHeader>
 
-      <div className="max-w-content mx-auto px-4 py-4 space-y-4">
+      <div className="max-w-content mx-auto px-4 py-4">
+        <SwipePages
+          label="Your progress"
+          testId="growth-pages"
+          pages={[
+            { key: 'stats', label: 'Your numbers', node: (
+              <div className="space-y-4">
         {/* Basic tiles */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" data-testid="growth-basic-tiles">
           {basicTiles.map(({ label, value, icon: Icon }, i) => (
@@ -76,8 +83,11 @@ export default function CareGrowthPage() {
           ))}
         </div>
 
-        <PersonalityCard stats={stats} />
-
+              </div>
+            ) },
+            { key: 'personality', label: 'Plant personality', node: <PersonalityCard stats={stats} /> },
+            { key: 'schedule', label: 'Your schedule', node: (
+              <div className="space-y-4">
         {/* On schedule: the same overdue rule the Today list uses */}
         {stats?.plants_on_schedule != null && (stats.total_plants || 0) > 0 && (
           <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="growth-thriving-card">
@@ -159,6 +169,10 @@ export default function CareGrowthPage() {
             </div>
           </div>
         ) : null}
+              </div>
+            ) },
+          ]}
+        />
       </div>
     </div>
   );

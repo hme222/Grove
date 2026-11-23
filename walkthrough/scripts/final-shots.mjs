@@ -1,0 +1,15 @@
+import { chromium } from 'playwright';
+import { startServer } from './serve.mjs';
+const server = await startServer(4192);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+const p = await ctx.newPage(); p.setDefaultTimeout(10000);
+const $ = (id) => p.getByTestId(id);
+await p.goto('http://localhost:4192/'); await p.waitForTimeout(1500); await p.mouse.click(195, 300); await p.waitForTimeout(12000);
+await p.screenshot({ path: '.cache/f-landing.png', clip: { x: 0, y: 90, width: 390, height: 160 } });
+await $('onboarding-continue').click(); await p.waitForTimeout(800); await $('signup-submit').click(); await p.waitForTimeout(1500);
+await $('onboarding-continue').click(); await p.waitForTimeout(2500);
+await p.screenshot({ path: '.cache/f-slide1.png' });
+await $('onboarding-continue').click(); await p.waitForTimeout(2200);
+await p.screenshot({ path: '.cache/f-slide2.png' });
+await b.close(); server.close();

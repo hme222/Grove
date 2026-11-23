@@ -257,7 +257,7 @@ export default function CarePage() {
   };
 
   return (
-    <div className="pb-24">
+    <div className="pb-4">
       <SectionTutorial tutorialId="care" />
       <PageHeader title="Today">
         <CareTabs />
@@ -419,7 +419,7 @@ export default function CarePage() {
 
       <div className="max-w-content mx-auto px-4 pb-4 space-y-3">
         <ScheduleReviewBanner />
-        {!loading && plants.length > 0 && <SetupNote />}
+        {!loading && plants.length > 0 && !!user?.first_care_celebrated && <SetupNote sheet />}
       </div>
 
       <section aria-labelledby="pip-heading" className="max-w-content mx-auto px-4 pb-4 space-y-3" data-testid="from-pip">
