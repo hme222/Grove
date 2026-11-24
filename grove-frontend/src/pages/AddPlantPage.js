@@ -9,7 +9,7 @@ import { plantAPI, speciesAPI, encyclopediaAPI } from '../lib/api';
 import PhotoBand from '../components/PhotoBand';
 import { PageHeader } from '../components/PageHeader';
 import { toast } from 'sonner';
-import { Search, Camera } from 'lucide-react';
+import { Search, Camera, Leaf } from 'lucide-react';
 import PhotoRequirement from '../components/PhotoRequirement';
 import ToxicityBadge from '../components/ToxicityBadge';
 import { ASPCA_PLANT_LIST } from '../components/PetSafetyLookup';
@@ -21,7 +21,8 @@ import { MEDIUMS } from '../constants/growMedia';
 import { firstPlantState, groveIsEmpty } from '../components/FirstPlantCelebration';
 
 // How many matches the list shows at once; the rest are reached by typing more of the name.
-const MAX_RESULTS_SHOWN = 6;
+const MAX_RESULTS_SHOWN = 4;
+const speciesThumb = (sp) => sp.wiki_thumbnail || sp.bhl_primary_thumbnail || sp.wiki_image || sp.botanical_illustration_thumb || null;
 
 const ROOMS = ['Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Office', 'Balcony', 'Patio', 'Greenhouse', 'Hallway', 'Dining Room'];
 const SOURCES = [
@@ -237,7 +238,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
       <div className="max-w-column mx-auto px-4 py-4">
         {showSearch ? (
           <div>
-            <div className="mb-4">
+            <div className="mb-3">
               <label htmlFor="addplant-search-species" className="font-ui text-xs text-grove-cream block mb-1.5">Search by name</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-grove-sage" />
@@ -269,19 +270,28 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                   key={sp.id}
                   onClick={() => { focusNext.current = 'addplant-nickname'; selectSpecies(sp); }}
                   data-testid="species-option"
-                  className="w-full text-left rounded-inset border-hairline border-grove-moss bg-grove-moss px-4 py-3 hover:border-grove-fernLine transition-colors duration-150"
+                  className="flex w-full items-center gap-3 text-left rounded-inset border-hairline border-grove-moss bg-grove-moss px-3 py-1.5 hover:border-grove-fernLine transition-colors duration-150"
                 >
-                  <p className="font-ui text-grove-cream text-sm font-medium">{sp.common_name}</p>
-                  <p className="font-latin text-xs text-grove-cream">{sp.latin_name}</p>
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
-                    <ToxicityBadge toxicity={sp.toxicity} testId="species-option-toxicity" interactive={false} />
-                    <span className="text-xs font-ui text-grove-cream">Check about every {sp.default_watering_days}d</span>
-                  </div>
+                  {/* A photo of the plant, so a name that is new to someone can be checked by sight. */}
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-chip bg-grove-canopy" data-testid="species-option-photo">
+                    {speciesThumb(sp) ? (
+                      <PhotoBand src={speciesThumb(sp)} aspect="thumb" eager className="h-full w-full rounded-none" testId="species-option-image" />
+                    ) : (
+                      <Leaf className="h-6 w-6 text-grove-sprout opacity-60" aria-hidden="true" />
+                    )}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-ui text-grove-cream text-base font-medium">{sp.common_name}</span>
+                    <span className="block font-scientific text-sm text-grove-cream">{sp.latin_name}</span>
+                    <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <ToxicityBadge toxicity={sp.toxicity} testId="species-option-toxicity" interactive={false} />
+                    </span>
+                  </span>
                 </button>
               ))}
             </div>
             {species.length > MAX_RESULTS_SHOWN && (
-              <p className="mt-2 font-ui text-sm text-grove-sage" data-testid="species-more">
+              <p className="mt-1 font-ui text-sm text-grove-sage" data-testid="species-more">
                 Showing {MAX_RESULTS_SHOWN} of {species.length}. Type more of the name to narrow it down.
               </p>
             )}
@@ -296,16 +306,16 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               ))}
             </div>
             {species.some((sp) => normalizeToxicity(sp.toxicity) !== 'unknown') && (
-              <p className="mt-2 font-ui text-xs text-grove-sage" data-testid="species-safety-source">
+              <p className="mt-1 font-ui text-xs text-grove-sage" data-testid="species-safety-source">
                 Pet safety is from the{' '}
-                <a href={ASPCA_PLANT_LIST} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-touch items-center text-grove-cream underline underline-offset-2">
+                <a href={ASPCA_PLANT_LIST} target="_blank" rel="noopener noreferrer" className="text-grove-cream underline underline-offset-2">
                   ASPCA&rsquo;s toxic and non-toxic plant list<span className="sr-only"> (opens in a new tab)</span>
                 </a>.
               </p>
             )}
             <button
               onClick={() => { focusNext.current = 'addplant-plant-name'; setShowSearch(false); }}
-              className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-4")}
+              className={cn(buttonVariants({ variant: 'outline' }), "w-full mt-2")}
             >
               Or add custom plant
             </button>
@@ -316,7 +326,7 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
               <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 flex items-center justify-between">
                 <div>
                   <p className="font-ui text-grove-cream text-sm font-medium">{selectedSpecies.common_name}</p>
-                  <p className="font-latin text-xs text-grove-cream">{selectedSpecies.latin_name}</p>
+                  <p className="font-scientific text-xs text-grove-cream">{selectedSpecies.latin_name}</p>
                 </div>
                 <button
                   type="button"
@@ -376,6 +386,13 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                 ))}
               </div>
             </div>
+            {/* The rest is optional, so it waits behind one line: the first screen is a name, a room and Next. */}
+            <details className="group rounded-card border-hairline border-grove-moss" data-testid="add-plant-more">
+              <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between px-4 font-ui text-base text-grove-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grove-lime">
+                <span>More about this plant <span className="text-grove-sage">(optional)</span></span>
+                <span aria-hidden="true" className="text-grove-sage transition-transform group-open:rotate-90">&rsaquo;</span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
             <div>
               <p id="addplant-grow-medium-label" className="font-ui text-xs text-grove-cream block mb-1.5">Grow medium</p>
               <div role="group" aria-labelledby="addplant-grow-medium-label" aria-describedby="addplant-grow-medium-hint" className="flex flex-wrap gap-1.5">
@@ -435,9 +452,11 @@ function ManualEntryFlow({ onBack, presetSpeciesId, presetName, focusSearch }) {
                 placeholder="Any notes about your plant…"
               />
             </div>
-            <p className="font-ui text-xs text-grove-sage" data-testid="add-plant-new-plant-note">
+            <p className="font-ui text-sm text-grove-sage" data-testid="add-plant-new-plant-note">
               Keep a new plant apart from your others for two weeks and check leaves and soil for pests. A few dropped leaves in the first weeks are normal; do not repot or feed right away.
             </p>
+              </div>
+            </details>
             <button
               type="submit"
               disabled={saving}

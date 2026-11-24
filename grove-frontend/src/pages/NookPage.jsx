@@ -123,16 +123,16 @@ export default function NookPage() {
     <div className="min-h-screen bg-grove-paper">
       <PageHeader title="Pip’s nook"><CareTabs /></PageHeader>
 
-      <div className="bg-grove-forest pb-2 pt-2">
+      <div className="bg-grove-forest pb-1 pt-1">
         <div className="mx-auto max-w-sheet">
           <NookCanvas view={view} label={`Pip’s nook, ${state.level_name.toLowerCase()}. Pip is on the ${state.pip.location}.${state.hero && state.hero.name ? ` ${state.hero.name} is on the table.` : ''}`} />
         </div>
       </div>
 
-      <div className="mx-auto max-w-sheet px-4 pb-6">
+      <div className="mx-auto max-w-sheet px-4 pb-4">
         <section
           aria-label="Pip’s note"
-          className="relative z-raised -mt-10 rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard p-5 shadow-lift"
+          className="relative z-raised -mt-10 rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard px-5 py-3 shadow-lift"
           data-testid="nook-pip"
         >
           <span aria-hidden="true" className="absolute -top-1.5 left-8 h-3 w-3 rotate-45 border-l-hairline border-t-hairline border-grove-paperBorder bg-grove-paperCard" />
@@ -147,7 +147,7 @@ export default function NookPage() {
           )}
         </section>
 
-        <section className="mt-5 space-y-1 border-b-hairline border-grove-paperBorder pb-5" data-testid="nook-summary">
+        <section className="mt-3 space-y-0.5 border-b-hairline border-grove-paperBorder pb-3" data-testid="nook-summary">
           <h2 className="font-plant text-xl text-grove-root">
             <span className="sr-only">Your nook: </span>
             {state.level_name}
@@ -160,7 +160,8 @@ export default function NookPage() {
               {windowSentence(state.window)}
             </p>
           )}
-          <p className="font-ui text-sm text-grove-inkSoft" data-testid="nook-items">
+          {/* Said once by the picture\u2019s own label; shown in words only to screen readers so the page stays on one screen. */}
+          <p className="sr-only" data-testid="nook-items">
             {/* Their own plant is the first thing in the room, so it is named first: a new nook is not "nothing". */}
             {(() => {
               const inRoom = [state.hero && state.hero.name ? `${state.hero.name} on the table` : null, ...items].filter(Boolean);
@@ -170,8 +171,8 @@ export default function NookPage() {
         </section>
 
         {state.plants.length > 0 && (
-          <section className="pt-5" data-testid="nook-plants">
-            <div className="mb-3 flex items-baseline justify-between gap-3">
+          <section className="pt-3" data-testid="nook-plants">
+            <div className="mb-2 flex items-baseline justify-between gap-3">
               <h2 className="font-plant text-xl text-grove-root">Your plants</h2>
               {state.plants.length > 1 && <span className="font-ui text-sm text-grove-inkSoft">Swipe</span>}
             </div>

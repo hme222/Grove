@@ -1,6 +1,6 @@
 {
   "note": "Raw <button> tags per file, outside components/ui/. A ratchet: counts may only go down. See scripts/check-primitives.js.",
-  "total": 312,
+  "total": 307,
   "files": {
     "src/components/BackButton.js": 2,
     "src/components/CareLogModal.js": 6,
@@ -48,7 +48,6 @@
     "src/components/help/SymptomHelp.jsx": 2,
     "src/components/onboarding/AccountStep.js": 3,
     "src/components/onboarding/EmailSteps.js": 7,
-    "src/components/onboarding/PipIntroStep.js": 2,
     "src/components/onboarding/PlanSteps.js": 4,
     "src/components/onboarding/QuizSteps.js": 3,
     "src/components/onboarding/StepScreen.js": 1,
@@ -77,11 +76,10 @@
     "src/pages/BadgesPage.js": 10,
     "src/pages/BouquetDetailPage.js": 5,
     "src/pages/BouquetsPage.js": 1,
-    "src/pages/CarePage.js": 8,
+    "src/pages/CarePage.js": 7,
     "src/pages/ChallengesPage.js": 1,
     "src/pages/CollectionPage.js": 9,
     "src/pages/ConfirmEmailPage.js": 1,
-    "src/pages/EncyclopediaPage.js": 2,
     "src/pages/FeedPage.js": 7,
     "src/pages/FloristDashboard.js": 2,
     "src/pages/ForgotPasswordPage.js": 1,

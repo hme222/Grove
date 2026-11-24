@@ -9,7 +9,7 @@ const out = process.argv[3];
 fs.mkdirSync(out, { recursive: true });
 const server = await startServer(4175);
 const browser = await chromium.launch();
-const viewport = mode === 'mobile' ? { width: 390, height: 844 } : { width: 1280, height: 900 };
+const viewport = mode === 'mobile' ? { width: Number(process.env.W || 390), height: Number(process.env.H || 844) } : { width: 1280, height: 900 };
 const ctx = await browser.newContext({ viewport, deviceScaleFactor: mode === 'mobile' ? 2 : 1 });
 const page = await ctx.newPage();
 page.setDefaultTimeout(5000);
@@ -17,10 +17,11 @@ const warnings = []; const errors = []; const external = [];
 page.on('console', (m) => { const t = m.text(); if (t.includes('[demo]')) warnings.push(t); else if (m.type() === 'error') errors.push(t.slice(0, 140)); });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message.slice(0, 140)));
 page.on('request', (r) => { const u = r.url(); if (!u.startsWith('http://localhost:4175') && !u.startsWith('data:') && !u.startsWith('blob:')) external.push(u); });
+if (process.env.AUDIT) { page.on('response', (r) => { if (/wikimedia|unsplash/.test(r.url())) console.log('IMG', r.status(), r.url().slice(0, 70)); }); page.on('requestfailed', (r) => { if (/wikimedia|unsplash/.test(r.url())) console.log('IMGFAIL', r.failure()?.errorText, r.url().slice(0, 70)); }); }
 const root = mode === 'mobile' ? page : page.frameLocator('iframe').first();
 const $ = (id) => root.getByTestId(id);
 let n = 0; const fails = [];
-const step = async (label, fn) => { try { await fn(); console.log('ok  ', label); } catch (e) { console.log('FAIL', label); fails.push(label + ': ' + e.message.split('\n')[0]); } await page.waitForTimeout(450); await page.screenshot({ timeout: 15000, path: `${out}/${String(++n).padStart(2, '0')}-${label}.png` }); };
+const step = async (label, fn) => { try { await fn(); console.log('ok  ', label); } catch (e) { console.log('FAIL', label); fails.push(label + ': ' + e.message.split('\n')[0]); } await page.waitForTimeout(process.env.AUDIT ? 1500 : 450); if (process.env.AUDIT) { const m = await page.evaluate(() => { window.scrollTo(0, 99999); const over = Math.round(window.scrollY); window.scrollTo(0, 0); const sc = [...document.querySelectorAll('html, body, body *')].filter((e) => ['auto', 'scroll'].includes(getComputedStyle(e).overflowY) && e.scrollHeight > e.clientHeight + 2 && e.clientHeight > 100).map((e) => (e.getAttribute('data-testid') || e.tagName) + ' ' + (e.scrollHeight - e.clientHeight)); return { over, sc }; }); console.log('SCROLL', label, m.over > 2 || m.sc.length ? 'NEEDS ' + m.over + 'px ' + m.sc.join(',') : 'fits'); } await page.screenshot({ timeout: 15000, path: `${out}/${String(++n).padStart(2, '0')}-${label}.png` }); };
 
 await page.goto('http://localhost:4175/', { timeout: 30000 });
 await page.waitForTimeout(1200);
@@ -31,7 +32,6 @@ await step('hemisphere', async () => { await $('hemisphere-north').click({ timeo
 await step('quiz-start', async () => { await $('quiz-intro-start').click({ timeout: 4000 }); });
 await step('q1', async () => { await root.locator('[data-testid^="option-q1"]').first().click(); await $('question-next').click(); });
 for (const q of ['q2', 'q3', 'q4']) await step(`${q}-skip`, async () => { await $('question-skip').click({ timeout: 4000 }); });
-await step('meet-pip', async () => { await $('pip-step-agree').click({ timeout: 5000 }); });
 await step('plan', async () => { await page.waitForTimeout(1200); await $('plan-start').click({ timeout: 5000 }); });
 for (let i = 1; i <= 4; i++) await step(`card-${i}`, async () => { await $('lesson-next').click({ timeout: 4000 }); });
 await step('add-plant', async () => { await $('soil-step-add-plant').click({ timeout: 4000 }); });
@@ -44,11 +44,11 @@ await step('resume', async () => { await $('next-lesson-start').scrollIntoViewIf
 await step('log', async () => { await $('soil-outcome-dry').click(); await $('soil-decision-water').click(); await $('soil-step-submit').click(); await page.waitForTimeout(700); await $('soil-step-continue').click(); await page.waitForTimeout(1000); });
 await step('celebrate', async () => { await $('first-care-celebration-cta').click({ timeout: 4000 }); await page.waitForTimeout(1200); });
 await step('offer', async () => { await $('nook-offer-yes').click({ timeout: 4000 }); await page.waitForTimeout(900); });
-await step('today-pip', async () => { await root.getByRole('link', { name: 'Today' }).click({ timeout: 4000 }); await page.waitForTimeout(1000); await $('pip-note-thumb').click({ timeout: 4000 }); await page.waitForTimeout(1200); });
+await step('today-pip', async () => { await root.getByRole('link', { name: 'Today' }).click({ timeout: 4000 }); await page.waitForTimeout(1000); await $('reminder-keep').click({ timeout: 2500 }).catch(() => {}); await page.waitForTimeout(400); await $('pets-no').click({ timeout: 1500 }).catch(() => {}); await $('pip-note-thumb').click({ timeout: 4000 }); await page.waitForTimeout(1200); });
 // Wander: places a curious reviewer would tap.
 for (const [name, link] of [['plants', 'Plants'], ['learn', 'Learn']]) await step(`wander-${name}`, async () => { await root.getByRole('link', { name: link }).click({ timeout: 4000 }); await page.waitForTimeout(1000); });
 await step('wander-plant-detail', async () => { await root.getByRole('link', { name: 'Plants' }).click(); await root.getByTestId('collection-grid-plant-tile').first().click({ timeout: 4000 }); await page.waitForTimeout(1200); });
-await step('wander-guide-species', async () => { await root.getByRole('link', { name: 'Learn' }).click(); await page.waitForTimeout(800); await root.getByText('Monstera', { exact: false }).first().click({ timeout: 4000 }); await page.waitForTimeout(1200); });
+await step('wander-guide-species', async () => { await root.getByRole('link', { name: 'Learn' }).click(); await page.waitForTimeout(800); await $('learn-tab-guide').click({ timeout: 4000 }); await page.waitForTimeout(600); await $('species-card').first().click({ timeout: 4000 }); await page.waitForTimeout(1200); });
 await step('wander-progress', async () => { await root.getByTestId('species-back-button').click({ timeout: 4000 }).catch(() => {}); await root.getByRole('link', { name: 'Today' }).click(); await root.getByTestId('care-growth-tab').click({ timeout: 4000 }); await page.waitForTimeout(1000); });
 await step('wander-profile', async () => { await root.getByTestId('header-profile-button').click({ timeout: 4000 }); await page.waitForTimeout(1000); });
 await step('wander-bell', async () => { await root.getByTestId('notification-bell').click({ timeout: 4000 }); await page.waitForTimeout(1000); });

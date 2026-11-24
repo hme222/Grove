@@ -13,6 +13,7 @@ export function startServer(port = 4173) {
     const urlPath = decodeURIComponent(req.url.split('?')[0]);
     if (urlPath.startsWith('/_vercel/')) { res.writeHead(404); res.end(); return; }
     let file = path.join(root, urlPath);
+    if (!path.extname(file) && fs.existsSync(file + '.html')) file += '.html'; // /type -> /type.html
     if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) file = path.join(root, 'index.html');
     res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
     fs.createReadStream(file).pipe(res);

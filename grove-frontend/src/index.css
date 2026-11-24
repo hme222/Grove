@@ -76,6 +76,13 @@
   font-family: var(--font-ui);
   font-style: italic;
 }
+/* A plant's scientific name (Latin binomial): Cormorant Garamond italic, the display family's own drawn italic. */
+.font-scientific {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
 .font-ui {
   font-family: var(--font-ui), system-ui, sans-serif;
 }
@@ -84,7 +91,7 @@
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* Sonner ships its own 1px border, 13px text and 12px action button. The app floor is 14px (--text-sm) and borders
+/* Sonner ships its own 1px border, 13px text and 12px action button. The app floor is 16px (--text-sm) and borders
    are the hairline token, so the toast is bound to both here. scripts/check-computed-tokens.js fails if a library
    rule below 14px is not overridden in this file. */
 [data-sonner-toaster] [data-sonner-toast][data-styled="true"] {
@@ -110,7 +117,7 @@
 /* First-run flow on a short screen (a small phone, a phone with big browser bars, or the desktop phone preview, which is
    756px tall): nothing here should need scrolling. The photo becomes a shorter band (2:1) first and goes only on the very
    shortest screens; the spacing closes up. Touch targets stay at --touch-min. */
-@media (max-height: 760px) {
+@media (max-height: 900px) {
   [data-testid="onboarding-flow"] [data-photo] { aspect-ratio: 2 / 1 !important; margin-top: 0.5rem; }
   [data-testid="onboarding-flow"] .os-pad { padding-top: 0.5rem; --os-pb: 0.5rem; }
   [data-testid="onboarding-flow"] [data-testid="step-actions"] { padding-top: 0.75rem; }
@@ -119,7 +126,7 @@
   [data-testid="onboarding-flow"] [role="radio"] { padding-top: 0.25rem; padding-bottom: 0.25rem; }
   [data-testid="onboarding-flow"] [data-testid="question-why"] { margin-top: 0.5rem; }
 }
-@media (max-height: 700px) {
+@media (max-height: 780px) {
   [data-testid="onboarding-flow"] [data-photo] { display: none; }
   [data-testid="onboarding-flow"] [data-testid="onboarding-heading"] { font-size: 1.5rem; }
   [data-testid="onboarding-flow"] .os-pad { --os-pb: 0px; }
@@ -152,25 +159,31 @@
   .os-underline, .os-fill, .os-spark { animation: none; }
 }
 
-/* The highlighter: a key word in a lesson card gets a marker stripe that sweeps on from the left, a little uneven, as if drawn by hand.
-   Cream text on the 28% stripe is at least 5:1 on the card colors, and the word is also set heavier, so the stripe is never the only cue.
+/* The highlighter: a key word in a lesson card gets a bright marker stripe that sweeps on from the left, a little uneven, as if drawn by hand.
+   The word is Forest on the Marker color (about 9.7:1), set bold, so the stripe is never the only cue and the text stays dark on light.
    It plays when the card appears and then stays. With reduced motion it is simply there. */
 [data-testid="lesson-player"] mark {
-  color: inherit;
-  /* The browser's own <mark> paints bright yellow under this. Cream on that yellow is about 1:1, so clear it. */
+  color: var(--grove-forest);
+  /* The browser's own <mark> paints yellow under this; the stripe below replaces it. */
   background-color: transparent;
-  font-weight: 600;
-  padding: 0 0.2em;
+  font-weight: 700;
+  padding: 0 0.22em;
   border-radius: 0.35em 0.15em 0.4em 0.2em;
-  background-image: linear-gradient(color-mix(in srgb, var(--grove-lime) 28%, transparent), color-mix(in srgb, var(--grove-lime) 28%, transparent));
+  background-image: linear-gradient(var(--grove-marker), var(--grove-marker));
   background-repeat: no-repeat;
-  background-position: 0 65%;
-  background-size: 100% 80%;
+  background-position: 0 50%;
+  background-size: 100% 100%;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   animation: os-mark-draw 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
 }
-@keyframes os-mark-draw { from { background-size: 0% 80%; } to { background-size: 100% 80%; } }
+/* Forest text is invisible on the dark card until the stripe is under it, so the word stays cream for the first half of the sweep. */
+@keyframes os-mark-draw {
+  from { background-size: 0% 100%; color: var(--grove-cream); }
+  55% { color: var(--grove-cream); }
+  56% { color: var(--grove-forest); }
+  to { background-size: 100% 100%; color: var(--grove-forest); }
+}
 @media (prefers-reduced-motion: reduce) {
   [data-testid="lesson-player"] mark { animation: none; }
 }
@@ -200,8 +213,8 @@
 .pip-layer { bottom: var(--pip-bottom, var(--nav-height)); }
 /* While Pip stands on the tab bar, the page ends his height higher, so the last card can scroll clear of him
    instead of sitting under him. PipPeek sets --pip-reserve to his measured height and clears it when he goes. */
-/* The bell panel on a phone: full width (inset by the side gutter) just under the bell; NotificationBell sets
-   --bell-top from the bell's position. From the sm breakpoint it hangs from the bell again (sm:absolute sm:top-full). */
-.bell-panel { top: var(--bell-top, 4rem); }
-@media (min-width: 640px) { .bell-panel { top: 100%; } }
-.app-shell { padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--pip-reserve, 0px)); }
+.app-shell { box-sizing: border-box; padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--pip-reserve, 0px)); }
+/* A page that asks for min-h-screen would be one screen tall plus the shell's bottom padding, so every page scrolled by the tab
+   bar's height even when its content was short. Inside the shell a page fills the screen minus that padding instead. */
+#main-content > .min-h-screen,
+#main-content > * > .min-h-screen { min-height: calc(100vh - var(--nav-height) - env(safe-area-inset-bottom) - var(--pip-reserve, 0rem)); }

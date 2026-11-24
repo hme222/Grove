@@ -11,6 +11,7 @@
   --grove-lime: #92B44B;
   --grove-root: #1A2410;
   --grove-sprout: #C3D98A;
+  --grove-marker: #B9E24E;
   --grove-cream: #F4F1E6;
   --grove-sage: #C3CBB1;
   --grove-lichen: #C8D0B6;
@@ -50,13 +51,13 @@
   --float-bar-height: 72px;
   --font-ui: 'Alegreya Sans', Optima, Candara, sans-serif;
   --font-display: 'Cormorant Garamond', Georgia, serif;
-  --text-sm: 0.875rem;
+  --text-sm: 1rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
-  --text-xs: 0.875rem;
-  --text-label: 0.9375rem;
+  --text-xs: 1rem;
+  --text-label: 1rem;
   --text-lead: 1.0625rem;
-  --text-sm: 0.875rem;
+  --text-sm: 1rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;

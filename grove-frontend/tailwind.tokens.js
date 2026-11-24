@@ -13,6 +13,7 @@ module.exports = {
       "lime": "#92B44B",
       "root": "#1A2410",
       "sprout": "#C3D98A",
+      "marker": "#B9E24E",
       "cream": "#F4F1E6",
       "sage": "#C3CBB1",
       "lichen": "#C8D0B6",
@@ -113,20 +114,20 @@ module.exports = {
   },
   "fontSize": {
     "xs": [
-      "0.875rem",
-      "1.25rem"
+      "1rem",
+      "1.4rem"
     ],
     "label": [
-      "0.9375rem",
-      "1.4rem"
+      "1rem",
+      "1.5rem"
     ],
     "lead": [
       "1.0625rem",
       "1.6rem"
     ],
     "sm": [
-      "0.875rem",
-      "1.25rem"
+      "1rem",
+      "1.4rem"
     ],
     "base": [
       "1rem",

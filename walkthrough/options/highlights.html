@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grove: lesson highlight options</title>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/tokens.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11190a;color:var(--grove-cream);font-family:var(--font-ui);font-size:16px}
+h1{font-family:var(--font-display);font-size:30px;margin:28px 24px 4px}.sub{margin:0 24px 18px;color:var(--grove-sage)}
+.grid{display:flex;flex-wrap:wrap;gap:24px;padding:0 24px 40px}.opt{width:390px}.opt h3{margin:0 0 8px;font-size:16px}.opt h3 span{font-weight:400;color:var(--grove-sage)}
+.phone{width:390px;background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;padding:18px}
+.card{background:var(--grove-moss);border:1px solid var(--grove-fern-line);border-radius:20px;padding:20px}
+.card h4{font-family:var(--font-display);font-size:24px;margin:0 0 10px;font-weight:600}
+.card p{margin:0 0 12px;line-height:1.5;font-size:18px}
+.card .f{color:var(--grove-sage);font-size:16px}
+.ratio{margin-top:8px;font-size:16px;color:var(--grove-sage)}
+mark{color:var(--grove-forest);font-weight:700;padding:0 .22em;border-radius:.35em .15em .4em .2em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.o1 mark{background:var(--grove-lime)}
+.o2 mark{background:var(--grove-sprout)}
+.o3 mark{background:var(--grove-sun)}
+.o4 mark{background:#B9E24E}
+.o5 mark{background:linear-gradient(transparent 8%,var(--grove-sprout) 8% 92%,transparent 92%);padding:0 .3em}
+.o6 mark{background:var(--grove-sun);transform:rotate(-1deg);display:inline-block;border-radius:.45em .2em .5em .25em;padding:0 .3em}
+.o7 mark{background:var(--grove-sprout);box-shadow:inset 0 -.18em 0 var(--grove-lime)}
+.o8 mark{background:var(--grove-cream);border-radius:99px;padding:0 .5em}
+.o9 mark{background:linear-gradient(100deg,var(--grove-lime),var(--grove-sprout) 60%,var(--grove-sun))}
+.o10 mark{background:var(--grove-sun);box-shadow:.14em .14em 0 var(--grove-forest);border:2px solid var(--grove-forest);padding:0 .25em}
+</style></head><body>
+<h1>Lesson highlight: forest text, brighter marker</h1>
+<p class="sub">Same sentence on the real lesson card color. Text is forest (#202D14) in every option. The ratio under each is the contrast of forest text on that marker.</p>
+<div class="grid" id="g"></div>
+<script>
+const O=[
+['Lime, solid','The brand lime, full strength.','#92B44B'],
+['Sprout','Lighter and softer, still bright on moss.','#C3D98A'],
+['Sun yellow','Warmest, the brightest on dark green.','#E8D77A'],
+['New bright lime','A new, livelier lime than the brand lime.','#B9E24E'],
+['Full-height marker','Sprout, edge to edge like a highlighter pen.','#C3D98A'],
+['Tilted sun sticker','Sun yellow, slightly tilted, hand-placed.','#E8D77A'],
+['Sprout with lime underline','Two greens: light fill, lime line under.','#C3D98A'],
+['Cream pill','Inverted: a cream pill with forest text.','#F4F1E6'],
+['Lime to sun gradient','Lime fading to sun, like a stroke of paint.','#C3D98A'],
+['Sun sticker with shadow','Sun with a forest outline and offset shadow.','#E8D77A']];
+const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const cr=(a,b)=>{const x=lum(a),y=lum(b);return ((Math.max(x,y)+.05)/(Math.min(x,y)+.05)).toFixed(1)};
+document.getElementById('g').innerHTML=O.map((o,i)=>`<div class="opt o${i+1}"><h3>H${i+1}. ${o[0]} <span>${o[1]}</span></h3><div class="phone"><div class="card"><h4>Erase the plant guilt.</h4><p>Most plants don’t die from a lack of love. They die from <mark>drowning</mark>. Throw away any rigid watering schedule that says “water every Tuesday.”</p><p class="f">From today, we listen to the soil, not the calendar.</p><div class="ratio">Forest text on marker: ${cr('#202D14',o[2])}:1</div></div></div></div>`).join('');
+</script></body></html>

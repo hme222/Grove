@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grove: lone plant and bell options</title>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/tokens.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11190a;color:var(--grove-cream);font-family:var(--font-ui);font-size:16px}
+h1{font-family:var(--font-display);font-size:30px;margin:28px 24px 4px}h2{font-family:var(--font-display);font-size:26px;margin:36px 24px 4px}
+.sub{margin:0 24px 16px;color:var(--grove-sage)}
+.grid{display:flex;flex-wrap:wrap;gap:24px;padding:0 24px 40px}
+.opt{width:390px}.opt h3{margin:0 0 8px;font-size:16px;font-weight:700}.opt h3 span{font-weight:400;color:var(--grove-sage)}
+.phone{width:390px;height:560px;background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;overflow:hidden;position:relative}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--grove-moss)}
+.hd b{font-family:var(--font-display);font-size:26px;font-weight:600}
+.pill{height:44px;border-radius:99px;border:1px solid var(--grove-moss);background:var(--grove-canopy);display:inline-flex;align-items:center;justify-content:center;padding:0 16px;margin-left:6px}
+.pill.ic{width:44px;padding:0}.pill.on{border-color:var(--grove-lime);background:var(--grove-moss)}
+.body{padding:16px}.row{display:flex;align-items:center;justify-content:space-between;color:var(--grove-sage);margin-bottom:12px}
+.btn{height:44px;border-radius:12px;border:1px solid var(--grove-fern-line);background:var(--grove-canopy);color:var(--grove-cream);padding:0 16px;font:inherit;display:inline-flex;align-items:center}
+.btn.p{background:var(--grove-lime);color:var(--grove-root);border-color:var(--grove-lime)}
+.card{background:var(--grove-canopy);border:1px solid var(--grove-moss);border-radius:20px}
+.ph{background:url(/plant.jpg) center/cover;border-radius:14px}
+.chip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--grove-fern-line);border-radius:99px;padding:2px 12px;color:var(--grove-sprout)}
+.dot{width:10px;height:10px;border-radius:99px;background:var(--grove-lime);display:inline-block}
+.nm{font-family:var(--font-display);font-size:20px;font-weight:600;line-height:1.2}.lat{font-style:italic;color:var(--grove-sage)}
+.muted{color:var(--grove-sage)}.dash{border:1.5px dashed var(--grove-fern-line);border-radius:20px;color:var(--grove-sage);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px}
+.scrim{position:absolute;inset:0;background:rgba(10,14,6,.62)}
+.ghostline{height:14px;border-radius:7px;background:var(--grove-canopy);margin:12px 0}
+.n{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--grove-moss)}.n:last-child{border-bottom:0}
+.ni{width:36px;height:36px;border-radius:99px;background:var(--grove-moss);flex:none;display:flex;align-items:center;justify-content:center;color:var(--grove-sprout)}
+.n p{margin:0}.n .t{color:var(--grove-cream)}.n .s{color:var(--grove-sage)}
+.panel{background:var(--grove-forest);border:1px solid var(--grove-moss)}
+.ph-h{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--grove-moss)}
+.ph-h b{font-family:var(--font-display);font-size:20px}
+.grab{width:44px;height:5px;border-radius:9px;background:var(--grove-fern-line);margin:10px auto 0}
+.sec{padding:10px 16px 2px;color:var(--grove-sage)}
+</style></head><body>
+<h1>Lone plant on the Plants page</h1><p class="sub">One plant, Spider Plant, healthy. Each frame is a 390 px phone. All text 16 px or larger.</p>
+<div class="grid" id="lone"></div>
+<h2>Bell notifications</h2><p class="sub">Each frame opens from the bell on Today, with two notifications. Empty state shown where it differs.</p>
+<div class="grid" id="bell"></div>
+<script>
+const hdr=(t,on)=>`<div class="hd"><b>${t}</b><span><span class="pill">Plant help</span><span class="pill ic ${on?'on':''}">🔔</span><span class="pill ic">👤</span></span></div>`;
+const plantsHd=`${hdr('Plants')}`;
+const bar=`<div class="row"><span>1 plant</span><span><span class="btn">Select</span> <span class="btn">+ Add</span></span></div>`;
+const status=`<span class="chip"><span class="dot"></span>Healthy</span>`;
+const L=[
+['Half tile, as now','Left as is: a tile in a two-column grid.',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="card" style="overflow:hidden"><div class="ph" style="height:150px;border-radius:0"></div><div style="padding:10px 12px"><div class="nm">Spider Plant</div>${status}</div></div></div>`],
+['Full-width row card','Photo left, name, next care, chevron.',`<div class="card" style="display:flex;gap:14px;padding:12px;align-items:center"><div class="ph" style="width:96px;height:96px;flex:none"></div><div style="flex:1"><div class="nm">Spider Plant</div><div class="lat">Chlorophytum comosum</div><div style="margin-top:6px">${status}</div></div><span class="muted">›</span></div>`],
+['Hero photo tile','Wide photo, name over a fade.',`<div class="card" style="overflow:hidden;position:relative;height:220px"><div class="ph" style="position:absolute;inset:0;border-radius:0"></div><div style="position:absolute;inset:auto 0 0 0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(16,22,9,.9))"><div class="nm" style="font-size:24px">Spider Plant</div>${status}</div></div>`],
+['Hero tile with next step','Hero photo plus a strip saying what is next.',`<div class="card" style="overflow:hidden"><div class="ph" style="height:170px;border-radius:0"></div><div style="padding:14px 16px"><div class="nm">Spider Plant</div><div class="lat">Chlorophytum comosum</div></div><div style="border-top:1px solid var(--grove-moss);padding:12px 16px;display:flex;justify-content:space-between"><span>Next: soil check</span><span class="muted">in 3 days</span></div></div>`],
+['Tile + add slot, side by side','Second column invites the next plant.',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="card" style="overflow:hidden"><div class="ph" style="height:150px;border-radius:0"></div><div style="padding:10px 12px"><div class="nm">Spider Plant</div>${status}</div></div><div class="dash" style="min-height:230px">+ Add your next plant</div></div>`],
+['Tile, add button below','Half tile then a full-width dashed add button.',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="card" style="overflow:hidden"><div class="ph" style="height:150px;border-radius:0"></div><div style="padding:10px 12px"><div class="nm">Spider Plant</div>${status}</div></div></div><div class="dash" style="height:64px">+ Add another plant</div>`],
+['Featured card with facts','Square photo and three plain facts.',`<div class="card" style="padding:14px"><div style="display:flex;gap:14px"><div class="ph" style="width:130px;height:130px;flex:none"></div><div><div class="nm">Spider Plant</div><div class="lat">Chlorophytum comosum</div><div style="margin-top:8px">${status}</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;text-align:center"><div><div class="nm">3 d</div><div class="muted">to soil check</div></div><div><div class="nm">Bright</div><div class="muted">light</div></div><div><div class="nm">Safe</div><div class="muted">for pets</div></div></div></div>`],
+['Tile + ghost slots','Two empty outlined tiles hint where more plants go.',`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><div class="card" style="overflow:hidden"><div class="ph" style="height:110px;border-radius:0"></div><div style="padding:8px"><div style="font-family:var(--font-display);font-weight:600">Spider Plant</div></div></div><div class="dash" style="min-height:170px;padding:6px">+</div><div class="dash" style="min-height:170px;padding:6px">+</div></div><p class="muted" style="margin-top:14px">Add two more and your plants group by room.</p>`],
+['Compact row + guidance','A short row, then a card that explains what comes next.',`<div class="card" style="display:flex;gap:12px;padding:10px;align-items:center"><div class="ph" style="width:64px;height:64px;flex:none"></div><div style="flex:1"><div class="nm">Spider Plant</div>${status}</div></div><div class="card" style="padding:16px;margin-top:12px"><div class="nm">Add a second plant</div><p class="muted" style="margin:6px 0 12px">Photo ID takes about a minute.</p><span class="btn p">Add a plant</span></div>`],
+['Tall portrait tile','Three-by-four photo, status chip on the photo.',`<div class="card" style="overflow:hidden;position:relative;height:330px"><div class="ph" style="position:absolute;inset:0;border-radius:0"></div><div style="position:absolute;top:12px;left:12px;background:rgba(26,36,16,.85);border-radius:99px;padding:2px 12px;display:flex;gap:6px;align-items:center"><span class="dot"></span>Healthy</div><div style="position:absolute;inset:auto 0 0 0;padding:50px 16px 14px;background:linear-gradient(transparent,rgba(16,22,9,.92))"><div class="nm" style="font-size:24px">Spider Plant</div><div class="lat">Chlorophytum comosum</div></div></div>`]
+];
+document.getElementById('lone').innerHTML=L.map((o,i)=>`<div class="opt"><h3>L${i+1}. ${o[0]} <span>${o[1]}</span></h3><div class="phone">${plantsHd}<div class="body">${bar}${o[2]}</div></div></div>`).join('');
+const ns=`<div class="n"><div class="ni">💧</div><div><p class="t">Spider Plant is ready for a soil check</p><p class="s">3 days ago</p></div></div><div class="n"><div class="ni">✨</div><div><p class="t">New lesson: Soil finger test</p><p class="s">Yesterday</p></div></div>`;
+const bg=`<div class="body"><div class="ghostline" style="width:40%"></div><div class="card" style="height:150px"></div><div class="ghostline"></div><div class="card" style="height:110px"></div></div>`;
+const head=(c)=>`<div class="ph-h"><b>Notifications</b><span class="btn" style="border:0;background:none">${c||'✕'}</span></div>`;
+const B=[
+['Dropdown card, as now','Card under the header.',hdr('Today',1)+bg+`<div class="panel" style="position:absolute;left:16px;right:16px;top:74px;border-radius:20px;overflow:hidden">${head()}${ns}<div style="padding:8px 16px"><span class="muted" style="text-decoration:underline">Notification settings</span></div></div>`],
+['Bottom sheet','Slides up, grab handle, thumb reachable.',hdr('Today',1)+bg+`<div class="scrim"></div><div class="panel" style="position:absolute;left:0;right:0;bottom:0;border-radius:24px 24px 0 0"><div class="grab"></div>${head()}${ns}<div style="padding:10px 16px 18px"><span class="btn" style="width:100%;justify-content:center">Notification settings</span></div></div>`],
+['Full page','A normal page with Back.',`<div class="hd"><span>‹ Back</span><b style="font-size:22px">Notifications</b><span style="width:48px"></span></div>${ns}<div class="body"><span class="btn" style="width:100%;justify-content:center">Notification settings</span></div>`],
+['Right drawer','Covers most of the width, page peeks left.',hdr('Today',1)+bg+`<div class="scrim"></div><div class="panel" style="position:absolute;top:0;bottom:0;right:0;width:320px;border-radius:24px 0 0 24px">${head()}${ns}</div>`],
+['Top sheet from the header','Drops from the header, full width, flat.',hdr('Today',1)+bg+`<div class="scrim" style="top:74px"></div><div class="panel" style="position:absolute;left:0;right:0;top:74px;border-width:0 0 1px">${ns}<div style="padding:8px 16px 12px;display:flex;justify-content:space-between"><span class="muted">Notification settings</span><span class="muted">Close</span></div></div>`],
+['Anchored popover','Narrow, points at the bell.',hdr('Today',1)+bg+`<div class="panel" style="position:absolute;right:16px;top:84px;width:300px;border-radius:20px;overflow:hidden"><div style="position:absolute;right:62px;top:-8px;width:14px;height:14px;background:var(--grove-forest);border:1px solid var(--grove-moss);border-width:1px 0 0 1px;transform:rotate(45deg)"></div>${head()}${ns}</div>`],
+['Sheet grouped by day','Bottom sheet with Today and Earlier headings.',hdr('Today',1)+bg+`<div class="scrim"></div><div class="panel" style="position:absolute;left:0;right:0;bottom:0;border-radius:24px 24px 0 0"><div class="grab"></div>${head()}<div class="sec">Today</div><div class="n"><div class="ni">💧</div><div><p class="t">Spider Plant is ready for a soil check</p></div></div><div class="sec">Earlier</div><div class="n"><div class="ni">✨</div><div><p class="t">New lesson: Soil finger test</p></div></div></div>`],
+['Inline strip under header','No overlay; pushes the page down, one tap to clear.',hdr('Today',1)+`<div style="background:var(--grove-canopy);border-bottom:1px solid var(--grove-moss)">${ns}<div style="padding:10px 16px;display:flex;justify-content:space-between"><span class="muted">Notification settings</span><span class="muted">Clear all</span></div></div>`+bg],
+['Floating cards above the nav','Newest as a card you can swipe away.',hdr('Today',0)+bg+`<div style="position:absolute;left:16px;right:16px;bottom:16px;display:grid;gap:10px"><div class="card n" style="border:1px solid var(--grove-fern-line)"><div class="ni">💧</div><div style="flex:1"><p class="t">Spider Plant is ready for a soil check</p><p class="s">Tap to open</p></div><span class="muted">✕</span></div><div class="card n"><div class="ni">✨</div><div style="flex:1"><p class="t">New lesson: Soil finger test</p></div><span class="muted">✕</span></div></div>`],
+['Centered dialog','Modal with scrim; empty state shown.',hdr('Today',1)+bg+`<div class="scrim"></div><div class="panel" style="position:absolute;left:24px;right:24px;top:120px;border-radius:24px;text-align:center;padding:22px 18px"><div class="ni" style="margin:0 auto 10px;width:48px;height:48px">🔔</div><div class="nm">Nothing new right now</div><p class="muted" style="margin:8px 0 16px">We’ll let you know when a plant needs you.</p><span class="btn p" style="width:100%;justify-content:center">Done</span></div>`]
+];
+document.getElementById('bell').innerHTML=B.map((o,i)=>`<div class="opt"><h3>B${i+1}. ${o[0]} <span>${o[1]}</span></h3><div class="phone">${o[2]}</div></div>`).join('');
+</script></body></html>

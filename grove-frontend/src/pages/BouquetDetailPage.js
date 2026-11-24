@@ -234,7 +234,7 @@ export default function BouquetDetailPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-ui text-grove-cream text-sm font-medium">{f.common_name}</p>
-                        <p className="font-latin text-xs italic text-grove-sage">{f.latin_name}</p>
+                        <p className="font-scientific text-xs italic text-grove-sage">{f.latin_name}</p>
                       </div>
                       <div className="text-right">
                         {Number(f.vase_life_days) > 0 && (

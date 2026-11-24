@@ -132,7 +132,7 @@ export default function SwapPage() {
                 {current.nickname || current.common_name}
               </h3>
               {current.latin_name && (
-                <p className="font-latin text-xs text-grove-cream italic">{current.latin_name}</p>
+                <p className="font-scientific text-xs text-grove-cream italic">{current.latin_name}</p>
               )}
               <div className="flex items-center gap-1.5 mt-2">
                 <span className="inline-flex items-center gap-1 rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 font-latin text-xs text-grove-cream min-h-6">
