@@ -193,11 +193,11 @@ const demoNote = (attr, text, margin) => {
   note.setAttribute(attr, '');
   note.setAttribute('data-demo-note', '');
   note.setAttribute('role', 'note');
-  note.style.cssText = `margin:${margin};padding:12px 14px;border-radius:12px;border:1px solid var(--grove-lime);border-left-width:6px;`
-    + 'background:color-mix(in srgb, var(--grove-lime) 14%, var(--grove-canopy));color:var(--grove-cream);font-size:15px;line-height:1.45;';
+  note.style.cssText = `margin:${margin};padding:8px 12px;border-radius:12px;border:1px solid var(--grove-lime);border-left-width:6px;`
+    + 'background:color-mix(in srgb, var(--grove-lime) 14%, var(--grove-canopy));color:var(--grove-cream);font-size:16px;line-height:1.4;';
   const tag = document.createElement('strong');
   tag.textContent = 'Demo note';
-  tag.style.cssText = 'display:inline-block;margin-right:8px;padding:1px 8px;border-radius:999px;background:var(--grove-lime);color:var(--grove-root);font-size:13px;';
+  tag.style.cssText = 'display:inline-block;margin-right:8px;padding:1px 8px;border-radius:999px;background:var(--grove-lime);color:var(--grove-root);font-size:16px;';
   note.append(tag, text);
   return note;
 };
@@ -213,11 +213,12 @@ const markSampleResult = () => {
 new MutationObserver(markSampleResult).observe(document.documentElement, { childList: true, subtree: true });
 
 // On a plant page, say plainly where an added photo goes: nowhere. It stays in this tab and is forgotten on exit.
+// The note sits at the top of the Photos tab, where a photo is added, so the first screen of the plant page stays short.
 const markPhotoNote = () => {
-  const tabs = document.querySelector('[data-testid="plant-detail-tabs"]');
-  if (!tabs || document.querySelector('[data-demo-photo-note]')) return;
-  const note = demoNote('data-demo-photo-note', 'The first three photos and the note in this story are samples. A photo you add stays in this browser tab; nothing is uploaded or saved, and it is gone when you close the demo.', '12px 16px 0');
-  tabs.parentNode.insertBefore(note, tabs);
+  const panel = document.querySelector('[role="tabpanel"][id*="content-photos"]');
+  if (!panel || panel.querySelector('[data-demo-photo-note]')) return;
+  const note = demoNote('data-demo-photo-note', 'The first three photos and the note in this story are samples. A photo you add stays in this browser tab; nothing is uploaded or saved, and it is gone when you close the demo.', '0 0 12px');
+  panel.insertBefore(note, panel.firstChild);
 };
 new MutationObserver(markPhotoNote).observe(document.documentElement, { childList: true, subtree: true });
 
@@ -225,7 +226,7 @@ new MutationObserver(markPhotoNote).observe(document.documentElement, { childLis
 const markSuggestionNote = () => {
   const card = document.querySelector('[data-testid="schedule-suggestion"]');
   if (!card || card.parentNode.querySelector('[data-demo-suggestion-note]')) return;
-  card.parentNode.insertBefore(demoNote('data-demo-suggestion-note', 'This suggestion is a sample. In the real app it comes from your own soil checks or your room\u2019s light.', '12px 0 0'), card);
+  card.parentNode.insertBefore(demoNote('data-demo-suggestion-note', 'Sample suggestion.', '8px 0 0'), card);
 };
 new MutationObserver(markSuggestionNote).observe(document.documentElement, { childList: true, subtree: true });
 

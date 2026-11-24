@@ -398,7 +398,8 @@ describe('the paper layout', () => {
   test('the progress line is one line of words, with a hairline divider before the plants', async () => {
     await mount();
     expect(q('nook-summary').textContent).toContain('Next in your nook: the shelf.');
-    expect(q('nook-summary').className).toContain('border-b-hairline');
+    // The shelf band that holds the plants starts with the hairline, so the summary and the plants stay one line apart.
+    expect(q('nook-plants').className).toContain('border-t-hairline');
   });
 
   test('the quiet lesson link is a real link with a 44px target', async () => {

@@ -61,8 +61,13 @@ export function WelcomeStage({ decorative = false, pinContinue = false, onContin
           <mask id="gw-mask-2" maskUnits="userSpaceOnUse" x="0" y="0" width={STAGE_W} height={STAGE_H}>
             <path className="gw-draw gw-draw-2" d={PEN_2} strokeWidth="14" {...DRAW} />
           </mask>
+          {/* The line is drawn over the photo but cut just inside the photo's edge, so it tucks under the picture with a clean
+              edge. (Seen through the photo's soft rim it looked broken.) */}
+          <clipPath id="gw-outside" clipRule="evenodd">
+            <path clipRule="evenodd" d={`M0 0H${STAGE_W}V${STAGE_H}H0Z M38 336H392A18 18 0 0 1 410 354V578A18 18 0 0 1 392 596H38A18 18 0 0 1 20 578V354A18 18 0 0 1 38 336Z`} />
+          </clipPath>
         </defs>
-        <g fill="var(--grove-lime)">
+        <g fill="var(--grove-lime)" clipPath="url(#gw-outside)">
           <path className="gw-line" mask="url(#gw-mask-1)" transform="translate(0 -34)" d={LINE_1} />
           <path className="gw-line" mask="url(#gw-mask-2)" d={LINE_2} />
         </g>

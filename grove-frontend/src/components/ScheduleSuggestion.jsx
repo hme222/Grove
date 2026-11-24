@@ -56,7 +56,7 @@ export default function ScheduleSuggestion({ plantId, days, onAccept }) {
     <section
       aria-labelledby="schedule-suggestion-title"
       data-testid="schedule-suggestion"
-      className="mt-3 rounded-inset border-hairline border-grove-fernLine/40 bg-grove-canopy p-3"
+      className="mt-2 rounded-inset border-hairline border-grove-fernLine/40 bg-grove-canopy p-3"
     >
       <p id="schedule-suggestion-title" className="font-ui text-sm font-semibold text-grove-cream">
         Try every {suggestion.days} days?

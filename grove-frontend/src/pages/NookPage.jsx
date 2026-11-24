@@ -123,13 +123,13 @@ export default function NookPage() {
     <div className="min-h-screen bg-grove-paper">
       <PageHeader title="Pip’s nook"><CareTabs /></PageHeader>
 
-      <div className="bg-grove-forest pb-1 pt-1">
+      <div className="bg-grove-forest">
         <div className="mx-auto max-w-sheet">
           <NookCanvas view={view} label={`Pip’s nook, ${state.level_name.toLowerCase()}. Pip is on the ${state.pip.location}.${state.hero && state.hero.name ? ` ${state.hero.name} is on the table.` : ''}`} />
         </div>
       </div>
 
-      <div className="mx-auto max-w-sheet px-4 pb-4">
+      <div className="mx-auto max-w-sheet px-4 pb-2">
         <section
           aria-label="Pip’s note"
           className="relative z-raised -mt-10 rounded-card border-hairline border-grove-paperBorder bg-grove-paperCard px-5 py-3 shadow-lift"
@@ -147,7 +147,7 @@ export default function NookPage() {
           )}
         </section>
 
-        <section className="mt-3 space-y-0.5 border-b-hairline border-grove-paperBorder pb-3" data-testid="nook-summary">
+        <section className="mt-3 flex flex-wrap items-baseline gap-x-3 pb-1" data-testid="nook-summary">
           <h2 className="font-plant text-xl text-grove-root">
             <span className="sr-only">Your nook: </span>
             {state.level_name}
@@ -171,8 +171,8 @@ export default function NookPage() {
         </section>
 
         {state.plants.length > 0 && (
-          <section className="pt-3" data-testid="nook-plants">
-            <div className="mb-2 flex items-baseline justify-between gap-3">
+          <section className="mt-2 -mx-4 rounded-t-card border-t-hairline border-grove-paperBorder bg-grove-paperDeep px-4 pb-2 pt-2" data-testid="nook-plants">
+            <div className="mb-1 flex items-baseline justify-between gap-3">
               <h2 className="font-plant text-xl text-grove-root">Your plants</h2>
               {state.plants.length > 1 && <span className="font-ui text-sm text-grove-inkSoft">Swipe</span>}
             </div>

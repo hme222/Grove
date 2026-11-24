@@ -177,7 +177,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
   };
 
   return (
-    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-4 space-y-3" data-testid="soil-step">
+    <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-4 space-y-2" data-testid="soil-step">
       {plants.length > 1 && (
         <label className="block text-xs font-ui text-grove-cream">
           Which plant?
@@ -197,7 +197,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       )}
 
       <fieldset>
-        <legend className="text-xs font-ui text-grove-cream mb-2">What did you feel in the soil?</legend>
+        <legend className="text-xs font-ui text-grove-cream mb-1">What did you feel in the soil?</legend>
         <div className="flex gap-2">
           {OUTCOMES.map((o) => (
             <button
@@ -215,7 +215,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       </fieldset>
 
       <fieldset>
-        <legend className="text-xs font-ui text-grove-cream mb-2">What will you do? (optional)</legend>
+        <legend className="text-xs font-ui text-grove-cream mb-1">What will you do? (optional)</legend>
         <div className="flex gap-2">
           {DECISIONS.map((d) => (
             <button
@@ -233,7 +233,7 @@ export default function SoilTestStep({ hasPlant, onLogged }) {
       </fieldset>
 
       <fieldset>
-        <legend className="text-xs font-ui text-grove-cream mb-2">What did you notice? (optional)</legend>
+        <legend className="text-xs font-ui text-grove-cream mb-1">What did you notice? (optional)</legend>
         <div className="flex flex-wrap gap-2">
           {NOTE_CHIPS.map((chip) => (
             <button

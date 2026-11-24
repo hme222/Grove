@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reckless styles (trial, local only)</title><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/tokens.css">
+<style>@font-face{font-family:'RK-S';src:url('/fonts/trial/reckless/S-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'RK-S';src:url('/fonts/trial/reckless/S-Medium.woff2') format('woff2');font-weight:500;font-style:normal}
+@font-face{font-family:'RK-S';src:url('/fonts/trial/reckless/S-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal}
+@font-face{font-family:'RK-S';src:url('/fonts/trial/reckless/S-Bold.woff2') format('woff2');font-weight:700;font-style:normal}
+@font-face{font-family:'RK-S';src:url('/fonts/trial/reckless/S-RegularItalic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'RK-S';src:url('/fonts/trial/reckless/S-MediumItalic.woff2') format('woff2');font-weight:500;font-style:italic}
+@font-face{font-family:'RK-M';src:url('/fonts/trial/reckless/M-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'RK-M';src:url('/fonts/trial/reckless/M-Medium.woff2') format('woff2');font-weight:500;font-style:normal}
+@font-face{font-family:'RK-M';src:url('/fonts/trial/reckless/M-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal}
+@font-face{font-family:'RK-M';src:url('/fonts/trial/reckless/M-Bold.woff2') format('woff2');font-weight:700;font-style:normal}
+@font-face{font-family:'RK-M';src:url('/fonts/trial/reckless/M-RegularItalic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'RK-M';src:url('/fonts/trial/reckless/M-MediumItalic.woff2') format('woff2');font-weight:500;font-style:italic}
+@font-face{font-family:'RK-XL';src:url('/fonts/trial/reckless/XL-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'RK-XL';src:url('/fonts/trial/reckless/XL-Medium.woff2') format('woff2');font-weight:500;font-style:normal}
+@font-face{font-family:'RK-XL';src:url('/fonts/trial/reckless/XL-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal}
+@font-face{font-family:'RK-XL';src:url('/fonts/trial/reckless/XL-Bold.woff2') format('woff2');font-weight:700;font-style:normal}
+@font-face{font-family:'RK-XL';src:url('/fonts/trial/reckless/XL-RegularItalic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'RK-XL';src:url('/fonts/trial/reckless/XL-MediumItalic.woff2') format('woff2');font-weight:500;font-style:italic}
+*{box-sizing:border-box}body{margin:0;background:#11190a;color:var(--grove-cream);font-family:var(--font-ui);font-size:16px}
+h1{font-family:var(--font-display);font-size:30px;margin:24px 24px 4px}.sub{margin:0 24px 16px;color:var(--grove-sage);max-width:76ch}
+.row{display:flex;gap:20px;padding:0 24px 36px;flex-wrap:wrap}.col{width:410px}.col h3{margin:0 0 8px;font-size:18px}
+.ph{background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;padding:20px}
+.card{background:var(--grove-moss);border:1px solid var(--grove-fern-line);border-radius:20px;padding:14px;margin-top:12px}
+.mu{color:var(--grove-sage)}.lab{font-size:16px;color:var(--grove-sage);margin:14px 0 4px}
+</style></head><body>
+<h1>Reckless: which style to buy</h1>
+<p class="sub">Standard width in its three contrast levels (S, M, XL), each at four weights plus italics. Same copy at the sizes the app uses. Trial files, on this computer only.</p>
+<div class="row" id="r"></div>
+<script>
+const W=[400,500,600,700];
+document.getElementById('r').innerHTML=['S','M','XL'].map(c=>`<div class="col" style="font-family:'RK-${c}',serif"><h3 style="font-family:var(--font-ui)">Reckless Standard ${c}</h3><div class="ph">`+W.map(w=>`<div class="lab" style="font-family:var(--font-ui)">weight ${w}</div><div style="font-weight:${w};font-size:30px;line-height:1.1">Welcome to FloraGrove</div><div style="font-weight:${w};font-size:24px;margin-top:6px">Erase the plant guilt.</div><div style="font-weight:${w};font-size:20px;margin-top:6px">Spider Plant · One reminder a day</div><div style="font-weight:${w};font-size:16px;margin-top:6px">Check the soil · 7 days · Today</div>`).join('')+`<div class="lab" style="font-family:var(--font-ui)">italic 400 and 500, 20px and 16px</div><div style="font-style:italic;font-weight:400;font-size:20px">Chlorophytum comosum</div><div style="font-style:italic;font-weight:500;font-size:20px">Monstera deliciosa</div><div style="font-style:italic;font-weight:400;font-size:16px">Epipremnum aureum · Araceae</div><div style="font-style:italic;font-weight:500;font-size:16px">Dracaena trifasciata</div></div></div>`).join('');
+</script></body></html>
