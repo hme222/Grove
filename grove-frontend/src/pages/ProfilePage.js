@@ -64,7 +64,7 @@ export default function ProfilePage() {
     <div>
       <PageHeader title="Profile" titleRef={titleRef} />
 
-      <div className="max-w-column mx-auto px-4 py-4 space-y-4">
+      <div className="max-w-column mx-auto px-4 py-3 space-y-3">
         <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="profile-identity-card">
           {/* Layout rule, not a token value: the 8rem minimum (min-w-32) is in rem so at 200% text the name drops under the
               avatar instead of being squeezed into a column too narrow to hold a word. */}

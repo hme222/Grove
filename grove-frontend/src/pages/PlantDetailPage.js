@@ -258,7 +258,7 @@ export default function PlantDetailPage() {
       {/* Header with photo */}
       <div className="relative">
         <div className="w-full bg-grove-moss overflow-hidden relative">
-          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-40" testId="plant-detail-hero" />
+          <PhotoBand src={photoUrl} alt={plant.common_name} ratio="tall" eager className="rounded-none max-h-20" testId="plant-detail-hero" />
           {/* Upload photo */}
           <label className="absolute top-3 right-3 cursor-pointer rounded-pill focus-within:ring-2 focus-within:ring-grove-lime">
             <input type="file" accept="image/*" onChange={handlePhotoUpload} className="peer sr-only" />
@@ -269,15 +269,13 @@ export default function PlantDetailPage() {
           </label>
         </div>
 
-        {/* Plant info bar */}
-        <div className="bg-grove-moss border-b-hairline border-grove-moss px-4 py-3">
-          {/* Wraps (the buttons drop under the name) when the reader’s text is large. */}
-          <div className="max-w-page mx-auto flex flex-wrap items-start justify-between gap-x-3 gap-y-3">
-            <div className="min-w-0 flex-1 basis-40">
-              <div className="flex items-center gap-2">
-                <StatusDot status={displayStatus(plant)} size="lg" showLabel />
-              </div>
-              <h1 id="page-title" className="font-plant text-grove-cream text-2xl mt-1">
+        {/* Plant info bar: the name and the one main action, the status and the facts in one wrapped row, and the pet-safety
+            source and who to call in the About tab (the chip says the answer; About says where it comes from). */}
+        <div className="bg-grove-moss border-b-hairline border-grove-moss px-4 py-2">
+          <div className="max-w-page mx-auto space-y-1.5">
+            {/* Wraps (the button drops under the name) when the reader’s text is large. */}
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <h1 id="page-title" className="min-w-0 flex-1 basis-40 font-plant text-grove-cream text-2xl">
                 <InlineText
                   value={plant.nickname || plant.common_name}
                   placeholder={plant.common_name || 'Add nickname'}
@@ -288,50 +286,6 @@ export default function PlantDetailPage() {
                   maxLength={60}
                 />
               </h1>
-              {plant.latin_name && (
-                <p className="font-scientific text-grove-cream text-xs mt-0.5">
-                  {plant.latin_name}
-                  {plant.ai_identified && !plant.ai_species_confirmed && (
-                    <span
-                      data-testid="plant-ai-identified-badge"
-                      className="ml-2 font-ui text-sm text-grove-lichen"
-                    >
-                      AI identified
-                    </span>
-                  )}
-                  {plant.species_id && (
-                    <button
-                      type="button"
-                      onClick={() => navigate(`/greenhouse/${plant.species_id}`, { state: { name: plant.common_name } })}
-                      data-testid="plant-view-in-greenhouse"
-                      className="ml-2 inline-flex items-center text-xs font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
-                    >
-                      View in the plant guide
-                    </button>
-                  )}
-                </p>
-              )}
-              <div className="flex flex-wrap items-center gap-2 mt-1">
-                <InlineRoom
-                  value={plant.room || ''}
-                  options={rooms}
-                  onSave={(v) => patchPlant({ room: v })}
-                  testid="plant-room"
-                />
-                <span className="inline-flex items-center whitespace-nowrap rounded-pill border-hairline border-grove-moss bg-grove-canopy px-2.5 py-1 text-xs font-ui text-grove-cream min-h-6">
-                  Grows in {String(plant.grow_medium || 'soil').replace('_', ' ')}
-                </span>
-              </div>
-              <ToxicityBadge toxicity={plant.species_toxicity} className="mt-1" testId="plant-toxicity" />
-              <PetSafetyLookup toxicity={plant.species_toxicity} className="block" testId="plant-safety-lookup" />
-              <p className="mt-1 font-ui text-xs text-grove-sage" data-testid="plant-safety-line">
-                {getToxicityInfo(plant.species_toxicity).level === 'unknown' ? '' : 'Based on ASPCA listings for cats and dogs. '}If a pet or child ate any of it:
-              </p>
-              <AppLink to="/help-my-plant" className="inline-flex min-h-touch items-center font-ui text-sm text-grove-cream underline underline-offset-2" data-testid="plant-poison-help">
-                Open Plant help for who to call
-              </AppLink>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setCareModalOpen(true)}
                 data-testid="plant-log-care-button"
@@ -340,30 +294,40 @@ export default function PlantDetailPage() {
                 <Droplets className="h-3.5 w-3.5" />
                 Log care
               </button>
-              <button type="button"
-                onClick={() => { setShareFrom({ kind: null, leafAt: null }); setShareOpen(true); }}
-                data-testid="plant-share-button"
-                className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
-              >
-                <Share2 className="h-4 w-4" aria-hidden="true" />
-                Share
-              </button>
-              <button type="button"
-                ref={archiveBtnRef}
-                onClick={() => setArchiveOpen(true)}
-                data-testid="plant-archive-button"
-                className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
-              >
-                <Archive className="h-4 w-4" aria-hidden="true" />
-                Archive
-              </button>
+            </div>
+            {plant.latin_name && (
+              <p className="font-scientific text-grove-cream text-xs">
+                {plant.latin_name}
+                {plant.ai_identified && !plant.ai_species_confirmed && (
+                  <span
+                    data-testid="plant-ai-identified-badge"
+                    className="ml-2 font-ui text-sm text-grove-lichen"
+                  >
+                    AI identified
+                  </span>
+                )}
+                {plant.species_id && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/greenhouse/${plant.species_id}`, { state: { name: plant.common_name } })}
+                    data-testid="plant-view-in-greenhouse"
+                    className="ml-2 inline-flex items-center text-xs font-ui text-grove-sprout underline underline-offset-2 hover:text-grove-cream"
+                  >
+                    View in the plant guide
+                  </button>
+                )}
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusDot status={displayStatus(plant)} size="lg" showLabel />
+              <ToxicityBadge toxicity={plant.species_toxicity} testId="plant-toxicity" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Four equal tabs, each with a colored icon above its word. Care opens first: it is what someone came to do. */}
-      <div className="max-w-page mx-auto px-4 py-3" data-testid="plant-detail-tabs">
+      <div className="max-w-page mx-auto px-4 py-2" data-testid="plant-detail-tabs">
         <Tabs defaultValue="care">
           <TabsList className="grid grid-cols-4 gap-0 overflow-visible border-b-hairline border-grove-moss">
             {PLANT_TABS.map(({ value, label, icon, testId }) => (
@@ -371,7 +335,7 @@ export default function PlantDetailPage() {
                 key={value}
                 value={value}
                 data-testid={testId}
-                className="group flex-col justify-center gap-1 py-2 text-base"
+                className="group flex-col justify-center gap-1 py-1 text-base"
               >
                 <IconCircle icon={icon} onGroup />
                 {label}
@@ -398,10 +362,10 @@ export default function PlantDetailPage() {
           </TabsContent>
 
           {/* Care Tab */}
-          <TabsContent value="care" className="pt-3 space-y-3">
+          <TabsContent value="care" className="pt-2 space-y-3">
             {/* Watering schedule */}
-            <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-              <h3 id={SCHEDULE_HEADING_ID} tabIndex={-1} className="font-plant text-grove-cream text-base font-semibold  mb-2 focus:outline-none">Watering schedule</h3>
+            <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-3">
+              <h3 id={SCHEDULE_HEADING_ID} tabIndex={-1} className="font-plant text-grove-cream text-base font-semibold mb-1 focus:outline-none">Watering schedule</h3>
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
                   <InlineStepper
@@ -413,7 +377,7 @@ export default function PlantDetailPage() {
                   />
                   <p
                     data-testid="watering-schedule-label"
-                    className="font-ui italic text-xs font-medium text-grove-sage mt-1 leading-snug"
+                    className="font-ui italic text-xs font-medium text-grove-sage leading-snug"
                   >
                     {plant.watering_frequency_source === 'ai' ? 'AI-suggested' : 'Your schedule'}
                   </p>
@@ -448,19 +412,30 @@ export default function PlantDetailPage() {
                 days={plant.watering_frequency_days}
                 onAccept={(d) => patchPlant({ watering_frequency_days: d })}
               />
-            </div>
-
-            {/* Last watered */}
-            <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
-              <h3 className="font-plant text-grove-cream text-base font-semibold  mb-1">Last watered</h3>
-              <p className="font-ui text-sm text-grove-cream">
-                {hasBeenCaredFor(plant) || lastWaterLog ? formatDate(hasBeenCaredFor(plant) ? plant.last_watered_at : lastWaterLog.logged_at) : 'Not logged yet'}
+              {/* Last watered and next due sit in the same card, so Care is one short panel. */}
+              <p className="mt-2 font-ui text-sm text-grove-cream">
+                <span className="font-semibold">Last watered: </span>
+                {(hasBeenCaredFor(plant) || lastWaterLog ? formatDate(hasBeenCaredFor(plant) ? plant.last_watered_at : lastWaterLog.logged_at) : '') || 'Not logged yet'}
+                <span aria-hidden="true"> · </span>
+                <span className="font-semibold">Next due: </span>{formatDate(plant.next_water_due) || 'Not set'}
               </p>
-              <p className="font-latin text-xs text-grove-cream mt-0.5">Next due: {formatDate(plant.next_water_due)}</p>
             </div>
+          </TabsContent>
 
+          {/* About tab: the plant's notes and details, then how it is doing. */}
+          <TabsContent value="about" className="pt-4">
+            <div className="mb-3 rounded-card border-hairline border-grove-moss bg-grove-moss p-5" data-testid="plant-safety-details">
+              <h3 className="font-plant text-grove-cream text-base font-semibold mb-2">Pet safety</h3>
+              <PetSafetyLookup toxicity={plant.species_toxicity} className="block" testId="plant-safety-lookup" />
+              <p className="mt-1 font-ui text-xs text-grove-sage" data-testid="plant-safety-line">
+                {getToxicityInfo(plant.species_toxicity).level === 'unknown' ? '' : 'Based on ASPCA listings for cats and dogs. '}If a pet or child ate any of it:
+              </p>
+              <AppLink to="/help-my-plant" className="inline-flex min-h-touch items-center font-ui text-sm text-grove-cream underline underline-offset-2" data-testid="plant-poison-help">
+                Open Plant help for who to call
+              </AppLink>
+            </div>
             {/* Biography */}
-            <div className="rounded-card border-hairline border-grove-fernLine/40 bg-grove-canopy p-5">
+            <div className="rounded-card border-hairline border-grove-fernLine/40 bg-grove-canopy p-5 mb-3">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-plant text-grove-sprout text-base font-semibold ">Plant Biography</h3>
                 <button
@@ -479,10 +454,7 @@ export default function PlantDetailPage() {
                 <p className="font-ui text-xs text-grove-sage">Generate an AI biography that tells this plant’s story.</p>
               )}
             </div>
-          </TabsContent>
 
-          {/* About tab: the plant's notes and details, then how it is doing. */}
-          <TabsContent value="about" className="pt-4">
 
             <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5">
               <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Notes</h3>
@@ -493,6 +465,15 @@ export default function PlantDetailPage() {
             <div className="rounded-card border-hairline border-grove-moss bg-grove-moss p-5 mt-3">
               <h3 className="font-plant text-grove-cream text-base font-semibold  mb-2">Details</h3>
               <div className="space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-ui text-xs text-grove-cream">Room</span>
+                  <InlineRoom
+                    value={plant.room || ''}
+                    options={rooms}
+                    onSave={(v) => patchPlant({ room: v })}
+                    testid="plant-room"
+                  />
+                </div>
                 <div className="flex justify-between">
                   <span className="font-ui text-xs text-grove-cream">Acquired</span>
                   <span className="font-latin text-xs text-grove-cream">{formatDate(plant.acquired_date)}</span>
@@ -535,6 +516,25 @@ export default function PlantDetailPage() {
             </div>
             </div>
           
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button type="button"
+                onClick={() => { setShareFrom({ kind: null, leafAt: null }); setShareOpen(true); }}
+                data-testid="plant-share-button"
+                className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
+              >
+                <Share2 className="h-4 w-4" aria-hidden="true" />
+                Share
+              </button>
+              <button type="button"
+                ref={archiveBtnRef}
+                onClick={() => setArchiveOpen(true)}
+                data-testid="plant-archive-button"
+                className={cn(buttonVariants({ variant: 'outline' }), "flex gap-1.5")}
+              >
+                <Archive className="h-4 w-4" aria-hidden="true" />
+                Archive
+              </button>
             </div>
           </TabsContent>
         </Tabs>

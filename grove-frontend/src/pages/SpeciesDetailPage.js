@@ -204,7 +204,7 @@ export default function SpeciesDetailPage() {
                 src={heroSrc}
                 ratio="wide"
                 fit={species.botanical_illustration || species.bhl_primary_illustration ? 'contain' : 'cover'}
-                className="max-h-40 rounded-none"
+                className="max-h-28 rounded-none"
                 testId="species-illustration"
               />
               {(species.botanical_illustration || species.bhl_primary_illustration) && (
@@ -282,7 +282,7 @@ export default function SpeciesDetailPage() {
           {openFact === 'light' && (
             <>
               <p className="font-ui text-base text-grove-cream">{lightCopy}</p>
-              {species.care_summary && <p className="mt-2 font-ui text-base leading-relaxed text-grove-cream">{species.care_summary}</p>}
+              {species.care_summary && <p className="mt-2 line-clamp-2 font-ui text-base leading-relaxed text-grove-cream">{species.care_summary}</p>}
               <Button
                 type="button"
                 variant="link"

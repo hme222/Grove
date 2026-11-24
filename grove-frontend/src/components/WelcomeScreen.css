@@ -32,7 +32,7 @@
 .gw-safe { white-space: nowrap; }
 .gw-safe b { font-weight: 700; }
 .gw-serif-bold { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
-.gw-forest { display: block; object-fit: cover; border-radius: var(--radius-card); z-index: 2; } /* above the green line, so the line passes behind the photo */
+.gw-forest { display: block; object-fit: cover; border-radius: var(--radius-card); }
 .gw-lines { left: 0; top: 0; overflow: visible; pointer-events: none; }
 .gw-cta {
   display: flex; align-items: center; justify-content: center;

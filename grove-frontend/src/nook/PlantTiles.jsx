@@ -24,9 +24,9 @@ function PhotoSlot({ plant }) {
   const url = plant.photo_url ? getFileUrl(plant.photo_url) : null;
   return (
     url ? (
-      <PhotoBand src={url} className="rounded-chip" testId={`nook-photo-${plant.id}`} />
+      <PhotoBand src={url} ratio="short" className="rounded-chip" testId={`nook-photo-${plant.id}`} />
     ) : (
-      <div className="flex aspect-wide items-center justify-center overflow-hidden rounded-chip bg-grove-paperDeep" data-testid={`nook-photo-${plant.id}`}>
+      <div className="flex aspect-short items-center justify-center overflow-hidden rounded-chip bg-grove-cream" data-testid={`nook-photo-${plant.id}`}>
         <Leaf className="h-6 w-6 text-grove-paperGreen" aria-hidden="true" />
       </div>
     )

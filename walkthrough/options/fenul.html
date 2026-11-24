@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fenul styles (trial, local only)</title><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/tokens.css">
+<style>@font-face{font-family:'FN-Standard';src:url('/fonts/trial/fenul/Standard-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'FN-Standard';src:url('/fonts/trial/fenul/Standard-Medium.woff2') format('woff2');font-weight:500;font-style:normal}
+@font-face{font-family:'FN-Standard';src:url('/fonts/trial/fenul/Standard-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal}
+@font-face{font-family:'FN-Standard';src:url('/fonts/trial/fenul/Standard-Bold.woff2') format('woff2');font-weight:700;font-style:normal}
+@font-face{font-family:'FN-Standard';src:url('/fonts/trial/fenul/Standard-RegularItalic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'FN-Standard';src:url('/fonts/trial/fenul/Standard-MediumItalic.woff2') format('woff2');font-weight:500;font-style:italic}
+@font-face{font-family:'FN-Condensed';src:url('/fonts/trial/fenul/Condensed-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'FN-Condensed';src:url('/fonts/trial/fenul/Condensed-Medium.woff2') format('woff2');font-weight:500;font-style:normal}
+@font-face{font-family:'FN-Condensed';src:url('/fonts/trial/fenul/Condensed-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal}
+@font-face{font-family:'FN-Condensed';src:url('/fonts/trial/fenul/Condensed-Bold.woff2') format('woff2');font-weight:700;font-style:normal}
+@font-face{font-family:'FN-Condensed';src:url('/fonts/trial/fenul/Condensed-RegularItalic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'FN-Condensed';src:url('/fonts/trial/fenul/Condensed-MediumItalic.woff2') format('woff2');font-weight:500;font-style:italic}
+@font-face{font-family:'FN-Compressed';src:url('/fonts/trial/fenul/Compressed-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
+@font-face{font-family:'FN-Compressed';src:url('/fonts/trial/fenul/Compressed-Medium.woff2') format('woff2');font-weight:500;font-style:normal}
+@font-face{font-family:'FN-Compressed';src:url('/fonts/trial/fenul/Compressed-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal}
+@font-face{font-family:'FN-Compressed';src:url('/fonts/trial/fenul/Compressed-Bold.woff2') format('woff2');font-weight:700;font-style:normal}
+@font-face{font-family:'FN-Compressed';src:url('/fonts/trial/fenul/Compressed-RegularItalic.woff2') format('woff2');font-weight:400;font-style:italic}
+@font-face{font-family:'FN-Compressed';src:url('/fonts/trial/fenul/Compressed-MediumItalic.woff2') format('woff2');font-weight:500;font-style:italic}
+*{box-sizing:border-box}body{margin:0;background:#11190a;color:var(--grove-cream);font-family:var(--font-ui);font-size:16px}
+h1{font-family:var(--font-display);font-size:30px;margin:24px 24px 4px}.sub{margin:0 24px 16px;color:var(--grove-sage);max-width:76ch}
+.row{display:flex;gap:20px;padding:0 24px 36px;flex-wrap:wrap}.col{width:410px}.col h3{margin:0 0 8px;font-size:18px}
+.ph{background:var(--grove-forest);border:1px solid var(--grove-moss);border-radius:28px;padding:20px}
+.card{background:var(--grove-moss);border:1px solid var(--grove-fern-line);border-radius:20px;padding:14px;margin-top:12px}
+.mu{color:var(--grove-sage)}.lab{font-size:16px;color:var(--grove-sage);margin:14px 0 4px}
+</style></head><body>
+<h1>Fenul: which style would you buy</h1>
+<p class="sub">Fenul Standard, Condensed and Compressed at four weights plus italics. Condensed and Compressed are narrower, which helps the no-scroll screens. Same copy at the sizes the app uses. Trial files, on this computer only.</p>
+<div class="row" id="r"></div>
+<script>
+const W=[400,500,600,700];
+const FAM=['Standard','Condensed','Compressed'];
+document.getElementById('r').innerHTML=FAM.map(c=>`<div class="col" style="font-family:'FN-${c}',serif"><h3 style="font-family:var(--font-ui)">Fenul ${c}</h3><div class="ph">`+W.map(w=>`<div class="lab" style="font-family:var(--font-ui)">weight ${w}</div><div style="font-weight:${w};font-size:30px;line-height:1.1">Welcome to FloraGrove</div><div style="font-weight:${w};font-size:24px;margin-top:6px">Erase the plant guilt.</div><div style="font-weight:${w};font-size:20px;margin-top:6px">Spider Plant \u00b7 One reminder a day</div><div style="font-weight:${w};font-size:16px;margin-top:6px">Check the soil \u00b7 7 days \u00b7 Today</div>`).join('')+`<div class="lab" style="font-family:var(--font-ui)">italic 400 and 500, 20px and 16px</div><div style="font-style:italic;font-weight:400;font-size:20px">Chlorophytum comosum</div><div style="font-style:italic;font-weight:500;font-size:20px">Monstera deliciosa</div><div style="font-style:italic;font-weight:400;font-size:16px">Epipremnum aureum</div><div style="font-style:italic;font-weight:500;font-size:16px">Dracaena trifasciata</div></div></div>`).join('')
++'</div><h1 style="margin-top:10px">In a real card</h1><div class="row" style="padding:0">'+FAM.map(c=>`<div class="col"><h3 style="font-family:var(--font-ui)">Fenul ${c} SemiBold, Alegreya Sans text</h3><div class="ph"><div style="font-family:'FN-${c}';font-weight:600;font-size:28px;line-height:1.1">Welcome to FloraGrove</div><div class="card"><div style="font-family:'FN-${c}';font-weight:600;font-size:24px">Erase the plant guilt.</div><div style="margin-top:6px;line-height:1.5">Most plants don\u2019t die from a lack of love. They die from drowning.</div></div><div class="card"><div style="font-family:'FN-${c}';font-weight:600;font-size:20px">Spider Plant</div><div style="font-family:'FN-${c}';font-style:italic;font-size:16px">Chlorophytum comosum</div><div>Check about every 7 days</div></div></div></div>`).join('');
+</script></body></html>
